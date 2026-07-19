@@ -1,0 +1,52 @@
+---
+import { equivalentPath, navigation, routes, type Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+	pathname: string;
+	counterpartSlug?: string;
+}
+
+const { locale, pathname, counterpartSlug } = Astro.props;
+const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
+const languagePath = equivalentPath(pathname, locale, otherLocale, counterpartSlug);
+const menuLabel = locale === 'es' ? 'Menú' : 'Menu';
+---
+
+<header class="site-header">
+	<div class="site-header__inner shell">
+		<a class="brand" href={routes[locale].home} aria-label={`Jossue Alcalá — ${locale === 'es' ? 'inicio' : 'home'}`}>
+			Jossue Alcalá
+		</a>
+		<nav class="nav" aria-label={locale === 'es' ? 'Navegación principal' : 'Primary navigation'}>
+			<ul class="nav__links">
+				{
+					navigation[locale].map((item) => (
+						<li>
+							<a href={routes[locale][item.key]} aria-current={pathname === routes[locale][item.key] ? 'page' : undefined}>
+								{item.label}
+							</a>
+						</li>
+					))
+				}
+			</ul>
+			<a class="language" href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
+				{otherLocale}
+			</a>
+			<details class="menu">
+				<summary>{menuLabel}</summary>
+				<ul class="menu__panel">
+					{
+						navigation[locale].map((item) => (
+							<li>
+								<a href={routes[locale][item.key]} aria-current={pathname === routes[locale][item.key] ? 'page' : undefined}>
+									{item.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</details>
+		</nav>
+	</div>
+</header>

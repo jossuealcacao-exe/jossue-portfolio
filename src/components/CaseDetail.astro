@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Breadcrumbs from './Breadcrumbs.astro';
+import { routes, type Locale } from '../data/i18n';
+
+interface Props {
+	entry: CollectionEntry<'cases'>;
+	locale: Locale;
+}
+
+const { entry, locale } = Astro.props;
+const es = locale === 'es';
+const data = entry.data;
+const sections = [
+	[es ? 'Contexto' : 'Context', data.context],
+	[es ? 'Problema' : 'Problem', data.problem],
+	[es ? 'Rol' : 'Role', data.role],
+] as const;
+const lists = [
+	[es ? 'Diagnóstico' : 'Diagnosis', data.diagnosis],
+	[es ? 'Intervención' : 'Intervention', data.intervention],
+	[es ? 'Decisiones' : 'Decisions', data.decisions],
+	['Stack', data.stack],
+	[es ? 'Evidencia' : 'Evidence', data.evidence],
+	[es ? 'Resultados verificados' : 'Verified outcomes', data.results],
+	[es ? 'Limitaciones' : 'Limitations', data.limitations],
+	[es ? 'Aprendizajes' : 'Learnings', data.learnings],
+] as const;
+---
+
+<Breadcrumbs
+	locale={locale}
+	items={[
+		{ label: es ? 'Trabajo' : 'Work', href: routes[locale].work },
+		{ label: data.title },
+	]}
+/>
+<article class="page shell">
+	<header class="hero">
+		<p class="eyebrow">{data.client} / {es ? 'Caso preliminar' : 'Preliminary case'}</p>
+		<h1>{data.title}</h1>
+		<p class="hero__lede">{data.summary}</p>
+		<span class="status">
+			{es ? 'Verificación pendiente' : 'Verification pending'} / {data.verification.source}
+		</span>
+	</header>
+
+	{
+		sections.map(([heading, value], index) => (
+			<section class="section case-grid">
+				<p class="index">{String(index + 1).padStart(2, '0')} / {heading}</p>
+				<div class="flow">
+					<h2>{heading}</h2>
+					<p>{value}</p>
+				</div>
+			</section>
+		))
+	}
+
+	{
+		lists.map(([heading, values], index) => (
+			<section class="section case-grid">
+				<p class="index">{String(index + 4).padStart(2, '0')} / {heading}</p>
+				<div class="flow">
+					<h2>{heading}</h2>
+					<ul class="list">
+						{values.map((value) => <li>{value}</li>)}
+					</ul>
+				</div>
+			</section>
+		))
+	}
+
+	<section class="section case-grid">
+		<p class="index">12 / CTA</p>
+		<div class="flow">
+			<h2>{data.cta}</h2>
+			<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
+				{es ? 'Iniciar conversación' : 'Start a conversation'}
+			</a>
+		</div>
+	</section>
+</article>

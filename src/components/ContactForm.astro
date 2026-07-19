@@ -1,0 +1,136 @@
+---
+import { contactEndpoint } from '../data/contact';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy =
+	locale === 'es'
+		? {
+				name: 'Nombre',
+				email: 'Correo',
+				organization: 'Organización (opcional)',
+				siteUrl: 'URL del sitio (opcional)',
+				project: 'Tipo de proyecto',
+				options: ['Shopify / desarrollo web', 'Optimización / CRO', 'Auditoría', 'IA y sistemas', 'Otro'],
+				message: 'Contexto y objetivo',
+				consent: 'Acepto que estos datos se usen únicamente para responder a esta solicitud.',
+				send: 'Enviar solicitud',
+				unconfigured: 'El formulario todavía no tiene un endpoint configurado. No se enviará ningún dato.',
+			}
+		: {
+				name: 'Name',
+				email: 'Email',
+				organization: 'Organization (optional)',
+				siteUrl: 'Website URL (optional)',
+				project: 'Project type',
+				options: ['Shopify / web development', 'Optimization / CRO', 'Audit', 'AI and systems', 'Other'],
+				message: 'Context and goal',
+				consent: 'I agree that this data may be used only to respond to this request.',
+				send: 'Send request',
+				unconfigured: 'The form does not have a configured endpoint yet. No data will be sent.',
+			};
+---
+
+<form
+	class="form"
+	method="post"
+	action={contactEndpoint ?? undefined}
+	data-contact-form
+	data-endpoint={contactEndpoint ?? ''}
+	data-locale={locale}
+>
+	<div class="field">
+		<label for="name">{copy.name}</label>
+		<input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+	</div>
+	<div class="field">
+		<label for="email">{copy.email}</label>
+		<input id="email" name="email" type="email" autocomplete="email" required maxlength="200" />
+	</div>
+	<div class="field">
+		<label for="organization">{copy.organization}</label>
+		<input id="organization" name="organization" type="text" autocomplete="organization" maxlength="160" />
+	</div>
+	<div class="field">
+		<label for="site-url">{copy.siteUrl}</label>
+		<input id="site-url" name="siteUrl" type="url" inputmode="url" autocomplete="url" maxlength="500" />
+	</div>
+	<div class="field">
+		<label for="project-type">{copy.project}</label>
+		<select id="project-type" name="projectType" required>
+			<option value="">—</option>
+			{copy.options.map((option) => <option value={option}>{option}</option>)}
+		</select>
+	</div>
+	<div class="field">
+		<label for="message">{copy.message}</label>
+		<textarea id="message" name="message" required minlength="20" maxlength="3000"></textarea>
+	</div>
+	<div class="honeypot" aria-hidden="true">
+		<label for="fax-number">Fax</label>
+		<input id="fax-number" name="faxNumber" type="text" tabindex="-1" autocomplete="off" />
+	</div>
+	<label class="consent">
+		<input type="checkbox" name="consent" value="yes" required />
+		<span>{copy.consent}</span>
+	</label>
+	<button class="button" type="submit" disabled={!contactEndpoint}>{copy.send}</button>
+	<p class="form-message" data-form-status aria-live="polite">
+		{!contactEndpoint && copy.unconfigured}
+	</p>
+</form>
+
+<script>
+	import { track } from '../scripts/analytics';
+
+	const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+	const status = form?.querySelector<HTMLElement>('[data-form-status]');
+	const endpoint = form?.dataset.endpoint;
+	const locale = form?.dataset.locale ?? 'es';
+	let started = false;
+
+	form?.addEventListener('focusin', () => {
+		if (started) return;
+		started = true;
+		track({ event: 'start_contact_form', path: window.location.pathname });
+	});
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!endpoint || !status) return;
+
+		const lastSubmission = Number(localStorage.getItem('contact-last-submission') ?? '0');
+		if (Date.now() - lastSubmission < 60_000) {
+			status.textContent =
+				locale === 'es' ? 'Espera un minuto antes de volver a enviar.' : 'Please wait one minute before submitting again.';
+			return;
+		}
+
+		const data = new FormData(form);
+		if (data.get('faxNumber')) return;
+		status.textContent = locale === 'es' ? 'Enviando…' : 'Sending…';
+
+		try {
+			const response = await fetch(endpoint, {
+				method: 'POST',
+				headers: { Accept: 'application/json' },
+				body: data,
+			});
+			if (!response.ok) throw new Error(`Contact endpoint responded ${response.status}`);
+			localStorage.setItem('contact-last-submission', String(Date.now()));
+			track({ event: 'submit_contact_form', path: window.location.pathname });
+			form.reset();
+			status.textContent =
+				locale === 'es' ? 'La solicitud fue recibida por el endpoint configurado.' : 'The configured endpoint received your request.';
+		} catch {
+			status.textContent =
+				locale === 'es'
+					? 'No fue posible enviar. Tus datos permanecen en el formulario.'
+					: 'Submission failed. Your data remains in the form.';
+		}
+	});
+</script>

@@ -1,0 +1,341 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Breadcrumbs from './Breadcrumbs.astro';
+import CaseCard from './CaseCard.astro';
+import ContactForm from './ContactForm.astro';
+import { metadata, routes, type Locale, type PageKey } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+	pageKey: PageKey;
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, pageKey, cases } = Astro.props;
+const es = locale === 'es';
+const pageMeta = metadata[locale][pageKey];
+const featured = cases.find((entry) => entry.data.publication.featured) ?? cases[0];
+const builder = cases.find((entry) => entry.data.slug === 'bloqio-builder');
+const breadcrumbLabel: Record<PageKey, string> = {
+	home: es ? 'Inicio' : 'Home',
+	work: es ? 'Trabajo' : 'Work',
+	services: es ? 'Servicios' : 'Services',
+	ai: es ? 'IA y sistemas' : 'AI and systems',
+	about: es ? 'Acerca' : 'About',
+	contact: es ? 'Contacto' : 'Contact',
+};
+---
+
+{pageKey !== 'home' && <Breadcrumbs locale={locale} items={[{ label: breadcrumbLabel[pageKey] }]} />}
+
+{
+	pageKey === 'home' && (
+		<>
+			<section class="hero shell">
+				<p class="eyebrow">{es ? 'Shopify / desarrollo web / UX y CRO' : 'Shopify / web development / UX and CRO'}</p>
+				<h1>{es ? 'Storefronts más claros, útiles y preparados para convertir.' : 'Clearer, more useful storefronts built to convert.'}</h1>
+				<p class="hero__lede">
+					{es
+						? 'Jossue conecta desarrollo web, Shopify y experiencia de usuario con adquisición, analítica e IA aplicada. Esta primera edición distingue con precisión la evidencia disponible de lo que aún debe validarse.'
+						: 'Jossue connects web development, Shopify, and user experience with acquisition, analytics, and applied AI. This first edition clearly separates available evidence from claims that still need validation.'}
+				</p>
+				<a class="button" href={routes[locale].work}>
+					{es ? 'Revisar trabajo' : 'Review work'}
+				</a>
+			</section>
+
+			{featured && (
+				<section class="section shell section-grid">
+					<p class="index">01 / {es ? 'Caso destacado' : 'Featured case'}</p>
+					<div class="flow">
+						<h2>{featured.data.title}</h2>
+						<p class="hero__lede">{featured.data.summary}</p>
+						<p class="muted">
+							{es
+								? 'La referencia del proyecto existe; alcance, rol y resultados todavía requieren fuentes revisables.'
+								: 'The project reference exists; scope, role, and outcomes still require reviewable sources.'}
+						</p>
+						<a href={`${routes[locale].work}${featured.data.slug}/`}>
+							{es ? 'Abrir caso estructurado' : 'Open structured case'} →
+						</a>
+					</div>
+				</section>
+			)}
+
+			{builder && (
+				<section class="section shell section-grid">
+					<p class="index">02 / Bloqio Builder</p>
+					<div class="flow">
+						<h2>{es ? 'Un caso sin cifras prematuras.' : 'A case without premature numbers.'}</h2>
+						<p>
+							{es
+								? 'La estructura conserva los datos recibidos fuera de la salida pública hasta contar con fuente, fecha y contexto.'
+								: 'The structure keeps supplied figures out of public output until they have a source, date, and context.'}
+						</p>
+						<a href={`${routes[locale].work}${builder.data.slug}/`}>{es ? 'Ver estado del caso' : 'View case status'} →</a>
+					</div>
+				</section>
+			)}
+
+			<section class="section shell">
+				<p class="index">03 / {es ? 'Capacidades' : 'Capabilities'}</p>
+				<div class="cards">
+					{[
+						[
+							es ? 'Shopify y storefronts' : 'Shopify and storefronts',
+							es
+								? 'Themes, secciones, componentes y experiencias comerciales mobile-first.'
+								: 'Themes, sections, components, and mobile-first commerce experiences.',
+						],
+						[
+							es ? 'UX y CRO' : 'UX and CRO',
+							es
+								? 'Diagnóstico de PDP, PLP, navegación y fugas de conversión con trazabilidad.'
+								: 'Evidence-led diagnosis across PDPs, PLPs, navigation, and conversion leaks.',
+						],
+						[
+							es ? 'Sistemas de producto' : 'Product systems',
+							es
+								? 'IA aplicada, automatización, analítica y operación conectadas al negocio.'
+								: 'Applied AI, automation, analytics, and operations connected to business needs.',
+						],
+					].map(([title, text], index) => (
+						<div class="card">
+							<p class="index">0{index + 1}</p>
+							<h3>{title}</h3>
+							<p>{text}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section class="section shell section-grid">
+				<p class="index">04 / {es ? 'Método' : 'Method'}</p>
+				<div class="flow">
+					<h2>{es ? 'Entender antes de producir.' : 'Understand before producing.'}</h2>
+					<ol class="list">
+						<li>{es ? 'Encuadrar el problema y las restricciones.' : 'Frame the problem and constraints.'}</li>
+						<li>{es ? 'Separar evidencia, supuestos y decisiones.' : 'Separate evidence, assumptions, and decisions.'}</li>
+						<li>{es ? 'Diseñar la intervención mínima útil.' : 'Design the smallest useful intervention.'}</li>
+						<li>{es ? 'Medir únicamente con fuentes acordadas.' : 'Measure only from agreed sources.'}</li>
+					</ol>
+				</div>
+			</section>
+
+			<section class="section shell section-grid">
+				<p class="index">05 / IA</p>
+				<div class="flow">
+					<h2>{es ? 'IA dentro de un sistema responsable.' : 'AI inside a responsible system.'}</h2>
+					<p>
+						{es
+							? 'Automatización y asistencia se plantean con límites, revisión humana y trazabilidad; no como una capa decorativa.'
+							: 'Automation and assistance are framed with boundaries, human review, and traceability—not as a decorative layer.'}
+					</p>
+					<a href={routes[locale].ai}>{es ? 'Ver principios' : 'Read the principles'} →</a>
+				</div>
+			</section>
+
+			<section class="section shell section-grid">
+				<p class="index">06 / Paid media</p>
+				<div class="flow">
+					<h2>{es ? 'Distribución conectada al producto.' : 'Distribution connected to product.'}</h2>
+					<p>
+						{es
+							? 'La capacidad incluye paid media, pero este portafolio inicial no publica gasto, retornos ni atribuciones sin documentación.'
+							: 'The capability includes paid media, but this initial portfolio publishes no spend, return, or attribution claims without documentation.'}
+					</p>
+				</div>
+			</section>
+
+			<section class="section shell section-grid">
+				<p class="index">07 / {es ? 'Siguiente' : 'Next'}</p>
+				<div class="flow">
+					<h2>{es ? 'Empezar por una conversación clara.' : 'Start with a clear conversation.'}</h2>
+					<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
+						{es ? 'Plantear un proyecto' : 'Describe a project'}
+					</a>
+				</div>
+			</section>
+		</>
+	)
+}
+
+{
+	pageKey === 'work' && (
+		<div class="page shell">
+			<section class="section">
+				<p class="eyebrow">{es ? 'Archivo de trabajo' : 'Work archive'}</p>
+				<h1>{es ? 'Casos en documentación.' : 'Cases in documentation.'}</h1>
+				<p class="hero__lede">
+					{es
+						? 'Estos son esqueletos públicos honestos, no estudios finales. Cada vacío de evidencia está marcado.'
+						: 'These are honest public structures, not finished case studies. Every evidence gap is marked.'}
+				</p>
+			</section>
+			<section class="section cards" aria-label={pageMeta.title}>
+				{cases.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}
+			</section>
+		</div>
+	)
+}
+
+{
+	pageKey === 'services' && (
+		<div class="page shell">
+			<section class="hero">
+				<p class="eyebrow">{es ? 'Servicios modulares' : 'Modular services'}</p>
+				<h1>{es ? 'De la fuga comercial a una implementación útil.' : 'From commercial friction to a useful implementation.'}</h1>
+				<p class="hero__lede">
+					{es
+						? 'El alcance se define según contexto y evidencia disponible; no hay paquetes que prometan resultados universales.'
+						: 'Scope is shaped by context and available evidence; there are no packages promising universal outcomes.'}
+				</p>
+			</section>
+			<section class="section cards">
+				{[
+					[
+						es ? 'Shopify y desarrollo web' : 'Shopify and web development',
+						es
+							? 'Storefronts, Liquid, theme customization, extensiones y componentes comerciales.'
+							: 'Storefronts, Liquid, theme customization, extensions, and commerce components.',
+					],
+					[
+						es ? 'Auditoría UX/CRO' : 'UX/CRO audit',
+						es
+							? 'Evidencia, riesgo comercial y recomendaciones priorizadas por impacto y esfuerzo.'
+							: 'Evidence, commercial risk, and recommendations prioritized by impact and effort.',
+					],
+					[
+						es ? 'Optimización de experiencia' : 'Experience optimization',
+						es
+							? 'PDP, PLP, navegación, búsqueda, confianza y experiencia mobile-first.'
+							: 'PDPs, PLPs, navigation, search, trust, and mobile-first experience.',
+					],
+					[
+						es ? 'Analítica y adquisición' : 'Analytics and acquisition',
+						es
+							? 'Medición y paid media conectados con la experiencia de destino.'
+							: 'Measurement and paid media connected to the landing experience.',
+					],
+					[
+						es ? 'IA y automatización' : 'AI and automation',
+						es ? 'Sistemas acotados, supervisados y mantenibles.' : 'Bounded, supervised, maintainable systems.',
+					],
+				].map(([title, text], index) => (
+					<div class="card">
+						<p class="index">{String(index + 1).padStart(2, '0')}</p>
+						<h3>{title}</h3>
+						<p>{text}</p>
+					</div>
+				))}
+			</section>
+			<section class="section section-grid">
+				<p class="index">06 / {es ? 'Proceso' : 'Process'}</p>
+				<div class="flow">
+					<h2>{es ? 'Un alcance que se puede explicar.' : 'A scope that can be explained.'}</h2>
+					<p>{es ? 'Contexto → diagnóstico → intervención → evidencia → aprendizaje.' : 'Context → diagnosis → intervention → evidence → learning.'}</p>
+					<a class="button" href={routes[locale].contact}>{es ? 'Compartir contexto' : 'Share context'}</a>
+				</div>
+			</section>
+		</div>
+	)
+}
+
+{
+	pageKey === 'ai' && (
+		<div class="page shell">
+			<section class="hero">
+				<p class="eyebrow">{es ? 'IA y sistemas' : 'AI and systems'}</p>
+				<h1>{es ? 'Automatizar con criterio.' : 'Automate with judgment.'}</h1>
+				<p class="hero__lede">
+					{es
+						? 'La IA se trata como un componente con entradas, límites, responsables y revisión.'
+						: 'AI is treated as a component with inputs, boundaries, owners, and review.'}
+				</p>
+			</section>
+			<section class="section cards">
+				{[
+					[es ? 'Problema antes que modelo' : 'Problem before model', es ? 'La herramienta sigue al caso de uso.' : 'The tool follows the use case.'],
+					[es ? 'Humano en control' : 'Human in control', es ? 'Las decisiones sensibles conservan revisión.' : 'Sensitive decisions retain review.'],
+					[es ? 'Datos mínimos' : 'Minimum data', es ? 'Se reduce exposición y retención innecesaria.' : 'Unnecessary exposure and retention are reduced.'],
+					[es ? 'Trazabilidad' : 'Traceability', es ? 'Entradas, cambios y salidas pueden auditarse.' : 'Inputs, changes, and outputs can be audited.'],
+				].map(([title, text], index) => (
+					<div class="card">
+						<p class="index">{String(index + 1).padStart(2, '0')}</p>
+						<h3>{title}</h3>
+						<p>{text}</p>
+					</div>
+				))}
+			</section>
+			<section class="section section-grid">
+				<p class="index">05 / {es ? 'Estado' : 'Status'}</p>
+				<div class="flow">
+					<h2>{es ? 'Capacidad, no promesa.' : 'Capability, not a promise.'}</h2>
+					<p>
+						{es
+							? 'Esta versión inicial no atribuye ahorros, precisión ni volumen a sistemas no documentados.'
+							: 'This initial version attributes no savings, accuracy, or volume to undocumented systems.'}
+					</p>
+				</div>
+			</section>
+		</div>
+	)
+}
+
+{
+	pageKey === 'about' && (
+		<div class="page shell">
+			<section class="hero">
+				<p class="eyebrow">{es ? 'Acerca' : 'About'}</p>
+				<h1>Jossue Alcalá.</h1>
+				<p class="hero__lede">
+					{es
+						? 'Este portafolio presenta capacidades en producto digital, crecimiento y sistemas. La biografía profesional detallada está pendiente de fuentes aprobadas.'
+						: 'This portfolio presents capabilities across digital product, growth, and systems. A detailed professional biography awaits approved sources.'}
+				</p>
+			</section>
+			<section class="section section-grid">
+				<p class="index">01 / {es ? 'Principios' : 'Principles'}</p>
+				<div class="flow">
+					<h2>{es ? 'Precisión sobre espectáculo.' : 'Precision over spectacle.'}</h2>
+					<ul class="list">
+						<li>{es ? 'Distinguir hechos de interpretaciones.' : 'Distinguish facts from interpretations.'}</li>
+						<li>{es ? 'Hacer visibles las restricciones.' : 'Make constraints visible.'}</li>
+						<li>{es ? 'Diseñar para uso, mantenimiento y acceso.' : 'Design for use, maintenance, and access.'}</li>
+						<li>{es ? 'No fabricar autoridad con métricas aisladas.' : 'Do not manufacture authority with isolated metrics.'}</li>
+					</ul>
+				</div>
+			</section>
+			<section class="section section-grid">
+				<p class="index">02 / {es ? 'Transparencia' : 'Transparency'}</p>
+				<div class="flow">
+					<h2>{es ? 'Una primera edición.' : 'A first edition.'}</h2>
+					<p>
+						{es
+							? 'Los casos se completarán al incorporar contexto, artefactos y validación. Hasta entonces permanecen explícitamente preliminares.'
+							: 'Cases will be completed as context, artifacts, and validation are added. Until then they remain explicitly preliminary.'}
+					</p>
+				</div>
+			</section>
+		</div>
+	)
+}
+
+{
+	pageKey === 'contact' && (
+		<div class="page shell">
+			<section class="section">
+				<p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
+				<h1>{es ? 'Comparte el problema.' : 'Share the problem.'}</h1>
+				<p class="hero__lede">
+					{es
+						? 'Incluye contexto, objetivo y restricciones. No se publica un correo ni canal directo mientras siga pendiente de configuración.'
+						: 'Include context, goal, and constraints. No email or direct channel is published while configuration remains pending.'}
+				</p>
+			</section>
+			<section class="section">
+				<ContactForm locale={locale} />
+			</section>
+		</div>
+	)
+}

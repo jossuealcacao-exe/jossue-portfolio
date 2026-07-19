@@ -1,0 +1,62 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import CaseDetail from '../../components/CaseDetail.astro';
+import PageView from '../../components/PageView.astro';
+import { metadata, routes, type Locale, type PageKey } from '../../data/i18n';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+type PageProps =
+	| { locale: Locale; pageKey: Exclude<PageKey, 'home'>; entry?: never }
+	| { locale: Locale; pageKey: 'case'; entry: CollectionEntry<'cases'> };
+
+export async function getStaticPaths() {
+	const paths: Array<{ params: { lang: Locale; path: string }; props: PageProps }> = [];
+	const pageKeys = ['work', 'services', 'ai', 'about', 'contact'] as const;
+
+	for (const locale of ['es', 'en'] as const) {
+		for (const pageKey of pageKeys) {
+			const path = routes[locale][pageKey].replace(`/${locale}/`, '').replace(/\/$/, '');
+			paths.push({ params: { lang: locale, path }, props: { locale, pageKey } });
+		}
+	}
+
+	const cases = await getCollection('cases', ({ data }) => data.publication.publish);
+	for (const entry of cases) {
+		const locale = entry.data.lang;
+		const workSegment = routes[locale].work.replace(`/${locale}/`, '').replace(/\/$/, '');
+		paths.push({
+			params: { lang: locale, path: `${workSegment}/${entry.data.slug}` },
+			props: { locale, pageKey: 'case', entry },
+		});
+	}
+
+	return paths;
+}
+
+const props = Astro.props as PageProps;
+const { locale, pageKey } = props;
+const pathname = Astro.url.pathname;
+const cases = (await getCollection('cases', ({ data }) => data.lang === locale && data.publication.publish)).sort((a, b) =>
+	a.data.title.localeCompare(b.data.title),
+);
+const entry = pageKey === 'case' ? props.entry : undefined;
+const meta = pageKey === 'case' ? undefined : metadata[locale][pageKey];
+const title = entry ? `${entry.data.title} — ${locale === 'es' ? 'Caso' : 'Case'} — Jossue Alcalá` : meta!.title;
+const description = entry?.data.summary ?? meta!.description;
+---
+
+<BaseLayout
+	locale={locale}
+	title={title}
+	description={description}
+	pathname={pathname}
+	counterpartSlug={entry?.data.counterpartSlug}
+>
+	{
+		entry ? (
+			<CaseDetail entry={entry} locale={locale} />
+		) : (
+			<PageView locale={locale} pageKey={pageKey as PageKey} cases={cases} />
+		)
+	}
+</BaseLayout>

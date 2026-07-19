@@ -1,0 +1,95 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { analyticsConfig } from '../data/analytics';
+import { equivalentPath, routes, type Locale } from '../data/i18n';
+import '../styles/global.css';
+
+interface Props {
+	locale: Locale;
+	title: string;
+	description: string;
+	pathname: string;
+	counterpartSlug?: string;
+}
+
+const { locale, title, description, pathname, counterpartSlug } = Astro.props;
+const alternateLocale: Locale = locale === 'es' ? 'en' : 'es';
+const alternatePath = equivalentPath(pathname, locale, alternateLocale, counterpartSlug);
+const site = Astro.site ?? new URL('https://portfolio.invalid');
+const canonical = new URL(pathname, site);
+const alternate = new URL(alternatePath, site);
+const defaultUrl = new URL(equivalentPath(pathname, locale, 'es', counterpartSlug), site);
+const isProfilePage = pathname === routes[locale].home || pathname === routes[locale].about;
+const pageNode = {
+	'@type': isProfilePage ? 'ProfilePage' : 'WebPage',
+	'@id': `${canonical.href}#page`,
+	url: canonical.href,
+	name: title,
+	description,
+	inLanguage: locale,
+	isPartOf: { '@id': `${site.href}#website` },
+	...(isProfilePage ? { mainEntity: { '@id': `${site.href}#person` } } : { about: { '@id': `${site.href}#person` } }),
+};
+const structuredData = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{
+			'@type': 'Person',
+			'@id': `${site.href}#person`,
+			name: 'Jossue Alcalá',
+			jobTitle: locale === 'es' ? 'Desarrollo web, Shopify y UX/CRO' : 'Web development, Shopify, and UX/CRO',
+			knowsAbout: ['Web development', 'Shopify', 'UX', 'Conversion rate optimization', 'Analytics', 'Paid media', 'Applied AI systems'],
+		},
+		{
+			'@type': 'WebSite',
+			'@id': `${site.href}#website`,
+			url: site.href,
+			name: 'Jossue Alcalá',
+			inLanguage: ['es', 'en'],
+		},
+		pageNode,
+	],
+};
+---
+
+<!doctype html>
+<html lang={locale} data-gtm-configured={Boolean(analyticsConfig.gtmId)} data-ga4-configured={Boolean(analyticsConfig.ga4Id)}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<meta name="theme-color" content="#f5f4ef" />
+		<title>{title}</title>
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="canonical" href={canonical} />
+		<link rel="alternate" hreflang={locale} href={canonical} />
+		<link rel="alternate" hreflang={alternateLocale} href={alternate} />
+		<link rel="alternate" hreflang="x-default" href={defaultUrl} />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Jossue Alcalá" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:locale" content={locale === 'es' ? 'es_MX' : 'en_US'} />
+		<meta property="og:locale:alternate" content={locale === 'es' ? 'en_US' : 'es_MX'} />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+		<Header locale={locale} pathname={pathname} counterpartSlug={counterpartSlug} />
+		<main id="main">
+			<slot />
+		</main>
+		<Footer locale={locale} />
+		<script>
+			import { bindAnalyticsEvents } from '../scripts/analytics';
+
+			bindAnalyticsEvents();
+		</script>
+	</body>
+</html>

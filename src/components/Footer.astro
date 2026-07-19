@@ -1,0 +1,38 @@
+---
+import { contact } from '../data/contact';
+import { routes, type Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+	<div class="site-footer__inner shell">
+		<div class="flow">
+			<p class="eyebrow">Jossue Alcalá / {year}</p>
+			<p>
+				{
+					locale === 'es'
+						? 'Portafolio editorial en construcción. Las brechas de evidencia están señaladas.'
+						: 'Editorial portfolio in progress. Evidence gaps are explicitly marked.'
+				}
+			</p>
+		</div>
+		<div class="flow">
+			<a href={routes[locale].contact} data-analytics-event="click_contact">
+				{locale === 'es' ? 'Iniciar una conversación' : 'Start a conversation'}
+			</a>
+			{
+				contact.email ? (
+					<a href={`mailto:${contact.email}`}>{contact.email}</a>
+				) : (
+					<p class="muted">{locale === 'es' ? 'Canal directo pendiente de configuración.' : 'Direct contact channel pending configuration.'}</p>
+				)
+			}
+		</div>
+	</div>
+</footer>

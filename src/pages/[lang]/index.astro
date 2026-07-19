@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import PageView from '../../components/PageView.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { isLocale, metadata, type Locale } from '../../data/i18n';
+
+export function getStaticPaths() {
+	return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }];
+}
+
+const { lang } = Astro.params;
+if (!isLocale(lang)) throw new Error(`Unsupported locale: ${lang}`);
+const locale: Locale = lang;
+const cases = (await getCollection('cases', ({ data }) => data.lang === locale && data.publication.publish)).sort((a, b) =>
+	a.data.title.localeCompare(b.data.title),
+);
+const pathname = `/${locale}/`;
+const meta = metadata[locale].home;
+---
+
+<BaseLayout locale={locale} title={meta.title} description={meta.description} pathname={pathname}>
+	<PageView locale={locale} pageKey="home" cases={cases} />
+</BaseLayout>

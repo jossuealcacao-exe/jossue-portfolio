@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { routes, type Locale } from '../data/i18n';
+
+interface Props {
+	entry: CollectionEntry<'cases'>;
+	index: number;
+	locale: Locale;
+}
+
+const { entry, index, locale } = Astro.props;
+const href = `${routes[locale].work}${entry.data.slug}/`;
+---
+
+<article class="card">
+	<div class="flow">
+		<p class="index">{String(index + 1).padStart(2, '0')} / {entry.data.client}</p>
+		<h3>{entry.data.title}</h3>
+		<p>{entry.data.summary}</p>
+	</div>
+	<div class="flow">
+		<span class="status">{locale === 'es' ? 'Evidencia pendiente' : 'Evidence pending'}</span>
+		<a href={href} data-analytics-event="view_case_study">{locale === 'es' ? 'Ver estructura del caso' : 'View case structure'} →</a>
+	</div>
+</article>

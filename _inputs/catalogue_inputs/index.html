@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>Catálogo de insumos · Portafolio de Jossue</title>
+    <meta
+      name="description"
+      content="Checklist local y editable de los insumos requeridos para el portafolio."
+    >
+    <link rel="stylesheet" href="./catalogue.css">
+    <script src="./catalogue.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalogue">Saltar al catálogo</a>
+
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">Documento de trabajo · local</p>
+        <h1>Catálogo de insumos</h1>
+      </div>
+      <p class="lede">
+        Inventario editable para reunir, validar y autorizar contenido sin confundir
+        disponibilidad con permiso de publicación.
+      </p>
+    </header>
+
+    <main id="catalogue">
+      <section class="summary" aria-labelledby="summary-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Estado del inventario</p>
+            <h2 id="summary-title">Progreso general</h2>
+          </div>
+          <p id="save-status" class="save-status" role="status" aria-live="polite">
+            Cargando…
+          </p>
+        </div>
+
+        <div id="overview" class="overview" aria-live="polite"></div>
+        <div>
+          <div class="progress-label">
+            <span>Ítems resueltos</span>
+            <strong id="overall-progress-label">0 de 0</strong>
+          </div>
+          <div
+            id="overall-progress"
+            class="progress-track"
+            role="progressbar"
+            aria-label="Progreso general"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            aria-valuenow="0"
+          >
+            <span></span>
+          </div>
+        </div>
+        <div id="category-progress" class="category-progress"></div>
+      </section>
+
+      <section class="workspace" aria-labelledby="filters-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Explorar y editar</p>
+            <h2 id="filters-title">Filtros</h2>
+          </div>
+          <p id="result-count" class="result-count" aria-live="polite"></p>
+        </div>
+
+        <form id="filters" class="filters" role="search">
+          <label class="search-field">
+            <span>Buscar</span>
+            <input
+              id="search"
+              name="search"
+              type="search"
+              placeholder="Nombre, descripción, ruta o notas"
+              autocomplete="off"
+            >
+          </label>
+          <label>
+            <span>Estado</span>
+            <select id="status-filter" name="status">
+              <option value="">Todos los estados</option>
+            </select>
+          </label>
+          <label>
+            <span>Prioridad</span>
+            <select id="priority-filter" name="priority">
+              <option value="">Todas las prioridades</option>
+              <option value="Crítica">Crítica</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </label>
+          <label>
+            <span>Categoría</span>
+            <select id="category-filter" name="category">
+              <option value="">Todas las categorías</option>
+            </select>
+          </label>
+          <button id="clear-filters" class="button button--quiet" type="button">
+            Limpiar filtros
+          </button>
+        </form>
+      </section>
+
+      <section class="catalogue-section" aria-labelledby="items-title">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Fuente operativa</p>
+            <h2 id="items-title">Checklist editable</h2>
+          </div>
+          <div class="actions">
+            <button id="export-json" class="button" type="button">Exportar JSON</button>
+            <button id="reset-data" class="button button--danger" type="button">
+              Restablecer
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <caption class="sr-only">
+              Insumos del portafolio. Los cambios se guardan en este navegador.
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Ítem</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Prioridad</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Ficha</th>
+              </tr>
+            </thead>
+            <tbody id="items-body"></tbody>
+          </table>
+        </div>
+        <p id="empty-state" class="empty-state" hidden>
+          No hay ítems que coincidan con los filtros.
+        </p>
+      </section>
+
+      <aside class="notice" aria-labelledby="usage-title">
+        <h2 id="usage-title">Uso y límites</h2>
+        <p>
+          Esta herramienta funciona con <code>file://</code>, guarda cambios en
+          <code>localStorage</code> y no sube archivos ni datos. “Recibido” no significa
+          “Aprobado para publicar”. Revisa siempre sensibilidad, derechos y vigencia.
+        </p>
+      </aside>
+    </main>
+
+    <footer>
+      <p>Catálogo local · sin conexión · sin telemetría</p>
+    </footer>
+
+    <template id="item-row-template">
+      <tr class="item-row">
+        <th class="item-name-cell" scope="row">
+          <label>
+            <span class="mobile-label">Ítem</span>
+            <input class="item-name" type="text" aria-label="Nombre del ítem">
+          </label>
+          <span class="item-id"></span>
+        </th>
+        <td data-label="Categoría">
+          <select class="item-category" aria-label="Categoría"></select>
+        </td>
+        <td data-label="Prioridad">
+          <select class="item-priority" aria-label="Prioridad">
+            <option value="Crítica">Crítica</option>
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </td>
+        <td data-label="Estado">
+          <select class="item-status" aria-label="Estado"></select>
+        </td>
+        <td data-label="Descripción">
+          <textarea class="item-description" rows="3" aria-label="Descripción"></textarea>
+        </td>
+        <td data-label="Ficha">
+          <details>
+            <summary>Ver / editar</summary>
+            <div class="detail-grid">
+              <label>
+                <span>Formato esperado</span>
+                <input class="item-format" type="text">
+              </label>
+              <label>
+                <span>Ruta destino</span>
+                <input class="item-destination" type="text">
+              </label>
+              <label>
+                <span>Sensibilidad / confidencialidad</span>
+                <select class="item-sensitivity">
+                  <option value="Público tras aprobación">Público tras aprobación</option>
+                  <option value="Interno">Interno</option>
+                  <option value="Confidencial">Confidencial</option>
+                  <option value="Por definir">Por definir</option>
+                </select>
+              </label>
+              <label>
+                <span>Fecha de actualización</span>
+                <input class="item-updated" type="date">
+              </label>
+              <label class="full-field">
+                <span>Notas</span>
+                <textarea class="item-notes" rows="3"></textarea>
+              </label>
+            </div>
+          </details>
+        </td>
+      </tr>
+    </template>
+
+    <noscript>
+      <p class="noscript">
+        Este catálogo necesita JavaScript para mostrar y guardar el checklist.
+      </p>
+    </noscript>
+  </body>
+</html>
