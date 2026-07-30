@@ -1,0 +1,70 @@
+---
+import Icon from './Icon.astro';
+import ToolMark from './ToolMark.astro';
+import { toolCategories } from '../data/tools';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const groups = toolCategories();
+const copy = {
+	prev: es ? 'Categoría anterior' : 'Previous category',
+	next: es ? 'Siguiente categoría' : 'Next category',
+	gallery: es ? 'Stack profesional por categoría' : 'Professional stack by category',
+};
+---
+
+<div class="stack-carousel" data-stack-carousel role="region" aria-roledescription="carousel" aria-label={copy.gallery}>
+	<div class="stack-carousel__shell">
+		<button type="button" class="stack-carousel__nav stack-carousel__nav--prev" data-stack-prev aria-label={copy.prev}>
+			<Icon name="arrow-left" size="md" />
+		</button>
+		<div class="stack-carousel__viewport" data-stack-viewport>
+			<div class="stack-carousel__track">
+				{
+					groups.map((group, index) => (
+						<article
+							class="stack-carousel__slide"
+							data-stack-slide
+							data-index={index}
+							role="group"
+							aria-roledescription="slide"
+							aria-label={`${index + 1} / ${groups.length} · ${group.label[locale]}`}
+						>
+							<p class="stack-carousel__category">{group.label[locale]}</p>
+							<p class="stack-carousel__summary">{group.summary[locale]}</p>
+							<ul class="tool-strip" aria-label={group.label[locale]}>
+								{group.tools.map((item) => (
+									<li>
+										<ToolMark tool={item} locale={locale} />
+									</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+		</div>
+		<button type="button" class="stack-carousel__nav stack-carousel__nav--next" data-stack-next aria-label={copy.next}>
+			<Icon name="arrow-right" size="md" />
+		</button>
+	</div>
+	<div class="stack-carousel__dots" data-stack-dots role="group" aria-label={copy.gallery}>
+		{
+			groups.map((group, index) => (
+				<button
+					type="button"
+					class="stack-carousel__dot"
+					data-stack-dot
+					data-index={index}
+					aria-pressed={index === 0 ? 'true' : 'false'}
+					aria-label={group.label[locale]}
+				/>
+			))
+		}
+	</div>
+</div>

@@ -2,8 +2,11 @@
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { analyticsConfig } from '../data/analytics';
+import { contact } from '../data/contact';
 import { equivalentPath, routes, type Locale } from '../data/i18n';
+import { profile } from '../data/profile';
 import '../styles/global.css';
+import '../styles/redesign.css';
 
 interface Props {
 	locale: Locale;
@@ -37,9 +40,28 @@ const structuredData = {
 		{
 			'@type': 'Person',
 			'@id': `${site.href}#person`,
-			name: 'Jossue Alcalá',
-			jobTitle: locale === 'es' ? 'Desarrollo web, Shopify y UX/CRO' : 'Web development, Shopify, and UX/CRO',
-			knowsAbout: ['Web development', 'Shopify', 'UX', 'Conversion rate optimization', 'Analytics', 'Paid media', 'Applied AI systems'],
+			name: profile.name,
+			jobTitle: `${profile.headline[locale]} · ${profile.subheadline[locale]}`,
+			knowsAbout: [
+				'Shopify',
+				'Chief ecommerce management',
+				'Conversion rate optimization',
+				'E-commerce growth',
+				'UX',
+				'Paid media',
+				'SEO',
+				'Applied AI systems',
+				'AI operating systems',
+				'Business automation',
+				'Web development',
+			],
+			...(contact.email ? { email: contact.email } : {}),
+			...(contact.phone ? { telephone: contact.phone } : {}),
+			sameAs: [
+				...(contact.linkedin ? [contact.linkedin] : []),
+				'https://bloqio.app/jossuealcala/',
+				'https://skillshop.credential.net/profile/jossuealcala9406/wallet',
+			],
 		},
 		{
 			'@type': 'WebSite',
@@ -60,7 +82,7 @@ const structuredData = {
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
-		<meta name="theme-color" content="#f5f4ef" />
+		<meta name="theme-color" content="#f7f7f3" />
 		<title>{title}</title>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="canonical" href={canonical} />
@@ -82,14 +104,21 @@ const structuredData = {
 	<body>
 		<a class="skip-link" href="#main">{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
 		<Header locale={locale} pathname={pathname} counterpartSlug={counterpartSlug} />
-		<main id="main">
+		<main id="main" tabindex="-1">
 			<slot />
 		</main>
 		<Footer locale={locale} />
 		<script>
 			import { bindAnalyticsEvents } from '../scripts/analytics';
+			import { initEvidenceGalleries } from '../scripts/evidence-gallery';
+			import { initMotion } from '../scripts/motion';
+
+			import { initStackCarousels } from '../scripts/stack-carousel';
 
 			bindAnalyticsEvents();
+			initMotion();
+			initEvidenceGalleries();
+			initStackCarousels();
 		</script>
 	</body>
 </html>

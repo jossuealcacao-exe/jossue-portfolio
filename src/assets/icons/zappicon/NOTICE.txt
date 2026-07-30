@@ -1,0 +1,3 @@
+Icons: curated subset of Zappicon v1.2 Free UI icons set (Light).
+https://zappicon.com
+Not a redistribution of the full library.

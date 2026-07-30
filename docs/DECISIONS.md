@@ -35,11 +35,10 @@ anteriores; añadir una nueva entrada que las reemplace.
 
 ## D-004 · Zappicon
 
-- **Estado:** aceptada.
-- **Decisión:** registrar Zappicon como faltante y no disponible; no sustituir ni recrear.
-- **Motivo:** no existe un activo fuente autorizado.
-- **Consecuencia:** ningún icono genérico debe presentarse como Zappicon.
-- **Revisar cuando:** se reciba el original y permiso de uso.
+- **Estado:** supersedida por D-018 (19 jul 2026).
+- **Decisión original:** registrar Zappicon como faltante y no disponible; no sustituir ni recrear.
+- **Motivo original:** no existía un activo fuente autorizado.
+- **Consecuencia histórica:** ningún icono genérico debía presentarse como Zappicon.
 
 ## D-005 · URL pública y canonical
 
@@ -53,12 +52,12 @@ anteriores; añadir una nueva entrada que las reemplace.
 
 ## D-006 · Contacto
 
-- **Estado:** propuesta bloqueada.
-- **Decisión:** no inventar correo, teléfono ni perfil; mantener el formulario implementado
-  pero deshabilitado sin endpoint.
-- **Motivo:** no existe canal publicable proporcionado.
-- **Consecuencia:** la página/CTA existen, pero no se envían datos ni se publica canal directo.
-- **Revisar cuando:** se confirme destino, responsable, privacidad y vigencia.
+- **Estado:** aceptada parcialmente.
+- **Decisión:** publicar correo, LinkedIn y teléfono/WhatsApp obtenidos del CV y autorizados
+  explícitamente el 18 de julio de 2026; mantener el formulario deshabilitado sin endpoint.
+- **Motivo:** existen canales directos aprobados, pero no una infraestructura de formulario.
+- **Consecuencia:** la página y el footer enlazan canales centralizados; no se envían datos por formulario.
+- **Revisar cuando:** cambie un canal o se aprueben endpoint, privacidad y retención.
 
 ## D-007 · Métricas Bloqio Builder
 
@@ -96,12 +95,12 @@ anteriores; añadir una nueva entrada que las reemplace.
 
 ## D-011 · Primer caso
 
-- **Estado:** aceptada, contenido pendiente.
-- **Decisión:** integrar WU Nutrition / DUMO como primer caso real.
-- **Motivo:** probar el patrón con evidencia real antes de escalar.
-- **Consecuencia:** el esqueleto técnico bilingüe existe; evidencia, rol, permisos y narrativa
-  real deben depositarse y validarse antes de reemplazarlo.
-- **Revisar cuando:** WU Nutrition / DUMO tenga fuentes y permisos suficientes.
+- **Estado:** aceptada e implementada.
+- **Decisión:** integrar Bloqio Builder como primer caso completo, sin métricas comerciales.
+- **Motivo:** es un producto propio con documentación y evidencia técnica más sólidas.
+- **Consecuencia:** el caso ES/EN publica contexto, rol, decisiones, stack, evidencia,
+  resultados cualitativos y límites; faltan activos visuales aprobados.
+- **Revisar cuando:** existan capturas, métricas verificadas o una demo pública autorizada.
 
 ## D-012 · Rutas y bilingüismo
 
@@ -128,3 +127,71 @@ anteriores; añadir una nueva entrada que las reemplace.
 - **Motivo:** evitar detección opaca por navegador, ubicación o cookie.
 - **Consecuencia:** español es el destino predeterminado y el usuario cambia idioma con enlace.
 - **Revisar cuando:** cambie el idioma predeterminado.
+
+## D-015 · WU Nutrition, Come Verde y DUMO
+
+- **Estado:** aceptada.
+- **Decisión:** publicar narrativas separadas para WU Nutrition y Come Verde; omitir DUMO de
+  rutas, títulos y contenido público.
+- **Motivo:** instrucción explícita del propietario del portafolio el 18 de julio de 2026.
+- **Consecuencia:** WU se presenta como caso Shopify/UX-CRO; Come Verde como Growth OS con
+  límites visibles porque la fuente disponible documenta un alcance compuesto.
+- **Revisar cuando:** lleguen artefactos exclusivos, permisos o evidencia visual de cada marca.
+
+## D-016 · Evidencia pública de La Carnicería Virtual
+
+- **Estado:** aceptada.
+- **Decisión:** integrar cuatro capturas de la auditoría con anotaciones HTML accesibles que
+  conectan ID, hallazgo, riesgo, recomendación, prioridad y confianza.
+- **Motivo:** mostrar el método y la calidad de análisis sin publicar el archivo confidencial completo.
+- **Consecuencia:** se publican señales técnicas y visuales verificables; quedan excluidos
+  ventas, inversión, ROAS, honorarios, theme export, PII e identificadores de tracking.
+- **Revisar cuando:** cambie el permiso de publicación o se incorporen capturas posteriores.
+
+## D-017 · Integración del CV
+
+- **Estado:** aceptada (ampliada 19 jul 2026).
+- **Decisión:** publicar perfil estructurado + descarga del PDF en `/cv/Jossue-Alcala-CV.pdf`;
+  publicar KPIs del CV (HP/Farmalisto/+8 años) y LCP LCV con fuente; actualizar rol vigente a
+  Chief Ecommerce Manager (WU/Come Verde); integrar capacidades de programación con IA y
+  automatizaciones de negocio desde `master_portfolio_ai`; omitir DUMO y métricas Bloqio
+  sin permiso.
+- **Motivo:** instrucción explícita del propietario el 19 de julio de 2026.
+- **Consecuencia:** Acerca, footer, casos WU/Come Verde e IA reflejan el rol y las capacidades;
+  el PDF descargable puede ir rezagado respecto al titular del sitio.
+- **Revisar cuando:** exista CV EN actualizado con el nuevo cargo o cambien permisos de métricas.
+
+## D-018 · Zappicon curado (menos es más)
+
+- **Estado:** aceptada (19 jul 2026).
+- **Decisión:** integrar un subconjunto mínimo de Zappicon v1.2 Free (estilo **1-Light**)
+  vía SVGs locales en `src/assets/icons/zappicon/` y el componente `Icon.astro`; no usar el
+  pack completo ni `@zappicon/react`.
+- **Motivo:** el pack libre autorizado está depositado en `_inputs/brand/`; la UX editorial
+  pide affordance silenciosa, no saturación.
+- **Consecuencia / curaduría:** solo menú móvil, descarga de CV, flecha interna, salida
+  externa, correo y chat (contacto). Sin iconos en nav, cards decorativas, estados ni hero.
+  Las etiquetas siguen siendo primarias; los iconos son decorativos salvo el toggle de menú.
+- **Revisar cuando:** se autorice un set de marca propio o cambie el criterio de densidad.
+
+## D-019 · Logos de marcas en `/cv/brands`
+
+- **Estado:** aceptada (19 jul 2026).
+- **Decisión:** publicar un set curado de logos de clientes/empleadores en
+  `public/cv/brands/` y mostrarlos con `BrandMark.astro` en Acerca (franja), cards de caso
+  y hero de caso; no inventar marcas faltantes.
+- **Motivo:** instrucción explícita; Bloqio y La Carnicería Virtual se localizaron desde
+  activos propios y el logo público del storefront.
+- **Consecuencia:** set inicial Bloqio, WU Nutrition, Come Verde, LCV, HP, Farmalisto.
+  Densidad baja; el nombre de cliente permanece en texto.
+- **Revisar cuando:** llegue un logo oficial distinto o permiso para omitir alguna marca.
+
+## D-020 · Motion editorial por sección
+
+- **Estado:** aceptada (19 jul 2026).
+- **Decisión:** scroll-snap `proximity` + reveals por IntersectionObserver + header sticky;
+  duraciones cortas (~220–560ms); sin full-page mandatory ni librerías de scroll-jacking.
+- **Motivo:** pedir animación inmersiva/premium sin saturar ni degradar UX/a11y.
+- **Consecuencia:** hero a viewport; secciones como puntos de anclaje; reduced-motion apaga
+  snap y animaciones.
+- **Revisar cuando:** medición real en móvil muestre fricción o se autorice motion más denso.

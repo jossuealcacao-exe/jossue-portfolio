@@ -1,5 +1,6 @@
 ---
 import { equivalentPath, navigation, routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -11,19 +12,24 @@ const { locale, pathname, counterpartSlug } = Astro.props;
 const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
 const languagePath = equivalentPath(pathname, locale, otherLocale, counterpartSlug);
 const menuLabel = locale === 'es' ? 'Menú' : 'Menu';
+const isCurrent = (key: keyof typeof routes[typeof locale]) => {
+	const href = routes[locale][key];
+	return pathname === href || (key === 'work' && pathname.startsWith(href));
+};
 ---
 
 <header class="site-header">
 	<div class="site-header__inner shell">
 		<a class="brand" href={routes[locale].home} aria-label={`Jossue Alcalá — ${locale === 'es' ? 'inicio' : 'home'}`}>
-			Jossue Alcalá
+			<span>Jossue Alcalá</span>
+			<small>{locale === 'es' ? 'Ecommerce · Producto' : 'Ecommerce · Product'}</small>
 		</a>
 		<nav class="nav" aria-label={locale === 'es' ? 'Navegación principal' : 'Primary navigation'}>
 			<ul class="nav__links">
 				{
 					navigation[locale].map((item) => (
 						<li>
-							<a href={routes[locale][item.key]} aria-current={pathname === routes[locale][item.key] ? 'page' : undefined}>
+							<a class:list={{ 'nav__cta': item.key === 'contact' }} href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
 								{item.label}
 							</a>
 						</li>
@@ -34,12 +40,20 @@ const menuLabel = locale === 'es' ? 'Menú' : 'Menu';
 				{otherLocale}
 			</a>
 			<details class="menu">
-				<summary>{menuLabel}</summary>
+				<summary class="menu__toggle" aria-label={menuLabel}>
+					<span class="menu__icon menu__icon--open">
+						<Icon name="menu" />
+					</span>
+					<span class="menu__icon menu__icon--close">
+						<Icon name="close" />
+					</span>
+					<span class="sr-only">{menuLabel}</span>
+				</summary>
 				<ul class="menu__panel">
 					{
 						navigation[locale].map((item) => (
 							<li>
-								<a href={routes[locale][item.key]} aria-current={pathname === routes[locale][item.key] ? 'page' : undefined}>
+								<a class:list={{ 'menu__cta': item.key === 'contact' }} href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
 									{item.label}
 								</a>
 							</li>

@@ -1,0 +1,41 @@
+{
+  "name": "Jossue Alcalá Portfolio Context Pack",
+  "version": "1.0.0",
+  "created": "2026-07-18",
+  "language": [
+    "es-MX",
+    "en"
+  ],
+  "target_repository": "jossuealcacao-exe/jossue-portfolio",
+  "recommended_destination": "_inputs/portfolio_context_2026-07-18/",
+  "case_studies": [
+    "Bloqio Builder",
+    "Bloqio CRO Apps"
+  ],
+  "capability_pages": [
+    "Shopify",
+    "Applied AI",
+    "AI Operating Systems",
+    "Enterprise AI"
+  ],
+  "source_repositories": [
+    "jossuealcacao-exe/bloqio-builder",
+    "jossuealcacao-exe/bloqio-cro",
+    "jossuealcacao-exe/bloqio-cro-toolkit",
+    "jossuealcacao-exe/jossue-portfolio"
+  ],
+  "files": [
+    "00_README_INTEGRATION.md",
+    "01_MASTER_INVENTORY.md",
+    "02_BLOQIO_BUILDER.md",
+    "03_BLOQIO_CRO_APPS.md",
+    "04_SHOPIFY_CAPABILITY.md",
+    "05_APPLIED_AI.md",
+    "06_AI_OPERATING_SYSTEMS.md",
+    "07_ENTERPRISE_AI.md",
+    "08_EVIDENCE_MATRIX.md",
+    "09_CLAIMS_TO_VERIFY.md",
+    "10_CODEX_INTEGRATION_PROMPT.md",
+    "manifest.json"
+  ]
+}

@@ -1,6 +1,10 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import StackList from './StackList.astro';
 
 interface Props {
 	entry: CollectionEntry<'cases'>;
@@ -10,16 +14,29 @@ interface Props {
 
 const { entry, index, locale } = Astro.props;
 const href = `${routes[locale].work}${entry.data.slug}/`;
+const es = locale === 'es';
+const presentation = casePresentation(entry.data.slug, locale);
+const category = presentation?.category ?? (es ? 'Proyecto digital' : 'Digital project');
+const summary = presentation?.summary ?? entry.data.summary;
 ---
 
-<article class="card">
-	<div class="flow">
-		<p class="index">{String(index + 1).padStart(2, '0')} / {entry.data.client}</p>
-		<h3>{entry.data.title}</h3>
-		<p>{entry.data.summary}</p>
-	</div>
-	<div class="flow">
-		<span class="status">{locale === 'es' ? 'Evidencia pendiente' : 'Evidence pending'}</span>
-		<a href={href} data-analytics-event="view_case_study">{locale === 'es' ? 'Ver estructura del caso' : 'View case structure'} →</a>
-	</div>
+<article class="case-card">
+	<a class="case-card__link" href={href} data-analytics-event="view_case_study">
+		<ProjectVisual slug={entry.data.slug} title={entry.data.title} stack={entry.data.stack} locale={locale} priority={index === 0} />
+		<div class="case-card__body">
+			<div class="case-card__meta">
+				<span>{String(index + 1).padStart(2, '0')}</span>
+				<span>{category}</span>
+			</div>
+			<div class="case-card__content flow">
+				<h3>{entry.data.title}</h3>
+				<p>{summary}</p>
+			</div>
+			<StackList stack={entry.data.stack} locale={locale} limit={5} compact />
+			<span class="case-card__cta">
+				{es ? 'Ver proyecto' : 'View project'}
+				<Icon name="arrow-right" />
+			</span>
+		</div>
+	</a>
 </article>

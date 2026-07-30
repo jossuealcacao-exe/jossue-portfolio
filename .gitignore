@@ -19,9 +19,16 @@ pnpm-debug.log*
 !.env.example
 .env.production
 
+# confidential source material — keep local
+_inputs/cv/*.pdf
+_inputs/projects/*
+!_inputs/projects/README.md
+_inputs/brand/*.zip
+
 # test artifacts
 playwright-report/
 test-results/
+.tmp-venv/
 
 # macOS-specific files
 .DS_Store

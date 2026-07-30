@@ -2,6 +2,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import CaseDetail from '../../components/CaseDetail.astro';
 import PageView from '../../components/PageView.astro';
+import { casePresentation } from '../../data/casePresentation';
 import { metadata, routes, type Locale, type PageKey } from '../../data/i18n';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
@@ -41,8 +42,9 @@ const cases = (await getCollection('cases', ({ data }) => data.lang === locale &
 );
 const entry = pageKey === 'case' ? props.entry : undefined;
 const meta = pageKey === 'case' ? undefined : metadata[locale][pageKey];
-const title = entry ? `${entry.data.title} — ${locale === 'es' ? 'Caso' : 'Case'} — Jossue Alcalá` : meta!.title;
-const description = entry?.data.summary ?? meta!.description;
+const publicCase = entry ? casePresentation(entry.data.slug, locale) : undefined;
+const title = entry ? `${entry.data.title} — ${locale === 'es' ? 'Proyecto' : 'Project'} — Jossue Alcalá` : meta!.title;
+const description = publicCase?.summary ?? meta!.description;
 ---
 
 <BaseLayout

@@ -1,0 +1,60 @@
+---
+interface MediaPlanItem {
+	id: string;
+	title: string;
+	description: string;
+	ratio: '16:9' | '4:3' | '3:2' | '9:16';
+	recommendedSize: string;
+	format: 'AVIF' | 'WebP' | 'PNG';
+	capture: string;
+	status?: 'pending' | 'captured';
+}
+
+interface Props {
+	items: MediaPlanItem[];
+	locale: 'es' | 'en';
+}
+
+const { items, locale } = Astro.props;
+const es = locale === 'es';
+const pendingItems = items.filter((item) => item.status !== 'captured');
+---
+
+{pendingItems.length > 0 && <section class="media-plan" aria-labelledby="media-plan-title">
+	<div class="media-plan__header flow">
+		<p class="eyebrow">{es ? 'Plan de evidencia visual' : 'Visual evidence plan'}</p>
+		<h3 id="media-plan-title">{es ? 'Capturas pendientes de producción' : 'Captures pending production'}</h3>
+		<p class="muted">
+			{es
+				? 'Estos marcos no simulan resultados. Definen la toma exacta que sustituirá cada placeholder cuando exista un entorno autorizado.'
+				: 'These frames do not simulate outcomes. They define the exact capture that will replace each placeholder when an authorized environment is available.'}
+		</p>
+	</div>
+	<div class="media-plan__grid">
+		{
+			pendingItems.map((item, index) => (
+				<article class="media-placeholder">
+					<div class="media-placeholder__frame" style={`--media-ratio: ${item.ratio.replace(':', ' / ')}`}>
+						<span>{String(index + 1).padStart(2, '0')}</span>
+						<strong>{item.ratio}</strong>
+					</div>
+					<div class="flow">
+						<p class="index">{item.id}</p>
+						<h3>{item.title}</h3>
+						<p>{item.description}</p>
+						<dl class="media-placeholder__specs">
+							<div>
+								<dt>{es ? 'Salida' : 'Output'}</dt>
+								<dd>{item.recommendedSize} · {item.format}</dd>
+							</div>
+							<div>
+								<dt>{es ? 'Toma' : 'Capture'}</dt>
+								<dd>{item.capture}</dd>
+							</div>
+						</dl>
+					</div>
+				</article>
+			))
+		}
+	</div>
+</section>}

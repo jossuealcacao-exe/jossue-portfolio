@@ -1,0 +1,31 @@
+---
+import type { BrandMark as Brand } from '../data/brands';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	brand: Brand;
+	locale?: Locale;
+	/** Pair with visible text elsewhere; mark stays decorative. */
+	decorative?: boolean;
+	size?: 'sm' | 'md';
+	class?: string;
+}
+
+const { brand, locale = 'es', decorative = true, size = 'sm', class: className } = Astro.props;
+const classes = ['brand-mark', `brand-mark--${size}`, `brand-mark--${brand.tone}`, className]
+	.filter(Boolean)
+	.join(' ');
+const alt = decorative ? '' : brand.name[locale];
+---
+
+<span class={classes}>
+	<img
+		src={brand.src}
+		alt={alt}
+		width={brand.width}
+		height={brand.height}
+		loading="lazy"
+		decoding="async"
+		aria-hidden={decorative ? true : undefined}
+	/>
+</span>

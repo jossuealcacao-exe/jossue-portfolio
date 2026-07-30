@@ -1,0 +1,27 @@
+---
+import type { ToolMark as Tool } from '../data/tools';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	tool: Tool;
+	locale?: Locale;
+	size?: 'sm' | 'md';
+	class?: string;
+}
+
+const { tool, locale = 'es', size = 'sm', class: className } = Astro.props;
+const classes = ['tool-mark', `tool-mark--${size}`, `tool-mark--${tool.id}`, className].filter(Boolean).join(' ');
+---
+
+<span class={classes} title={tool.name[locale]}>
+	<img
+		src={tool.src}
+		alt=""
+		width={tool.width}
+		height={tool.height}
+		loading="lazy"
+		decoding="async"
+		aria-hidden="true"
+	/>
+	<span class="sr-only">{tool.name[locale]}</span>
+</span>

@@ -1,7 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import Breadcrumbs from './Breadcrumbs.astro';
+import { brandForCaseSlug } from '../data/brands';
+import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
+import BrandMark from './BrandMark.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import CaseDiagrams from './CaseDiagrams.astro';
+import CaseMedia from './CaseMedia.astro';
+import Icon from './Icon.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import StackList from './StackList.astro';
 
 interface Props {
 	entry: CollectionEntry<'cases'>;
@@ -11,21 +19,28 @@ interface Props {
 const { entry, locale } = Astro.props;
 const es = locale === 'es';
 const data = entry.data;
-const sections = [
-	[es ? 'Contexto' : 'Context', data.context],
-	[es ? 'Problema' : 'Problem', data.problem],
-	[es ? 'Rol' : 'Role', data.role],
-] as const;
-const lists = [
-	[es ? 'Diagnóstico' : 'Diagnosis', data.diagnosis],
-	[es ? 'Intervención' : 'Intervention', data.intervention],
-	[es ? 'Decisiones' : 'Decisions', data.decisions],
-	['Stack', data.stack],
-	[es ? 'Evidencia' : 'Evidence', data.evidence],
-	[es ? 'Resultados verificados' : 'Verified outcomes', data.results],
-	[es ? 'Limitaciones' : 'Limitations', data.limitations],
-	[es ? 'Aprendizajes' : 'Learnings', data.learnings],
-] as const;
+const brand = brandForCaseSlug(data.slug);
+const publishableMedia = data.media;
+const publishableDiagrams = data.diagrams?.length ? data.diagrams : undefined;
+const projectLinks = data.projectLinks?.length ? data.projectLinks : undefined;
+const presentation = casePresentation(data.slug, locale);
+if (!presentation) throw new Error(`Missing public presentation for ${locale}/${data.slug}`);
+const chapters = [
+	{ id: 'challenge', heading: es ? 'El reto' : 'The challenge' },
+	{ id: 'approach', heading: es ? 'El enfoque' : 'The approach' },
+	{ id: 'delivery', heading: es ? 'Trabajo realizado' : 'What I delivered' },
+	...(publishableDiagrams ? [{ id: 'signals', heading: es ? 'Gráficos' : 'Signals' }] : []),
+	...(publishableMedia ? [{ id: 'gallery', heading: es ? 'El producto' : 'The product' }] : []),
+	{ id: 'outcome', heading: es ? 'Resultado' : 'Outcome' },
+	{ id: 'technology', heading: es ? 'Tecnología' : 'Technology' },
+	...(projectLinks ? [{ id: 'links', heading: es ? 'Repos y consulta' : 'Repos and links' }] : []),
+];
+const sectionNumber = (id: string) => String(chapters.findIndex((chapter) => chapter.id === id) + 1).padStart(2, '0');
+const linkKindCopy = {
+	repo: es ? 'Repositorio' : 'Repository',
+	live: es ? 'Proyecto vivo' : 'Live project',
+	reference: es ? 'Consulta' : 'Reference',
+} as const;
 ---
 
 <Breadcrumbs
@@ -36,45 +51,122 @@ const lists = [
 	]}
 />
 <article class="page shell">
-	<header class="hero">
-		<p class="eyebrow">{data.client} / {es ? 'Caso preliminar' : 'Preliminary case'}</p>
-		<h1>{data.title}</h1>
-		<p class="hero__lede">{data.summary}</p>
-		<span class="status">
-			{es ? 'Verificación pendiente' : 'Verification pending'} / {data.verification.source}
-		</span>
+	<header class="hero case-hero">
+		<div class="case-hero__kicker">
+			{
+				brand && (
+					<div class="case-brand">
+						<BrandMark brand={brand} size="md" />
+					</div>
+				)
+			}
+			<p class="eyebrow">{presentation.category}</p>
+		</div>
+		<div class="case-hero__grid">
+			<h1>{data.title}</h1>
+			<div class="case-hero__summary flow">
+				<p class="hero__lede">{presentation.summary}</p>
+				<dl class="case-hero__facts">
+					<div><dt>{es ? 'Contribución' : 'Contribution'}</dt><dd>{presentation.role}</dd></div>
+					<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
+				</dl>
+			</div>
+		</div>
 	</header>
-
-	{
-		sections.map(([heading, value], index) => (
-			<section class="section case-grid">
-				<p class="index">{String(index + 1).padStart(2, '0')} / {heading}</p>
-				<div class="flow">
-					<h2>{heading}</h2>
-					<p>{value}</p>
-				</div>
-			</section>
-		))
-	}
-
-	{
-		lists.map(([heading, values], index) => (
-			<section class="section case-grid">
-				<p class="index">{String(index + 4).padStart(2, '0')} / {heading}</p>
-				<div class="flow">
-					<h2>{heading}</h2>
-					<ul class="list">
-						{values.map((value) => <li>{value}</li>)}
-					</ul>
-				</div>
-			</section>
-		))
-	}
-
-	<section class="section case-grid">
-		<p class="index">12 / CTA</p>
+	<div class="case-cover" data-reveal>
+		<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
+	</div>
+	<nav class="case-jump" aria-label={es ? 'Navegación del caso' : 'Case navigation'}>
+		{chapters.map((chapter) => <a href={`#${chapter.id}`}>{chapter.heading}</a>)}
+	</nav>
+	<section id="challenge" class="section case-grid" data-case-section>
+		<p class="index">{sectionNumber('challenge')} / {es ? 'El reto' : 'The challenge'}</p>
+		<div class="case-prose flow">
+			<h2>{es ? 'Entender el negocio antes de diseñar la solución.' : 'Understand the business before designing the solution.'}</h2>
+			<p>{presentation.context}</p>
+			<p>{presentation.challenge}</p>
+		</div>
+	</section>
+	<section id="approach" class="section case-grid" data-case-section>
+		<p class="index">{sectionNumber('approach')} / {es ? 'El enfoque' : 'The approach'}</p>
 		<div class="flow">
-			<h2>{data.cta}</h2>
+			<h2>{es ? 'Una dirección clara para producto, experiencia y operación.' : 'A clear direction for product, experience, and operations.'}</h2>
+			<ol class="approach-list">
+				{presentation.approach.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><p>{item}</p></li>)}
+			</ol>
+		</div>
+	</section>
+	<section id="delivery" class="section case-grid" data-case-section>
+		<p class="index">{sectionNumber('delivery')} / {es ? 'Trabajo realizado' : 'What I delivered'}</p>
+		<div class="flow">
+			<h2>{es ? 'Del criterio a una solución que el equipo puede usar.' : 'From product judgment to a solution the team can use.'}</h2>
+			<ul class="deliverable-grid">
+				{presentation.deliverables.map((item) => <li>{item}</li>)}
+			</ul>
+		</div>
+	</section>
+	{publishableDiagrams && (
+		<section id="signals" class="section case-grid case-signals" data-case-section>
+			<p class="index">{sectionNumber('signals')} / {es ? 'Gráficos' : 'Signals'}</p>
+			<div class="flow">
+				<h2>{es ? 'Evidencia traducida a lectura visual.' : 'Evidence translated into visual reading.'}</h2>
+				<CaseDiagrams diagrams={publishableDiagrams} locale={locale} />
+			</div>
+		</section>
+	)}
+	{publishableMedia && (
+		<section id="gallery" class="section case-grid case-gallery" data-case-section>
+			<p class="index">{sectionNumber('gallery')} / {es ? 'El producto' : 'The product'}</p>
+			<div class="flow">
+				<h2>{es ? 'La experiencia en contexto.' : 'The experience in context.'}</h2>
+				<CaseMedia media={publishableMedia} locale={locale} />
+			</div>
+		</section>
+	)}
+	<section id="outcome" class="section case-grid" data-case-section>
+		<p class="index">{sectionNumber('outcome')} / {es ? 'Resultado' : 'Outcome'}</p>
+		<div class="flow">
+			<h2>{es ? 'Lo que el proyecto dejó construido.' : 'What the project put in place.'}</h2>
+			<ul class="outcome-list">{presentation.outcomes.map((item) => <li>{item}</li>)}</ul>
+			<div class="principles-block">
+				<p class="eyebrow">{es ? 'Principios aplicados' : 'Principles applied'}</p>
+				<ul>{presentation.principles.map((item) => <li>{item}</li>)}</ul>
+			</div>
+		</div>
+	</section>
+	<section id="technology" class="section case-grid" data-case-section>
+		<p class="index">{sectionNumber('technology')} / {es ? 'Tecnología' : 'Technology'}</p>
+		<div class="flow">
+			<h2>{es ? 'Stack elegido para la solución.' : 'A stack selected for the solution.'}</h2>
+			<StackList stack={data.stack} locale={locale} />
+		</div>
+	</section>
+	{projectLinks && (
+		<section id="links" class="section case-grid case-links" data-case-section>
+			<p class="index">{sectionNumber('links')} / {es ? 'Repos y consulta' : 'Repos and links'}</p>
+			<div class="flow">
+				<h2>{es ? 'Dónde revisar el proyecto.' : 'Where to review the project.'}</h2>
+				<ul class="project-link-list">
+					{projectLinks.map((link) => (
+						<li>
+							<a class="project-link" href={link.href} rel="noreferrer">
+								<span>
+									<small>{linkKindCopy[link.kind]}</small>
+									<strong>{link.label}</strong>
+								</span>
+								<Icon name="arrow-up-right" />
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		</section>
+	)}
+
+	<section class="section case-grid case-cta">
+		<p class="index">{es ? 'Siguiente paso' : 'Next step'}</p>
+		<div class="flow">
+			<h2>{presentation.cta}</h2>
 			<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
 				{es ? 'Iniciar conversación' : 'Start a conversation'}
 			</a>

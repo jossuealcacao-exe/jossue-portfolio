@@ -1,0 +1,79 @@
+---
+import arrowLeft from '../assets/icons/zappicon/arrow-left-small.svg?raw';
+import arrowRight from '../assets/icons/zappicon/arrow-right-small.svg?raw';
+import arrowUpRight from '../assets/icons/zappicon/arrow-up-right-small.svg?raw';
+import badgePercent from '../assets/icons/zappicon/badge-percent.svg?raw';
+import basketShopping from '../assets/icons/zappicon/basket-shopping.svg?raw';
+import chatDots from '../assets/icons/zappicon/chat-dots.svg?raw';
+import checkList from '../assets/icons/zappicon/check-list-square.svg?raw';
+import code from '../assets/icons/zappicon/code.svg?raw';
+import display from '../assets/icons/zappicon/display.svg?raw';
+import download from '../assets/icons/zappicon/download-bracket.svg?raw';
+import dollarArrowDown from '../assets/icons/zappicon/dollar-arrow-down.svg?raw';
+import envelope from '../assets/icons/zappicon/envelope.svg?raw';
+import exclamationTriangle from '../assets/icons/zappicon/exclamation-triangle.svg?raw';
+import filter from '../assets/icons/zappicon/filter.svg?raw';
+import menuBars from '../assets/icons/zappicon/menu-bars.svg?raw';
+import mobile from '../assets/icons/zappicon/mobile.svg?raw';
+import sparklesAi from '../assets/icons/zappicon/sparkles-ai.svg?raw';
+import trendUp from '../assets/icons/zappicon/chart-trend-up-alt.svg?raw';
+import user from '../assets/icons/zappicon/user.svg?raw';
+import xmark from '../assets/icons/zappicon/xmark.svg?raw';
+
+export type IconName =
+	| 'arrow-left'
+	| 'arrow-right'
+	| 'arrow-up-right'
+	| 'badge-percent'
+	| 'basket'
+	| 'chat'
+	| 'check-list'
+	| 'code'
+	| 'display'
+	| 'download'
+	| 'dollar-down'
+	| 'envelope'
+	| 'exclamation'
+	| 'filter'
+	| 'mobile'
+	| 'sparkles-ai'
+	| 'trend-up'
+	| 'user'
+	| 'menu'
+	| 'close';
+
+interface Props {
+	name: IconName;
+	/** Visual size in rem units (default 1). */
+	size?: 'sm' | 'md';
+	class?: string;
+}
+
+const icons: Record<IconName, string> = {
+	'arrow-left': arrowLeft,
+	'arrow-right': arrowRight,
+	'arrow-up-right': arrowUpRight,
+	'badge-percent': badgePercent,
+	basket: basketShopping,
+	chat: chatDots,
+	'check-list': checkList,
+	code,
+	display,
+	download,
+	'dollar-down': dollarArrowDown,
+	envelope,
+	exclamation: exclamationTriangle,
+	filter,
+	mobile,
+	'sparkles-ai': sparklesAi,
+	'trend-up': trendUp,
+	user,
+	menu: menuBars,
+	close: xmark,
+};
+
+const { name, size = 'sm', class: className } = Astro.props;
+const classes = ['icon', `icon--${size}`, className].filter(Boolean).join(' ');
+---
+
+<span class={classes} set:html={icons[name]} />

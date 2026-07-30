@@ -1,0 +1,46 @@
+---
+import type { Locale } from '../data/i18n';
+import { brandForCaseSlug } from '../data/brands';
+import BrandMark from './BrandMark.astro';
+
+interface Props {
+	slug: string;
+	title: string;
+	stack: string[];
+	locale: Locale;
+	priority?: boolean;
+}
+
+const { slug, title, locale } = Astro.props;
+const brand = brandForCaseSlug(slug);
+const coverTheme: Record<string, { label: string; eyebrow: string; bg: string; ink: string; accent: string }> = {
+	'bloqio-builder': { label: 'Bloqio Builder', eyebrow: 'AI website builder', bg: '#dbe4ff', ink: '#13224f', accent: '#315efb' },
+	'bloqio-cro-apps': { label: 'Bloqio CRO Apps', eyebrow: 'Prometeo / Hermes', bg: '#11110f', ink: '#f6f6f2', accent: '#8ff3a6' },
+	'wu-nutrition': { label: 'WU Nutrition', eyebrow: 'DTC ecommerce', bg: '#eff3e5', ink: '#182414', accent: '#79a832' },
+	'la-carniceria-virtual': { label: 'La Carnicería Virtual', eyebrow: 'Store health audit', bg: '#2b1712', ink: '#fff2e7', accent: '#e74b2f' },
+	'come-verde': { label: 'Come Verde', eyebrow: 'CPG growth system', bg: '#214b3b', ink: '#f5f2d8', accent: '#cfe979' },
+	miawseo: { label: 'MIAWSEO', eyebrow: 'Michiteca', bg: '#7e2634', ink: '#fff4f1', accent: '#ffb14a' },
+	vineria: { label: 'Vinería', eyebrow: 'Wine explorer', bg: '#4c1630', ink: '#fff2f7', accent: '#d6a556' },
+	'ahp-plus': { label: 'AHP+', eyebrow: 'Agent Handoff Protocol Plus', bg: '#f3f7ff', ink: '#101827', accent: '#38bdf8' },
+	tiendaonline: { label: 'Casa Tecalli', eyebrow: 'Shopify OS 2.0', bg: '#4a3326', ink: '#fff3df', accent: '#d7a96f' },
+};
+const theme = coverTheme[slug] ?? { label: title, eyebrow: locale === 'es' ? 'Proyecto digital' : 'Digital project', bg: '#11110f', ink: '#f6f6f2', accent: '#315efb' };
+const wordmark = theme.label;
+---
+
+<div
+	class:list={['project-visual', 'project-visual--brand-cover', `project-visual--${slug}`]}
+	style={`--cover-bg:${theme.bg};--cover-ink:${theme.ink};--cover-accent:${theme.accent};`}
+>
+	<div class="project-visual__cover">
+		<div class="project-visual__identity">
+			<span>{theme.eyebrow}</span>
+			{brand ? <BrandMark brand={brand} locale={locale} size="md" decorative={false} /> : <strong class="project-visual__wordmark">{wordmark}</strong>}
+		</div>
+		<div class="project-visual__badge" aria-hidden="true">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+</div>

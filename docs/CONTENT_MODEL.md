@@ -9,7 +9,7 @@ de este documento lo amplía sin convertir contenido provisional en evidencia.
 ## Colección técnica actual
 
 `src/content.config.ts` exporta la colección `cases`, cargada desde un arreglo tipado y
-validada con Zod. Contiene cinco casos por dos idiomas: 10 entradas publicables y 5 slugs
+validada con Zod. Contiene ocho casos por dos idiomas: 16 entradas publicables y 8 slugs
 equivalentes.
 
 Campos reales:
@@ -22,7 +22,12 @@ Campos reales:
   `limitations`, `learnings`: listas de texto;
 - `cta`;
 - `verification`: `status` (`pending`, `requires-review` o `verified`), `asOf` nullable y
-  `source`;
+	`source`;
+- `positioning`, opcional: `client-work`, `owned-product` o `concept`;
+- `media`, opcional: clave de activo, alt, caption, URL fuente, fecha, viewport y anotaciones
+	auditables con posición, ID, hallazgo, riesgo, recomendación, prioridad y confianza;
+- `mediaPlan`, opcional: brief honesto de captura con título, descripción, proporción,
+	resolución, formato y ruta o estado requerido;
 - `publication`: `publish` y `featured`;
 - `internalClaims`, opcional: objetos con `label`, `value`, `publish: false`,
   `status: requires-review`, `asOf: null` y `source: prompt`.
@@ -31,13 +36,15 @@ Campos reales:
 usuarios y 45 páginas únicamente como datos proporcionados, no como datos “reales”,
 verificados o publicables.
 
-## Placeholders bilingües actuales
+## Estado de las entradas bilingües
 
-Las 10 entradas son esqueletos editoriales ES/EN. Sus textos identifican rol, contexto,
-evidencia y resultados pendientes; son placeholders deliberados para validar estructura,
-rutas y componentes. `publication.publish: true` significa que el esqueleto se genera, no que
-la evidencia del caso esté aprobada. WU Nutrition / DUMO es el caso destacado y próximo a
-integrarse con evidencia validada.
+Los cinco casos iniciales cuentan con narrativa ES/EN y declaran fuentes y limitaciones. La
+Carnicería Virtual, WU Nutrition y Bloqio CRO Apps incluyen evidencia visual; sus permisos
+editoriales siguen siendo un gate separado. MIAWSEO se integra como producto propio con build
+revisado. Vinería se integra como producto editorial en revisión parcial porque tres pruebas de
+interacción están desactualizadas. Casa Tecalli se integra como concepto Shopify en revisión
+parcial hasta validarlo en una development store. `publication.publish: true` genera la página,
+pero no autoriza métricas o activos.
 
 ## Reglas comunes
 
@@ -171,7 +178,8 @@ No construir una cita a partir de una conversación ni corregir su sentido.
 - nivel de privacidad;
 - permiso.
 
-No existe aún un contacto publicable. El modelo no debe poblarse con un dato provisional.
+Correo, LinkedIn y WhatsApp se publican por autorización registrada; el formulario permanece
+deshabilitado hasta contar con endpoint, privacidad y controles server-side.
 
 ## Entidad: enlace
 
@@ -197,7 +205,7 @@ Antes de publicar:
 
 ## Evolución de la implementación
 
-La colección y rutas ya existen. El siguiente paso es actualizar la entrada estructurada de
-WU Nutrition / DUMO desde fuentes depositadas en `_inputs/case-studies/`, sin romper el
-esquema actual. El modelo editorial futuro puede añadir autoría, permisos por activo, medios,
-fechas, taxonomía y traducción, después de validarlo con ese primer caso.
+La colección y rutas ya existen. El siguiente paso es añadir evidencia visual aprobada a
+Bloqio Builder y WU Nutrition, además de separar los entregables exclusivos de Come Verde.
+El modelo editorial puede incorporar autoría, permisos por activo, medios, fechas, taxonomía
+y traducción sin romper el esquema actual.

@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
 	{
-		ignores: ['dist/**', '.astro/**', 'node_modules/**', 'docs/**', '_inputs/**'],
+		ignores: ['dist/**', '.astro/**', 'node_modules/**', 'test-results/**', 'docs/**', '_inputs/**'],
 	},
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
@@ -13,7 +13,9 @@ export default [
 		files: ['astro.config.mjs', 'scripts/**/*.mjs', 'tests/**/*.ts'],
 		languageOptions: {
 			globals: {
+				Buffer: 'readonly',
 				console: 'readonly',
+				fetch: 'readonly',
 				process: 'readonly',
 				URL: 'readonly',
 			},

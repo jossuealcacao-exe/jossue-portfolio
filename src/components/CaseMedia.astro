@@ -1,0 +1,246 @@
+---
+import { Image } from 'astro:assets';
+import hermesQtyEditable from '../assets/cases/bloqio-cro-apps/hermes-qty-editable.png';
+import hermesStickyDesktop from '../assets/cases/bloqio-cro-apps/hermes-sticky-desktop.png';
+import hermesStickyMobile from '../assets/cases/bloqio-cro-apps/hermes-sticky-mobile.png';
+import hermesVariantSync from '../assets/cases/bloqio-cro-apps/hermes-variant-sync.png';
+import bloqioGalleryPublicDesktop from '../assets/cases/bloqio-cro-apps/gallery-public-desktop.png';
+import hermesPublicMobile from '../assets/cases/bloqio-cro-apps/hermes-public-mobile.png';
+import prometeoPublicDesktop from '../assets/cases/bloqio-cro-apps/prometeo-public-desktop.png';
+import builderEntryDesktop from '../assets/cases/bloqio-builder/builder-entry-desktop.png';
+import builderGuidedMobile from '../assets/cases/bloqio-builder/builder-guided-mobile.png';
+import prometeoTopbarCountdown from '../assets/cases/bloqio-cro-apps/prometeo-topbar-countdown.png';
+import prometeoTopbarCta from '../assets/cases/bloqio-cro-apps/prometeo-topbar-cta.png';
+import prometeoTopbarOffer from '../assets/cases/bloqio-cro-apps/prometeo-topbar-offer.png';
+import prometeoTopbarPdp from '../assets/cases/bloqio-cro-apps/prometeo-topbar-pdp.png';
+import casaTecalliCollectionDesktop from '../assets/cases/tiendaonline/casa-tecalli-collection-desktop.png';
+import casaTecalliHomeDesktop from '../assets/cases/tiendaonline/casa-tecalli-home-desktop.png';
+import casaTecalliProductMobile from '../assets/cases/tiendaonline/casa-tecalli-product-mobile.png';
+import collectionMobile from '../assets/cases/wu-nutrition/collection-mobile.png';
+import danielaAssistantMobile from '../assets/cases/wu-nutrition/daniela-assistant-mobile.png';
+import homeMobile from '../assets/cases/wu-nutrition/home-mobile.png';
+import productMobile from '../assets/cases/wu-nutrition/product-mobile.png';
+import productStickyMobile from '../assets/cases/wu-nutrition/product-sticky-mobile.png';
+import lcvCategoryDesktop from '../assets/cases/la-carniceria-virtual/category-desktop.jpg';
+import lcvHomeDesktop from '../assets/cases/la-carniceria-virtual/home-desktop.jpg';
+import lcvLighthouseMobile from '../assets/cases/la-carniceria-virtual/lighthouse-home-mobile.jpg';
+import lcvPdpMobile from '../assets/cases/la-carniceria-virtual/pdp-mobile.jpg';
+import miawseoBreedMobile from '../assets/cases/miawseo/breed-mobile.png';
+import miawseoHomeDesktop from '../assets/cases/miawseo/home-desktop.png';
+import miawseoNetworkDesktop from '../assets/cases/miawseo/network-desktop.png';
+import vineriaGrapeModalMobile from '../assets/cases/vineria/grape-modal-mobile.png';
+import vineriaHomeMobile from '../assets/cases/vineria/explorer-mobile.png';
+import vineriaHomeDesktop from '../assets/cases/vineria/home-desktop.png';
+import Icon from './Icon.astro';
+
+interface MediaItem {
+	key: string;
+	alt: string;
+	caption: string;
+	sourceUrl: string;
+	capturedAt: string;
+	viewport: string;
+	annotations?: unknown[];
+}
+
+interface Props {
+	media: MediaItem[];
+	locale: 'es' | 'en';
+}
+
+const { media, locale } = Astro.props;
+const es = locale === 'es';
+const images = {
+	'home-mobile': homeMobile,
+	'collection-mobile': collectionMobile,
+	'product-mobile': productMobile,
+	'product-sticky-mobile': productStickyMobile,
+	'daniela-assistant-mobile': danielaAssistantMobile,
+	'builder-entry-desktop': builderEntryDesktop,
+	'builder-guided-mobile': builderGuidedMobile,
+	'casa-tecalli-home-desktop': casaTecalliHomeDesktop,
+	'casa-tecalli-collection-desktop': casaTecalliCollectionDesktop,
+	'casa-tecalli-product-mobile': casaTecalliProductMobile,
+	'lcv-home-desktop': lcvHomeDesktop,
+	'lcv-category-desktop': lcvCategoryDesktop,
+	'lcv-pdp-mobile': lcvPdpMobile,
+	'lcv-lighthouse-mobile': lcvLighthouseMobile,
+	'prometeo-public-desktop': prometeoPublicDesktop,
+	'hermes-public-mobile': hermesPublicMobile,
+	'gallery-public-desktop': bloqioGalleryPublicDesktop,
+	'prometeo-topbar-offer': prometeoTopbarOffer,
+	'prometeo-topbar-countdown': prometeoTopbarCountdown,
+	'prometeo-topbar-cta': prometeoTopbarCta,
+	'prometeo-topbar-pdp': prometeoTopbarPdp,
+	'hermes-sticky-mobile': hermesStickyMobile,
+	'hermes-sticky-desktop': hermesStickyDesktop,
+	'hermes-variant-sync': hermesVariantSync,
+	'hermes-qty-editable': hermesQtyEditable,
+	'miawseo-home-desktop': miawseoHomeDesktop,
+	'miawseo-network-desktop': miawseoNetworkDesktop,
+	'miawseo-breed-mobile': miawseoBreedMobile,
+	'vineria-home-desktop': vineriaHomeDesktop,
+	'vineria-home-mobile': vineriaHomeMobile,
+	'vineria-grape-modal-mobile': vineriaGrapeModalMobile,
+} as const;
+
+const visibleMedia = media.flatMap((item) => {
+	const image = images[item.key as keyof typeof images];
+	const isMobile = /mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`);
+	return image ? [{ ...item, image, isMobile }] : [];
+});
+
+const payload = visibleMedia.map((item) => ({
+	src: item.image.src,
+	alt: item.alt,
+	caption: item.caption,
+	viewport: item.viewport,
+	capturedAt: item.capturedAt,
+	sourceUrl: item.sourceUrl,
+	annotations: [],
+}));
+
+const copy = {
+	open: es ? 'Ver imagen' : 'View image',
+	close: es ? 'Cerrar visor' : 'Close viewer',
+	prev: es ? 'Anterior' : 'Previous',
+	next: es ? 'Siguiente' : 'Next',
+	source: es ? 'Proyecto' : 'Project',
+	findings: es ? 'Detalles del proyecto' : 'Project details',
+	evidence: es ? 'Detalle' : 'Detail',
+	risk: es ? 'Por qué importa' : 'Why it matters',
+	recommendation: es ? 'Dirección' : 'Direction',
+	confidence: es ? 'Contexto' : 'Context',
+	of: es ? 'de' : 'of',
+	gallery: es ? 'Galería del proyecto' : 'Project gallery',
+	closeHotspot: es ? 'Cerrar punto destacado' : 'Close highlighted point',
+	selectSlide: es ? 'Ver imagen' : 'View image',
+	captured: es ? 'Captura' : 'Captured',
+	viewport: es ? 'Viewport' : 'Viewport',
+};
+---
+
+<div
+	class="evidence-gallery"
+	data-evidence-gallery
+	data-locale={locale}
+	role="region"
+	aria-roledescription="carousel"
+	aria-label={copy.gallery}
+>
+	<script is:inline type="application/json" data-evidence-payload set:html={JSON.stringify({ copy, items: payload })} />
+	<div class="evidence-carousel" data-evidence-carousel>
+		<div class="evidence-carousel__shell">
+			{
+				visibleMedia.length > 1 && (
+					<button type="button" class="evidence-carousel__nav evidence-carousel__nav--prev" data-carousel-prev aria-label={copy.prev}>
+						<Icon name="arrow-left" size="md" />
+					</button>
+				)
+			}
+			<div class="evidence-carousel__viewport" data-carousel-viewport>
+				<div class="evidence-carousel__track">
+				{
+					visibleMedia.map((item, index) => (
+						<figure
+							class:list={['evidence-figure', { 'is-active': index === 0, 'evidence-figure--mobile': item.isMobile }]}
+							data-evidence-item
+							data-index={index}
+							role="group"
+							aria-roledescription="slide"
+							aria-label={`${index + 1} / ${visibleMedia.length}`}
+						>
+							<div class="evidence-frame">
+								<button
+									type="button"
+									class="evidence-trigger"
+									data-evidence-open
+									data-index={index}
+									aria-label={`${item.alt} — ${copy.open}`}
+								>
+									<Image
+										src={item.image}
+										alt={item.alt}
+										width={720}
+										format="webp"
+										quality={84}
+										loading={index === 0 ? 'eager' : 'lazy'}
+										decoding="async"
+									/>
+									<span class="evidence-trigger__hint">
+										<span>{copy.open}</span>
+										<Icon name="arrow-up-right" />
+									</span>
+								</button>
+							</div>
+							<figcaption class:list={{ 'evidence-figure__caption--mobile': item.isMobile }}>
+								<span class="evidence-figure__index">
+									{String(index + 1).padStart(2, '0')} / {String(visibleMedia.length).padStart(2, '0')}
+								</span>
+								<span>{item.alt}</span>
+							</figcaption>
+						</figure>
+					))
+				}
+				</div>
+			</div>
+			{
+				visibleMedia.length > 1 && (
+					<button type="button" class="evidence-carousel__nav evidence-carousel__nav--next" data-carousel-next aria-label={copy.next}>
+						<Icon name="arrow-right" size="md" />
+					</button>
+				)
+			}
+		</div>
+		{
+			visibleMedia.length > 1 && (
+				<div class="evidence-carousel__dots" data-carousel-dots role="group" aria-label={copy.gallery}>
+					{visibleMedia.map((_, index) => (
+						<button
+							type="button"
+							class="evidence-carousel__dot"
+							data-carousel-dot
+							data-index={index}
+							aria-pressed={index === 0 ? 'true' : 'false'}
+							aria-label={`${String(index + 1).padStart(2, '0')} / ${String(visibleMedia.length).padStart(2, '0')}`}
+						/>
+					))}
+				</div>
+			)
+		}
+	</div>
+</div>
+
+<dialog class="evidence-lightbox" data-evidence-lightbox aria-labelledby="evidence-lightbox-title">
+	<div class="evidence-lightbox__chrome">
+		<p class="evidence-lightbox__counter" data-lightbox-counter>01 / 01</p>
+		<button type="button" class="evidence-lightbox__icon-btn" data-lightbox-close aria-label={copy.close}>
+			<Icon name="close" size="md" />
+		</button>
+	</div>
+	<div class="evidence-lightbox__stage">
+		<button type="button" class="evidence-lightbox__nav evidence-lightbox__nav--prev" data-lightbox-prev aria-label={copy.prev}>
+			<Icon name="arrow-left" size="md" />
+		</button>
+		<figure class="evidence-lightbox__figure">
+			<div class="evidence-lightbox__frame" data-lightbox-frame>
+				<div class="evidence-lightbox__canvas">
+					<img data-lightbox-image alt="" />
+					<div class="evidence-lightbox__markers" data-lightbox-markers hidden></div>
+					<div class="hotspot-cards" data-lightbox-hotspot-card hidden aria-live="polite"></div>
+				</div>
+			</div>
+			<figcaption>
+				<strong id="evidence-lightbox-title" data-lightbox-caption></strong>
+			</figcaption>
+		</figure>
+		<button type="button" class="evidence-lightbox__nav evidence-lightbox__nav--next" data-lightbox-next aria-label={copy.next}>
+			<Icon name="arrow-right" size="md" />
+		</button>
+	</div>
+	<aside class="evidence-lightbox__aside" data-lightbox-aside hidden>
+		<p class="eyebrow">{copy.findings}</p>
+		<div data-lightbox-findings></div>
+	</aside>
+	<div class="evidence-lightbox__dots" data-lightbox-dots role="group" aria-label={copy.gallery}></div>
+</dialog>

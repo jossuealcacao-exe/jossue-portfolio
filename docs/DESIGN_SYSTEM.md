@@ -15,6 +15,27 @@ paleta final y activos de marca siguen pendientes.
 5. **Movimiento opcional:** toda animación respeta `prefers-reduced-motion`.
 6. **Estados explícitos:** foco, error, éxito, carga y vacío deben entenderse sin ambigüedad.
 
+## Movimiento (implementado)
+
+Principio: presencia y jerarquía, no ornamento. `src/scripts/motion.ts` + tokens en CSS.
+
+- **Scroll por sección:** `scroll-snap-type: y proximity` en `html` (nunca `mandatory`);
+  `.hero` y `.section` con `scroll-snap-align: start` y `scroll-margin-top` del header.
+- **Viewport:** el hero usa `min-height: calc(100svh - var(--header-h))`; las secciones
+  mantienen altura de contenido (sin forzar 100vh en casos largos).
+- **Reveals:** entrada suave (`opacity` + `translateY` ~1.15rem, ~560ms, easing out);
+  hero al cargar; secciones offscreen al entrar en vista; stagger breve en cards/KPIs/marcas.
+- **Header:** sticky con blur ligero y estado `is-scrolled`.
+- **Accesibilidad:** sin motion si `prefers-reduced-motion: reduce`; el contenido no depende
+  de la animación; sin scroll-jacking.
+
+### Galerías de evidencia
+
+- Grid editorial con hover sutil y affordance “Ampliar”.
+- Visor `<dialog>` inmersivo: contador, prev/next, filmstrip, Escape/flechas, foco.
+- Marcadores de auditoría interactivos (resaltan hallazgos); en el visor, panel lateral.
+- Diagramas: barras con crecimiento suave al revelar la sección.
+
 ## Tokens implementados
 
 `src/styles/global.css` define actualmente:
@@ -99,9 +120,15 @@ campo, errores vinculados programáticamente y confirmación no dependiente de c
 
 ## Iconografía y Zappicon
 
-Los iconos nunca sustituyen etiquetas necesarias. Zappicon está registrado como faltante y
-no disponible; no debe generarse, reemplazarse por un icono genérico ni recrearse desde una
-captura.
+Los iconos nunca sustituyen etiquetas necesarias. Se usa un **subconjunto curado** de
+Zappicon v1.2 Free (estilo Light) vía `Icon.astro` y SVGs en `src/assets/icons/zappicon/`.
+
+Criterio “menos es más”:
+
+- affordance funcional (menú, descarga, continuar, externo, canales de contacto);
+- sin iconos en la navegación principal, sin filas decorativas y sin adornos en el hero;
+- color por `currentColor`; tamaño ~1rem; decorativos con `aria-hidden` salvo el menú móvil;
+- no redistribuir el pack completo ni inventar iconos “estilo Zappicon”.
 
 ## Medios
 

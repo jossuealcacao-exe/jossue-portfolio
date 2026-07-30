@@ -2,8 +2,8 @@
 
 ## Estado
 
-Arquitectura bilingüe implementada como SSG. Existen 23 páginas estáticas: raíz, 11 en español
-y 11 en inglés. Los slugs y equivalencias están aceptados; el dominio/canonical real sigue
+Arquitectura bilingüe implementada como SSG. Existen 29 páginas estáticas: raíz, 14 en español
+y 14 en inglés. Los slugs y equivalencias están aceptados; el dominio/canonical real sigue
 bloqueado y la salida usa el fallback rastreable `https://portfolio.invalid`.
 
 ## Principios
@@ -17,8 +17,8 @@ bloqueado y la salida usa el fallback rastreable `https://portfolio.invalid`.
 
 ## Rutas implementadas
 
-La raíz `/` devuelve redirección 308 determinista a `/es/`; no detecta navegador, ubicación
-ni preferencia almacenada.
+La raíz `/` genera una redirección HTML determinista a `/es/`; no detecta navegador, ubicación
+ni preferencia almacenada. Una respuesta HTTP 308 requiere configuración en la plataforma de despliegue.
 
 Rutas de página:
 
@@ -29,11 +29,14 @@ Rutas de página:
 
 Casos, en ambos idiomas bajo `/es/trabajo/{slug}/` y `/en/work/{slug}/`:
 
-- `wu-nutrition-dumo`;
+- `wu-nutrition`;
 - `bloqio-cro-apps`;
 - `bloqio-builder`;
 - `la-carniceria-virtual`;
 - `come-verde`.
+- `miawseo`;
+- `vineria`;
+- `tiendaonline`.
 
 El selector de idioma conserva la página equivalente y, en casos, `counterpartSlug`; si no
 puede resolver equivalencia, vuelve al inicio del idioma destino.
@@ -51,8 +54,10 @@ puede resolver equivalencia, vuelve al inicio del idioma destino.
   - trayectoria o CV;
   - principios de trabajo.
 - **Trabajo**
-  - inventario curado de proyectos;
-  - filtros solo si el volumen real los justifica;
+	- trabajo de cliente;
+	- productos propios y trabajo deseado;
+	- conceptos técnicos;
+	- filtros solo si el volumen real los justifica;
   - acceso a casos de estudio.
 - **Caso de estudio**
   - resumen;
@@ -78,7 +83,8 @@ exista contenido aprobado.
 
 El header implementa Inicio mediante la marca, Trabajo, Servicios, IA y sistemas, Acerca,
 Contacto y selector ES/EN. En viewport estrecho usa un menú nativo `details`; el selector de
-idioma permanece accesible. Zappicon no se usa como sustituto de identidad.
+idioma permanece accesible (toggle con icono Zappicon Light + etiqueta accesible).
+Zappicon no sustituye identidad de marca.
 
 ### Local en casos
 
@@ -110,7 +116,7 @@ Español e inglés están implementados con:
 
 - `lang` por documento;
 - navegación equivalente definida en `src/data/i18n.ts`;
-- cinco entradas de caso por idioma en la colección `cases`;
+- ocho entradas de caso por idioma en la colección `cases`;
 - `hreflang` ES/EN y `x-default` hacia el equivalente español;
 - selector rastreable mediante enlaces, no control dependiente de JavaScript;
 - títulos y descripciones localizados.

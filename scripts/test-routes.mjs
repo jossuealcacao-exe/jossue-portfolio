@@ -3,7 +3,16 @@ import path from 'node:path';
 
 const root = process.cwd();
 const dist = path.join(root, 'dist');
-const caseSlugs = ['wu-nutrition-dumo', 'bloqio-cro-apps', 'bloqio-builder', 'la-carniceria-virtual', 'come-verde'];
+const caseSlugs = [
+	'wu-nutrition',
+	'bloqio-cro-apps',
+	'bloqio-builder',
+	'la-carniceria-virtual',
+	'come-verde',
+	'miawseo',
+	'vineria',
+	'tiendaonline',
+];
 const routes = [
 	'/',
 	'/es/',
@@ -23,10 +32,40 @@ const routes = [
 ];
 
 const failures = [];
+const forbiddenPublicClaims = [
+	'57+',
+	'57 usuarios',
+	'57 users',
+	'45 páginas',
+	'45 pages',
+	'↑ CR',
+	'DUMO',
+	'Resultados documentados en el CV',
+	'Implementación revisada',
+	'Implementation reviewed',
+	'Revisión parcial',
+	'Partial review',
+	'Verificación pendiente',
+	'Verification pending',
+	'Plan de evidencia visual',
+	'Visual evidence plan',
+	'Capturas pendientes de producción',
+	'Captures pending production',
+	'Fuente de captura',
+	'Capture source',
+	'Auditoría 360',
+	'360 audit',
+	'evidencia de UX/CRO',
+	'UX/CRO evidence',
+];
 for (const route of routes) {
 	const file = route === '/' ? path.join(dist, 'index.html') : path.join(dist, route, 'index.html');
 	try {
 		await access(file);
+		const html = await readFile(file, 'utf8');
+		for (const claim of forbiddenPublicClaims) {
+			if (html.includes(claim)) failures.push(`Restricted claim "${claim}" found in ${route}.`);
+		}
 	} catch {
 		failures.push(`Missing ${route} (${path.relative(root, file)})`);
 	}

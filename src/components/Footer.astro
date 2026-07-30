@@ -1,6 +1,7 @@
 ---
 import { contact } from '../data/contact';
 import { routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -8,31 +9,42 @@ interface Props {
 
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
+const es = locale === 'es';
+const tags = es
+	? ['Shopify', 'UX/CRO', 'Ecommerce', 'IA aplicada', 'Growth', 'México', 'Guadalajara', 'Producto digital']
+	: ['Shopify', 'UX/CRO', 'Ecommerce', 'Applied AI', 'Growth', 'Mexico', 'Guadalajara', 'Digital product'];
 ---
 
 <footer class="site-footer">
 	<div class="site-footer__inner shell">
-		<div class="flow">
+		<div class="site-footer__brand flow">
 			<p class="eyebrow">Jossue Alcalá / {year}</p>
-			<p>
-				{
-					locale === 'es'
-						? 'Portafolio editorial en construcción. Las brechas de evidencia están señaladas.'
-						: 'Editorial portfolio in progress. Evidence gaps are explicitly marked.'
-				}
-			</p>
+			<h2>{es ? 'Ecommerce, producto e IA aplicada desde México.' : 'Ecommerce, product, and applied AI from Mexico.'}</h2>
+			<p>{es ? 'Desarrollo Shopify, UX/CRO, growth y sistemas operables para equipos que necesitan pasar de diagnóstico a ejecución.' : 'Shopify development, UX/CRO, growth, and operable systems for teams moving from diagnosis to execution.'}</p>
 		</div>
-		<div class="flow">
-			<a href={routes[locale].contact} data-analytics-event="click_contact">
-				{locale === 'es' ? 'Iniciar una conversación' : 'Start a conversation'}
-			</a>
-			{
-				contact.email ? (
-					<a href={`mailto:${contact.email}`}>{contact.email}</a>
-				) : (
-					<p class="muted">{locale === 'es' ? 'Canal directo pendiente de configuración.' : 'Direct contact channel pending configuration.'}</p>
-				)
-			}
+		<div class="site-footer__directory">
+			<div>
+				<p class="eyebrow">{es ? 'Etiquetas' : 'Tags'}</p>
+				<ul class="footer-tags" aria-label={es ? 'Etiquetas SEO y GEO' : 'SEO and GEO tags'}>
+					{tags.map((tag) => <li>{tag}</li>)}
+				</ul>
+			</div>
+			<div>
+				<p class="eyebrow">{es ? 'Perfiles' : 'Profiles'}</p>
+				<ul class="footer-links">
+					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin">LinkedIn<Icon name="arrow-up-right" /></a></li>}
+					{contact.github && <li><a href={contact.github} rel="noreferrer" data-analytics-event="click_github">GitHub<Icon name="arrow-up-right" /></a></li>}
+					{contact.cvEs && <li><a href={contact.cvEs} download data-analytics-event="download_cv">{es ? 'CV en PDF' : 'PDF resume'}<Icon name="download" /></a></li>}
+				</ul>
+			</div>
+			<div>
+				<p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
+				<ul class="footer-links">
+					{contact.email && <li><a href={`mailto:${contact.email}`} data-analytics-event="click_email">{contact.email}<Icon name="arrow-up-right" /></a></li>}
+					{contact.whatsapp && contact.phone && <li><a href={contact.whatsapp} rel="noreferrer" data-analytics-event="click_whatsapp">WhatsApp · {contact.phone}<Icon name="arrow-up-right" /></a></li>}
+					<li><a href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Formulario de contacto' : 'Contact form'}<Icon name="arrow-right" /></a></li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </footer>

@@ -82,7 +82,7 @@ equivale a “Aprobado para publicar”.
 - Deben tratarse como confidenciales y **no publicables** hasta validación y autorización.
 - La URL pública/canonical está bloqueada por falta de dominio confirmado.
 - El canal público de contacto está bloqueado por falta de dato autorizado.
-- Zappicon no está disponible; no debe sustituirse.
+- Zappicon Free está depositado; solo se publica un subconjunto curado (D-018), sin saturar la UI.
 
 ## Criterios de aceptación de esta fase
 
@@ -97,5 +97,5 @@ equivale a “Aprobado para publicar”.
 
 1. ¿Qué dominio y canonical reales reemplazarán el fallback `.invalid`?
 2. ¿Qué canal de contacto puede publicarse y qué endpoint recibirá el formulario?
-3. ¿Qué evidencia, rol y permisos de WU Nutrition / DUMO pueden publicarse?
+3. ¿Qué evidencia visual y métricas de WU Nutrition y Come Verde pueden publicarse?
 4. ¿Quién aprueba contenido, legal, privacidad y publicación?

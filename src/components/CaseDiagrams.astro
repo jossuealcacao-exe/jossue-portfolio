@@ -1,0 +1,92 @@
+---
+interface DiagramItem {
+	label: string;
+	value: number;
+	unit?: string;
+	detail?: string;
+}
+
+interface Diagram {
+	id: string;
+	title: string;
+	caption: string;
+	kind: 'bars' | 'layers' | 'compare' | 'flow';
+	items: DiagramItem[];
+	note?: string;
+}
+
+interface Props {
+	diagrams: Diagram[];
+	locale: 'es' | 'en';
+}
+
+const { diagrams, locale } = Astro.props;
+
+const maxBar = (items: DiagramItem[]) => Math.max(...items.map((item) => item.value), 1);
+---
+
+<div class="diagram-gallery" aria-label={locale === 'es' ? 'Diagramas de apoyo' : 'Supporting diagrams'}>
+	{
+		diagrams.map((diagram) => {
+			const peak = maxBar(diagram.items);
+			return (
+				<figure class={`diagram diagram--${diagram.kind}`}>
+					<div class="diagram__header">
+						<p class="diagram__id">{diagram.id}</p>
+						<h3>{diagram.title}</h3>
+						<p>{diagram.caption}</p>
+					</div>
+					{diagram.kind === 'flow' ? (
+						<ol class="diagram-flow">
+							{diagram.items.map((item, index) => (
+								<li>
+									<span>{String(index + 1).padStart(2, '0')}</span>
+									<div>
+										<strong>{item.label}</strong>
+										{item.detail && <p>{item.detail}</p>}
+									</div>
+								</li>
+							))}
+						</ol>
+					) : diagram.kind === 'compare' ? (
+						<div class="diagram-compare" role="list">
+							{diagram.items.map((item) => (
+								<div class="diagram-compare__item" role="listitem">
+									<span class="diagram-compare__value">
+										{item.value}
+										{item.unit && <small>{item.unit}</small>}
+									</span>
+									<span class="diagram-compare__label">{item.label}</span>
+									{item.detail && <span class="diagram-compare__detail">{item.detail}</span>}
+								</div>
+							))}
+						</div>
+					) : (
+						<ul class:list={['diagram-bars', { 'diagram-bars--layers': diagram.kind === 'layers' }]}>
+							{diagram.items.map((item) => (
+								<li>
+									<div class="diagram-bars__meta">
+										<span>{item.label}</span>
+										<strong>
+											{item.value}
+											{item.unit ?? (diagram.kind === 'layers' || diagram.kind === 'bars' ? '%' : '')}
+										</strong>
+									</div>
+									<div
+										class="diagram-bars__track"
+										aria-hidden="true"
+										style={`--bar:${diagram.kind === 'layers' ? item.value : Math.round((item.value / peak) * 100)}%`}
+									>
+										<span />
+									</div>
+									{item.detail && <p class="diagram-bars__detail">{item.detail}</p>}
+								</li>
+							))}
+						</ul>
+					)}
+					{diagram.note && <figcaption>{diagram.note}</figcaption>}
+				</figure>
+			);
+		})
+	}
+</div>

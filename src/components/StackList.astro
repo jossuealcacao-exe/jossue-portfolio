@@ -1,0 +1,29 @@
+---
+import type { Locale } from '../data/i18n';
+import { toolForStackLabel } from '../data/tools';
+import ToolMark from './ToolMark.astro';
+
+interface Props {
+	stack: string[];
+	locale: Locale;
+	limit?: number;
+	compact?: boolean;
+}
+
+const { stack, locale, limit, compact = false } = Astro.props;
+const items = limit ? stack.slice(0, limit) : stack;
+---
+
+<ul class:list={['stack-list', { 'stack-list--compact': compact }]} aria-label={locale === 'es' ? 'Tecnologías utilizadas' : 'Technologies used'}>
+	{
+		items.map((label) => {
+			const tool = toolForStackLabel(label);
+			return (
+				<li>
+					{tool && <ToolMark tool={tool} locale={locale} />}
+					<span>{label}</span>
+				</li>
+			);
+		})
+	}
+</ul>

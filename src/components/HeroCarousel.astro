@@ -1,0 +1,304 @@
+---
+import type { ImageMetadata } from 'astro';
+import { routes, type Locale } from '../data/i18n';
+import heroDevDesktop from '../assets/hero/hero-dev-desktop.webp';
+import heroDevMobile from '../assets/hero/hero-dev-mobile.webp';
+import heroProfileDesktop from '../assets/hero/hero-profile-desktop.webp';
+import heroProfileMobile from '../assets/hero/hero-profile-mobile.webp';
+import heroUxDesktop from '../assets/hero/hero-ux-desktop.webp';
+import heroUxMobile from '../assets/hero/hero-ux-mobile.webp';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+interface HeroSlide {
+	id: 'profile' | 'ux' | 'development';
+	kicker: string;
+	title: string;
+	copy: string;
+	icon: IconName;
+	primary: string;
+	secondary: string;
+	visualLabel: string;
+	points: Array<{ label: string; icon: IconName }>;
+	image: {
+		desktop: ImageMetadata;
+		mobile: ImageMetadata;
+	};
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const slides: HeroSlide[] = es
+	? [
+			{
+				id: 'profile',
+				kicker: 'Ecommerce Product Builder',
+				title: 'Ecommerce que convierte.',
+				copy: 'Estrategia, UX, Shopify e IA para convertir oportunidades en productos operables.',
+				icon: 'user',
+				primary: 'Explorar proyectos',
+				secondary: 'Hablemos de tu proyecto',
+				visualLabel: 'Perfil profesional',
+				points: [
+					{ label: 'Estrategia', icon: 'trend-up' },
+					{ label: 'Producto', icon: 'basket' },
+					{ label: 'Operación', icon: 'check-list' },
+				],
+				image: {
+					desktop: heroProfileDesktop,
+					mobile: heroProfileMobile,
+				},
+			},
+			{
+				id: 'ux',
+				kicker: 'UX ecommerce · CRO',
+				title: 'UX que reduce fricción.',
+				copy: 'Navegación, PDP, carrito y compra móvil conectados a hipótesis comerciales.',
+				icon: 'basket',
+				primary: 'Ver trabajo UX',
+				secondary: 'Mapear fricción',
+				visualLabel: 'Flujo ecommerce',
+				points: [
+					{ label: 'Descubrir', icon: 'filter' },
+					{ label: 'Decidir', icon: 'badge-percent' },
+					{ label: 'Comprar', icon: 'basket' },
+				],
+				image: {
+					desktop: heroUxDesktop,
+					mobile: heroUxMobile,
+				},
+			},
+			{
+				id: 'development',
+				kicker: 'Web development · Shopify',
+				title: 'Web lista para operar.',
+				copy: 'Arquitectura, componentes y datos convertidos en interfaces medibles.',
+				icon: 'code',
+				primary: 'Ver capacidades',
+				secondary: 'Iniciar conversación',
+				visualLabel: 'Sistema web',
+				points: [
+					{ label: 'Arquitectura', icon: 'display' },
+					{ label: 'Componentes', icon: 'code' },
+					{ label: 'QA', icon: 'check-list' },
+				],
+				image: {
+					desktop: heroDevDesktop,
+					mobile: heroDevMobile,
+				},
+			},
+		]
+	: [
+			{
+				id: 'profile',
+				kicker: 'Ecommerce Product Builder',
+				title: 'Ecommerce that converts.',
+				copy: 'Strategy, UX, Shopify, and AI turning opportunities into operable products.',
+				icon: 'user',
+				primary: 'Explore projects',
+				secondary: 'Let’s discuss your project',
+				visualLabel: 'Professional profile',
+				points: [
+					{ label: 'Strategy', icon: 'trend-up' },
+					{ label: 'Product', icon: 'basket' },
+					{ label: 'Operation', icon: 'check-list' },
+				],
+				image: {
+					desktop: heroProfileDesktop,
+					mobile: heroProfileMobile,
+				},
+			},
+			{
+				id: 'ux',
+				kicker: 'Ecommerce UX · CRO',
+				title: 'UX with less friction.',
+				copy: 'Navigation, PDP, cart, and mobile purchase tied to commercial hypotheses.',
+				icon: 'basket',
+				primary: 'View UX work',
+				secondary: 'Map friction',
+				visualLabel: 'Ecommerce flow',
+				points: [
+					{ label: 'Discover', icon: 'filter' },
+					{ label: 'Decide', icon: 'badge-percent' },
+					{ label: 'Buy', icon: 'basket' },
+				],
+				image: {
+					desktop: heroUxDesktop,
+					mobile: heroUxMobile,
+				},
+			},
+			{
+				id: 'development',
+				kicker: 'Web development · Shopify',
+				title: 'Web ready to operate.',
+				copy: 'Architecture, components, and data turned into measurable interfaces.',
+				icon: 'code',
+				primary: 'View capabilities',
+				secondary: 'Start a conversation',
+				visualLabel: 'Web system',
+				points: [
+					{ label: 'Architecture', icon: 'display' },
+					{ label: 'Components', icon: 'code' },
+					{ label: 'QA', icon: 'check-list' },
+				],
+				image: {
+					desktop: heroDevDesktop,
+					mobile: heroDevMobile,
+				},
+			},
+		];
+
+const heroTitleId = `home-hero-title-${locale}`;
+---
+
+<div class="hero-carousel" data-hero-carousel aria-label={es ? 'Enfoques profesionales' : 'Professional focus areas'}>
+	<div class="hero-carousel__viewport" data-hero-viewport>
+		<div class="hero-carousel__slides">
+		{slides.map((slide, index) => (
+			<section
+				class:list={['hero-carousel__slide', `hero-carousel__slide--${slide.id}`]}
+				aria-labelledby={index === 0 ? heroTitleId : undefined}
+				data-hero-slide
+			>
+				<figure class="hero-carousel__visual" aria-label={slide.visualLabel}>
+					<div class="hero-visual">
+						<picture class="hero-visual__media" aria-hidden="true">
+							<source media="(max-width: 767px)" srcset={slide.image.mobile.src} />
+							<img
+								src={slide.image.desktop.src}
+								width={slide.image.desktop.width}
+								height={slide.image.desktop.height}
+								alt=""
+								loading={index === 0 ? 'eager' : 'lazy'}
+								decoding="async"
+							/>
+						</picture>
+						<div class="hero-visual__topline">
+							<span>{String(index + 1).padStart(2, '0')}</span>
+							<strong>{slide.visualLabel}</strong>
+						</div>
+					</div>
+				</figure>
+				<div class="hero-carousel__content flow">
+					<p class="eyebrow">
+						<Icon name={slide.icon} />
+						{slide.kicker}
+					</p>
+					{index === 0 ? <h1 id={heroTitleId}>{slide.title}</h1> : <h2>{slide.title}</h2>}
+					<p class="hero__lede">{slide.copy}</p>
+					<ul class="hero-carousel__badges">
+						{slide.points.map((point) => <li><Icon name={point.icon} />{point.label}</li>)}
+					</ul>
+					<div class="hero__actions">
+						<a class="button" href={index === 1 ? routes[locale].work : index === 2 ? routes[locale].services : routes[locale].work}>
+							{slide.primary}
+						</a>
+						<a class="button button--ghost" href={routes[locale].contact} data-analytics-event="click_contact">
+							{slide.secondary}
+						</a>
+					</div>
+				</div>
+			</section>
+		))}
+		</div>
+	</div>
+	<div class="hero-carousel__controls" aria-label={es ? 'Cambiar enfoque' : 'Change focus'}>
+		{slides.map((slide, index) => (
+			<button type="button" data-hero-control data-slide-index={index} aria-current={index === 0 ? 'true' : 'false'}>
+				<span>{String(index + 1).padStart(2, '0')}</span>
+				{slide.visualLabel}
+			</button>
+		))}
+	</div>
+	<button class="hero-carousel__nav hero-carousel__nav--prev" type="button" data-hero-prev aria-label={es ? 'Slide anterior' : 'Previous slide'}>
+		<Icon name="arrow-left" />
+	</button>
+	<button class="hero-carousel__nav hero-carousel__nav--next" type="button" data-hero-next aria-label={es ? 'Slide siguiente' : 'Next slide'}>
+		<Icon name="arrow-right" />
+	</button>
+</div>
+
+<script>
+	const heroCarousels = document.querySelectorAll('[data-hero-carousel]');
+
+	heroCarousels.forEach((carousel) => {
+		const viewport = carousel.querySelector<HTMLElement>('[data-hero-viewport]');
+		const slides = Array.from(carousel.querySelectorAll<HTMLElement>('[data-hero-slide]'));
+		const controls = Array.from(carousel.querySelectorAll<HTMLButtonElement>('[data-hero-control]'));
+		const prev = carousel.querySelector<HTMLButtonElement>('[data-hero-prev]');
+		const next = carousel.querySelector<HTMLButtonElement>('[data-hero-next]');
+		let activeIndex = 0;
+		let frame = 0;
+		let dragging = false;
+		let moved = false;
+		let startX = 0;
+		let startLeft = 0;
+
+		if (!viewport || slides.length === 0) return;
+
+		const setActive = (index: number) => {
+			activeIndex = (index + slides.length) % slides.length;
+			controls.forEach((control, controlIndex) => {
+				control.setAttribute('aria-current', String(controlIndex === activeIndex));
+			});
+		};
+
+		const goTo = (index: number) => {
+			const nextIndex = (index + slides.length) % slides.length;
+			viewport.scrollTo({ left: slides[nextIndex].offsetLeft, behavior: 'smooth' });
+			setActive(nextIndex);
+		};
+
+		controls.forEach((control) => {
+			control.addEventListener('click', () => goTo(Number(control.dataset.slideIndex ?? 0)));
+		});
+
+		prev?.addEventListener('click', () => goTo(activeIndex - 1));
+		next?.addEventListener('click', () => goTo(activeIndex + 1));
+
+		viewport.addEventListener('pointerdown', (event) => {
+			if (event.pointerType === 'touch' || (event.target instanceof Element && event.target.closest('a, button'))) return;
+			dragging = true;
+			moved = false;
+			startX = event.clientX;
+			startLeft = viewport.scrollLeft;
+			viewport.setPointerCapture(event.pointerId);
+			viewport.dataset.dragging = 'true';
+		});
+
+		viewport.addEventListener('pointermove', (event) => {
+			if (!dragging) return;
+			const delta = event.clientX - startX;
+			if (Math.abs(delta) > 4) moved = true;
+			viewport.scrollLeft = startLeft - delta;
+		});
+
+		viewport.addEventListener('pointerup', (event) => {
+			if (!dragging) return;
+			dragging = false;
+			viewport.releasePointerCapture(event.pointerId);
+			delete viewport.dataset.dragging;
+			if (moved) {
+				const nearest = Math.round(viewport.scrollLeft / viewport.clientWidth);
+				goTo(nearest);
+			}
+		});
+
+		viewport.addEventListener('scroll', () => {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => {
+				const closest = slides.reduce(
+					(best, slide, index) => {
+						const distance = Math.abs(slide.offsetLeft - viewport.scrollLeft);
+						return distance < best.distance ? { index, distance } : best;
+					},
+					{ index: activeIndex, distance: Number.POSITIVE_INFINITY },
+				);
+				setActive(closest.index);
+			});
+		}, { passive: true });
+	});
+</script>

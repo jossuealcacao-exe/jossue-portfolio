@@ -25,14 +25,12 @@ export const navigation = {
 	es: [
 		{ key: 'work', label: 'Trabajo' },
 		{ key: 'services', label: 'Servicios' },
-		{ key: 'ai', label: 'IA y sistemas' },
 		{ key: 'about', label: 'Acerca' },
 		{ key: 'contact', label: 'Contacto' },
 	],
 	en: [
 		{ key: 'work', label: 'Work' },
 		{ key: 'services', label: 'Services' },
-		{ key: 'ai', label: 'AI & systems' },
 		{ key: 'about', label: 'About' },
 		{ key: 'contact', label: 'Contact' },
 	],
@@ -46,23 +44,23 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		},
 		work: {
 			title: 'Trabajo seleccionado — Jossue Alcalá',
-			description: 'Casos estructurados con evidencia pendiente claramente identificada y sin métricas no verificadas.',
+			description: 'Proyectos de Shopify, ecommerce, producto digital e IA aplicada para marcas y productos independientes.',
 		},
 		services: {
 			title: 'Servicios — Jossue Alcalá',
-			description: 'Shopify, desarrollo web, auditorías UX/CRO e implementación de sistemas digitales orientados al negocio.',
+			description: 'Desarrollo Shopify, estrategia UX/CRO, optimización ecommerce, analítica, automatización e IA aplicada.',
 		},
 		ai: {
 			title: 'IA y sistemas — Jossue Alcalá',
-			description: 'Un enfoque prudente para integrar IA, automatización y sistemas de trabajo con revisión humana.',
+			description: 'Productos, automatizaciones y sistemas de IA diseñados para integrarse con operaciones ecommerce reales.',
 		},
 		about: {
 			title: 'Acerca — Jossue Alcalá',
-			description: 'Principios de trabajo, alcance actual y criterios de evidencia de este portafolio.',
+			description: 'Trayectoria de Jossue Alcalá en ecommerce, Shopify, growth, producto digital, paid media e IA aplicada.',
 		},
 		contact: {
 			title: 'Contacto — Jossue Alcalá',
-			description: 'Formulario accesible para iniciar una conversación; requiere un endpoint configurado para enviar.',
+			description: 'Correo, LinkedIn y WhatsApp para hablar sobre Shopify, UX/CRO, desarrollo web o producto.',
 		},
 	},
 	en: {
@@ -72,23 +70,23 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		},
 		work: {
 			title: 'Selected work — Jossue Alcalá',
-			description: 'Structured cases with evidence gaps made explicit and no unverified metrics.',
+			description: 'Shopify, ecommerce, digital product, and applied AI work for brands and independent products.',
 		},
 		services: {
 			title: 'Services — Jossue Alcalá',
-			description: 'Shopify, web development, UX/CRO audits, and digital systems built around business needs.',
+			description: 'Shopify development, UX/CRO strategy, ecommerce optimization, analytics, automation, and applied AI.',
 		},
 		ai: {
 			title: 'AI and systems — Jossue Alcalá',
-			description: 'A careful approach to AI, automation, and working systems with human review.',
+			description: 'AI products, automations, and systems designed for real ecommerce operations.',
 		},
 		about: {
 			title: 'About — Jossue Alcalá',
-			description: 'Working principles, current scope, and evidence standards for this portfolio.',
+			description: 'Jossue Alcalá’s experience across ecommerce, Shopify, growth, digital product, paid media, and applied AI.',
 		},
 		contact: {
 			title: 'Contact — Jossue Alcalá',
-			description: 'An accessible conversation form that requires a configured endpoint before it can submit.',
+			description: 'Email, LinkedIn, and WhatsApp for Shopify, UX/CRO, web development, or product conversations.',
 		},
 	},
 };
