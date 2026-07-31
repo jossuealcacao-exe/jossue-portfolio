@@ -1,6 +1,5 @@
 ---
 import { equivalentPath, navigation, routes, type Locale } from '../data/i18n';
-import Icon from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -41,15 +40,16 @@ const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 			</a>
 			<details class="menu">
 				<summary class="menu__toggle" aria-label={menuLabel}>
-					<span class="menu__icon menu__icon--open">
-						<Icon name="menu" />
-					</span>
-					<span class="menu__icon menu__icon--close">
-						<Icon name="close" />
-					</span>
+					<span class="menu__glyph" aria-hidden="true"><i></i><i></i><i></i></span>
 					<span class="sr-only">{menuLabel}</span>
 				</summary>
 				<ul class="menu__panel">
+					<li class="menu__masthead">
+						<a class="menu__brand" href={routes[locale].home}>Jossue Alcalá</a>
+						<a class="menu__lang" href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
+							{otherLocale}
+						</a>
+					</li>
 					{
 						navigation[locale].map((item) => (
 							<li>

@@ -47,32 +47,34 @@ const selectedCases = selectedSlugs.flatMap((slug) => {
 
 const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			{ title: 'Shopify y producto', text: 'Storefronts, themes, apps y sistemas de contenido diseñados para que el equipo pueda operar y crecer.', icon: 'basket' },
-			{ title: 'UX/CRO y growth', text: 'Experiencias de compra, priorización y adquisición conectadas con objetivos comerciales concretos.', icon: 'trend-up' },
-			{ title: 'IA aplicada', text: 'Productos y automatizaciones que integran datos, interfaces y control humano dentro del flujo real.', icon: 'sparkles-ai' },
+			{ title: 'Shopify y ecommerce', text: 'Levanto tiendas Shopify que venden y que tu equipo puede mover sin depender de nadie: storefront, temas y apps a la medida del negocio.', icon: 'basket' },
+			{ title: 'UX/CX y CRO', text: 'Encuentro dónde se te escapa la venta y rediseño la experiencia para que más visitas terminen en compra. Con evidencia, no con opiniones.', icon: 'trend-up' },
+			{ title: 'Sistemas operativos con IA', text: 'Pongo la IA a trabajar de verdad: copilotos y agentes con tus datos, tus permisos y control humano, integrados a tu operación diaria.', icon: 'sparkles-ai' },
+			{ title: 'Desarrollo web', text: 'Construyo el producto completo, de la idea al deploy: front, back, integraciones y APIs que aguantan el negocio real.', icon: 'code' },
 		]
 	: [
-			{ title: 'Shopify and product', text: 'Storefronts, themes, apps, and content systems designed for teams to operate and grow.', icon: 'basket' },
-			{ title: 'UX/CRO and growth', text: 'Shopping experiences, prioritization, and acquisition connected to specific commercial goals.', icon: 'trend-up' },
-			{ title: 'Applied AI', text: 'Products and automations integrating data, interfaces, and human control into real workflows.', icon: 'sparkles-ai' },
+			{ title: 'Shopify and ecommerce', text: 'I build Shopify stores that sell and that your team can run on its own: storefront, themes, and apps shaped around the business.', icon: 'basket' },
+			{ title: 'UX/CX and CRO', text: 'I find where sales leak and redesign the experience so more visits become purchases. Driven by evidence, not opinions.', icon: 'trend-up' },
+			{ title: 'AI operating systems', text: 'I put AI to real work: copilots and agents with your data, your permissions, and human control, wired into daily operations.', icon: 'sparkles-ai' },
+			{ title: 'Web development', text: 'I build the whole product, from idea to deploy: front, back, integrations, and APIs that hold up in the real business.', icon: 'code' },
 		];
 
-const services = es
+const services: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			['Shopify y desarrollo web', 'Themes, secciones, storefronts y componentes comerciales construidos alrededor del negocio.'],
-			['Estrategia UX/CRO', 'Priorización de oportunidades en navegación, producto, confianza, carrito y compra móvil.'],
-			['Optimización ecommerce', 'Mejoras de experiencia, performance y operación que el equipo puede implementar y mantener.'],
-			['Analítica y growth', 'Medición, paid media y CRM conectados con la experiencia que recibe el usuario.'],
-			['IA aplicada y automatización', 'Copilotos, agentes y flujos con datos, permisos y decisiones humanas.'],
-			['Apps y sistemas Shopify', 'Productos propios cuando una necesidad comercial requiere más que una app genérica.'],
+			{ title: 'Shopify y desarrollo web', text: 'Themes, secciones, storefronts y componentes comerciales construidos alrededor del negocio.', icon: 'code' },
+			{ title: 'Estrategia UX/CRO', text: 'Priorización de oportunidades en navegación, producto, confianza, carrito y compra móvil.', icon: 'filter' },
+			{ title: 'Optimización ecommerce', text: 'Mejoras de experiencia, performance y operación que el equipo puede implementar y mantener.', icon: 'trend-up' },
+			{ title: 'Analítica y growth', text: 'Medición, paid media y CRM conectados con la experiencia que recibe el usuario.', icon: 'badge-percent' },
+			{ title: 'IA aplicada y automatización', text: 'Copilotos, agentes y flujos con datos, permisos y decisiones humanas.', icon: 'sparkles-ai' },
+			{ title: 'Apps y sistemas Shopify', text: 'Productos propios cuando una necesidad comercial requiere más que una app genérica.', icon: 'basket' },
 		]
 	: [
-			['Shopify and web development', 'Themes, sections, storefronts, and commercial components built around the business.'],
-			['UX/CRO strategy', 'Opportunity prioritization across navigation, product, trust, cart, and mobile purchase.'],
-			['Ecommerce optimization', 'Experience, performance, and operational improvements teams can implement and maintain.'],
-			['Analytics and growth', 'Measurement, paid media, and CRM connected to the experience users actually receive.'],
-			['Applied AI and automation', 'Copilots, agents, and workflows with data, permissions, and human decisions.'],
-			['Shopify apps and systems', 'Owned products when a commercial need requires more than a generic app.'],
+			{ title: 'Shopify and web development', text: 'Themes, sections, storefronts, and commercial components built around the business.', icon: 'code' },
+			{ title: 'UX/CRO strategy', text: 'Opportunity prioritization across navigation, product, trust, cart, and mobile purchase.', icon: 'filter' },
+			{ title: 'Ecommerce optimization', text: 'Experience, performance, and operational improvements teams can implement and maintain.', icon: 'trend-up' },
+			{ title: 'Analytics and growth', text: 'Measurement, paid media, and CRM connected to the experience users actually receive.', icon: 'badge-percent' },
+			{ title: 'Applied AI and automation', text: 'Copilots, agents, and workflows with data, permissions, and human decisions.', icon: 'sparkles-ai' },
+			{ title: 'Shopify apps and systems', text: 'Owned products when a commercial need requires more than a generic app.', icon: 'basket' },
 		];
 
 const aiSystems = es
@@ -89,23 +91,31 @@ const aiSystems = es
 			['Growth intelligence', 'Scorecards, synthesis, and automation turning fragmented data into priorities.'],
 	];
 
-const opportunitySignals: Array<{ label: string; detail: string; value: number; icon: IconName; metric: string }> = es
+const painPoints: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			{ label: 'Storefront lento', detail: 'Riesgo: sesiones pagadas llegan a una experiencia que no sostiene intención móvil.', value: 86, icon: 'exclamation', metric: 'CR en riesgo' },
-			{ label: 'Cart drawer incompleto', detail: 'Riesgo: valor, envío, cantidad o confianza no están visibles cuando el usuario decide.', value: 78, icon: 'basket', metric: 'Ticket sin capturar' },
-			{ label: 'UX sin evidencia', detail: 'Riesgo: rediseñar sin separar fricción real, percepción interna y prioridad comercial.', value: 72, icon: 'filter', metric: 'Prioridad borrosa' },
-			{ label: 'IA sin operación', detail: 'Riesgo: automatizar tareas sin datos, permisos, revisión humana ni medición útil.', value: 68, icon: 'sparkles-ai', metric: 'Horas no recuperadas' },
+			{ icon: 'exclamation', title: 'Llega tráfico pero no convierte', text: 'Las sesiones pagadas caen en una experiencia que no sostiene la intención de compra, sobre todo en móvil.' },
+			{ icon: 'basket', title: 'El carrito pierde la venta al final', text: 'Valor, envío, cantidad y confianza no quedan claros justo cuando la persona decide.' },
+			{ icon: 'filter', title: 'Se rediseña sin saber dónde está la fuga', text: 'Se cambia por opinión y no por evidencia: se mueve todo y no mejora lo que de verdad importa.' },
+			{ icon: 'sparkles-ai', title: 'La IA suena bien pero no opera', text: 'Automatizaciones sin datos, permisos ni revisión humana que al final nadie usa.' },
 		]
 	: [
-			{ label: 'Slow storefront', detail: 'Risk: paid sessions land on an experience that does not sustain mobile intent.', value: 86, icon: 'exclamation', metric: 'CR at risk' },
-			{ label: 'Incomplete cart drawer', detail: 'Risk: value, shipping, quantity, or trust are missing when the user decides.', value: 78, icon: 'basket', metric: 'Uncaptured AOV' },
-			{ label: 'UX without evidence', detail: 'Risk: redesigning without separating real friction, internal opinion, and commercial priority.', value: 72, icon: 'filter', metric: 'Blurred priority' },
-			{ label: 'AI without operations', detail: 'Risk: automating tasks without data, permissions, human review, or useful measurement.', value: 68, icon: 'sparkles-ai', metric: 'Hours not recovered' },
+			{ icon: 'exclamation', title: 'Traffic arrives but doesn’t convert', text: 'Paid sessions land on an experience that doesn’t sustain purchase intent, especially on mobile.' },
+			{ icon: 'basket', title: 'The cart loses the sale at the end', text: 'Value, shipping, quantity, and trust aren’t clear right when the person decides.' },
+			{ icon: 'filter', title: 'Redesigns happen without finding the leak', text: 'Driven by opinion, not evidence: everything moves and what matters doesn’t improve.' },
+			{ icon: 'sparkles-ai', title: 'AI sounds good but doesn’t operate', text: 'Automations with no data, permissions, or human review that nobody ends up using.' },
 		];
 
-const decisionPath = es
-	? ['Detectar fuga', 'Priorizar impacto', 'Prototipo medible', 'Implementar', 'QA y aprendizaje']
-	: ['Detect leakage', 'Prioritize impact', 'Measurable prototype', 'Implement', 'QA and learning'];
+const pillars: Array<{ title: string; text: string; icon: IconName }> = es
+	? [
+			{ icon: 'trend-up', title: 'UX y CX para CRO', text: 'Diseño la experiencia alrededor de dónde se decide y dónde se fuga la conversión.' },
+			{ icon: 'sparkles-ai', title: 'Sistemas operativos con IA', text: 'Copilotos y agentes con datos, permisos y control humano que sí se integran a la operación.' },
+			{ icon: 'code', title: 'Desarrollo web', text: 'Storefronts, temas y componentes Shopify hechos para que el equipo opere y crezca.' },
+		]
+	: [
+			{ icon: 'trend-up', title: 'UX and CX for CRO', text: 'I design the experience around where people decide and where conversion leaks.' },
+			{ icon: 'sparkles-ai', title: 'AI operating systems', text: 'Copilots and agents with data, permissions, and human control that truly fit the operation.' },
+			{ icon: 'code', title: 'Web development', text: 'Shopify storefronts, themes, and components built for teams to operate and grow.' },
+		];
 ---
 
 {
@@ -143,8 +153,8 @@ const decisionPath = es
 					</div>
 					<ul class="outcomes-grid">
 						{outcomes.map((outcome) => (
-							<li>
-								<p class="outcomes-grid__value">{outcome.value}</p>
+							<li data-kpi-item>
+								<p class="outcomes-grid__value">{outcome.value}{outcome.suffix && <small>{outcome.suffix}</small>}</p>
 								<p class="outcomes-grid__label">{outcome.label}</p>
 								<p class="outcomes-grid__detail">{outcome.detail}</p>
 							</li>
@@ -180,31 +190,32 @@ const decisionPath = es
 				</div>
 				<div class="opportunity-grid">
 					<article class="signal-panel">
-						<p class="eyebrow">{es ? 'Pain points frecuentes' : 'Common pain points'}</p>
-						<ul class="signal-bars">
-							{opportunitySignals.map((signal) => (
-								<li style={`--signal:${signal.value}%`}>
-									<Icon name={signal.icon} size="md" />
-									<div>
-										<strong>{signal.label}</strong>
-										<span>{signal.detail}</span>
-									</div>
-									<i aria-hidden="true"><span /></i>
-									<em>{signal.metric}</em>
+						<p class="eyebrow">{es ? 'Síntomas que veo seguido' : 'Symptoms I see often'}</p>
+						<ul class="pain-list">
+							{painPoints.map((pain, index) => (
+								<li data-reveal-item style={`--reveal-i:${index}`}>
+									<span class="opp-motif" aria-hidden="true">
+										<Icon name={pain.icon} size="md" />
+									</span>
+									<strong>{pain.title}</strong>
+									<span>{pain.text}</span>
 								</li>
 							))}
 						</ul>
 					</article>
 					<article class="path-panel">
-						<p class="eyebrow">{es ? 'Cuándo contactarme' : 'When to contact me'}</p>
-						<ol class="decision-path">
-							{decisionPath.map((label, index) => (
-								<li>
-									<span>{String(index + 1).padStart(2, '0')}</span>
-									<strong>{label}</strong>
+						<p class="eyebrow">{es ? 'Cómo lo resuelvo' : 'How I solve it'}</p>
+						<ul class="solve-list">
+							{pillars.map((pillar, index) => (
+								<li data-reveal-item style={`--reveal-i:${index}`}>
+									<span class="opp-motif" aria-hidden="true">
+										<Icon name={pillar.icon} size="md" />
+									</span>
+									<strong>{pillar.title}</strong>
+									<span>{pillar.text}</span>
 								</li>
 							))}
-						</ol>
+						</ul>
 						<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
 							{es ? 'Auditar mi experiencia ecommerce' : 'Audit my ecommerce experience'}
 						</a>
@@ -213,12 +224,12 @@ const decisionPath = es
 			</section>
 
 			<section class="section shell profile-section">
+				<p class="index">05 / {es ? 'Perfil' : 'Profile'}</p>
 				<div class="profile-intro">
 					<figure class="profile-intro__photo">
 						<Image src={profilePhoto} alt={es ? 'Retrato de Jossue Alcalá' : 'Portrait of Jossue Alcalá'} width={640} height={800} loading="lazy" decoding="async" />
 					</figure>
 					<div class="flow">
-						<p class="index">05 / {es ? 'Perfil' : 'Profile'}</p>
 						<h2>{es ? 'Estrategia de negocio con capacidad de construir.' : 'Business strategy with the ability to build.'}</h2>
 						<p class="profile-headline">{about.headline}</p>
 						<p>{es ? 'Trabajo entre dirección y ejecución para que las ideas no terminen en una presentación: se conviertan en una experiencia que el equipo pueda lanzar, medir y mejorar.' : 'I work between direction and delivery so ideas do not stop at a presentation: they become experiences teams can launch, measure, and improve.'}</p>
@@ -280,7 +291,7 @@ const decisionPath = es
 				<a class="button" href={routes[locale].contact}>{es ? 'Contarme tu reto' : 'Tell me about your challenge'}</a>
 			</section>
 			<section class="section service-grid">
-				{services.map(([title, text], index) => <article class="service-card"><span>{String(index + 1).padStart(2, '0')}</span><h2>{title}</h2><p>{text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>)}
+				{services.map((service, index) => <article class="service-card"><span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>)}
 			</section>
 			<section class="section process-section">
 				<div class="section-heading"><p class="index">{es ? 'Cómo trabajo' : 'How I work'}</p><h2>{es ? 'Un proceso simple para decisiones complejas.' : 'A simple process for complex decisions.'}</h2></div>
@@ -334,7 +345,7 @@ const decisionPath = es
 				<figure class="about-hero__portrait"><Image src={profilePhoto} alt={es ? 'Retrato de Jossue Alcalá' : 'Portrait of Jossue Alcalá'} width={640} height={800} loading="eager" decoding="async" /></figure>
 			</section>
 			<section class="section"><div class="section-heading"><p class="index">01 / {es ? 'Marcas' : 'Brands'}</p><h2>{es ? 'Experiencia en tecnología, retail, salud y consumo.' : 'Experience across technology, retail, health, and consumer brands.'}</h2></div><ul class="brand-strip">{brands.map((brand) => <li><BrandMark brand={brand} locale={locale} size="md" decorative={false} /></li>)}</ul></section>
-			<section class="section"><div class="section-heading"><p class="index">02 / {es ? 'Impacto profesional' : 'Professional impact'}</p><h2>{es ? 'Resultados dentro de contextos comerciales reales.' : 'Outcomes inside real commercial contexts.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
+			<section class="section"><div class="section-heading"><p class="index">02 / {es ? 'Impacto profesional' : 'Professional impact'}</p><h2>{es ? 'Resultados dentro de contextos comerciales reales.' : 'Outcomes inside real commercial contexts.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li data-kpi-item><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
 			<section class="section"><div class="section-heading"><p class="index">03 / {es ? 'Experiencia' : 'Experience'}</p><h2>{es ? 'Una trayectoria entre negocio, growth y producto.' : 'A career across business, growth, and product.'}</h2></div><ol class="profile-timeline">{about.experience.map((item) => <li><p class="profile-timeline__meta"><span>{item.period}</span><span>{item.org}</span></p><h2>{item.role}</h2><ul class="list">{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul></li>)}</ol></section>
 			<section class="section about-capabilities"><div class="section-heading"><p class="index">04 / {es ? 'Capacidades' : 'Capabilities'}</p><h2>{es ? 'Dirección estratégica con capacidad técnica.' : 'Strategic direction with technical capability.'}</h2></div><div class="capability-grid">{capabilities.map((capability, index) => <article><span>0{index + 1}</span><Icon name={capability.icon} size="md" /><h3>{capability.title}</h3><p>{capability.text}</p></article>)}</div><StackCarousel locale={locale} /></section>
 			<section class="section about-details"><div><p class="index">05 / {es ? 'Formación' : 'Education'}</p><ul class="list">{about.education.map((item) => <li>{item}</li>)}</ul></div><div><p class="index">06 / {es ? 'Idiomas y enlaces' : 'Languages and links'}</p><ul class="list">{about.languages.map((item) => <li>{item}</li>)}{about.links.map((link) => <li><a class="link-with-icon" href={link.href} rel="noreferrer" data-analytics-event={link.event}>{link.label}<Icon name="arrow-up-right" /></a></li>)}</ul></div></section>

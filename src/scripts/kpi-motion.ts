@@ -63,6 +63,13 @@ function activateItem(item: HTMLElement): void {
 		return;
 	}
 
+	// Values with child markup (e.g. a <small> suffix) must not be rewritten via textContent.
+	if (value.childElementCount > 0) {
+		item.classList.add('is-kpi-visible');
+		window.setTimeout(() => value.classList.add('is-kpi-value-live'), COUNT_DELAY_MS);
+		return;
+	}
+
 	const raw = value.dataset.kpiValue ?? value.textContent ?? '';
 	value.dataset.kpiValue = raw.trim();
 	const parsed = parseKpiValue(raw);

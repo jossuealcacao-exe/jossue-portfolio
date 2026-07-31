@@ -18,6 +18,8 @@ const es = locale === 'es';
 const presentation = casePresentation(entry.data.slug, locale);
 const category = presentation?.category ?? (es ? 'Proyecto digital' : 'Digital project');
 const summary = presentation?.summary ?? entry.data.summary;
+// Fantasy name only (e.g. "AHP+", "MIAWSEO") — drop the descriptive tail after the em dash.
+const displayName = entry.data.title.split('—')[0].trim();
 ---
 
 <article class="case-card">
@@ -29,7 +31,7 @@ const summary = presentation?.summary ?? entry.data.summary;
 				<span>{category}</span>
 			</div>
 			<div class="case-card__content flow">
-				<h3>{entry.data.title}</h3>
+				<h3>{displayName}</h3>
 				<p>{summary}</p>
 			</div>
 			<StackList stack={entry.data.stack} locale={locale} limit={5} compact />

@@ -28,7 +28,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'wu-nutrition': {
 		es: {
 			category: 'Ecommerce DTC · Shopify',
-			summary: 'Dirección ecommerce que integra storefront, adquisición, analítica e IA aplicada en una experiencia de compra coherente y operable.',
+			summary: 'Dirección ecommerce de punta a punta: storefront Shopify, adquisición, analítica e IA aplicada conectadas en una experiencia que convierte y que el equipo puede operar.',
 			context: 'WU Nutrition comercializa suplementos DTC en Shopify y marketplaces. La operación exige conectar la promesa de campaña con el descubrimiento, la decisión de compra, el carrito y la relación posterior con el cliente.',
 			challenge: 'Convertir iniciativas dispersas de growth en un sistema ecommerce consistente, reutilizable y preparado para evolucionar sin añadir complejidad innecesaria al equipo.',
 			role: 'Como Chief Ecommerce Manager, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización.',
@@ -51,7 +51,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 		},
 		en: {
 			category: 'DTC ecommerce · Shopify',
-			summary: 'Ecommerce leadership connecting storefront, acquisition, analytics, and applied AI into a coherent, operable shopping experience.',
+			summary: 'End-to-end ecommerce leadership: Shopify storefront, acquisition, analytics, and applied AI connected into an experience that converts and the team can operate.',
 			context: 'WU Nutrition sells supplements through Shopify DTC and marketplaces. The operation needs campaign promises to continue through discovery, purchase decisions, cart, and the post-purchase relationship.',
 			challenge: 'Turn fragmented growth initiatives into a consistent, reusable ecommerce system that can evolve without adding unnecessary complexity for the team.',
 			role: 'As Chief Ecommerce Manager, I lead ecommerce strategy and work hands-on across design, Shopify development, UX/CRO, acquisition, analytics, and automation.',
@@ -118,7 +118,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'bloqio-builder': {
 		es: {
 			category: 'Producto con IA · SaaS',
-			summary: 'Un creador web con IA que transforma objetivos de negocio en páginas estructuradas, editables y listas para evolucionar.',
+			summary: 'Creador web con IA donde el objetivo de negocio se vuelve una página estructurada y editable. La IA propone, la persona decide: de la idea a publicar sin caja negra.',
 			context: 'Crear una web todavía obliga a muchas personas a entender plantillas, componentes y decisiones de diseño antes de poder expresar lo que su negocio necesita.',
 			challenge: 'Reducir esa complejidad sin convertir la IA en una caja negra ni quitar al usuario el control sobre la estructura, el contenido y la publicación.',
 			role: 'Founder y product builder. Definí concepto, estrategia, UX, arquitectura de bloques, comportamiento de la IA y dirección técnica del producto.',
@@ -138,7 +138,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 		},
 		en: {
 			category: 'AI product · SaaS',
-			summary: 'An AI website builder that turns business goals into structured, editable pages designed to evolve.',
+			summary: 'An AI website builder where a business goal becomes a structured, editable page. AI proposes, the person decides — from idea to publish, with no black box.',
 			context: 'Building a website still asks many people to understand templates, components, and design decisions before they can express what their business actually needs.',
 			challenge: 'Reduce that complexity without turning AI into a black box or taking control of structure, content, and publishing away from the user.',
 			role: 'Founder and product builder. I defined the concept, strategy, UX, block architecture, AI behavior, and technical direction.',
@@ -228,7 +228,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'miawseo': {
 		es: {
 			category: 'Producto editorial · Full-stack',
-			summary: 'Un museo felino digital que convierte veinte razas, historia y participación comunitaria en una red de exploración intuitiva.',
+			summary: 'Producto editorial full-stack que vuelve intuitivo un catálogo profundo con wayfinding, narrativa y comunidad moderada. UX y desarrollo de extremo a extremo.',
 			context: 'MIAWSEO es un producto auto-iniciado que transforma contenido editorial sobre gatos en una experiencia de descubrimiento, orientación y comunidad.',
 			challenge: 'Organizar un catálogo profundo sin perder contexto y permitir contribuciones públicas sin comprometer la calidad del contenido.',
 			role: 'Dirección de producto, arquitectura de información, diseño de experiencia e implementación full-stack.',
@@ -240,7 +240,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 		},
 		en: {
 			category: 'Editorial product · Full-stack',
-			summary: 'A digital feline museum turning twenty breeds, history, and community participation into an intuitive exploration network.',
+			summary: 'A full-stack editorial product that makes a deep catalog intuitive through wayfinding, narrative, and moderated community. UX and development, end to end.',
 			context: 'MIAWSEO is a self-initiated product transforming editorial content about cats into an experience of discovery, orientation, and community.',
 			challenge: 'Organize a deep catalog without losing context and enable public contributions without compromising content quality.',
 			role: 'Product direction, information architecture, experience design, and full-stack implementation.',
@@ -254,7 +254,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'vineria': {
 		es: {
 			category: 'Producto editorial · Front-end',
-			summary: 'Una guía interactiva que hace accesible el mundo del vino a través de veinticuatro uvas, búsqueda, filtros y perfiles progresivos.',
+			summary: 'Guía interactiva que hace accesible el vino con búsqueda, filtros y perfiles progresivos. UX editorial enfocada en claridad, descubrimiento y disfrute.',
 			context: 'Vinería es un producto auto-iniciado para personas que quieren entender variedades, regiones, aromas y maridajes sin enfrentarse a una enciclopedia.',
 			challenge: 'Convertir investigación extensa en una experiencia clara, visual y agradable para quien apenas comienza a explorar el tema.',
 			role: 'Dirección editorial, diseño de producto, modelado de contenido e implementación front-end.',
@@ -266,7 +266,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 		},
 		en: {
 			category: 'Editorial product · Front-end',
-			summary: 'An interactive guide making wine approachable through twenty-four grapes, search, filters, and progressive profiles.',
+			summary: 'An interactive guide that makes wine approachable with search, filters, and progressive profiles. Editorial UX focused on clarity, discovery, and enjoyment.',
 			context: 'Vinería is a self-initiated product for people who want to understand varieties, regions, aromas, and pairings without facing an encyclopedia.',
 			challenge: 'Turn extensive research into a clear, visual, and enjoyable experience for people beginning to explore the subject.',
 			role: 'Editorial direction, product design, content modeling, and front-end implementation.',
@@ -280,7 +280,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'ahp-plus': {
 		es: {
 			category: 'Sistema IA · Protocolo operativo',
-			summary: 'Un protocolo Git-backed para que los agentes de IA trabajen con memoria verificable, continuidad entre plataformas y handoffs que no dependan de recordar el chat.',
+			summary: 'Convierto flujos con IA en sistemas operables y auditables: memoria verificable en Git, continuidad entre plataformas y handoffs que no dependen de recordar el chat.',
 			context: 'Los equipos pueden usar Codex, Cursor, Claude Code, OpenCode o ChatGPT para construir software, pero la continuidad se rompe cuando el contexto vive solo en conversaciones, resúmenes o memoria privada del proveedor.',
 			challenge: 'Diseñar un plano operativo que convierta memoria, decisiones, QA, riesgos y handoffs en datos versionados dentro del repositorio, sin reemplazar la autoridad humana ni los controles de Git.',
 			role: 'Creador y arquitecto de AHP+. Definí el concepto, la especificación, el modelo de certeza, los registros, la CLI, la integración con Pangea OS y la narrativa de autoría para CV y portafolio.',
@@ -304,7 +304,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 		},
 		en: {
 			category: 'AI systems · Operating protocol',
-			summary: 'A Git-backed protocol that gives AI agents verifiable memory, cross-platform continuity, and handoffs that do not depend on remembering the chat.',
+			summary: 'I turn AI workflows into operable, auditable systems: verifiable memory in Git, cross-platform continuity, and handoffs that don’t rely on remembering the chat.',
 			context: 'Teams can use Codex, Cursor, Claude Code, OpenCode, or ChatGPT to build software, but continuity breaks when context lives only in conversations, summaries, or private provider memory.',
 			challenge: 'Design an operating plane that turns memory, decisions, QA, risks, and handoffs into versioned repository data without replacing human authority or Git controls.',
 			role: 'Creator and architect of AHP+. I defined the concept, specification, certainty model, records, CLI, Pangea OS integration, and authorship narrative for CV and portfolio use.',

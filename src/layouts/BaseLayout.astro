@@ -107,16 +107,26 @@ const structuredData = {
 		<main id="main" tabindex="-1">
 			<slot />
 		</main>
+		<div class="section-spy" data-section-spy aria-hidden="true">
+			<span class="section-spy__dot"></span>
+			<span class="section-spy__label" data-section-spy-label>
+				<span data-section-spy-num></span><span class="section-spy__rest" data-section-spy-rest></span>
+			</span>
+		</div>
 		<Footer locale={locale} />
 		<script>
 			import { bindAnalyticsEvents } from '../scripts/analytics';
 			import { initEvidenceGalleries } from '../scripts/evidence-gallery';
+			import { initKpiMotion } from '../scripts/kpi-motion';
 			import { initMotion } from '../scripts/motion';
+			import { initProjectSlides } from '../scripts/slides';
 
 			import { initStackCarousels } from '../scripts/stack-carousel';
 
 			bindAnalyticsEvents();
 			initMotion();
+			initKpiMotion();
+			initProjectSlides();
 			initEvidenceGalleries();
 			initStackCarousels();
 		</script>

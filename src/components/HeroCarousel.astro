@@ -187,7 +187,17 @@ const heroTitleId = `home-hero-title-${locale}`;
 						<Icon name={slide.icon} />
 						{slide.kicker}
 					</p>
-					{index === 0 ? <h1 id={heroTitleId}>{slide.title}</h1> : <h2>{slide.title}</h2>}
+					{index === 0 ? (
+						<h1 id={heroTitleId} class="hero-title">
+							<span class="hero-title__sizer" aria-hidden="true">{slide.title}</span>
+							<span class="hero-title__type" data-tw data-tw-text={slide.title}>{slide.title}</span>
+						</h1>
+					) : (
+						<h2 class="hero-title">
+							<span class="hero-title__sizer" aria-hidden="true">{slide.title}</span>
+							<span class="hero-title__type" data-tw data-tw-text={slide.title}>{slide.title}</span>
+						</h2>
+					)}
 					<p class="hero__lede">{slide.copy}</p>
 					<ul class="hero-carousel__badges">
 						{slide.points.map((point) => <li><Icon name={point.icon} />{point.label}</li>)}
@@ -222,6 +232,8 @@ const heroTitleId = `home-hero-title-${locale}`;
 </div>
 
 <script>
+	const MOTION_REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const AUTOPLAY_MS = 7000;
 	const heroCarousels = document.querySelectorAll('[data-hero-carousel]');
 
 	heroCarousels.forEach((carousel) => {
@@ -230,26 +242,102 @@ const heroTitleId = `home-hero-title-${locale}`;
 		const controls = Array.from(carousel.querySelectorAll<HTMLButtonElement>('[data-hero-control]'));
 		const prev = carousel.querySelector<HTMLButtonElement>('[data-hero-prev]');
 		const next = carousel.querySelector<HTMLButtonElement>('[data-hero-next]');
-		let activeIndex = 0;
+		let activeIndex = -1;
 		let frame = 0;
+		let autoplayTimer = 0;
+		let typeTimer = 0;
+		let paused = false;
 		let dragging = false;
 		let moved = false;
 		let startX = 0;
 		let startLeft = 0;
+		// While a programmatic smooth scroll is in flight, ignore scroll-driven
+		// active tracking so it cannot fight the transition (retype/reschedule churn).
+		let settling = false;
+		let settleTarget = 0;
+		let settleTimer = 0;
 
 		if (!viewport || slides.length === 0) return;
 
-		const setActive = (index: number) => {
-			activeIndex = (index + slides.length) % slides.length;
+		const typeTitle = (slide: HTMLElement) => {
+			const target = slide.querySelector<HTMLElement>('[data-tw]');
+			if (!target) return;
+			const full = target.dataset.twText ?? target.textContent ?? '';
+			target.dataset.twText = full;
+			window.clearInterval(typeTimer);
+			const holder = target.closest('.hero-title');
+			if (MOTION_REDUCED) {
+				target.textContent = full;
+				return;
+			}
+			holder?.classList.add('is-typing');
+			let count = 0;
+			target.textContent = '';
+			const stepMs = Math.max(24, Math.min(48, Math.round(1000 / Math.max(1, full.length))));
+			typeTimer = window.setInterval(() => {
+				count += 1;
+				target.textContent = full.slice(0, count);
+				if (count >= full.length) {
+					window.clearInterval(typeTimer);
+					holder?.classList.remove('is-typing');
+				}
+			}, stepMs);
+		};
+
+		const syncProgress = () => {
+			controls.forEach((control, controlIndex) => {
+				control.classList.remove('is-filling');
+				if (controlIndex === activeIndex && !MOTION_REDUCED && !paused) {
+					void control.offsetWidth;
+					control.classList.add('is-filling');
+				}
+			});
+		};
+
+		const schedule = () => {
+			window.clearTimeout(autoplayTimer);
+			if (MOTION_REDUCED || paused) return;
+			autoplayTimer = window.setTimeout(() => goTo(activeIndex + 1), AUTOPLAY_MS);
+		};
+
+		const setActive = (index: number, force = false) => {
+			const nextIndex = (index + slides.length) % slides.length;
+			if (nextIndex === activeIndex && !force) return;
+			activeIndex = nextIndex;
 			controls.forEach((control, controlIndex) => {
 				control.setAttribute('aria-current', String(controlIndex === activeIndex));
 			});
+			slides.forEach((slide, slideIndex) => slide.classList.toggle('is-active', slideIndex === activeIndex));
+			typeTitle(slides[activeIndex]);
+			syncProgress();
+			schedule();
 		};
 
 		const goTo = (index: number) => {
 			const nextIndex = (index + slides.length) % slides.length;
-			viewport.scrollTo({ left: slides[nextIndex].offsetLeft, behavior: 'smooth' });
+			settleTarget = slides[nextIndex].offsetLeft;
+			settling = true;
+			window.clearTimeout(settleTimer);
+			settleTimer = window.setTimeout(() => {
+				settling = false;
+			}, 900);
+			viewport.scrollTo({ left: settleTarget, behavior: MOTION_REDUCED ? 'auto' : 'smooth' });
 			setActive(nextIndex);
+		};
+
+		const pause = () => {
+			if (paused) return;
+			paused = true;
+			carousel.classList.add('is-paused');
+			window.clearTimeout(autoplayTimer);
+		};
+
+		const resume = () => {
+			if (!paused) return;
+			paused = false;
+			carousel.classList.remove('is-paused');
+			syncProgress();
+			schedule();
 		};
 
 		controls.forEach((control) => {
@@ -267,6 +355,9 @@ const heroTitleId = `home-hero-title-${locale}`;
 			startLeft = viewport.scrollLeft;
 			viewport.setPointerCapture(event.pointerId);
 			viewport.dataset.dragging = 'true';
+			settling = false;
+			window.clearTimeout(settleTimer);
+			pause();
 		});
 
 		viewport.addEventListener('pointermove', (event) => {
@@ -283,13 +374,20 @@ const heroTitleId = `home-hero-title-${locale}`;
 			delete viewport.dataset.dragging;
 			if (moved) {
 				const nearest = Math.round(viewport.scrollLeft / viewport.clientWidth);
+				resume();
 				goTo(nearest);
+			} else {
+				resume();
 			}
 		});
 
 		viewport.addEventListener('scroll', () => {
 			cancelAnimationFrame(frame);
 			frame = requestAnimationFrame(() => {
+				if (settling) {
+					if (Math.abs(viewport.scrollLeft - settleTarget) < 2) settling = false;
+					return;
+				}
 				const closest = slides.reduce(
 					(best, slide, index) => {
 						const distance = Math.abs(slide.offsetLeft - viewport.scrollLeft);
@@ -300,5 +398,17 @@ const heroTitleId = `home-hero-title-${locale}`;
 				setActive(closest.index);
 			});
 		}, { passive: true });
+
+		carousel.addEventListener('focusin', pause);
+		carousel.addEventListener('focusout', (event) => {
+			const related = (event as FocusEvent).relatedTarget;
+			if (!(related instanceof Node) || !carousel.contains(related)) resume();
+		});
+		document.addEventListener('visibilitychange', () => {
+			if (document.hidden) pause();
+			else resume();
+		});
+
+		setActive(0, true);
 	});
 </script>

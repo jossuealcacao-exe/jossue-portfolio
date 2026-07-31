@@ -63,14 +63,14 @@ const linkKindCopy = {
 			<p class="eyebrow">{presentation.category}</p>
 		</div>
 		<div class="case-hero__grid">
-			<h1>{data.title}</h1>
-			<div class="case-hero__summary flow">
+			<div class="case-hero__main flow">
+				<h1>{data.title}</h1>
 				<p class="hero__lede">{presentation.summary}</p>
-				<dl class="case-hero__facts">
-					<div><dt>{es ? 'Contribución' : 'Contribution'}</dt><dd>{presentation.role}</dd></div>
-					<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
-				</dl>
 			</div>
+			<dl class="case-hero__facts">
+				<div><dt>{es ? 'Contribución' : 'Contribution'}</dt><dd>{presentation.role}</dd></div>
+				<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
+			</dl>
 		</div>
 	</header>
 	<div class="case-cover" data-reveal>
