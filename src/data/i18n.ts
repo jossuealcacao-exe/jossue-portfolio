@@ -23,13 +23,13 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
 
 export const navigation = {
 	es: [
-		{ key: 'work', label: 'Trabajo' },
+		{ key: 'work', label: 'Proyectos' },
 		{ key: 'services', label: 'Servicios' },
-		{ key: 'about', label: 'Acerca' },
+		{ key: 'about', label: 'Sobre mí' },
 		{ key: 'contact', label: 'Contacto' },
 	],
 	en: [
-		{ key: 'work', label: 'Work' },
+		{ key: 'work', label: 'Projects' },
 		{ key: 'services', label: 'Services' },
 		{ key: 'about', label: 'About' },
 		{ key: 'contact', label: 'Contact' },

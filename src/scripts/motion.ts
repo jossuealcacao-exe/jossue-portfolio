@@ -73,8 +73,6 @@ function bindReveals(): void {
 }
 
 function bindSectionSpy(): void {
-	// Case pages already pin their own chapter menu (.case-jump); it replaces the spy chip.
-	if (document.querySelector('.case-jump')) return;
 	const bar = document.querySelector<HTMLElement>('[data-section-spy]');
 	const label = bar?.querySelector<HTMLElement>('[data-section-spy-label]');
 	const kickers = [...document.querySelectorAll<HTMLElement>('main .index')].filter((el) =>

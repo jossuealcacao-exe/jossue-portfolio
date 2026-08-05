@@ -46,7 +46,7 @@ const linkKindCopy = {
 <Breadcrumbs
 	locale={locale}
 	items={[
-		{ label: es ? 'Trabajo' : 'Work', href: routes[locale].work },
+		{ label: es ? 'Proyectos' : 'Projects', href: routes[locale].work },
 		{ label: data.title },
 	]}
 />
@@ -76,9 +76,6 @@ const linkKindCopy = {
 	<div class="case-cover" data-reveal>
 		<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
 	</div>
-	<nav class="case-jump" aria-label={es ? 'Navegación del caso' : 'Case navigation'}>
-		{chapters.map((chapter) => <a href={`#${chapter.id}`}>{chapter.heading}</a>)}
-	</nav>
 	<section id="challenge" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('challenge')} / {es ? 'El reto' : 'The challenge'}</p>
 		<div class="case-prose flow">

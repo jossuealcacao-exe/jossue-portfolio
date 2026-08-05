@@ -63,31 +63,31 @@ const services: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
 			{ title: 'Shopify y desarrollo web', text: 'Themes, secciones, storefronts y componentes comerciales construidos alrededor del negocio.', icon: 'code' },
 			{ title: 'Estrategia UX/CRO', text: 'Priorización de oportunidades en navegación, producto, confianza, carrito y compra móvil.', icon: 'filter' },
-			{ title: 'Optimización ecommerce', text: 'Mejoras de experiencia, performance y operación que el equipo puede implementar y mantener.', icon: 'trend-up' },
+			{ title: 'Optimización ecommerce', text: 'Mejoras de experiencia, performance y operación que el equipo puede implementar y usar.', icon: 'trend-up' },
 			{ title: 'Analítica y growth', text: 'Medición, paid media y CRM conectados con la experiencia que recibe el usuario.', icon: 'badge-percent' },
-			{ title: 'IA aplicada y automatización', text: 'Copilotos, agentes y flujos con datos, permisos y decisiones humanas.', icon: 'sparkles-ai' },
-			{ title: 'Apps y sistemas Shopify', text: 'Productos propios cuando una necesidad comercial requiere más que una app genérica.', icon: 'basket' },
+			{ title: 'IA aplicada y automatización', text: 'Copilotos, agentes y flujos con datos, permisos y decisiones que se integran con tus necesidades.', icon: 'sparkles-ai' },
+			{ title: 'Apps y sistemas Shopify', text: 'Desarrollo de productos personalizados cuando una necesidad comercial requiere más que una app genérica.', icon: 'basket' },
 		]
 	: [
 			{ title: 'Shopify and web development', text: 'Themes, sections, storefronts, and commercial components built around the business.', icon: 'code' },
 			{ title: 'UX/CRO strategy', text: 'Opportunity prioritization across navigation, product, trust, cart, and mobile purchase.', icon: 'filter' },
-			{ title: 'Ecommerce optimization', text: 'Experience, performance, and operational improvements teams can implement and maintain.', icon: 'trend-up' },
+			{ title: 'Ecommerce optimization', text: 'Experience, performance, and operational improvements teams can implement and use.', icon: 'trend-up' },
 			{ title: 'Analytics and growth', text: 'Measurement, paid media, and CRM connected to the experience users actually receive.', icon: 'badge-percent' },
-			{ title: 'Applied AI and automation', text: 'Copilots, agents, and workflows with data, permissions, and human decisions.', icon: 'sparkles-ai' },
-			{ title: 'Shopify apps and systems', text: 'Owned products when a commercial need requires more than a generic app.', icon: 'basket' },
+			{ title: 'Applied AI and automation', text: 'Copilots, agents, and workflows with data, permissions, and decisions that fit your needs.', icon: 'sparkles-ai' },
+			{ title: 'Shopify apps and systems', text: 'Custom product development when a commercial need requires more than a generic app.', icon: 'basket' },
 		];
 
 const aiSystems = es
 	? [
 			['IA en producto', 'Asistentes que entienden contexto, proponen acciones y mantienen visible el control del usuario.'],
-			['Desarrollo asistido', 'Agentes integrados en un proceso de alcance, implementación, revisión y documentación.'],
-			['Sistemas de operación', 'Copilotos sobre Shopify, Odoo, CRM, analítica y medios para apoyar decisiones recurrentes.'],
+			['Desarrollo y programación', 'Agentes de desarrollo integrados en un proceso de alcance, implementación, revisión y documentación para ejecución de tareas operativas.'],
+			['Sistemas de operación', 'Copilotos sobre Shopify, Odoo, CRM, analítica y paid media para complementar decisiones estratégicas.'],
 			['Inteligencia de growth', 'Scorecards, síntesis y automatizaciones para convertir datos dispersos en prioridades.'],
 		]
 	: [
 			['AI in products', 'Assistants that understand context, propose actions, and keep user control visible.'],
-			['Assisted development', 'Agents integrated into a process for scoping, implementation, review, and documentation.'],
-			['Operating systems', 'Copilots over Shopify, Odoo, CRM, analytics, and media supporting recurring decisions.'],
+			['Development and programming', 'Development agents integrated into a scoping, implementation, review, and documentation process to execute operational tasks.'],
+			['Operating systems', 'Copilots over Shopify, Odoo, CRM, analytics, and paid media to support strategic decisions.'],
 			['Growth intelligence', 'Scorecards, synthesis, and automation turning fragmented data into priorities.'],
 	];
 
@@ -107,13 +107,13 @@ const painPoints: Array<{ title: string; text: string; icon: IconName }> = es
 
 const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			{ icon: 'trend-up', title: 'UX y CX para CRO', text: 'Diseño la experiencia alrededor de dónde se decide y dónde se fuga la conversión.' },
-			{ icon: 'sparkles-ai', title: 'Sistemas operativos con IA', text: 'Copilotos y agentes con datos, permisos y control humano que sí se integran a la operación.' },
+			{ icon: 'trend-up', title: 'UX y CX para CRO', text: 'Diseño la experiencia alrededor del cliente. Optimizo dónde se decide y dónde se fuga el usuario.' },
+			{ icon: 'sparkles-ai', title: 'Sistemas operativos con IA', text: 'Copilotos y agentes con datos, permisos y control humano que sí se integran a tu negocio.' },
 			{ icon: 'code', title: 'Desarrollo web', text: 'Storefronts, temas y componentes Shopify hechos para que el equipo opere y crezca.' },
 		]
 	: [
-			{ icon: 'trend-up', title: 'UX and CX for CRO', text: 'I design the experience around where people decide and where conversion leaks.' },
-			{ icon: 'sparkles-ai', title: 'AI operating systems', text: 'Copilots and agents with data, permissions, and human control that truly fit the operation.' },
+			{ icon: 'trend-up', title: 'UX and CX for CRO', text: 'I design the experience around the customer. I optimize where decisions happen and where users drop off.' },
+			{ icon: 'sparkles-ai', title: 'AI operating systems', text: 'Copilots and agents with data, permissions, and human control that truly integrate into your business.' },
 			{ icon: 'code', title: 'Web development', text: 'Shopify storefronts, themes, and components built for teams to operate and grow.' },
 		];
 ---
@@ -129,8 +129,8 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				<div class="section-heading">
 					<p class="index">01 / {es ? 'Trabajo seleccionado' : 'Selected work'}</p>
 					<div class="flow">
-						<h2 id="selected-work-title">{es ? 'Productos y experiencias construidos para avanzar el negocio.' : 'Products and experiences built to move the business forward.'}</h2>
-						<p>{es ? 'Estrategia, diseño y ejecución reunidos en una misma historia.' : 'Strategy, design, and execution brought together in one story.'}</p>
+						<h2 id="selected-work-title">{es ? 'Productos y experiencias construidos profesionalmente.' : 'Products and experiences built professionally.'}</h2>
+						<p>{es ? 'Estrategia, diseño y ejecución reunidos en un mismo portafolio.' : 'Strategy, design, and execution brought together in one portfolio.'}</p>
 					</div>
 				</div>
 				<div class="project-grid">
@@ -148,7 +148,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 						<p class="index">02 / {es ? 'Impacto profesional' : 'Professional impact'}</p>
 						<div class="flow">
 							<h2>{es ? 'Experiencia comercial con profundidad técnica.' : 'Commercial experience with technical depth.'}</h2>
-							<p>{es ? 'Más de ocho años trabajando entre growth, ecommerce, producto y ejecución digital.' : 'More than eight years working across growth, ecommerce, product, and digital delivery.'}</p>
+							<p>{es ? 'Más de 8 años trabajando en desarrollo web, desarrollo IA, ecommerce, producto y ejecución digital.' : 'More than 8 years across web development, AI development, ecommerce, product, and digital delivery.'}</p>
 						</div>
 					</div>
 					<ul class="outcomes-grid">
@@ -171,7 +171,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<p class="index">03 / {es ? 'Capacidades' : 'Capabilities'}</p>
 					<div class="flow">
 						<h2>{es ? 'Una visión completa, de la oportunidad a la operación.' : 'A complete view, from opportunity to operation.'}</h2>
-						<p>{es ? 'El stack cambia. El criterio para elegir, priorizar y entregar permanece.' : 'The stack changes. The judgment to choose, prioritize, and deliver remains.'}</p>
+						<p>{es ? 'Un stack sólido para cada necesidad digital de tu negocio.' : 'A solid stack for every digital need of your business.'}</p>
 					</div>
 				</div>
 				<div class="capability-grid">
@@ -185,7 +185,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<p class="index">04 / {es ? 'Diagnóstico para decidir' : 'Diagnostic for decision'}</p>
 					<div class="flow">
 						<h2 id="opportunity-title">{es ? 'Si la tienda pierde intención, primero ubicamos dónde se fuga.' : 'If the store is losing intent, first we locate the leakage.'}</h2>
-						<p>{es ? 'Detecto dónde se está perdiendo conversión, priorizo la mejora con mayor impacto y convierto el diagnóstico en acciones que tu equipo puede lanzar.' : 'I detect where conversion is leaking, prioritize the highest-impact improvement, and turn diagnosis into actions your team can launch.'}</p>
+						<p>{es ? 'Detecto dónde se está perdiendo conversión, priorizo la mejora con mayor impacto y convierto el diagnóstico en acciones que tu equipo puede operar.' : 'I detect where conversion is leaking, prioritize the highest-impact improvement, and turn diagnosis into actions your team can operate.'}</p>
 					</div>
 				</div>
 				<div class="opportunity-grid">
@@ -217,7 +217,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 							))}
 						</ul>
 						<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
-							{es ? 'Auditar mi experiencia ecommerce' : 'Audit my ecommerce experience'}
+							{es ? 'Auditar mi tienda online' : 'Audit my online store'}
 						</a>
 					</article>
 				</div>
@@ -232,7 +232,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<div class="flow">
 						<h2>{es ? 'Estrategia de negocio con capacidad de construir.' : 'Business strategy with the ability to build.'}</h2>
 						<p class="profile-headline">{about.headline}</p>
-						<p>{es ? 'Trabajo entre dirección y ejecución para que las ideas no terminen en una presentación: se conviertan en una experiencia que el equipo pueda lanzar, medir y mejorar.' : 'I work between direction and delivery so ideas do not stop at a presentation: they become experiences teams can launch, measure, and improve.'}</p>
+						<p>{es ? 'Trabajo con dirección y ejecución para que las ideas no terminen en una presentación y se conviertan en una experiencia que el equipo pueda usar, medir y mejorar.' : 'I work with direction and delivery so ideas do not stop at a presentation and become an experience the team can use, measure, and improve.'}</p>
 						<div class="hero__actions">
 							<a class="button" href={routes[locale].about}>{es ? 'Conocer mi experiencia' : 'Explore my experience'}</a>
 							<a class="button button--ghost" href={routes[locale].contact}>{es ? 'Iniciar conversación' : 'Start a conversation'}</a>
@@ -251,7 +251,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				<div class="flow">
 					<p class="eyebrow">{es ? 'Proyectos seleccionados' : 'Selected projects'}</p>
 					<h1>{es ? 'Trabajo que une estrategia, producto y ejecución.' : 'Work that brings strategy, product, and execution together.'}</h1>
-					<p class="hero__lede">{es ? 'Experiencias ecommerce, productos propios y conceptos diseñados para resolver necesidades reales con claridad.' : 'Ecommerce experiences, independent products, and concepts designed to solve real needs with clarity.'}</p>
+					<p class="hero__lede">{es ? 'Experiencias ecommerce, productos propios y conceptos diseñados para resolver necesidades reales del negocio.' : 'Ecommerce experiences, independent products, and concepts designed to solve real business needs.'}</p>
 				</div>
 				<dl class="work-folio">
 					<div><dt>{String(clientWork.length).padStart(2, '0')}</dt><dd>{es ? 'Marcas' : 'Brands'}</dd></div>
@@ -288,7 +288,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				<p class="eyebrow">{es ? 'Servicios' : 'Services'}</p>
 				<h1>{es ? 'De la oportunidad comercial a una solución que tu equipo puede operar.' : 'From commercial opportunity to a solution your team can operate.'}</h1>
 				<p class="hero__lede">{es ? 'Defino prioridades, diseño la experiencia y participo en la implementación para conectar estrategia, tecnología y resultados.' : 'I define priorities, design the experience, and work through implementation to connect strategy, technology, and outcomes.'}</p>
-				<a class="button" href={routes[locale].contact}>{es ? 'Contarme tu reto' : 'Tell me about your challenge'}</a>
+				<a class="button" href={routes[locale].contact}>{es ? 'Contáctame' : 'Contact me'}</a>
 			</section>
 			<section class="section service-grid">
 				{services.map((service, index) => <article class="service-card"><span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>)}
@@ -310,7 +310,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 			<section class="hero compact-hero">
 				<p class="eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p>
 				<h1>{es ? 'IA integrada a productos y operaciones ecommerce.' : 'AI integrated into ecommerce products and operations.'}</h1>
-				<p class="hero__lede">{es ? 'Diseño asistentes, automatizaciones y sistemas que trabajan con contexto real, acciones claras y decisiones humanas.' : 'I design assistants, automations, and systems that work with real context, clear actions, and human decisions.'}</p>
+				<p class="hero__lede">{es ? 'Diseño asistentes, automatizaciones y sistemas que trabajan con contexto en tiempo real, interconectados, con acciones claras y decisiones humanas.' : 'I design assistants, automations, and systems that work with real-time, connected context, clear actions, and human decisions.'}</p>
 			</section>
 			<section class="section ai-grid">
 				{aiSystems.map(([title, text], index) => <article><span>0{index + 1}</span><h2>{title}</h2><p>{text}</p></article>)}
@@ -322,7 +322,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<li>{es ? 'Convierte contexto en acciones comprensibles y reversibles.' : 'It turns context into understandable, reversible actions.'}</li>
 					<li>{es ? 'Se integra con permisos, datos y decisiones del negocio.' : 'It integrates with business permissions, data, and decisions.'}</li>
 				</ul>
-				<a class="button" href={routes[locale].contact}>{es ? 'Explorar una oportunidad con IA' : 'Explore an AI opportunity'}</a>
+				<a class="button" href={routes[locale].contact}>{es ? 'Quiero mi negocio con IA' : 'I want my business running on AI'}</a>
 			</section>
 		</div>
 	)
@@ -336,7 +336,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<p class="eyebrow">{es ? 'Perfil profesional' : 'Professional profile'}</p>
 					<h1>{profile.name}</h1>
 					<p class="profile-headline">{about.headline}</p>
-					<p class="hero__lede">{es ? 'Más de ocho años conectando estrategia comercial, ecommerce, paid media, producto digital y ejecución técnica.' : 'More than eight years connecting commercial strategy, ecommerce, paid media, digital product, and technical delivery.'}</p>
+					<p class="hero__lede">{about.summary}</p>
 					<div class="hero__actions">
 						{cvHref && <a class="button link-with-icon" href={cvHref} download data-analytics-event="download_cv"><Icon name="download" />{es ? 'Descargar CV' : 'Download CV'}</a>}
 						<a class="button button--ghost" href={routes[locale].contact}>{es ? 'Contacto' : 'Contact'}</a>
@@ -345,10 +345,11 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				<figure class="about-hero__portrait"><Image src={profilePhoto} alt={es ? 'Retrato de Jossue Alcalá' : 'Portrait of Jossue Alcalá'} width={640} height={800} loading="eager" decoding="async" /></figure>
 			</section>
 			<section class="section"><div class="section-heading"><p class="index">01 / {es ? 'Marcas' : 'Brands'}</p><h2>{es ? 'Experiencia en tecnología, retail, salud y consumo.' : 'Experience across technology, retail, health, and consumer brands.'}</h2></div><ul class="brand-strip">{brands.map((brand) => <li><BrandMark brand={brand} locale={locale} size="md" decorative={false} /></li>)}</ul></section>
-			<section class="section"><div class="section-heading"><p class="index">02 / {es ? 'Impacto profesional' : 'Professional impact'}</p><h2>{es ? 'Resultados dentro de contextos comerciales reales.' : 'Outcomes inside real commercial contexts.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li data-kpi-item><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
+			<section class="section"><div class="section-heading"><p class="index">02 / {es ? 'Impacto profesional' : 'Professional impact'}</p><h2>{es ? 'Resultados en contextos comerciales reales.' : 'Results in real commercial contexts.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li data-kpi-item><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
 			<section class="section"><div class="section-heading"><p class="index">03 / {es ? 'Experiencia' : 'Experience'}</p><h2>{es ? 'Una trayectoria entre negocio, growth y producto.' : 'A career across business, growth, and product.'}</h2></div><ol class="profile-timeline">{about.experience.map((item) => <li><p class="profile-timeline__meta"><span>{item.period}</span><span>{item.org}</span></p><h2>{item.role}</h2><ul class="list">{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul></li>)}</ol></section>
 			<section class="section about-capabilities"><div class="section-heading"><p class="index">04 / {es ? 'Capacidades' : 'Capabilities'}</p><h2>{es ? 'Dirección estratégica con capacidad técnica.' : 'Strategic direction with technical capability.'}</h2></div><div class="capability-grid">{capabilities.map((capability, index) => <article><span>0{index + 1}</span><Icon name={capability.icon} size="md" /><h3>{capability.title}</h3><p>{capability.text}</p></article>)}</div><StackCarousel locale={locale} /></section>
-			<section class="section about-details"><div><p class="index">05 / {es ? 'Formación' : 'Education'}</p><ul class="list">{about.education.map((item) => <li>{item}</li>)}</ul></div><div><p class="index">06 / {es ? 'Idiomas y enlaces' : 'Languages and links'}</p><ul class="list">{about.languages.map((item) => <li>{item}</li>)}{about.links.map((link) => <li><a class="link-with-icon" href={link.href} rel="noreferrer" data-analytics-event={link.event}>{link.label}<Icon name="arrow-up-right" /></a></li>)}</ul></div></section>
+			<section class="section about-skills"><div class="section-heading"><p class="index">05 / {es ? 'Habilidades' : 'Skills'}</p><h2>{es ? 'Stack y habilidades aplicadas al negocio.' : 'Stack and skills applied to the business.'}</h2></div><div class="about-skills__grid"><div class="flow"><p class="eyebrow">{es ? 'Plataformas y técnica' : 'Platforms and technical'}</p><ul class="list">{about.skills.map((item) => <li>{item}</li>)}</ul></div><div class="flow"><p class="eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p><ul class="list">{about.aiCapabilities.map((item) => <li>{item}</li>)}</ul></div></div></section>
+			<section class="section about-details"><div><p class="index">06 / {es ? 'Formación' : 'Education'}</p><ul class="list">{about.education.map((item) => <li>{item}</li>)}</ul></div><div><p class="index">07 / {es ? 'Idiomas y enlaces' : 'Languages and links'}</p><ul class="list">{about.languages.map((item) => <li>{item}</li>)}{about.links.map((link) => <li><a class="link-with-icon" href={link.href} rel="noreferrer" data-analytics-event={link.event}>{link.label}<Icon name="arrow-up-right" /></a></li>)}</ul></div></section>
 		</div>
 	)
 }
@@ -358,8 +359,8 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 		<div class="page shell contact-page">
 			<section class="hero compact-hero contact-hero">
 				<p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
-				<h1>{es ? 'Hablemos de lo que quieres construir, mejorar o lanzar.' : 'Let’s discuss what you want to build, improve, or launch.'}</h1>
-				<p class="hero__lede">{es ? 'Comparte el contexto, la oportunidad y lo que necesitas mover. Te responderé con preguntas claras y un siguiente paso concreto.' : 'Share the context, the opportunity, and what needs to move. I will respond with clear questions and a concrete next step.'}</p>
+				<h1>{es ? 'Hablemos de lo que quieres construir, mejorar o crear.' : 'Let’s discuss what you want to build, improve, or create.'}</h1>
+				<p class="hero__lede">{es ? 'Compárteme tus dudas y te responderé con soluciones claras y un siguiente paso concreto.' : 'Share your questions and I will reply with clear solutions and a concrete next step.'}</p>
 			</section>
 			<section class="section contact-layout">
 				<div class="flow"><p class="index">{es ? 'Canales directos' : 'Direct channels'}</p><h2>{es ? 'Elige el canal que te resulte más cómodo.' : 'Choose the channel that works best for you.'}</h2></div>

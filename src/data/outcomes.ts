@@ -36,8 +36,8 @@ const outcomes: HomeOutcome[] = [
 		value: { es: '>$1M', en: '>$1M' },
 		suffix: { es: 'MXN', en: 'MXN' },
 		detail: {
-			es: 'Presupuesto mensual administrado · ≈ US$50K.',
-			en: 'Monthly budget managed · ≈ US$50K.',
+			es: 'Presupuesto mensual administrado.',
+			en: 'Monthly budget managed.',
 		},
 		source: 'CV 2026-04-13',
 	},
@@ -45,8 +45,8 @@ const outcomes: HomeOutcome[] = [
 		label: { es: 'Experiencia profesional', en: 'Professional experience' },
 		value: { es: '+8 años', en: '+8 years' },
 		detail: {
-			es: 'Un solo stack: desarrollo web y Shopify, UX/CX para CRO, paid media y sistemas operativos con IA.',
-			en: 'One stack: web and Shopify development, UX/CX for CRO, paid media, and AI operating systems.',
+			es: 'Un solo stack: desarrollo web y Shopify, UX/CX para CRO y paid media.',
+			en: 'One stack: web and Shopify development, UX/CX for CRO, and paid media.',
 		},
 		source: 'CV 2026-04-13',
 	},

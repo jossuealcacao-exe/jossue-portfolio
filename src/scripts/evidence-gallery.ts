@@ -18,6 +18,7 @@ interface MediaPayload {
 	viewport: string;
 	capturedAt: string;
 	sourceUrl: string;
+	isPhone?: boolean;
 	annotations: AnnotationPayload[];
 }
 
@@ -489,6 +490,8 @@ function createLightboxController(
 		image.src = item.src;
 		image.alt = item.alt;
 		caption.textContent = item.caption;
+		// Non-phone captures render flat: the device chrome collapses via CSS.
+		dialog.querySelector('[data-lightbox-device]')?.classList.toggle('is-flat', !item.isPhone);
 		counter.textContent = `${pad(index + 1)} / ${pad(payload.items.length)}`;
 		prevBtn.hidden = payload.items.length < 2;
 		nextBtn.hidden = payload.items.length < 2;

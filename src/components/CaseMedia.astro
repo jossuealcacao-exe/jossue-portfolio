@@ -1,36 +1,6 @@
 ---
 import { Image } from 'astro:assets';
-import hermesQtyEditable from '../assets/cases/bloqio-cro-apps/hermes-qty-editable.png';
-import hermesStickyDesktop from '../assets/cases/bloqio-cro-apps/hermes-sticky-desktop.png';
-import hermesStickyMobile from '../assets/cases/bloqio-cro-apps/hermes-sticky-mobile.png';
-import hermesVariantSync from '../assets/cases/bloqio-cro-apps/hermes-variant-sync.png';
-import bloqioGalleryPublicDesktop from '../assets/cases/bloqio-cro-apps/gallery-public-desktop.png';
-import hermesPublicMobile from '../assets/cases/bloqio-cro-apps/hermes-public-mobile.png';
-import prometeoPublicDesktop from '../assets/cases/bloqio-cro-apps/prometeo-public-desktop.png';
-import builderEntryDesktop from '../assets/cases/bloqio-builder/builder-entry-desktop.png';
-import builderGuidedMobile from '../assets/cases/bloqio-builder/builder-guided-mobile.png';
-import prometeoTopbarCountdown from '../assets/cases/bloqio-cro-apps/prometeo-topbar-countdown.png';
-import prometeoTopbarCta from '../assets/cases/bloqio-cro-apps/prometeo-topbar-cta.png';
-import prometeoTopbarOffer from '../assets/cases/bloqio-cro-apps/prometeo-topbar-offer.png';
-import prometeoTopbarPdp from '../assets/cases/bloqio-cro-apps/prometeo-topbar-pdp.png';
-import casaTecalliCollectionDesktop from '../assets/cases/tiendaonline/casa-tecalli-collection-desktop.png';
-import casaTecalliHomeDesktop from '../assets/cases/tiendaonline/casa-tecalli-home-desktop.png';
-import casaTecalliProductMobile from '../assets/cases/tiendaonline/casa-tecalli-product-mobile.png';
-import collectionMobile from '../assets/cases/wu-nutrition/collection-mobile.png';
-import danielaAssistantMobile from '../assets/cases/wu-nutrition/daniela-assistant-mobile.png';
-import homeMobile from '../assets/cases/wu-nutrition/home-mobile.png';
-import productMobile from '../assets/cases/wu-nutrition/product-mobile.png';
-import productStickyMobile from '../assets/cases/wu-nutrition/product-sticky-mobile.png';
-import lcvCategoryDesktop from '../assets/cases/la-carniceria-virtual/category-desktop.jpg';
-import lcvHomeDesktop from '../assets/cases/la-carniceria-virtual/home-desktop.jpg';
-import lcvLighthouseMobile from '../assets/cases/la-carniceria-virtual/lighthouse-home-mobile.jpg';
-import lcvPdpMobile from '../assets/cases/la-carniceria-virtual/pdp-mobile.jpg';
-import miawseoBreedMobile from '../assets/cases/miawseo/breed-mobile.png';
-import miawseoHomeDesktop from '../assets/cases/miawseo/home-desktop.png';
-import miawseoNetworkDesktop from '../assets/cases/miawseo/network-desktop.png';
-import vineriaGrapeModalMobile from '../assets/cases/vineria/grape-modal-mobile.png';
-import vineriaHomeMobile from '../assets/cases/vineria/explorer-mobile.png';
-import vineriaHomeDesktop from '../assets/cases/vineria/home-desktop.png';
+import type { ImageMetadata } from 'astro';
 import Icon from './Icon.astro';
 
 interface MediaItem {
@@ -50,44 +20,24 @@ interface Props {
 
 const { media, locale } = Astro.props;
 const es = locale === 'es';
-const images = {
-	'home-mobile': homeMobile,
-	'collection-mobile': collectionMobile,
-	'product-mobile': productMobile,
-	'product-sticky-mobile': productStickyMobile,
-	'daniela-assistant-mobile': danielaAssistantMobile,
-	'builder-entry-desktop': builderEntryDesktop,
-	'builder-guided-mobile': builderGuidedMobile,
-	'casa-tecalli-home-desktop': casaTecalliHomeDesktop,
-	'casa-tecalli-collection-desktop': casaTecalliCollectionDesktop,
-	'casa-tecalli-product-mobile': casaTecalliProductMobile,
-	'lcv-home-desktop': lcvHomeDesktop,
-	'lcv-category-desktop': lcvCategoryDesktop,
-	'lcv-pdp-mobile': lcvPdpMobile,
-	'lcv-lighthouse-mobile': lcvLighthouseMobile,
-	'prometeo-public-desktop': prometeoPublicDesktop,
-	'hermes-public-mobile': hermesPublicMobile,
-	'gallery-public-desktop': bloqioGalleryPublicDesktop,
-	'prometeo-topbar-offer': prometeoTopbarOffer,
-	'prometeo-topbar-countdown': prometeoTopbarCountdown,
-	'prometeo-topbar-cta': prometeoTopbarCta,
-	'prometeo-topbar-pdp': prometeoTopbarPdp,
-	'hermes-sticky-mobile': hermesStickyMobile,
-	'hermes-sticky-desktop': hermesStickyDesktop,
-	'hermes-variant-sync': hermesVariantSync,
-	'hermes-qty-editable': hermesQtyEditable,
-	'miawseo-home-desktop': miawseoHomeDesktop,
-	'miawseo-network-desktop': miawseoNetworkDesktop,
-	'miawseo-breed-mobile': miawseoBreedMobile,
-	'vineria-home-desktop': vineriaHomeDesktop,
-	'vineria-home-mobile': vineriaHomeMobile,
-	'vineria-grape-modal-mobile': vineriaGrapeModalMobile,
-} as const;
+
+// Every asset under assets/cases is addressable by its basename (without extension).
+const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/*.{png,jpg,jpeg,webp}', {
+	eager: true,
+});
+const images: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(modules)) {
+	const name = path.split('/').pop()?.replace(/\.(png|jpe?g|webp)$/i, '');
+	if (name) images[name] = mod.default;
+}
 
 const visibleMedia = media.flatMap((item) => {
-	const image = images[item.key as keyof typeof images];
-	const isMobile = /mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`);
-	return image ? [{ ...item, image, isMobile }] : [];
+	const image = images[item.key];
+	if (!image) return [];
+	// Portrait phone captures get the device mockup treatment.
+	const isPhone = image.height / image.width > 1.7;
+	const isMobile = isPhone || /mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`);
+	return [{ ...item, image, isMobile, isPhone }];
 });
 
 const payload = visibleMedia.map((item) => ({
@@ -97,6 +47,7 @@ const payload = visibleMedia.map((item) => ({
 	viewport: item.viewport,
 	capturedAt: item.capturedAt,
 	sourceUrl: item.sourceUrl,
+	isPhone: item.isPhone,
 	annotations: [],
 }));
 
@@ -150,7 +101,7 @@ const copy = {
 							aria-roledescription="slide"
 							aria-label={`${index + 1} / ${visibleMedia.length}`}
 						>
-							<div class="evidence-frame">
+							<div class:list={['evidence-frame', { 'evidence-frame--device': item.isPhone }]}>
 								<button
 									type="button"
 									class="evidence-trigger"
@@ -158,15 +109,34 @@ const copy = {
 									data-index={index}
 									aria-label={`${item.alt} — ${copy.open}`}
 								>
-									<Image
-										src={item.image}
-										alt={item.alt}
-										width={720}
-										format="webp"
-										quality={84}
-										loading={index === 0 ? 'eager' : 'lazy'}
-										decoding="async"
-									/>
+									{item.isPhone ? (
+										<span class="iphone">
+											<span class="iphone__buttons" aria-hidden="true" />
+											<span class="iphone__power" aria-hidden="true" />
+											<span class="iphone__screen">
+												<Image
+													src={item.image}
+													alt={item.alt}
+													width={720}
+													format="webp"
+													quality={84}
+													loading={index === 0 ? 'eager' : 'lazy'}
+													decoding="async"
+												/>
+												<span class="iphone__island" aria-hidden="true" />
+											</span>
+										</span>
+									) : (
+										<Image
+											src={item.image}
+											alt={item.alt}
+											width={720}
+											format="webp"
+											quality={84}
+											loading={index === 0 ? 'eager' : 'lazy'}
+											decoding="async"
+										/>
+									)}
 									<span class="evidence-trigger__hint">
 										<span>{copy.open}</span>
 										<Icon name="arrow-up-right" />
@@ -224,14 +194,21 @@ const copy = {
 		</button>
 		<figure class="evidence-lightbox__figure">
 			<div class="evidence-lightbox__frame" data-lightbox-frame>
-				<div class="evidence-lightbox__canvas">
-					<img data-lightbox-image alt="" />
-					<div class="evidence-lightbox__markers" data-lightbox-markers hidden></div>
-					<div class="hotspot-cards" data-lightbox-hotspot-card hidden aria-live="polite"></div>
+				<div class="evidence-lightbox__canvas" data-lightbox-device>
+					<span class="iphone iphone--lightbox">
+						<span class="iphone__buttons" aria-hidden="true"></span>
+						<span class="iphone__power" aria-hidden="true"></span>
+						<span class="iphone__screen">
+							<img data-lightbox-image alt="" />
+							<span class="iphone__island" aria-hidden="true"></span>
+							<div class="evidence-lightbox__markers" data-lightbox-markers hidden></div>
+							<div class="hotspot-cards" data-lightbox-hotspot-card hidden aria-live="polite"></div>
+						</span>
+					</span>
 				</div>
 			</div>
 			<figcaption>
-				<strong id="evidence-lightbox-title" data-lightbox-caption></strong>
+				<strong id="evidence-lightbox-title" class="evidence-lightbox__badge" data-lightbox-caption></strong>
 			</figcaption>
 		</figure>
 		<button type="button" class="evidence-lightbox__nav evidence-lightbox__nav--next" data-lightbox-next aria-label={copy.next}>

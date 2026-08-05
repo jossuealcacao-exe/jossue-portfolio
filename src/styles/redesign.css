@@ -195,14 +195,16 @@
 		background: var(--accent);
 	}
 
-	/* While pinned, the in-flow kicker hands off to the fixed glass bar (no duplicate). */
+	/* While pinned, the in-flow kicker hands off to the fixed chip (no duplicate). */
 	.section-heading > .index,
-	.profile-section > .index {
+	.profile-section > .index,
+	.case-grid > .index {
 		transition: opacity 180ms var(--ease-out);
 	}
 
 	.section-heading > .index.is-spy-active,
-	.profile-section > .index.is-spy-active {
+	.profile-section > .index.is-spy-active,
+	.case-grid > .index.is-spy-active {
 		opacity: 0;
 	}
 
@@ -929,7 +931,8 @@
 		--carousel-gutter: clamp(0.75rem, 3vw, 2.25rem);
 		display: grid;
 		grid-auto-flow: column;
-		grid-auto-columns: minmax(min(88vw, 23rem), min(88vw, 23rem));
+		/* Narrower than the viewport so the next card peeks in and hints the swipe. */
+		grid-auto-columns: min(84vw, 21rem);
 		gap: clamp(1rem, 2.2vw, 2rem);
 		margin-inline: calc(var(--carousel-gutter) * -1);
 		padding-inline: var(--carousel-gutter);
@@ -1788,6 +1791,29 @@
 		}
 	}
 
+	.about-skills {
+		display: grid;
+		gap: var(--space-4);
+	}
+
+	.about-skills__grid {
+		display: grid;
+		gap: var(--space-3);
+		align-items: start;
+	}
+
+	.about-skills__grid .list li {
+		color: var(--muted);
+		line-height: 1.55;
+	}
+
+	@media (min-width: 52rem) {
+		.about-skills__grid {
+			grid-template-columns: 1fr 1fr;
+			gap: var(--space-4);
+		}
+	}
+
 	.about-details {
 		display: grid;
 		gap: var(--space-4);
@@ -2047,6 +2073,8 @@
 	.diagram {
 		display: grid;
 		gap: var(--space-2);
+		/* <figure> UA margins (40px per side) were shrinking the card on mobile. */
+		margin: 0;
 		padding: clamp(1.25rem, 3vw, 2rem);
 		border: 1px solid var(--line);
 		background: var(--surface);
@@ -2243,6 +2271,167 @@
 		width: 100%;
 		max-height: 42rem;
 		object-fit: contain;
+	}
+
+	/* ——— iPhone 17 Pro mockup ———————————————————————————
+	   Sized with container-query units so the titanium frame, bezel,
+	   Dynamic Island and side keys scale with the device width. */
+	.evidence-frame--device {
+		border: 0;
+		background: transparent;
+		container-type: inline-size;
+	}
+
+	.evidence-frame--device .evidence-trigger {
+		overflow: visible;
+		border-radius: 0;
+		background: transparent;
+	}
+
+	.iphone {
+		position: relative;
+		display: block;
+		width: 100%;
+		padding: 2.9cqw;
+		background: linear-gradient(150deg, #56565d 0%, #2b2b30 34%, #121216 66%, #43434a 100%);
+		border-radius: 17cqw;
+		box-shadow:
+			inset 0 0 0 1px color-mix(in srgb, #ffffff 15%, transparent),
+			inset 0 1px 1px color-mix(in srgb, #ffffff 24%, transparent),
+			0 1.5rem 3.2rem color-mix(in srgb, #08080a 34%, transparent),
+			0 0.4rem 1rem color-mix(in srgb, #08080a 22%, transparent);
+	}
+
+	.iphone__screen {
+		position: relative;
+		display: block;
+		overflow: hidden;
+		padding: 2.1cqw;
+		border-radius: 14.4cqw;
+		background: #000;
+	}
+
+	.iphone__screen img {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: none;
+		border-radius: 12.2cqw;
+		object-fit: cover;
+	}
+
+	.iphone__island {
+		position: absolute;
+		top: 4cqw;
+		left: 50%;
+		width: 25.5cqw;
+		height: 7.4cqw;
+		translate: -50% 0;
+		border-radius: 100rem;
+		background: #060608;
+		box-shadow:
+			inset 0 0 0 1px color-mix(in srgb, #ffffff 6%, transparent),
+			0 0 0.4cqw color-mix(in srgb, #000000 60%, transparent);
+	}
+
+	.iphone__buttons,
+	.iphone__power {
+		position: absolute;
+		width: 1.3cqw;
+		border-radius: 0.8cqw;
+	}
+
+	.iphone__buttons {
+		left: -0.65cqw;
+		top: 36cqw;
+		height: 48cqw;
+		background: linear-gradient(
+			to bottom,
+			#43434a 0 15%,
+			transparent 15% 31%,
+			#43434a 31% 62%,
+			transparent 62% 71%,
+			#43434a 71% 100%
+		);
+	}
+
+	.iphone__power {
+		right: -0.65cqw;
+		top: 54cqw;
+		height: 24cqw;
+		background: #43434a;
+		box-shadow: inset 0 0 0 0.5px color-mix(in srgb, #ffffff 18%, transparent);
+	}
+
+	/* Lightbox: the canvas hosts the device; flat items collapse the chrome.
+	   Size containment only applies in device mode — with an explicit width —
+	   because it would collapse the flat canvas's fit-content sizing to zero. */
+	.evidence-lightbox__canvas:not(.is-flat) {
+		container-type: inline-size;
+		width: min(19rem, calc(var(--lightbox-image-max-height, min(56svh, 32rem)) / 2.3), calc(100vw - 7.5rem));
+		max-height: none;
+	}
+
+	.evidence-lightbox__canvas:not(.is-flat) img {
+		width: 100%;
+		max-width: 100%;
+		max-height: none;
+	}
+
+	/* Flat items: the device wrappers become chrome-less fit-content blocks so the
+	   image sizes itself exactly like the original lightbox (max-height cap). */
+	.evidence-lightbox__canvas.is-flat {
+		width: fit-content;
+	}
+
+	.evidence-lightbox__canvas.is-flat .iphone,
+	.evidence-lightbox__canvas.is-flat .iphone__screen {
+		display: block;
+		width: fit-content;
+		padding: 0;
+		border-radius: 0;
+		background: none;
+		box-shadow: none;
+	}
+
+	.evidence-lightbox__canvas.is-flat img {
+		width: auto;
+		max-height: var(--lightbox-image-max-height, min(56svh, 32rem));
+		border-radius: 0;
+	}
+
+	.evidence-lightbox__canvas.is-flat :is(.iphone__island, .iphone__buttons, .iphone__power) {
+		display: none;
+	}
+
+	/* Caption badge inside the lightbox. */
+	.evidence-lightbox__figure figcaption {
+		justify-items: center;
+		padding-top: 0.9rem;
+	}
+
+	strong.evidence-lightbox__badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.55rem;
+		max-width: min(46rem, 92%);
+		padding: 0.55rem 0.9rem;
+		border: 1px solid color-mix(in srgb, #ffffff 24%, transparent);
+		background: color-mix(in srgb, #ffffff 9%, transparent);
+		color: #f6f6f2;
+		font-family: var(--body);
+		font-size: 0.82rem;
+		font-weight: 650;
+		letter-spacing: 0.015em;
+		line-height: 1.35;
+	}
+
+	strong.evidence-lightbox__badge::before {
+		content: '';
+		flex: none;
+		width: 0.5rem;
+		height: 0.5rem;
+		background: var(--accent);
 	}
 
 	@media (min-width: 64rem) {
