@@ -6,15 +6,21 @@
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
+		"dev": "astro dev",
+		"api": "node --env-file=.env.api api/server.mjs",
+		"test:api": "node --test api/server.test.mjs",
+		"test:worker": "node --test worker/index.test.mjs",
+		"build": "astro build",
+		"build:production": "PUBLIC_SITE_URL=https://jossuealcala.com PUBLIC_CONTACT_ENDPOINT=/api/contact PUBLIC_GA4_ID=G-LVEXEJH1YJ astro build",
+		"deploy": "npm run build:production && npx --yes wrangler@4.119.0 deploy",
+		"submissions": "node --env-file=.env.api scripts/list-submissions.mjs",
     "preview": "astro preview",
     "check": "astro check",
     "lint": "eslint .",
     "test:links": "node scripts/test-links.mjs",
     "test:routes": "node scripts/test-routes.mjs",
     "test:e2e": "playwright test --config tests/playwright.config.ts",
-    "validate": "npm run check && npm run lint && npm run build && npm run test:routes && npm run test:links && npm run test:e2e",
+		"validate": "npm run check && npm run lint && npm run build && npm run test:api && npm run test:worker && npm run test:routes && npm run test:links && npm run test:e2e",
     "astro": "astro"
   },
   "dependencies": {

@@ -2,7 +2,8 @@ import type { AnalyticsEvent } from '../data/analytics';
 
 declare global {
 	interface Window {
-		dataLayer?: AnalyticsEvent[];
+		dataLayer?: unknown[];
+		gtag?: (...args: unknown[]) => void;
 	}
 }
 

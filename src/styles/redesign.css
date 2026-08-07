@@ -280,10 +280,14 @@
 		position: sticky;
 		top: 0;
 		z-index: 20;
-		border-bottom: 1px solid transparent;
-		background: color-mix(in srgb, var(--paper) 92%, transparent);
-		backdrop-filter: blur(1rem) saturate(140%);
-		-webkit-backdrop-filter: blur(1rem) saturate(140%);
+		border-bottom: 1px solid color-mix(in srgb, #ffffff 52%, transparent);
+		background:
+			linear-gradient(180deg, color-mix(in srgb, #ffffff 42%, transparent), transparent 72%),
+			color-mix(in srgb, var(--paper) 68%, transparent);
+		box-shadow:
+			inset 0 1px 0 color-mix(in srgb, #ffffff 72%, transparent),
+			0 0.55rem 1.8rem color-mix(in srgb, var(--ink) 4%, transparent);
+		backdrop-filter: blur(1.5rem) saturate(180%) contrast(104%);
 		transition:
 			background-color var(--motion-fast) var(--ease-out),
 			border-color var(--motion-fast) var(--ease-out),
@@ -296,9 +300,13 @@
 	}
 
 	.site-header.is-scrolled {
-		border-bottom-color: var(--line);
-		background: color-mix(in srgb, var(--paper) 84%, transparent);
-		box-shadow: 0 0.6rem 2rem color-mix(in srgb, var(--ink) 5%, transparent);
+		border-bottom-color: color-mix(in srgb, var(--ink) 10%, transparent);
+		background:
+			linear-gradient(180deg, color-mix(in srgb, #ffffff 48%, transparent), transparent 72%),
+			color-mix(in srgb, var(--paper) 58%, transparent);
+		box-shadow:
+			inset 0 1px 0 color-mix(in srgb, #ffffff 78%, transparent),
+			0 0.7rem 2rem color-mix(in srgb, var(--ink) 6%, transparent);
 	}
 
 	.site-header__inner {
@@ -377,8 +385,13 @@
 		padding: 0.55rem;
 		border: 1px solid var(--line);
 		border-radius: var(--radius-md);
-		background: var(--surface);
-		box-shadow: var(--shadow-raised);
+		background:
+			linear-gradient(150deg, color-mix(in srgb, #ffffff 48%, transparent), transparent 64%),
+			color-mix(in srgb, var(--paper) 72%, transparent);
+		box-shadow:
+			inset 0 1px 0 color-mix(in srgb, #ffffff 78%, transparent),
+			0 1rem 2.8rem color-mix(in srgb, var(--ink) 10%, transparent);
+		backdrop-filter: blur(1.6rem) saturate(180%);
 		transform-origin: top right;
 		animation: menu-in var(--motion-fast) var(--ease-out) both;
 	}
@@ -479,7 +492,6 @@
 		border-bottom-color: transparent;
 		background: transparent;
 		backdrop-filter: none;
-		-webkit-backdrop-filter: none;
 		box-shadow: none;
 		pointer-events: none;
 	}
@@ -501,7 +513,6 @@
 		border-color: color-mix(in srgb, var(--ink) 16%, transparent);
 		background: color-mix(in srgb, var(--paper) 62%, transparent);
 		backdrop-filter: blur(14px) saturate(1.3);
-		-webkit-backdrop-filter: blur(14px) saturate(1.3);
 	}
 
 	.menu__panel a {
@@ -842,6 +853,12 @@
 		padding-top: 0;
 	}
 
+	@media (min-width: 64rem) {
+		.opportunity-section {
+			padding-top: clamp(2.5rem, 5vw, 5rem);
+		}
+	}
+
 	.opportunity-grid {
 		display: grid;
 		gap: var(--space-3);
@@ -987,7 +1004,7 @@
 
 	.case-card__link:hover {
 		border-color: color-mix(in srgb, var(--ink) 35%, var(--line));
-		box-shadow: var(--shadow-raised);
+		box-shadow: 0 0.45rem 1.2rem color-mix(in srgb, var(--ink) 6%, transparent);
 	}
 
 	.case-card__meta,
@@ -1000,35 +1017,12 @@
 			background-color var(--motion-base) var(--ease-out);
 	}
 
-	/* Desktop: the whole card inverts to a dark scheme on hover. */
+	/* Desktop hover: discreet — ink border, soft close shadow, faint accent tint. */
 	@media (hover: hover) and (min-width: 48rem) {
 		.case-card__link:hover {
 			border-color: var(--ink);
-			color: var(--paper);
-			background: var(--ink);
-		}
-
-		.case-card__link:hover .case-card__content h3 {
-			color: var(--paper);
-		}
-
-		.case-card__link:hover .case-card__meta,
-		.case-card__link:hover .case-card__content p {
-			color: color-mix(in srgb, var(--paper) 68%, transparent);
-		}
-
-		.case-card__link:hover .case-card__meta span + span::before {
-			color: color-mix(in srgb, var(--paper) 42%, transparent);
-		}
-
-		.case-card__link:hover .stack-list li {
-			border-color: color-mix(in srgb, var(--paper) 26%, transparent);
-			color: var(--paper);
-			background: color-mix(in srgb, var(--paper) 8%, transparent);
-		}
-
-		.case-card__link:hover .stack-list .tool-mark img {
-			filter: grayscale(1) brightness(0) invert(1);
+			background: color-mix(in srgb, var(--accent) 3%, var(--surface));
+			box-shadow: 0 0.45rem 1.2rem color-mix(in srgb, var(--ink) 6%, transparent);
 		}
 	}
 
@@ -1414,6 +1408,14 @@
 		letter-spacing: 0.04em;
 	}
 
+	/* About KPIs carry compound values ("+21% MX · +35% PE"): smaller scale,
+	   wrapping allowed, so they never overflow their cell. */
+	.kpi-grid__value {
+		font-size: clamp(1.75rem, 2.6vw, 2.75rem);
+		line-height: 1.05;
+		white-space: normal;
+	}
+
 	.outcomes-grid__label,
 	.kpi-grid__label {
 		color: var(--ink);
@@ -1569,7 +1571,7 @@
 		width: 100%;
 		height: 100%;
 		max-width: 100%;
-		border: 0;
+		border: 1px solid var(--line);
 		border-radius: var(--radius-lg);
 		object-fit: cover;
 		object-position: center 18%;
@@ -1751,16 +1753,17 @@
 		}
 	}
 
+	/* Same hairline treatment as the home outcomes grid, for consistency. */
 	.kpi-grid {
 		gap: 1px;
-		border: 1px solid var(--line);
+		border: 1px solid var(--line-strong);
 		border-radius: var(--radius-lg);
 		overflow: hidden;
-		background: var(--line);
+		background: var(--line-strong);
 	}
 
 	.kpi-grid > li {
-		background: var(--surface);
+		background: var(--paper);
 	}
 
 	.profile-timeline {
@@ -1769,6 +1772,9 @@
 	}
 
 	.profile-timeline > li {
+		/* The global `li { max-width: 68ch }` was squeezing the whole role row
+		   and collapsing its third column into a one-word-per-line strip. */
+		max-width: none;
 		grid-template-columns: 1fr;
 		gap: 1rem;
 		padding-block: clamp(1.5rem, 4vw, 3rem);
@@ -2227,6 +2233,26 @@
 		gap: 0.75rem;
 	}
 
+	.evidence-carousel__viewport {
+		overscroll-behavior-inline: contain;
+		scroll-padding-inline: var(--gutter);
+		touch-action: pan-x pinch-zoom;
+		cursor: grab;
+	}
+
+	.evidence-carousel__viewport.is-dragging {
+		cursor: grabbing;
+		scroll-snap-type: none;
+		user-select: none;
+	}
+
+	.evidence-carousel__track,
+	.evidence-trigger,
+	.evidence-trigger img {
+		-webkit-user-drag: none;
+		user-select: none;
+	}
+
 	.evidence-carousel__nav {
 		border-radius: 0;
 		background: var(--surface);
@@ -2295,11 +2321,8 @@
 		padding: 2.9cqw;
 		background: linear-gradient(150deg, #56565d 0%, #2b2b30 34%, #121216 66%, #43434a 100%);
 		border-radius: 17cqw;
-		box-shadow:
-			inset 0 0 0 1px color-mix(in srgb, #ffffff 15%, transparent),
-			inset 0 1px 1px color-mix(in srgb, #ffffff 24%, transparent),
-			0 1.5rem 3.2rem color-mix(in srgb, #08080a 34%, transparent),
-			0 0.4rem 1rem color-mix(in srgb, #08080a 22%, transparent);
+		border: 1px solid color-mix(in srgb, #ffffff 18%, #242429);
+		box-shadow: none;
 	}
 
 	.iphone__screen {
@@ -2329,9 +2352,8 @@
 		translate: -50% 0;
 		border-radius: 100rem;
 		background: #060608;
-		box-shadow:
-			inset 0 0 0 1px color-mix(in srgb, #ffffff 6%, transparent),
-			0 0 0.4cqw color-mix(in srgb, #000000 60%, transparent);
+		border: 1px solid color-mix(in srgb, #ffffff 7%, transparent);
+		box-shadow: none;
 	}
 
 	.iphone__buttons,
@@ -2360,7 +2382,8 @@
 		top: 54cqw;
 		height: 24cqw;
 		background: #43434a;
-		box-shadow: inset 0 0 0 0.5px color-mix(in srgb, #ffffff 18%, transparent);
+		border: 0.5px solid color-mix(in srgb, #ffffff 18%, transparent);
+		box-shadow: none;
 	}
 
 	/* Lightbox: the canvas hosts the device; flat items collapse the chrome.
@@ -2498,6 +2521,11 @@
 		gap: var(--space-4);
 	}
 
+	.contact-form-section {
+		display: grid;
+		gap: var(--space-4);
+	}
+
 	.contact-channels {
 		display: grid;
 		gap: 0.75rem;
@@ -2540,6 +2568,240 @@
 		.contact-layout {
 			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
 		}
+
+		.contact-form-section {
+			grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+			align-items: start;
+		}
+	}
+
+	/* ——— Contact form ——————————————————————————————
+	   Editorial fields: hairline boxes, eyebrow labels, accent focus. */
+	.contact-form {
+		--field-line: var(--line);
+		--field-danger: #b3261e;
+		max-width: 52rem;
+	}
+
+	.form {
+		max-width: none;
+		gap: clamp(1rem, 2.5vw, 1.5rem);
+	}
+
+	/* A class-level `display` outranks the UA `[hidden]` rule, so the form and
+	   the success panel need their hidden state restated. */
+	.form[hidden],
+	.form-success[hidden] {
+		display: none;
+	}
+
+	.form__row {
+		display: grid;
+		gap: clamp(1rem, 2.5vw, 1.5rem);
+	}
+
+	@media (min-width: 40rem) {
+		.form__row {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+
+	.field {
+		gap: 0.45rem;
+		min-width: 0;
+	}
+
+	.field > label:not(.consent) {
+		display: flex;
+		align-items: baseline;
+		gap: 0.5rem;
+		color: var(--ink);
+		font-size: 0.72rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.field__req {
+		color: var(--muted);
+		font-size: 0.62rem;
+		font-weight: 650;
+		letter-spacing: 0.06em;
+	}
+
+	.field input,
+	.field textarea,
+	.field select {
+		min-height: 3.25rem;
+		padding: 0.85rem 0.9rem;
+		border: 1px solid var(--field-line);
+		background: var(--surface);
+		font-family: var(--body);
+		font-size: 1rem;
+		transition:
+			border-color var(--motion-fast) var(--ease-out),
+			box-shadow var(--motion-fast) var(--ease-out);
+	}
+
+	.field input::placeholder,
+	.field textarea::placeholder {
+		color: color-mix(in srgb, var(--muted) 70%, transparent);
+	}
+
+	.field select {
+		appearance: none;
+		padding-right: 2.4rem;
+		background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+		background-position: calc(100% - 1.15rem) 1.45rem, calc(100% - 0.85rem) 1.45rem;
+		background-size: 0.3rem 0.3rem, 0.3rem 0.3rem;
+		background-repeat: no-repeat;
+		cursor: pointer;
+	}
+
+	.field input:hover,
+	.field textarea:hover,
+	.field select:hover {
+		border-color: var(--line-strong);
+	}
+
+	.field input:focus-visible,
+	.field textarea:focus-visible,
+	.field select:focus-visible {
+		border-color: var(--accent);
+		outline: none;
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent);
+	}
+
+	.field textarea {
+		min-height: 9.5rem;
+		line-height: 1.5;
+	}
+
+	.field [aria-invalid='true'] {
+		border-color: var(--field-danger);
+	}
+
+	.field [aria-invalid='true']:focus-visible {
+		box-shadow: 0 0 0 2px color-mix(in srgb, var(--field-danger) 20%, transparent);
+	}
+
+	.field__meta {
+		justify-self: end;
+		color: var(--muted);
+		font-size: 0.72rem;
+		letter-spacing: 0.02em;
+	}
+
+	.field__error:empty {
+		display: none;
+	}
+
+	.field__error {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: var(--field-danger);
+		font-size: 0.82rem;
+		font-weight: 600;
+	}
+
+	.field__error::before {
+		content: '';
+		flex: none;
+		width: 0.4rem;
+		height: 0.4rem;
+		background: var(--field-danger);
+	}
+
+	.consent {
+		grid-template-columns: 1.35rem minmax(0, 1fr);
+		gap: 0.75rem;
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--field-line);
+		background: var(--surface);
+		color: var(--muted);
+		font-size: 0.92rem;
+		line-height: 1.45;
+		cursor: pointer;
+	}
+
+	.consent input {
+		width: 1.15rem;
+		height: 1.15rem;
+		margin-top: 0.15rem;
+		accent-color: var(--accent);
+		cursor: pointer;
+	}
+
+	.form__actions {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1rem;
+		padding-top: 0.35rem;
+	}
+
+	.form__actions .button:disabled {
+		cursor: progress;
+		opacity: 0.6;
+	}
+
+	.form__status:empty {
+		display: none;
+	}
+
+	.form__status {
+		margin: 0;
+		padding: 0.55rem 0.85rem;
+		border: 1px solid var(--line);
+		background: var(--surface);
+		font-size: 0.88rem;
+		font-weight: 600;
+	}
+
+	.form__status[data-tone='warn'] {
+		border-color: color-mix(in srgb, var(--ink) 30%, transparent);
+	}
+
+	.form__status[data-tone='error'] {
+		border-color: var(--field-danger);
+		color: var(--field-danger);
+	}
+
+	.form-success {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 1.15rem;
+		align-items: start;
+		padding: clamp(1.35rem, 3vw, 2rem);
+		border: 1px solid var(--line-strong);
+		background: var(--surface);
+	}
+
+	.form-success__mark {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		aspect-ratio: 1;
+		border: 1px solid var(--line);
+		color: var(--accent);
+		background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+	}
+
+	.form-success strong {
+		display: block;
+		font-family: var(--heading);
+		font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+		line-height: 1.15;
+	}
+
+	.form-success p {
+		color: var(--muted);
+	}
+
+	.form-success .button {
+		justify-self: start;
+		margin-top: 0.35rem;
 	}
 
 	.site-footer {
@@ -2612,6 +2874,9 @@
 		gap: 0.45rem;
 		font-weight: 750;
 		text-decoration: none;
+		/* Never split emails or phone numbers mid-token; wrap on spaces only. */
+		overflow-wrap: normal;
+		word-break: normal;
 	}
 
 	.footer-links a:hover {
@@ -2626,7 +2891,7 @@
 		}
 
 		.site-footer__directory {
-			grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1fr);
+			grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.75fr) minmax(0, 1.2fr);
 		}
 	}
 }

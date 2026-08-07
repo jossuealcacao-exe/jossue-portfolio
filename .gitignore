@@ -19,6 +19,10 @@ pnpm-debug.log*
 !.env.example
 .env.production
 
+# Local contact API records
+api/data/*.json
+api/data/*.tmp
+
 # confidential source material — keep local
 _inputs/cv/*.pdf
 _inputs/projects/*
@@ -29,6 +33,7 @@ _inputs/brand/*.zip
 playwright-report/
 test-results/
 .tmp-venv/
+.wrangler-dry-run/
 
 # macOS-specific files
 .DS_Store

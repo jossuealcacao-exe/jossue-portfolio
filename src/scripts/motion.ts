@@ -59,6 +59,9 @@ function bindReveals(): void {
 	}
 
 	targets.forEach((element) => element.classList.add('reveal'));
+	// threshold 0: very tall sections can never reach a ratio threshold
+	// (e.g. an 8% slice of a 10k px section exceeds the viewport), which
+	// left them permanently unrevealed; the rootMargin already delays entry.
 	const observer = new IntersectionObserver(
 		(entries) => {
 			entries.forEach((entry) => {
@@ -67,7 +70,7 @@ function bindReveals(): void {
 				observer.unobserve(entry.target);
 			});
 		},
-		{ rootMargin: '0px 0px -10% 0px', threshold: 0.08 },
+		{ rootMargin: '0px 0px -10% 0px', threshold: 0 },
 	);
 	targets.forEach((element) => observer.observe(element));
 }

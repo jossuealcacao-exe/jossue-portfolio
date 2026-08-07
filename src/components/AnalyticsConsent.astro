@@ -1,0 +1,139 @@
+---
+import { analyticsConfig } from '../data/analytics';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = locale === 'es'
+	? {
+		label: 'Preferencias de analitica',
+		text: 'Uso Google Analytics para entender que contenido resulta util y mejorar el sitio.',
+		accept: 'Aceptar analitica',
+		reject: 'Continuar sin analitica',
+	}
+	: {
+		label: 'Analytics preferences',
+		text: 'I use Google Analytics to understand which content is useful and improve the site.',
+		accept: 'Accept analytics',
+		reject: 'Continue without analytics',
+	};
+---
+
+{
+	analyticsConfig.ga4Id && (
+		<aside
+			class="analytics-consent"
+			data-analytics-consent
+			data-measurement-id={analyticsConfig.ga4Id}
+			aria-label={copy.label}
+			hidden
+		>
+			<p>{copy.text}</p>
+			<div class="analytics-consent__actions">
+				<button type="button" class="button" data-analytics-accept>{copy.accept}</button>
+				<button type="button" class="analytics-consent__reject" data-analytics-reject>{copy.reject}</button>
+			</div>
+		</aside>
+	)
+}
+
+<script>
+	const STORAGE_KEY = 'jossue-analytics-consent';
+	const consent = document.querySelector<HTMLElement>('[data-analytics-consent]');
+
+	function loadAnalytics(measurementId: string) {
+		if (document.querySelector(`script[data-ga4="${measurementId}"]`)) return;
+		window.dataLayer ??= [];
+		window.gtag = function gtag(...args: unknown[]) {
+			window.dataLayer?.push(args);
+		};
+		window.gtag('js', new Date());
+		window.gtag('config', measurementId, { anonymize_ip: true });
+
+		const script = document.createElement('script');
+		script.async = true;
+		script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
+		script.dataset.ga4 = measurementId;
+		document.head.append(script);
+	}
+
+	if (consent) {
+		const measurementId = consent.dataset.measurementId;
+		const savedPreference = localStorage.getItem(STORAGE_KEY);
+		if (savedPreference === 'granted' && measurementId) loadAnalytics(measurementId);
+		else if (savedPreference !== 'denied') consent.hidden = false;
+
+		consent.querySelector('[data-analytics-accept]')?.addEventListener('click', () => {
+			localStorage.setItem(STORAGE_KEY, 'granted');
+			consent.hidden = true;
+			if (measurementId) loadAnalytics(measurementId);
+		});
+		consent.querySelector('[data-analytics-reject]')?.addEventListener('click', () => {
+			localStorage.setItem(STORAGE_KEY, 'denied');
+			consent.hidden = true;
+		});
+	}
+</script>
+
+<style>
+	.analytics-consent {
+		position: fixed;
+		right: clamp(1rem, 3vw, 2rem);
+		bottom: clamp(1rem, 3vw, 2rem);
+		z-index: 80;
+		display: grid;
+		gap: 1rem;
+		width: min(28rem, calc(100vw - 2rem));
+		padding: 1.25rem;
+		border: 1px solid var(--line);
+		background: color-mix(in srgb, var(--paper) 94%, transparent);
+		box-shadow: 0 1rem 3rem rgb(0 0 0 / 12%);
+		backdrop-filter: blur(18px) saturate(130%);
+	}
+
+	.analytics-consent[hidden] {
+		display: none;
+	}
+
+	.analytics-consent p {
+		margin: 0;
+		font-size: 0.95rem;
+		line-height: 1.5;
+	}
+
+	.analytics-consent__actions {
+		display: flex;
+		align-items: center;
+		gap: 1rem;
+		flex-wrap: wrap;
+	}
+
+	.analytics-consent .button {
+		min-height: 2.75rem;
+		padding: 0.75rem 1rem;
+	}
+
+	.analytics-consent__reject {
+		padding: 0.5rem 0;
+		border: 0;
+		background: transparent;
+		color: var(--ink-muted);
+		font: inherit;
+		font-weight: 700;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+		cursor: pointer;
+	}
+
+	@media (max-width: 40rem) {
+		.analytics-consent {
+			left: 1rem;
+			right: 1rem;
+			bottom: 1rem;
+			width: auto;
+		}
+	}
+</style>

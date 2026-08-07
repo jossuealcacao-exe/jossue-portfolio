@@ -53,6 +53,7 @@ const description = publicCase?.summary ?? meta!.description;
 	description={description}
 	pathname={pathname}
 	counterpartSlug={entry?.data.counterpartSlug}
+	caseStudy={entry ? { title: entry.data.title, client: entry.data.client, role: entry.data.role, stack: entry.data.stack } : undefined}
 >
 	{
 		entry ? (

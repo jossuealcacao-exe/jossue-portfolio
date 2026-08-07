@@ -1,0 +1,45 @@
+{
+	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+	"name": "jossue-portfolio",
+	"main": "./worker/index.mjs",
+	"compatibility_date": "2026-08-05",
+	"workers_dev": true,
+	"routes": [
+		{
+			"pattern": "jossuealcala.com",
+			"custom_domain": true
+		},
+		{
+			"pattern": "www.jossuealcala.com",
+			"custom_domain": true
+		}
+	],
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"run_worker_first": ["/api/*", "/healthz"],
+		"html_handling": "force-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	"vars": {
+		"ALLOWED_ORIGINS": "https://jossuealcala.com,https://www.jossuealcala.com,https://jossue-portfolio.jossue-alcala-o.workers.dev",
+		"CONTACT_EMAIL_TO": "jossue.alcala.o@gmail.com"
+	},
+	"send_email": [
+		{
+			"name": "CONTACT_EMAIL",
+			"destination_address": "jossue.alcala.o@gmail.com"
+		}
+	],
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "jossue-portfolio-contact",
+			"database_id": "037a5771-0e76-40bb-b90b-6485ed1972b0",
+			"migrations_dir": "migrations"
+		}
+	],
+	"observability": {
+		"enabled": true
+	}
+}

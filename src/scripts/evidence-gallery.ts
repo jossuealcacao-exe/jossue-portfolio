@@ -175,6 +175,10 @@ function bindCarousel(gallery: HTMLElement): () => number {
 	if (!viewport || !slides.length) return () => 0;
 
 	let activeIndex = 0;
+	let pointerId: number | null = null;
+	let dragStartX = 0;
+	let dragStartLeft = 0;
+	let dragged = false;
 
 	const syncUI = () => {
 		slides.forEach((slide, index) => {
@@ -193,12 +197,57 @@ function bindCarousel(gallery: HTMLElement): () => number {
 		const slide = slides[bounded];
 		if (!slide) return;
 		activeIndex = bounded;
+		const viewportRect = viewport.getBoundingClientRect();
+		const slideRect = slide.getBoundingClientRect();
 		viewport.scrollTo({
-			left: slide.offsetLeft - viewport.offsetLeft,
+			left:
+				viewport.scrollLeft +
+				(slideRect.left - viewportRect.left) -
+				(viewport.clientWidth - slideRect.width) / 2,
 			behavior,
 		});
 		syncUI();
 	};
+
+	// Touch devices use native momentum scrolling. Pointer handling adds the same
+	// direct grab-and-drag interaction for mouse users without hijacking vertical scroll.
+	viewport.addEventListener('pointerdown', (event) => {
+		if (event.pointerType !== 'mouse' || event.button !== 0) return;
+		pointerId = event.pointerId;
+		dragStartX = event.clientX;
+		dragStartLeft = viewport.scrollLeft;
+		dragged = false;
+	});
+
+	viewport.addEventListener('pointermove', (event) => {
+		if (pointerId !== event.pointerId) return;
+		const delta = event.clientX - dragStartX;
+		if (!dragged && Math.abs(delta) < 6) return;
+		dragged = true;
+		viewport.classList.add('is-dragging');
+		viewport.setPointerCapture(event.pointerId);
+		viewport.scrollLeft = dragStartLeft - delta;
+	});
+
+	const finishDrag = (event: PointerEvent) => {
+		if (pointerId !== event.pointerId) return;
+		pointerId = null;
+		viewport.classList.remove('is-dragging');
+		if (viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId);
+	};
+
+	viewport.addEventListener('pointerup', finishDrag);
+	viewport.addEventListener('pointercancel', finishDrag);
+	viewport.addEventListener(
+		'click',
+		(event) => {
+			if (!dragged) return;
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			dragged = false;
+		},
+		{ capture: true },
+	);
 
 	dots.forEach((dot) => {
 		dot.addEventListener('click', () => {
@@ -212,12 +261,14 @@ function bindCarousel(gallery: HTMLElement): () => number {
 	nextBtn?.addEventListener('click', () => scrollToSlide(activeIndex + 1, interactionBehavior()));
 
 	const syncFromScroll = () => {
-		const center = viewport.scrollLeft + viewport.clientWidth * 0.5;
+		const viewportRect = viewport.getBoundingClientRect();
+		const center = viewportRect.left + viewportRect.width * 0.5;
 		let nearest = activeIndex;
 		let nearestDistance = Number.POSITIVE_INFINITY;
 
 		slides.forEach((slide, index) => {
-			const slideCenter = slide.offsetLeft + slide.offsetWidth * 0.5;
+			const slideRect = slide.getBoundingClientRect();
+			const slideCenter = slideRect.left + slideRect.width * 0.5;
 			const distance = Math.abs(center - slideCenter);
 			if (distance < nearestDistance) {
 				nearestDistance = distance;

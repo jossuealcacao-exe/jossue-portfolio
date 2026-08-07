@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import profilePhoto from '../assets/profile.jpeg';
 import { brandStrip } from '../data/brands';
-import { contact, contactEndpoint } from '../data/contact';
+import { contact } from '../data/contact';
 import { routes, type Locale, type PageKey } from '../data/i18n';
 import { homeOutcomes } from '../data/outcomes';
 import { profile, profileCopy } from '../data/profile';
@@ -367,10 +367,10 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				<ul class="contact-channels">
 					{contact.email && <li><a href={`mailto:${contact.email}`} data-analytics-event="click_email"><Icon name="envelope" /><span><small>Email</small>{contact.email}</span><Icon name="arrow-up-right" /></a></li>}
 					{contact.whatsapp && contact.phone && <li><a href={contact.whatsapp} rel="noreferrer" data-analytics-event="click_whatsapp"><Icon name="chat" /><span><small>WhatsApp</small>{contact.phone}</span><Icon name="arrow-up-right" /></a></li>}
-					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin"><span><small>LinkedIn</small>Jossue Alcalá</span><Icon name="arrow-up-right" /></a></li>}
+					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin"><Icon name="linkedin" size="md" /><span><small>LinkedIn</small>Jossue Alcalá</span><Icon name="arrow-up-right" /></a></li>}
 				</ul>
 			</section>
-			{contactEndpoint && <section class="section"><div class="section-heading"><p class="index">{es ? 'Cuéntame sobre el proyecto' : 'Tell me about the project'}</p><h2>{es ? 'Un poco de contexto es suficiente para empezar.' : 'A little context is enough to get started.'}</h2></div><ContactForm locale={locale} /></section>}
+			<section class="section contact-form-section"><div class="section-heading"><p class="index">{es ? 'Cuéntame sobre el proyecto' : 'Tell me about the project'}</p><h2>{es ? 'Un poco de contexto es suficiente para empezar.' : 'A little context is enough to get started.'}</h2></div><ContactForm locale={locale} /></section>
 		</div>
 	)
 }

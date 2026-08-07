@@ -1,7 +1,7 @@
 export const contact = {
-	email: 'jossue.alcala.o@gmail.com',
-	phone: '+52 33 2991 5487',
-	whatsapp: 'https://wa.me/523329915487',
+	email: 'hola@jossuealcala.com',
+	phone: '+52 33 1632 6710',
+	whatsapp: 'https://wa.me/523316326710',
 	location: null,
 	linkedin: 'https://www.linkedin.com/in/jossue-alcala',
 	github: 'https://github.com/jossuealcacao-exe',

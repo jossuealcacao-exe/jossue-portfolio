@@ -1,6 +1,8 @@
 ---
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import AnalyticsConsent from '../components/AnalyticsConsent.astro';
+import profileImage from '../assets/profile.jpeg';
 import { analyticsConfig } from '../data/analytics';
 import { contact } from '../data/contact';
 import { equivalentPath, routes, type Locale } from '../data/i18n';
@@ -14,15 +16,22 @@ interface Props {
 	description: string;
 	pathname: string;
 	counterpartSlug?: string;
+	caseStudy?: {
+		title: string;
+		client: string;
+		role: string;
+		stack: string[];
+	};
 }
 
-const { locale, title, description, pathname, counterpartSlug } = Astro.props;
+const { locale, title, description, pathname, counterpartSlug, caseStudy } = Astro.props;
 const alternateLocale: Locale = locale === 'es' ? 'en' : 'es';
 const alternatePath = equivalentPath(pathname, locale, alternateLocale, counterpartSlug);
 const site = Astro.site ?? new URL('https://portfolio.invalid');
 const canonical = new URL(pathname, site);
 const alternate = new URL(alternatePath, site);
 const defaultUrl = new URL(equivalentPath(pathname, locale, 'es', counterpartSlug), site);
+const socialImage = new URL(profileImage.src, site);
 const isProfilePage = pathname === routes[locale].home || pathname === routes[locale].about;
 const pageNode = {
 	'@type': isProfilePage ? 'ProfilePage' : 'WebPage',
@@ -59,6 +68,7 @@ const structuredData = {
 			...(contact.phone ? { telephone: contact.phone } : {}),
 			sameAs: [
 				...(contact.linkedin ? [contact.linkedin] : []),
+				...(contact.github ? [contact.github] : []),
 				'https://bloqio.app/jossuealcala/',
 				'https://skillshop.credential.net/profile/jossuealcala9406/wallet',
 			],
@@ -69,8 +79,26 @@ const structuredData = {
 			url: site.href,
 			name: 'Jossue Alcalá',
 			inLanguage: ['es', 'en'],
+			creator: { '@id': `${site.href}#person` },
 		},
 		pageNode,
+		...(caseStudy
+			? [
+					{
+						'@type': 'CreativeWork',
+						'@id': `${canonical.href}#project`,
+						url: canonical.href,
+						name: caseStudy.title,
+						description,
+						inLanguage: locale,
+						creator: { '@id': `${site.href}#person` },
+						author: { '@id': `${site.href}#person` },
+						about: caseStudy.client,
+						keywords: caseStudy.stack.join(', '),
+						abstract: caseStudy.role,
+					},
+				]
+			: []),
 	],
 };
 ---
@@ -82,6 +110,8 @@ const structuredData = {
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
+		<meta name="author" content={profile.name} />
+		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 		<meta name="theme-color" content="#f7f7f3" />
 		<title>{title}</title>
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -96,9 +126,14 @@ const structuredData = {
 		<meta property="og:url" content={canonical} />
 		<meta property="og:locale" content={locale === 'es' ? 'es_MX' : 'en_US'} />
 		<meta property="og:locale:alternate" content={locale === 'es' ? 'en_US' : 'es_MX'} />
-		<meta name="twitter:card" content="summary" />
+		<meta property="og:image" content={socialImage} />
+		<meta property="og:image:width" content={String(profileImage.width)} />
+		<meta property="og:image:height" content={String(profileImage.height)} />
+		<meta property="og:image:alt" content={locale === 'es' ? 'Retrato profesional de Jossue Alcalá' : 'Professional portrait of Jossue Alcalá'} />
+		<meta name="twitter:card" content="summary_large_image" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={socialImage} />
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
 	</head>
 	<body>
@@ -114,6 +149,7 @@ const structuredData = {
 			</span>
 		</div>
 		<Footer locale={locale} />
+		<AnalyticsConsent locale={locale} />
 		<script>
 			import { bindAnalyticsEvents } from '../scripts/analytics';
 			import { initEvidenceGalleries } from '../scripts/evidence-gallery';

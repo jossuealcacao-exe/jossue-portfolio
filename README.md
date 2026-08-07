@@ -21,6 +21,28 @@ Set `PUBLIC_SITE_URL` to the production origin before deployment. If absent, bui
 - `npm run test:routes` — required output route checks.
 - `npm run test:links` — internal link checks against `dist`.
 - `npm run test:e2e` — responsive, redirect, contact, and console checks.
+- `npm run test:worker` — Cloudflare Worker API checks.
+- `npm run submissions` — authenticated production message query.
+
+## Contact API
+
+The static site can send the contact form to the local Node API instead of opening a mail client:
+
+```sh
+cp .env.example .env
+cp .env.example .env.api
+npm run api
+```
+
+Set `PUBLIC_CONTACT_ENDPOINT` in `.env` to the API URL and set a private `CONTACT_ADMIN_TOKEN` in `.env.api`. The API stores records in the ignored `api/data/submissions.json` file for local use.
+
+Endpoints:
+
+- `POST /api/contact` — validates and stores a form submission.
+- `GET /api/submissions` — returns submissions with `Authorization: Bearer <CONTACT_ADMIN_TOKEN>`.
+- `GET /healthz` — health check without sensitive data.
+
+The JSON store is appropriate for local development only. Production uses the same HTTP contract in a Cloudflare Worker with the `jossue-portfolio-contact` D1 database. `ADMIN_TOKEN` and `RATE_LIMIT_SALT` are Worker secrets; neither belongs in Git.
 - `npm run validate` — complete validation sequence.
 
 Install the Playwright browser once with `npx playwright install chromium`.
@@ -33,4 +55,15 @@ Navigation, route equivalents, and metadata live in `src/data/i18n.ts`. Contact 
 
 ## Deployment
 
-Publish `dist/` from `npm run build`. Confirm the generated canonical URLs, `robots.txt`, and sitemap use the real `PUBLIC_SITE_URL`.
+`npm run deploy` builds the canonical `https://jossuealcala.com` site, uploads static assets and the contact Worker, and updates the configured custom domains. Apply pending D1 migrations before deploying:
+
+```sh
+npx --yes wrangler@4.119.0 d1 migrations apply jossue-portfolio-contact --remote
+npm run deploy
+```
+
+Production endpoints:
+
+- `POST https://jossuealcala.com/api/contact`
+- `GET https://jossuealcala.com/api/submissions` with the admin bearer token
+- `GET https://jossuealcala.com/healthz`

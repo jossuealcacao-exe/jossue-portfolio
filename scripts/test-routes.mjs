@@ -71,7 +71,7 @@ for (const route of routes) {
 	}
 }
 
-for (const asset of ['robots.txt', 'sitemap-index.xml']) {
+for (const asset of ['robots.txt', 'sitemap-index.xml', 'llms.txt']) {
 	try {
 		await access(path.join(dist, asset));
 	} catch {
@@ -81,6 +81,14 @@ for (const asset of ['robots.txt', 'sitemap-index.xml']) {
 
 const rootHtml = await readFile(path.join(dist, 'index.html'), 'utf8');
 if (!rootHtml.includes('/es/')) failures.push('Root redirect does not point to /es/.');
+const homeHtml = await readFile(path.join(dist, 'es', 'index.html'), 'utf8');
+const caseHtml = await readFile(path.join(dist, 'es', 'trabajo', 'ahp-plus', 'index.html'), 'utf8');
+if (!caseHtml.includes('"@type":"CreativeWork"')) failures.push('Case studies must expose CreativeWork structured data.');
+if (process.env.PUBLIC_GA4_ID) {
+	if (!homeHtml.includes(`data-ga4-configured="true"`) || !homeHtml.includes(process.env.PUBLIC_GA4_ID)) {
+		failures.push('Production build does not contain the configured GA4 measurement ID.');
+	}
+}
 const robots = await readFile(path.join(dist, 'robots.txt'), 'utf8');
 if (!process.env.PUBLIC_SITE_URL && !robots.includes('Disallow: /')) {
 	failures.push('Unconfigured builds must block indexing in robots.txt.');
@@ -90,5 +98,5 @@ if (failures.length) {
 	console.error(failures.join('\n'));
 	process.exitCode = 1;
 } else {
-	console.log(`Verified ${routes.length} static routes plus robots and sitemap.`);
+	console.log(`Verified ${routes.length} static routes plus robots, sitemap, and llms.txt.`);
 }

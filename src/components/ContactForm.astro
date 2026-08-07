@@ -1,136 +1,375 @@
 ---
-import { contactEndpoint } from '../data/contact';
+import { contact, contactEndpoint } from '../data/contact';
 import type { Locale } from '../data/i18n';
+import Icon from './Icon.astro';
 
 interface Props {
 	locale: Locale;
 }
 
 const { locale } = Astro.props;
-const copy =
-	locale === 'es'
-		? {
-				name: 'Nombre',
-				email: 'Correo',
-				organization: 'Organización (opcional)',
-				siteUrl: 'URL del sitio (opcional)',
-				project: 'Tipo de proyecto',
-				options: ['Shopify / desarrollo web', 'Estrategia y mejora de conversión', 'Producto digital', 'IA y sistemas', 'Otro'],
-				message: 'Contexto y objetivo',
-				consent: 'Acepto que estos datos se usen únicamente para responder a esta solicitud.',
-				send: 'Enviar solicitud',
-				unconfigured: 'El formulario todavía no tiene un endpoint configurado. No se enviará ningún dato.',
-			}
-		: {
-				name: 'Name',
-				email: 'Email',
-				organization: 'Organization (optional)',
-				siteUrl: 'Website URL (optional)',
-				project: 'Project type',
-				options: ['Shopify / web development', 'Conversion strategy and optimization', 'Digital product', 'AI and systems', 'Other'],
-				message: 'Context and goal',
-				consent: 'I agree that this data may be used only to respond to this request.',
-				send: 'Send request',
-				unconfigured: 'The form does not have a configured endpoint yet. No data will be sent.',
-			};
+const es = locale === 'es';
+const copy = es
+	? {
+			name: 'Nombre',
+			namePh: 'Cómo te llamas',
+			email: 'Correo',
+			emailPh: 'tucorreo@empresa.com',
+			organization: 'Empresa o marca',
+			organizationPh: 'Opcional',
+			siteUrl: 'Sitio web',
+			siteUrlPh: 'Opcional · https://tutienda.com',
+			project: '¿Qué necesitas?',
+			options: [
+				'Tienda Shopify o desarrollo web',
+				'Mejorar conversión (UX/CRO)',
+				'Producto digital a la medida',
+				'IA y automatización',
+				'Otra cosa',
+			],
+			budget: 'Presupuesto aproximado',
+			budgetOptions: [
+				'Aún no lo defino',
+				'Menos de $20,000 MXN',
+				'$20,000 – $50,000 MXN',
+				'$50,000 – $120,000 MXN',
+				'$120,000 – $300,000 MXN',
+				'$300,000 – $600,000 MXN',
+				'Más de $600,000 MXN',
+				'Retainer mensual · equipo dedicado',
+			],
+			message: 'Cuéntame el contexto',
+			messagePh: 'Qué vendes, qué está pasando hoy y qué te gustaría lograr.',
+			consent: 'Acepto que uses estos datos únicamente para responder a esta solicitud.',
+			send: 'Enviar solicitud',
+			sending: 'Enviando…',
+			required: 'Obligatorio',
+			errName: 'Escribe tu nombre.',
+			errEmail: 'Escribe un correo válido.',
+			errProject: 'Elige una opción.',
+			errMessage: 'Cuéntame un poco más (mínimo 20 caracteres).',
+			errConsent: 'Necesito tu autorización para responderte.',
+			errThrottle: 'Acabas de enviar una solicitud. Espera un minuto.',
+			errNetwork: 'No se pudo enviar. Tus datos siguen aquí: intenta de nuevo o escríbeme directo.',
+			okTitle: 'Solicitud enviada.',
+			okText: 'Te respondo por correo en menos de 24 horas hábiles con preguntas concretas y un siguiente paso.',
+			mailTitle: 'Abrí tu correo con todo listo.',
+			mailText: 'Solo dale enviar en tu aplicación de correo. Si no se abrió, escríbeme a',
+			again: 'Enviar otra solicitud',
+			counter: 'caracteres',
+		}
+	: {
+			name: 'Name',
+			namePh: 'Your name',
+			email: 'Email',
+			emailPh: 'you@company.com',
+			organization: 'Company or brand',
+			organizationPh: 'Optional',
+			siteUrl: 'Website',
+			siteUrlPh: 'Optional · https://yourstore.com',
+			project: 'What do you need?',
+			options: [
+				'Shopify store or web development',
+				'Improve conversion (UX/CRO)',
+				'Custom digital product',
+				'AI and automation',
+				'Something else',
+			],
+			budget: 'Approximate budget',
+			budgetOptions: [
+				'Not defined yet',
+				'Under US$1,000',
+				'US$1,000 – US$2,500',
+				'US$2,500 – US$6,000',
+				'US$6,000 – US$15,000',
+				'US$15,000 – US$30,000',
+				'Over US$30,000',
+				'Monthly retainer · dedicated team',
+			],
+			message: 'Tell me the context',
+			messagePh: 'What you sell, what is happening today, and what you want to achieve.',
+			consent: 'I agree that this data is used only to answer this request.',
+			send: 'Send request',
+			sending: 'Sending…',
+			required: 'Required',
+			errName: 'Please write your name.',
+			errEmail: 'Please write a valid email.',
+			errProject: 'Pick one option.',
+			errMessage: 'Tell me a bit more (20 characters minimum).',
+			errConsent: 'I need your permission to reply.',
+			errThrottle: 'You just sent a request. Please wait a minute.',
+			errNetwork: 'Could not send. Your data is still here: try again or email me directly.',
+			okTitle: 'Request sent.',
+			okText: 'I reply by email within 24 business hours with concrete questions and a next step.',
+			mailTitle: 'Your email app is open with everything ready.',
+			mailText: 'Just hit send in your mail app. If it did not open, write to',
+			again: 'Send another request',
+			counter: 'characters',
+		};
 ---
 
-<form
-	class="form"
-	method="post"
-	action={contactEndpoint ?? undefined}
-	data-contact-form
-	data-endpoint={contactEndpoint ?? ''}
-	data-locale={locale}
->
-	<div class="field">
-		<label for="name">{copy.name}</label>
-		<input id="name" name="name" type="text" autocomplete="name" required maxlength="120" />
+<div class="contact-form" data-contact-form data-locale={locale} data-endpoint={contactEndpoint ?? ''} data-mailto={contact.email ?? ''}>
+	<form class="form" method="post" action={contactEndpoint ?? undefined} novalidate>
+		<div class="form__row">
+			<div class="field">
+				<label for="cf-name">{copy.name} <span class="field__req">{copy.required}</span></label>
+				<input id="cf-name" name="name" type="text" autocomplete="name" maxlength="120" required data-error={copy.errName} />
+				<p class="field__error" data-error-for="cf-name" aria-live="polite"></p>
+			</div>
+			<div class="field">
+				<label for="cf-email">{copy.email} <span class="field__req">{copy.required}</span></label>
+				<input id="cf-email" name="email" type="email" inputmode="email" autocomplete="email" placeholder={copy.emailPh} maxlength="200" required data-error={copy.errEmail} />
+				<p class="field__error" data-error-for="cf-email" aria-live="polite"></p>
+			</div>
+		</div>
+
+		<div class="form__row">
+			<div class="field">
+				<label for="cf-org">{copy.organization}</label>
+				<input id="cf-org" name="organization" type="text" autocomplete="organization" placeholder={copy.organizationPh} maxlength="160" />
+			</div>
+			<div class="field">
+				<label for="cf-site">{copy.siteUrl}</label>
+				<input id="cf-site" name="siteUrl" type="url" inputmode="url" autocomplete="url" placeholder={copy.siteUrlPh} maxlength="500" />
+			</div>
+		</div>
+
+		<div class="form__row">
+			<div class="field">
+				<label for="cf-project">{copy.project} <span class="field__req">{copy.required}</span></label>
+				<select id="cf-project" name="projectType" required data-error={copy.errProject}>
+					<option value="">—</option>
+					{copy.options.map((option) => <option value={option}>{option}</option>)}
+				</select>
+				<p class="field__error" data-error-for="cf-project" aria-live="polite"></p>
+			</div>
+			<div class="field">
+				<label for="cf-budget">{copy.budget}</label>
+				<select id="cf-budget" name="budget">
+					{copy.budgetOptions.map((option) => <option value={option}>{option}</option>)}
+				</select>
+			</div>
+		</div>
+
+		<div class="field">
+			<label for="cf-message">{copy.message} <span class="field__req">{copy.required}</span></label>
+			<textarea id="cf-message" name="message" rows="6" minlength="20" maxlength="3000" placeholder={copy.messagePh} required data-error={copy.errMessage}></textarea>
+			<p class="field__meta"><span data-char-count>0</span>/3000 {copy.counter}</p>
+			<p class="field__error" data-error-for="cf-message" aria-live="polite"></p>
+		</div>
+
+		<div class="honeypot" aria-hidden="true">
+			<label for="cf-fax">Fax</label>
+			<input id="cf-fax" name="faxNumber" type="text" tabindex="-1" autocomplete="off" />
+		</div>
+
+		<div class="field">
+			<label class="consent">
+				<input type="checkbox" name="consent" value="yes" required data-error={copy.errConsent} />
+				<span>{copy.consent}</span>
+			</label>
+			<p class="field__error" data-error-for="consent" aria-live="polite"></p>
+		</div>
+
+		<div class="form__actions">
+			<button class="button" type="submit" data-submit>{copy.send}</button>
+			<p class="form__status" data-form-status role="status" aria-live="polite"></p>
+		</div>
+	</form>
+
+	<div class="form-success" data-form-success hidden>
+		<span class="form-success__mark" aria-hidden="true"><Icon name="check-list" size="md" /></span>
+		<div class="flow">
+			<strong data-success-title></strong>
+			<p data-success-text></p>
+			<button class="button button--ghost" type="button" data-form-reset>{copy.again}</button>
+		</div>
 	</div>
-	<div class="field">
-		<label for="email">{copy.email}</label>
-		<input id="email" name="email" type="email" autocomplete="email" required maxlength="200" />
-	</div>
-	<div class="field">
-		<label for="organization">{copy.organization}</label>
-		<input id="organization" name="organization" type="text" autocomplete="organization" maxlength="160" />
-	</div>
-	<div class="field">
-		<label for="site-url">{copy.siteUrl}</label>
-		<input id="site-url" name="siteUrl" type="url" inputmode="url" autocomplete="url" maxlength="500" />
-	</div>
-	<div class="field">
-		<label for="project-type">{copy.project}</label>
-		<select id="project-type" name="projectType" required>
-			<option value="">—</option>
-			{copy.options.map((option) => <option value={option}>{option}</option>)}
-		</select>
-	</div>
-	<div class="field">
-		<label for="message">{copy.message}</label>
-		<textarea id="message" name="message" required minlength="20" maxlength="3000"></textarea>
-	</div>
-	<div class="honeypot" aria-hidden="true">
-		<label for="fax-number">Fax</label>
-		<input id="fax-number" name="faxNumber" type="text" tabindex="-1" autocomplete="off" />
-	</div>
-	<label class="consent">
-		<input type="checkbox" name="consent" value="yes" required />
-		<span>{copy.consent}</span>
-	</label>
-	<button class="button" type="submit" disabled={!contactEndpoint}>{copy.send}</button>
-	<p class="form-message" data-form-status aria-live="polite">
-		{!contactEndpoint && copy.unconfigured}
-	</p>
-</form>
+</div>
 
 <script>
 	import { track } from '../scripts/analytics';
 
-	const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
-	const status = form?.querySelector<HTMLElement>('[data-form-status]');
-	const endpoint = form?.dataset.endpoint;
-	const locale = form?.dataset.locale ?? 'es';
-	let started = false;
+	const root = document.querySelector<HTMLElement>('[data-contact-form]');
+	const form = root?.querySelector<HTMLFormElement>('form');
+	if (root && form) {
+		const locale = root.dataset.locale ?? 'es';
+		const es = locale === 'es';
+		const endpoint = root.dataset.endpoint || '';
+		const mailto = root.dataset.mailto || '';
+		const status = form.querySelector<HTMLElement>('[data-form-status]');
+		const submit = form.querySelector<HTMLButtonElement>('[data-submit]');
+		const success = root.querySelector<HTMLElement>('[data-form-success]');
+		const successTitle = success?.querySelector<HTMLElement>('[data-success-title]');
+		const successText = success?.querySelector<HTMLElement>('[data-success-text]');
+		const counter = form.querySelector<HTMLElement>('[data-char-count]');
+		const message = form.querySelector<HTMLTextAreaElement>('#cf-message');
+		const copy = {
+			sending: es ? 'Enviando…' : 'Sending…',
+			throttle: es ? 'Acabas de enviar una solicitud. Espera un minuto.' : 'You just sent a request. Please wait a minute.',
+			network: es
+				? 'No se pudo enviar. Tus datos siguen aquí: intenta de nuevo o escríbeme directo.'
+				: 'Could not send. Your data is still here: try again or email me directly.',
+			okTitle: es ? 'Solicitud enviada.' : 'Request sent.',
+			okText: es
+				? 'Te respondo por correo en menos de 24 horas hábiles con preguntas concretas y un siguiente paso.'
+				: 'I reply by email within 24 business hours with concrete questions and a next step.',
+			mailTitle: es ? 'Abrí tu correo con todo listo.' : 'Your email app is open with everything ready.',
+			mailText: es
+				? `Solo dale enviar en tu aplicación de correo. Si no se abrió, escríbeme a ${mailto}.`
+				: `Just hit send in your mail app. If it did not open, write to ${mailto}.`,
+		};
+		// Bots fill instantly; a human needs seconds to read and type.
+		const openedAt = Date.now();
+		let started = false;
 
-	form?.addEventListener('focusin', () => {
-		if (started) return;
-		started = true;
-		track({ event: 'start_contact_form', path: window.location.pathname });
-	});
+		const fieldError = (id: string) => form.querySelector<HTMLElement>(`[data-error-for="${id}"]`);
 
-	form?.addEventListener('submit', async (event) => {
-		event.preventDefault();
-		if (!endpoint || !status) return;
+		const setError = (input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement, text: string) => {
+			const holder = fieldError(input.type === 'checkbox' ? 'consent' : input.id);
+			input.setAttribute('aria-invalid', 'true');
+			if (holder) {
+				holder.textContent = text;
+				input.setAttribute('aria-describedby', holder.id || (holder.id = `${input.id || 'consent'}-error`));
+			}
+		};
 
-		const lastSubmission = Number(localStorage.getItem('contact-last-submission') ?? '0');
-		if (Date.now() - lastSubmission < 60_000) {
-			status.textContent =
-				locale === 'es' ? 'Espera un minuto antes de volver a enviar.' : 'Please wait one minute before submitting again.';
-			return;
-		}
+		const clearError = (input: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement) => {
+			const holder = fieldError(input.type === 'checkbox' ? 'consent' : input.id);
+			input.removeAttribute('aria-invalid');
+			if (holder) holder.textContent = '';
+		};
 
-		const data = new FormData(form);
-		if (data.get('faxNumber')) return;
-		status.textContent = locale === 'es' ? 'Enviando…' : 'Sending…';
-
-		try {
-			const response = await fetch(endpoint, {
-				method: 'POST',
-				headers: { Accept: 'application/json' },
-				body: data,
+		const validate = () => {
+			const controls = [...form.querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>('[required]')];
+			let firstInvalid: HTMLElement | null = null;
+			controls.forEach((control) => {
+				const valid = control.type === 'checkbox' ? (control as HTMLInputElement).checked : control.checkValidity();
+				if (valid) {
+					clearError(control);
+					return;
+				}
+				setError(control, control.dataset.error ?? '');
+				if (!firstInvalid) firstInvalid = control;
 			});
-			if (!response.ok) throw new Error(`Contact endpoint responded ${response.status}`);
-			localStorage.setItem('contact-last-submission', String(Date.now()));
-			track({ event: 'submit_contact_form', path: window.location.pathname });
+			if (firstInvalid) (firstInvalid as HTMLElement).focus();
+			return !firstInvalid;
+		};
+
+		const showSuccess = (title: string, text: string) => {
+			if (!success || !successTitle || !successText) return;
+			successTitle.textContent = title;
+			successText.textContent = text;
+			if (status) {
+				status.textContent = '';
+				status.dataset.tone = '';
+			}
+			form.hidden = true;
+			success.hidden = false;
+			success.scrollIntoView({ block: 'center', behavior: 'smooth' });
+		};
+
+		const buildMailto = (data: FormData) => {
+			const lines = [
+				`${es ? 'Nombre' : 'Name'}: ${data.get('name')}`,
+				`${es ? 'Correo' : 'Email'}: ${data.get('email')}`,
+				`${es ? 'Empresa' : 'Company'}: ${data.get('organization') || '—'}`,
+				`${es ? 'Sitio' : 'Website'}: ${data.get('siteUrl') || '—'}`,
+				`${es ? 'Necesita' : 'Needs'}: ${data.get('projectType')}`,
+				`${es ? 'Presupuesto' : 'Budget'}: ${data.get('budget')}`,
+				'',
+				`${es ? 'Contexto' : 'Context'}:`,
+				String(data.get('message') ?? ''),
+			];
+			const subject = es
+				? `Solicitud de proyecto — ${data.get('name')}`
+				: `Project request — ${data.get('name')}`;
+			return `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+		};
+
+		message?.addEventListener('input', () => {
+			if (counter) counter.textContent = String(message.value.length);
+		});
+
+		form.addEventListener('focusin', () => {
+			if (started) return;
+			started = true;
+			track({ event: 'start_contact_form', path: window.location.pathname });
+		});
+
+		form.addEventListener('input', (event) => {
+			const target = event.target as HTMLInputElement;
+			if (target?.getAttribute('aria-invalid')) clearError(target);
+		});
+
+		form.querySelector<HTMLInputElement>('[name="consent"]')?.addEventListener('change', (event) => {
+			const target = event.target as HTMLInputElement;
+			if (target.checked) clearError(target);
+		});
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			if (!status || !submit) return;
+			status.textContent = '';
+			status.dataset.tone = '';
+
+			const data = new FormData(form);
+			// Silent drop for bots: honeypot filled or submitted in under three seconds.
+			if (data.get('faxNumber') || Date.now() - openedAt < 3000) return;
+			if (!validate()) return;
+
+			const last = Number(localStorage.getItem('contact-last-submission') ?? '0');
+			if (Date.now() - last < 60_000) {
+				status.textContent = copy.throttle;
+				status.dataset.tone = 'warn';
+				return;
+			}
+
+			data.delete('faxNumber');
+
+			if (!endpoint) {
+				// No form service configured: hand the message to the user's mail client.
+				window.location.href = buildMailto(data);
+				localStorage.setItem('contact-last-submission', String(Date.now()));
+				track({ event: 'submit_contact_form', path: window.location.pathname });
+				showSuccess(copy.mailTitle, copy.mailText);
+				return;
+			}
+
+			submit.disabled = true;
+			status.textContent = copy.sending;
+
+			try {
+				const response = await fetch(endpoint, {
+					method: 'POST',
+					headers: { Accept: 'application/json' },
+					body: data,
+				});
+				if (!response.ok) throw new Error(`Contact endpoint responded ${response.status}`);
+				localStorage.setItem('contact-last-submission', String(Date.now()));
+				track({ event: 'submit_contact_form', path: window.location.pathname });
+				form.reset();
+				if (counter) counter.textContent = '0';
+				showSuccess(copy.okTitle, copy.okText);
+			} catch {
+				status.textContent = copy.network;
+				status.dataset.tone = 'error';
+			} finally {
+				submit.disabled = false;
+			}
+		});
+
+		root.querySelector<HTMLButtonElement>('[data-form-reset]')?.addEventListener('click', () => {
+			if (!success) return;
+			success.hidden = true;
+			form.hidden = false;
 			form.reset();
-			status.textContent =
-				locale === 'es' ? 'La solicitud fue recibida por el endpoint configurado.' : 'The configured endpoint received your request.';
-		} catch {
-			status.textContent =
-				locale === 'es'
-					? 'No fue posible enviar. Tus datos permanecen en el formulario.'
-					: 'Submission failed. Your data remains in the form.';
-		}
-	});
+			if (counter) counter.textContent = '0';
+			if (status) {
+				status.textContent = '';
+				status.dataset.tone = '';
+			}
+			form.querySelector<HTMLInputElement>('#cf-name')?.focus();
+		});
+	}
 </script>
