@@ -1,0 +1,18 @@
+---
+import { getCollection } from 'astro:content';
+import BlogHeader from '../../../components/BlogHeader.astro';
+import PostCard from '../../../components/PostCard.astro';
+import { categories, categoryPath, publishedPosts, type Locale } from '../../../data/blog';
+import BlogLayout from '../../../layouts/BlogLayout.astro';
+
+export function getStaticPaths() { return categories.map((category) => ({ params: { lang: 'es', category: category.es.slug }, props: { slug: category.es.slug, counterpart: category.en.slug, label: category.es.label } })); }
+const locale: Locale = 'es';
+const { slug, counterpart, label } = Astro.props as { slug: string; counterpart: string; label: string };
+const allPosts = publishedPosts(await getCollection('blog'), locale);
+const posts = allPosts.filter((post) => post.data.categorySlug === slug);
+---
+<BlogLayout locale={locale} pathname={categoryPath(locale, slug)} counterpart={categoryPath('en', counterpart)} title={`${label} — Blog de Jossue Alcalá`} description={`Artículos de ${label.toLowerCase()} escritos por Jossue Alcalá.`}>
+	<BlogHeader slot="header" locale={locale} activeCategory={slug} posts={allPosts} />
+	<section class="category-hero"><p>Blog / Categoría</p><h1>{label}</h1><p>{posts.length} {posts.length === 1 ? 'artículo publicado' : 'artículos publicados'}</p></section>
+	<section class="section">{posts.length ? <div class="post-grid">{posts.map((post) => <PostCard entry={post} />)}</div> : <p>Aún no hay artículos en esta categoría.</p>}</section>
+</BlogLayout>

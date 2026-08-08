@@ -6,6 +6,7 @@ import profileImage from '../assets/profile.jpeg';
 import { analyticsConfig } from '../data/analytics';
 import { contact } from '../data/contact';
 import { equivalentPath, routes, type Locale } from '../data/i18n';
+import { monetizationConfig } from '../data/monetization';
 import { profile } from '../data/profile';
 import '../styles/global.css';
 import '../styles/redesign.css';
@@ -53,7 +54,7 @@ const structuredData = {
 			jobTitle: `${profile.headline[locale]} · ${profile.subheadline[locale]}`,
 			knowsAbout: [
 				'Shopify',
-				'Chief ecommerce management',
+				'E-commerce leadership and digital growth',
 				'Conversion rate optimization',
 				'E-commerce growth',
 				'UX',
@@ -111,6 +112,7 @@ const structuredData = {
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<meta name="author" content={profile.name} />
+		<meta name="google-adsense-account" content={monetizationConfig.adsenseAccount} />
 		<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 		<meta name="theme-color" content="#f7f7f3" />
 		<title>{title}</title>
@@ -119,6 +121,7 @@ const structuredData = {
 		<link rel="alternate" hreflang={locale} href={canonical} />
 		<link rel="alternate" hreflang={alternateLocale} href={alternate} />
 		<link rel="alternate" hreflang="x-default" href={defaultUrl} />
+		<link rel="alternate" type="application/rss+xml" title={locale === 'es' ? 'Blog de Jossue Alcalá' : "Jossue Alcalá's blog"} href={`https://blog.jossuealcala.com/${locale}/rss.xml`} />
 		<meta property="og:type" content="website" />
 		<meta property="og:site_name" content="Jossue Alcalá" />
 		<meta property="og:title" content={title} />

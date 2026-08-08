@@ -1,0 +1,28 @@
+---
+lang: es
+slug: titulo-en-minusculas
+counterpartSlug: english-lowercase-title
+title: "Título claro que responde una búsqueda real"
+description: "Resumen útil de 140 a 160 caracteres."
+excerpt: "Una razón concreta para abrir el artículo."
+category: Tecnología
+categorySlug: tecnologia
+counterpartCategorySlug: technology
+publishedAt: 2026-09-01T08:00:00-06:00
+readMinutes: 5
+featured: false
+draft: true
+heroImage: ../../assets/blog/example.jpg
+heroAlt: "Descripción literal de la imagen"
+keywords:
+  - palabra clave principal
+author:
+  name: Jossue Alcalá
+sources:
+  - label: "Fuente primaria"
+    url: "https://example.com/primary-source"
+publication:
+  publish: false
+---
+
+Escribe para resolver una pregunta concreta. Agrega experiencia propia, fuentes primarias y una conclusión accionable.

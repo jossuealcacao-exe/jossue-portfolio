@@ -145,7 +145,7 @@
       format: "PDF + DOCX/MD editable",
       destination: "_inputs/cv/",
       description: "Trayectoria, experiencia, educación y habilidades con fechas verificables.",
-      notes: "Contenido + descarga pública /cv/Jossue-Alcala-CV.pdf autorizados el 19 jul 2026. Rol sitio: Chief Ecommerce Manager.",
+      notes: "Contenido + descarga pública /cv/Jossue-Alcala-CV.pdf autorizados el 19 jul 2026. Rol sitio: Head of E-commerce & Digital Growth.",
       sensitivity: "Público tras aprobación",
       updatedAt: "2026-07-19",
     },

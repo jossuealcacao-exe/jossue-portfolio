@@ -1,0 +1,19 @@
+{
+  "name": "jossue-blog",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "social:local": "npx --yes wrangler@4.119.0 d1 migrations apply jossue-blog-social --local --config wrangler.jsonc",
+    "worker:dev": "npx --yes wrangler@4.119.0 dev --config wrangler.jsonc",
+    "deploy": "PUBLIC_SITE_URL=https://blog.jossuealcala.com astro build && npx --yes wrangler@4.119.0 deploy --config wrangler.jsonc"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "7.1.1"
+  }
+}

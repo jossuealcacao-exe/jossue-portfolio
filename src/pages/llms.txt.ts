@@ -2,6 +2,7 @@ import { getCollection } from 'astro:content';
 import type { APIRoute } from 'astro';
 import { casePresentation } from '../data/casePresentation';
 import { contact } from '../data/contact';
+import { publishedBlogPosts } from '../data/blog';
 
 export const GET: APIRoute = async ({ site }) => {
 	const origin = site ?? new URL('https://portfolio.invalid');
@@ -13,6 +14,9 @@ export const GET: APIRoute = async ({ site }) => {
 		const url = new URL(`/es/trabajo/${entry.data.slug}/`, origin).href;
 		return `- [${entry.data.title}](${url}): ${summary}`;
 	});
+	const blogPosts = publishedBlogPosts(await getCollection('blog'), 'es');
+	const blogOrigin = new URL('https://blog.jossuealcala.com');
+	const blogLines = blogPosts.map((entry) => `- [${entry.data.title}](${new URL(`/${entry.data.lang}/${entry.data.slug}/`, blogOrigin).href}): ${entry.data.description}`);
 
 	const content = [
 		'# Jossue Alcala',
@@ -28,6 +32,7 @@ export const GET: APIRoute = async ({ site }) => {
 		`- [Servicios](${new URL('/es/servicios/', origin).href})`,
 		`- [IA y sistemas](${new URL('/es/ia-y-sistemas/', origin).href})`,
 		`- [Perfil y experiencia](${new URL('/es/acerca/', origin).href})`,
+		`- [Blog](${new URL('/es/', blogOrigin).href})`,
 		`- [English version](${new URL('/en/', origin).href})`,
 		'',
 		'## Areas de especialidad',
@@ -41,6 +46,10 @@ export const GET: APIRoute = async ({ site }) => {
 		'## Proyectos publicados',
 		'',
 		...projectLines,
+		'',
+		'## Articulos del blog',
+		'',
+		...blogLines,
 		'',
 		'## Autoria y contacto',
 		'',

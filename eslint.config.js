@@ -4,13 +4,13 @@ import tseslint from 'typescript-eslint';
 
 export default [
 	{
-		ignores: ['dist/**', '.astro/**', '.wrangler-dry-run/**', 'node_modules/**', 'test-results/**', 'docs/**', '_inputs/**'],
+		ignores: ['dist/**', '.astro/**', 'blog/dist/**', 'blog/.astro/**', 'blog/.wrangler/**', '.wrangler-dry-run/**', 'node_modules/**', 'test-results/**', 'docs/**', '_inputs/**'],
 	},
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,
 	...astro.configs['flat/recommended'],
 	{
-		files: ['astro.config.mjs', 'api/**/*.mjs', 'worker/**/*.mjs', 'scripts/**/*.mjs', 'tests/**/*.ts'],
+		files: ['astro.config.mjs', 'blog/astro.config.mjs', 'api/**/*.mjs', 'worker/**/*.mjs', 'blog/worker/**/*.mjs', 'scripts/**/*.mjs', 'tests/**/*.ts'],
 		languageOptions: {
 			globals: {
 				Buffer: 'readonly',

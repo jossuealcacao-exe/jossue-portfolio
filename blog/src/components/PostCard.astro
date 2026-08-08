@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import type { BlogEntry } from '../data/blog';
+import { categoryPath, formatDate, postPath } from '../data/blog';
+import AtomIcon from './AtomIcon.astro';
+import SocialActions from './SocialActions.astro';
+const { entry } = Astro.props as { entry: BlogEntry };
+const { data } = entry;
+const es = data.lang === 'es';
+---
+
+<article class="feed-post">
+	<header class="feed-post__author">
+		<a class="author-avatar" href={`https://jossuealcala.com/${es ? 'es/acerca/' : 'en/about/'}`} aria-label={`${es ? 'Perfil de' : 'Profile of'} ${data.author.name}`}><AtomIcon /></a>
+		<div><strong>{data.author.name}</strong><p><a href={categoryPath(data.lang, data.categorySlug)}>{data.category}</a> · {formatDate(data.publishedAt, data.lang)}</p></div>
+		<span>{data.readMinutes} min</span>
+	</header>
+	<div class="feed-post__copy">
+		<h2><a href={postPath(entry)}>{data.title}</a></h2>
+		<p>{data.excerpt}</p>
+	</div>
+	<a class="feed-post__image" href={postPath(entry)}><Image src={data.heroImage} alt={data.heroAlt} widths={[640, 960, 1280]} sizes="(min-width: 48rem) 44rem, 100vw" loading="lazy" /></a>
+	<footer>
+		<SocialActions slug={data.slug} locale={data.lang} compact />
+		<a class="feed-post__read" href={postPath(entry)}>{es ? 'Leer' : 'Read'} <span aria-hidden="true">→</span></a>
+	</footer>
+</article>

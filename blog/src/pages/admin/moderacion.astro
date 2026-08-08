@@ -1,0 +1,52 @@
+---
+---
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="robots" content="noindex, nofollow" />
+		<title>Moderación — Blog de Jossue Alcalá</title>
+		<style>
+			:root { font-family: Inter, system-ui, sans-serif; color: #171717; background: #f4f3ee; }
+			* { box-sizing: border-box; } body { margin: 0; } main { width: min(100% - 2rem, 52rem); margin: auto; padding: 3rem 0 6rem; }
+			header { display: flex; align-items: end; justify-content: space-between; gap: 1rem; } h1 { max-width: 8ch; margin: 0; font-family: Georgia, serif; font-size: clamp(3rem, 8vw, 6rem); font-weight: 500; line-height: .9; }
+			.auth { display: grid; grid-template-columns: 1fr auto; gap: .5rem; margin: 2rem 0; padding: 1rem; border: 1px solid #d8d6ce; border-radius: 1rem; background: #fff; }
+			input { min-width: 0; padding: .8rem; border: 1px solid #d8d6ce; border-radius: 2rem; } button { padding: .75rem 1rem; border: 0; border-radius: 2rem; background: #171717; color: #fff; cursor: pointer; font-weight: 750; }
+			.list { display: grid; gap: .75rem; } article { padding: 1rem; border: 1px solid #d8d6ce; border-radius: 1rem; background: #fff; } article small { color: #6b6962; } article p { line-height: 1.55; } article footer { display: flex; gap: .5rem; } article footer button:last-child { background: #e3e0d8; color: #171717; }
+			.status { min-height: 1.4rem; color: #b53e27; font-size: .8rem; }
+		</style>
+	</head>
+	<body>
+		<main>
+			<header><div><small>Jossue Alcalá / Blog</small><h1>Moderar comentarios</h1></div><a href="/es/">Volver al blog</a></header>
+			<form class="auth"><input name="token" type="password" autocomplete="current-password" placeholder="Token de administración" required /><button type="submit">Ver pendientes</button></form>
+			<p class="status" aria-live="polite"></p>
+			<section class="list" aria-label="Comentarios pendientes"></section>
+		</main>
+		<script>
+			const form = document.querySelector<HTMLFormElement>('.auth')!;
+			const list = document.querySelector<HTMLElement>('.list')!;
+			const status = document.querySelector<HTMLElement>('.status')!;
+			let token = '';
+			const apiBase = import.meta.env.DEV ? 'http://localhost:8788' : '';
+			type ModerationComment = { id: string; postSlug: string; body: string; createdAt: string };
+			const load = async () => {
+				const response = await fetch(`${apiBase}/api/moderation/comments?status=pending`, { headers: { authorization: `Bearer ${token}` } });
+				if (!response.ok) throw new Error('No fue posible entrar. Revisa el token.');
+				const data = await response.json();
+				list.replaceChildren();
+				if (!data.comments.length) { const empty = document.createElement('p'); empty.textContent = 'No hay comentarios pendientes.'; list.append(empty); return; }
+				data.comments.forEach((comment: ModerationComment) => {
+					const article = document.createElement('article');
+					const meta = document.createElement('small'); meta.textContent = `${comment.postSlug} · ${new Date(comment.createdAt).toLocaleString('es-MX')}`;
+					const copy = document.createElement('p'); copy.textContent = comment.body;
+					const footer = document.createElement('footer');
+					[['Aprobar', 'approved'], ['Rechazar', 'rejected']].forEach(([label, next]) => { const button = document.createElement('button'); button.type = 'button'; button.textContent = label; button.addEventListener('click', async () => { const response = await fetch(`${apiBase}/api/moderation/comments/${comment.id}`, { method: 'PATCH', headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' }, body: JSON.stringify({ status: next }) }); if (response.ok) await load(); }); footer.append(button); });
+					article.append(meta, copy, footer); list.append(article);
+				});
+			};
+			form.addEventListener('submit', async (event) => { event.preventDefault(); token = new FormData(form).get('token')?.toString() ?? ''; status.textContent = ''; try { await load(); } catch (error) { status.textContent = error instanceof Error ? error.message : 'No fue posible cargar los comentarios.'; } });
+		</script>
+	</body>
+</html>

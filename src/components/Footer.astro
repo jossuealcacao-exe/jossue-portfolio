@@ -32,6 +32,7 @@ const tags = es
 			<div>
 				<p class="eyebrow">{es ? 'Perfiles' : 'Profiles'}</p>
 				<ul class="footer-links">
+					<li><a href={`https://blog.jossuealcala.com/${locale}/`} data-analytics-event="click_blog">Blog<Icon name="arrow-up-right" /></a></li>
 					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin">LinkedIn<Icon name="arrow-up-right" /></a></li>}
 					{contact.github && <li><a href={contact.github} rel="noreferrer" data-analytics-event="click_github">GitHub<Icon name="arrow-up-right" /></a></li>}
 					{contact.cvEs && <li><a href={contact.cvEs} download data-analytics-event="download_cv">{es ? 'CV en PDF' : 'PDF resume'}<Icon name="download" /></a></li>}

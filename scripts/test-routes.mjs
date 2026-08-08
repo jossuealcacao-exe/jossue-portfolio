@@ -84,12 +84,19 @@ if (!rootHtml.includes('/es/')) failures.push('Root redirect does not point to /
 const homeHtml = await readFile(path.join(dist, 'es', 'index.html'), 'utf8');
 const caseHtml = await readFile(path.join(dist, 'es', 'trabajo', 'ahp-plus', 'index.html'), 'utf8');
 if (!caseHtml.includes('"@type":"CreativeWork"')) failures.push('Case studies must expose CreativeWork structured data.');
+if (!homeHtml.includes('<meta name="google-adsense-account" content="ca-pub-5612202849073748">')) {
+	failures.push('Home must expose the AdSense ownership verification meta tag.');
+}
 if (process.env.PUBLIC_GA4_ID) {
 	if (!homeHtml.includes(`data-ga4-configured="true"`) || !homeHtml.includes(process.env.PUBLIC_GA4_ID)) {
 		failures.push('Production build does not contain the configured GA4 measurement ID.');
 	}
 }
 const robots = await readFile(path.join(dist, 'robots.txt'), 'utf8');
+const adsTxt = await readFile(path.join(dist, 'ads.txt'), 'utf8');
+if (!adsTxt.includes('google.com, pub-5612202849073748, DIRECT, f08c47fec0942fa0')) {
+	failures.push('ads.txt does not contain the configured AdSense publisher.');
+}
 if (!process.env.PUBLIC_SITE_URL && !robots.includes('Disallow: /')) {
 	failures.push('Unconfigured builds must block indexing in robots.txt.');
 }

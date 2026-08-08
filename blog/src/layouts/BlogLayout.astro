@@ -1,0 +1,56 @@
+---
+import type { Locale } from '../data/blog';
+import { monetizationConfig } from '../../../src/data/monetization';
+import '../styles/blog.css';
+
+interface Props {
+	locale: Locale;
+	title: string;
+	description: string;
+	pathname: string;
+	counterpart?: string;
+	article?: { publishedAt: Date; updatedAt?: Date; keywords: string[]; image?: { src: string } };
+}
+
+const { locale, title, description, pathname, counterpart, article } = Astro.props;
+const site = Astro.site ?? new URL('https://blog.invalid');
+const canonical = new URL(pathname, site);
+const alternate = new URL(counterpart ?? (locale === 'es' ? '/en/' : '/es/'), site);
+const portfolio = `https://jossuealcala.com/${locale === 'es' ? 'es/acerca/' : 'en/about/'}`;
+const structuredData = {
+	'@context': 'https://schema.org',
+	'@graph': [
+		{ '@type': 'WebSite', '@id': `${site.href}#website`, name: 'Blog de Jossue Alcalá', url: site.href, inLanguage: ['es', 'en'] },
+		...(article ? [{ '@type': 'BlogPosting', '@id': `${canonical.href}#article`, headline: title, description, url: canonical.href, inLanguage: locale, datePublished: article.publishedAt.toISOString(), dateModified: (article.updatedAt ?? article.publishedAt).toISOString(), keywords: article.keywords.join(', '), author: { '@type': 'Person', name: 'Jossue Alcalá', url: portfolio }, publisher: { '@type': 'Person', name: 'Jossue Alcalá', url: portfolio }, ...(article.image ? { image: new URL(article.image.src, site).href } : {}) }] : []),
+	],
+};
+---
+
+<!doctype html>
+<html lang={locale}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content={description} />
+		<meta name="google-adsense-account" content={monetizationConfig.adsenseAccount} />
+		<meta name="robots" content="index, follow, max-image-preview:large" />
+		<title>{title}</title>
+		<link rel="canonical" href={canonical} />
+		<link rel="alternate" hreflang={locale} href={canonical} />
+		<link rel="alternate" hreflang={locale === 'es' ? 'en' : 'es'} href={alternate} />
+		<link rel="alternate" hreflang="x-default" href={locale === 'es' ? canonical : alternate} />
+		<link rel="alternate" type="application/rss+xml" title="RSS" href={`/${locale}/rss.xml`} />
+		<meta property="og:type" content={article ? 'article' : 'website'} />
+		<meta property="og:site_name" content="Blog de Jossue Alcalá" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+	</head>
+	<body>
+		<a class="skip-link" href="#main">{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
+		<slot name="header" />
+		<main id="main"><slot /></main>
+		<footer class="blog-footer"><div><a href={`https://jossuealcala.com/${locale === 'es' ? 'es/' : 'en/'}`}>← {locale === 'es' ? 'JossueAlcala.com' : 'JossueAlcala.com'}</a><span>Jossue Alcalá / {new Date().getFullYear()}</span></div></footer>
+	</body>
+</html>

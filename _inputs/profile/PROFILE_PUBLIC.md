@@ -7,7 +7,7 @@
 
 ## Autorizado / publicado
 
-- Titular actual del sitio: Chief Ecommerce Manager · WU Nutrition / Come Verde.
+- Titular actual del sitio: Head of E-commerce & Digital Growth · WU Nutrition / Come Verde.
 - Subtítulo: Fundador Bloqio · Shopify Product, CRO & Applied AI.
 - Bio, competencias, capacidades de IA/automatización, experiencia, educación, idiomas.
 - KPIs del CV (HP, Farmalisto, +8 años) y LCP CrUX del caso LCV.
@@ -22,4 +22,4 @@
 
 ## Nota de vigencia
 
-El PDF descargable puede no incluir aún el cargo Chief Ecommerce Manager; el sitio es la fuente vigente del rol y de las capacidades AI/Growth OS.
+El PDF descargable debe reflejar el cargo Head of E-commerce & Digital Growth; el sitio conserva la fuente vigente del rol y de las capacidades AI/Growth OS.

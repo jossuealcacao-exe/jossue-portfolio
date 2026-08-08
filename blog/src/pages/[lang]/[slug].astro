@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BlogHeader from '../../components/BlogHeader.astro';
+import AtomIcon from '../../components/AtomIcon.astro';
+import Comments from '../../components/Comments.astro';
+import SocialActions from '../../components/SocialActions.astro';
+import { categoryPath, formatDate, postPath } from '../../data/blog';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export async function getStaticPaths() {
+	const entries = (await getCollection('blog')).filter((entry) => entry.data.publication.publish && !entry.data.draft && entry.data.publishedAt <= new Date());
+	return entries.map((entry) => ({ params: { lang: entry.data.lang, slug: entry.data.slug }, props: { entry, allPosts: entries.filter((post) => post.data.lang === entry.data.lang) } }));
+}
+const { entry, allPosts } = Astro.props as { entry: CollectionEntry<'blog'>; allPosts: CollectionEntry<'blog'>[] };
+const { data } = entry;
+const { Content } = await render(entry);
+const es = data.lang === 'es';
+---
+<BlogLayout locale={data.lang} pathname={postPath(entry)} counterpart={`/${data.lang === 'es' ? 'en' : 'es'}/${data.counterpartSlug}/`} title={`${data.title} — Blog de Jossue Alcalá`} description={data.description} article={{ publishedAt: data.publishedAt, updatedAt: data.updatedAt, keywords: data.keywords, image: data.heroImage }}>
+	<BlogHeader slot="header" locale={data.lang} activeCategory={data.categorySlug} posts={allPosts} />
+	<article class="article">
+		<header><p class="post-meta"><a href={categoryPath(data.lang, data.categorySlug)}>{data.category}</a> · {formatDate(data.publishedAt, data.lang)} · {data.readMinutes} min</p><h1>{data.title}</h1><p class="lede">{data.description}</p><div class="article-author"><a class="author-avatar" href={`https://jossuealcala.com/${es ? 'es/acerca/' : 'en/about/'}`} rel="author" aria-label={`${es ? 'Perfil de' : 'Profile of'} ${data.author.name}`}><AtomIcon /></a><p>{es ? 'Por' : 'By'} <a href={`https://jossuealcala.com/${es ? 'es/acerca/' : 'en/about/'}`} rel="author">{data.author.name}</a><br /><span>{es ? 'Ecommerce, producto y tecnología' : 'Ecommerce, product, and technology'}</span></p></div><SocialActions slug={data.slug} locale={data.lang} commentsHref="#comments" /></header>
+		<Image class="article-image" src={data.heroImage} alt={data.heroAlt} widths={[720, 1200, 1600]} sizes="(min-width: 70rem) 72rem, 100vw" loading="eager" />
+		<div class="article-body"><Content />{data.supportImage && data.supportImageAlt && <figure><Image src={data.supportImage} alt={data.supportImageAlt} widths={[640, 960, 1400]} sizes="(min-width: 60rem) 48rem, 100vw" loading="lazy" /></figure>}<section class="article-share"><p>{es ? '¿Te pareció útil o estás en desacuerdo?' : 'Useful, or do you disagree?'}</p><SocialActions slug={data.slug} locale={data.lang} commentsHref="#comments" /></section><section class="sources"><h2>{es ? 'Fuentes' : 'Sources'}</h2><ul>{data.sources.map((source) => <li><a href={source.url} rel="noreferrer">{source.label}</a></li>)}</ul></section><Comments slug={data.slug} locale={data.lang} /></div>
+	</article>
+</BlogLayout>

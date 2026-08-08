@@ -1,0 +1,96 @@
+---
+import type { BlogEntry, Locale } from '../data/blog';
+import { blogPath, categoryPath, categories, postPath } from '../data/blog';
+import AtomIcon from './AtomIcon.astro';
+
+interface Props { locale: Locale; activeCategory?: string; posts: BlogEntry[]; }
+const { locale, activeCategory, posts } = Astro.props;
+const es = locale === 'es';
+const searchIndex = JSON.stringify(posts.map((entry) => ({ title: entry.data.title, description: entry.data.description, category: entry.data.category, url: postPath(entry) }))).replace(/</g, '\\u003c');
+---
+
+<header class="blog-header">
+	<div class="blog-header__inner">
+		<a class="blog-brand" href={blogPath(locale)} aria-label={es ? 'Inicio del blog de Jossue Alcalá' : 'Jossue Alcalá blog home'}>
+			<span class="blog-brand__mark"><AtomIcon /></span>
+			<span class="blog-brand__name"><strong>Blog</strong><small>Jossue Alcalá</small></span>
+		</a>
+
+		<div class="blog-search-shell">
+			<button class="icon-button blog-search-toggle" type="button" aria-expanded="false" aria-controls="blog-search-panel" aria-label={es ? 'Abrir buscador de artículos' : 'Open article search'}>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg>
+			</button>
+			<form class="blog-search" id="blog-search-panel" role="search" hidden>
+				<label class="sr-only" for="article-search">{es ? 'Buscar artículos' : 'Search articles'}</label>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"></circle><path d="m16 16 4.25 4.25"></path></svg>
+				<input id="article-search" type="search" placeholder={es ? 'Buscar por tema, categoría o título' : 'Search by topic, category, or title'} autocomplete="off" />
+				<button class="blog-search__close" type="button" aria-label={es ? 'Cerrar buscador' : 'Close search'}>×</button>
+				<div class="blog-search__results" role="status" aria-live="polite" hidden></div>
+			</form>
+		</div>
+
+		<details class="blog-menu">
+			<summary class="icon-button" aria-label={es ? 'Abrir menú y categorías' : 'Open menu and categories'}>
+				<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h14"></path></svg>
+			</summary>
+			<div class="blog-menu__panel">
+				<p>{es ? 'Explorar' : 'Explore'}</p>
+				<nav aria-label={es ? 'Categorías del blog' : 'Blog categories'}>
+					<a href={blogPath(locale)} aria-current={!activeCategory ? 'page' : undefined}>{es ? 'Últimos artículos' : 'Latest articles'}</a>
+					{categories.map((category) => <a href={categoryPath(locale, category[locale].slug)} aria-current={activeCategory === category[locale].slug ? 'page' : undefined}>{category[locale].label}</a>)}
+				</nav>
+				<div class="blog-menu__utility">
+					<a href={locale === 'es' ? '/en/' : '/es/'}>{locale === 'es' ? 'Read in English' : 'Leer en español'}</a>
+					<a href={`https://jossuealcala.com/${es ? 'es/' : 'en/'}`}>{es ? 'Visitar mi portafolio' : 'Visit my portfolio'} ↗</a>
+				</div>
+			</div>
+		</details>
+	</div>
+	<script type="application/json" data-blog-search-index is:inline set:html={searchIndex}></script>
+</header>
+
+<script>
+	const searchIndex = JSON.parse(document.querySelector('[data-blog-search-index]')?.textContent ?? '[]');
+	const toggle = document.querySelector<HTMLButtonElement>('.blog-search-toggle');
+	const form = document.querySelector<HTMLFormElement>('.blog-search');
+	const input = form?.querySelector<HTMLInputElement>('input');
+	const results = form?.querySelector<HTMLElement>('.blog-search__results');
+	const close = form?.querySelector<HTMLButtonElement>('.blog-search__close');
+	const setSearch = (open: boolean) => {
+		if (!form || !toggle) return;
+		form.hidden = !open;
+		toggle.setAttribute('aria-expanded', String(open));
+		document.body.classList.toggle('search-is-open', open);
+		if (open) window.setTimeout(() => input?.focus(), 40);
+	};
+	toggle?.addEventListener('click', () => setSearch(true));
+	close?.addEventListener('click', () => setSearch(false));
+	document.addEventListener('keydown', (event) => { if (event.key === 'Escape') setSearch(false); });
+	if (input && results) {
+		const render = () => {
+			const query = input.value.trim().toLocaleLowerCase();
+			results.replaceChildren();
+			if (!query) { results.hidden = true; return; }
+			const matches = searchIndex.filter((entry: { title: string; description: string; category: string }) => `${entry.title} ${entry.description} ${entry.category}`.toLocaleLowerCase().includes(query)).slice(0, 6);
+			matches.forEach((entry: { title: string; category: string; url: string }) => {
+				const link = document.createElement('a');
+				link.href = entry.url;
+				const label = document.createElement('small');
+				label.textContent = entry.category;
+				const title = document.createElement('strong');
+				title.textContent = entry.title;
+				link.append(label, title);
+				results.append(link);
+			});
+			if (!matches.length) { const empty = document.createElement('p'); empty.textContent = document.documentElement.lang === 'es' ? 'No encontramos artículos con esa búsqueda.' : 'No articles matched that search.'; results.append(empty); }
+			results.hidden = false;
+		};
+		input.addEventListener('input', render);
+		form?.addEventListener('submit', (event) => event.preventDefault());
+	}
+	document.addEventListener('click', (event) => {
+		document.querySelectorAll<HTMLDetailsElement>('.blog-menu[open]').forEach((menu) => {
+			if (!menu.contains(event.target as Node)) menu.removeAttribute('open');
+		});
+	});
+</script>

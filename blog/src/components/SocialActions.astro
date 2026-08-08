@@ -1,0 +1,72 @@
+---
+interface Props { slug: string; locale: 'es' | 'en'; commentsHref?: string; compact?: boolean; }
+const { slug, locale, commentsHref = `/${locale}/${slug}/#comments`, compact = false } = Astro.props;
+const es = locale === 'es';
+---
+
+<div class:list={['social-actions', { 'social-actions--compact': compact }]} data-social data-post-slug={slug}>
+	<button type="button" data-like aria-label={es ? 'Me gusta' : 'Like'}>
+		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.4 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"></path></svg>
+		<span data-like-count>0</span>
+	</button>
+	<a href={commentsHref} aria-label={es ? 'Ver comentarios' : 'View comments'}>
+		<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h9a4 4 0 0 1 4 4Z"></path></svg>
+		<span data-comment-count>0</span>
+	</a>
+	<button type="button" data-share aria-label={es ? 'Compartir artículo' : 'Share article'}>
+		<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"></circle><circle cx="6" cy="12" r="2.5"></circle><circle cx="18" cy="19" r="2.5"></circle><path d="m8.2 10.8 7.5-4.4M8.2 13.2l7.5 4.4"></path></svg>
+		<span data-share-count>0</span>
+	</button>
+	<span class="social-actions__status" data-social-status aria-live="polite"></span>
+</div>
+
+<script>
+	type Counts = { likes: number; shares: number; comments: unknown[] };
+	const apiBase = import.meta.env.DEV ? 'http://localhost:8788' : '';
+	const clientKey = 'jossue-blog-client-id';
+	const clientId = localStorage.getItem(clientKey) ?? crypto.randomUUID();
+	localStorage.setItem(clientKey, clientId);
+
+	const update = (root: HTMLElement, data: Counts) => {
+		const likes = root.querySelector<HTMLElement>('[data-like-count]');
+		const shares = root.querySelector<HTMLElement>('[data-share-count]');
+		const comments = root.querySelector<HTMLElement>('[data-comment-count]');
+		if (likes) likes.textContent = String(data.likes ?? 0);
+		if (shares) shares.textContent = String(data.shares ?? 0);
+		if (comments) comments.textContent = String(data.comments?.length ?? 0);
+	};
+
+	const request = async (slug: string, init?: RequestInit) => {
+		const response = await fetch(`${apiBase}/api/posts/${encodeURIComponent(slug)}/social`, init);
+		if (!response.ok) throw new Error('social-request-failed');
+		return response.json();
+	};
+
+	document.querySelectorAll<HTMLElement>('[data-social]:not([data-social-ready])').forEach((root) => {
+		root.dataset.socialReady = 'true';
+		const slug = root.dataset.postSlug ?? '';
+		const status = root.querySelector<HTMLElement>('[data-social-status]');
+		request(slug).then((data) => update(root, data)).catch(() => {});
+
+		root.querySelector<HTMLButtonElement>('[data-like]')?.addEventListener('click', async (event) => {
+			const button = event.currentTarget as HTMLButtonElement;
+			button.disabled = true;
+			try {
+				const data = await request(slug, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'like', clientId }) });
+				button.classList.add('is-active');
+				update(root, data);
+			} catch { if (status) status.textContent = document.documentElement.lang === 'es' ? 'No se pudo registrar.' : 'Could not save.'; }
+			finally { button.disabled = false; }
+		});
+
+		root.querySelector<HTMLButtonElement>('[data-share]')?.addEventListener('click', async () => {
+			const url = new URL(`/${document.documentElement.lang}/${slug}/`, window.location.origin).href;
+			try {
+				if (navigator.share) await navigator.share({ title: document.title, url });
+				else { await navigator.clipboard.writeText(url); if (status) status.textContent = document.documentElement.lang === 'es' ? 'Enlace copiado' : 'Link copied'; }
+				const data = await request(slug, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ action: 'share', clientId }) });
+				update(root, data);
+			} catch (error) { if ((error as DOMException)?.name !== 'AbortError' && status) status.textContent = document.documentElement.lang === 'es' ? 'No se pudo compartir.' : 'Could not share.'; }
+		});
+	});
+</script>

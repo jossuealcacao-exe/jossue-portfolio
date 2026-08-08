@@ -1,4 +1,5 @@
 import { defineCollection } from 'astro:content';
+import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const caseSchema = z.object({
@@ -131,13 +132,13 @@ const cases = [
 		title: 'WU Nutrition',
 		client: 'WU Nutrition',
 		summary:
-			'Operación DTC bajo rol de Chief Ecommerce Manager: storefront Shopify, UX/CRO, producto conversacional con IA, Growth OS, analítica, paid media y automatizaciones con aprobación humana.',
+			'Operación DTC bajo rol de Head of E-commerce & Digital Growth: storefront Shopify, UX/CRO, producto conversacional con IA, Growth OS, analítica, paid media y automatizaciones con aprobación humana.',
 		context:
-			'WU Nutrition opera suplementos DTC en Shopify con marketplaces. Como Chief Ecommerce Manager, Jossue conecta adquisición, experiencia de compra, datos e IA operativa dentro del mismo sistema de decisión.',
+			'WU Nutrition opera suplementos DTC en Shopify con marketplaces. Como Head of E-commerce & Digital Growth, Jossue conecta adquisición, experiencia de compra, datos e IA operativa dentro del mismo sistema de decisión.',
 		problem:
 			'Convertir iniciativas dispersas de growth en sistemas implementables y mantenibles, reducir dependencia innecesaria de aplicaciones y cuidar una experiencia de compra mobile-first.',
 		role:
-			'Chief Ecommerce Manager. Dirige ecommerce y growth digital; diseña e implementa componentes, flujos, copiloto comercial y documentación; conecta desarrollo, CRO, adquisición, analítica y QA.',
+			'Head of E-commerce & Digital Growth. Dirige ecommerce y growth digital; diseña e implementa componentes, flujos, copiloto comercial y documentación; conecta desarrollo, CRO, adquisición, analítica y QA.',
 		diagnosis: [
 			'El storefront necesitaba componentes comerciales configurables y consistentes.',
 			'La experiencia de adquisición debía continuar en landing pages, PDP, PLP y carrito.',
@@ -285,13 +286,13 @@ const cases = [
 		title: 'WU Nutrition',
 		client: 'WU Nutrition',
 		summary:
-			'DTC operations under a Chief Ecommerce Manager role: Shopify storefront, UX/CRO, conversational AI product, Growth OS, analytics, paid media, and human-approved automations.',
+			'DTC operations under a Head of E-commerce & Digital Growth role: Shopify storefront, UX/CRO, conversational AI product, Growth OS, analytics, paid media, and human-approved automations.',
 		context:
-			'WU Nutrition runs DTC supplements on Shopify with marketplace presence. As Chief Ecommerce Manager, Jossue connects acquisition, shopping experience, data, and operational AI inside one decision system.',
+			'WU Nutrition runs DTC supplements on Shopify with marketplace presence. As Head of E-commerce & Digital Growth, Jossue connects acquisition, shopping experience, data, and operational AI inside one decision system.',
 		problem:
 			'Turn separate growth initiatives into maintainable systems, reduce unnecessary app dependency, and protect a mobile-first shopping experience.',
 		role:
-			'Chief Ecommerce Manager. Leads ecommerce and digital growth; designs and implements components, flows, a commerce copilot, and documentation while connecting development, CRO, acquisition, analytics, and QA.',
+			'Head of E-commerce & Digital Growth. Leads ecommerce and digital growth; designs and implements components, flows, a commerce copilot, and documentation while connecting development, CRO, acquisition, analytics, and QA.',
 		diagnosis: [
 			'The storefront needed configurable and consistent commerce components.',
 			'The acquisition experience had to continue across landing pages, PDPs, PLPs, and cart.',
@@ -1689,13 +1690,13 @@ const cases = [
 		title: 'Come Verde',
 		client: 'Come Verde',
 		summary:
-			'Como Chief Ecommerce Manager: sistema operativo de medios y marca CPG, Growth OS, capa de estrategia con IA y medición orientada a rotación en anaquel — no a ROAS DTC.',
+			'Como Head of E-commerce & Digital Growth: sistema operativo de medios y marca CPG, Growth OS, capa de estrategia con IA y medición orientada a rotación en anaquel — no a ROAS DTC.',
 		context:
-			'Come Verde opera snacks saludables en retail físico y marketplaces. Bajo el mismo rol de Chief Ecommerce Manager que WU Nutrition, el trabajo documentado separa Brand (mensaje, calendario, target) de Media (plan, compra, optimización y reporte) y conecta Growth OS con fuentes Odoo/Shopify/ads.',
+			'Come Verde opera snacks saludables en retail físico y marketplaces. Bajo el mismo rol de Head of E-commerce & Digital Growth que WU Nutrition, el trabajo documentado separa Brand (mensaje, calendario, target) de Media (plan, compra, optimización y reporte) y conecta Growth OS con fuentes Odoo/Shopify/ads.',
 		problem:
 			'Aplicar lógica DTC a una marca CPG produce métricas irrelevantes, creativos de “venta directa” y presupuesto que recorta brand building para perseguir ROAS imposible de medir en tienda.',
 		role:
-			'Chief Ecommerce Manager. Opera la capa ecommerce/medios: plan de medios, compra y optimización, coordinación con Brand y Comercial, Growth OS, playbooks de activación y Claude como brand strategy layer con validación humana.',
+			'Head of E-commerce & Digital Growth. Opera la capa ecommerce/medios: plan de medios, compra y optimización, coordinación con Brand y Comercial, Growth OS, playbooks de activación y Claude como brand strategy layer con validación humana.',
 		diagnosis: [
 			'El KPI final no es ROAS sino rotación y disponibilidad mental en punto de venta.',
 			'Brand define mensaje y calendario; Media amplifica sin inventar la partitura.',
@@ -1810,13 +1811,13 @@ const cases = [
 		title: 'Come Verde',
 		client: 'Come Verde',
 		summary:
-			'As Chief Ecommerce Manager: a CPG media and brand operating system, Growth OS, an AI brand-strategy layer, and measurement aimed at shelf velocity — not DTC ROAS.',
+			'As Head of E-commerce & Digital Growth: a CPG media and brand operating system, Growth OS, an AI brand-strategy layer, and measurement aimed at shelf velocity — not DTC ROAS.',
 		context:
-			'Come Verde sells healthy snacks through physical retail and marketplaces. Under the same Chief Ecommerce Manager role as WU Nutrition, the documented work separates Brand (message, calendar, target) from Media (plan, buy, optimize, report) and connects Growth OS to Odoo/Shopify/ads sources.',
+			'Come Verde sells healthy snacks through physical retail and marketplaces. Under the same Head of E-commerce & Digital Growth role as WU Nutrition, the documented work separates Brand (message, calendar, target) from Media (plan, buy, optimize, report) and connects Growth OS to Odoo/Shopify/ads sources.',
 		problem:
 			'Applying DTC logic to a CPG brand produces irrelevant metrics, “direct-response” creatives, and budgets that cut brand building to chase ROAS that cannot be measured in-store.',
 		role:
-			'Chief Ecommerce Manager. Runs the ecommerce/media layer: media planning, buying and optimization, Brand and Commercial coordination, Growth OS, activation playbooks, and Claude as a brand-strategy layer with human validation.',
+			'Head of E-commerce & Digital Growth. Runs the ecommerce/media layer: media planning, buying and optimization, Brand and Commercial coordination, Growth OS, activation playbooks, and Claude as a brand-strategy layer with human validation.',
 		diagnosis: [
 			'The end KPI is not ROAS but velocity and mental availability at the point of sale.',
 			'Brand owns message and calendar; Media amplifies without writing the score.',
@@ -2981,4 +2982,46 @@ const caseStudies = defineCollection({
 	schema: caseSchema,
 });
 
-export const collections = { cases: caseStudies };
+const blogPosts = defineCollection({
+	loader: glob({
+		pattern: '**/*.{md,mdoc}',
+		base: './src/content/blog',
+		generateId: ({ entry, data }) => `${String(data.lang ?? 'unknown')}/${String(data.slug ?? entry)}`,
+	}),
+	schema: ({ image }) =>
+		z.object({
+			lang: z.enum(['es', 'en']),
+			slug: z.string(),
+			counterpartSlug: z.string(),
+			title: z.string(),
+			description: z.string(),
+			excerpt: z.string(),
+			category: z.string(),
+			categorySlug: z.string(),
+			counterpartCategorySlug: z.string(),
+			publishedAt: z.coerce.date(),
+			updatedAt: z.coerce.date().optional(),
+			readMinutes: z.number().int().positive().max(20),
+			featured: z.boolean().default(false),
+			draft: z.boolean().default(true),
+			heroImage: image(),
+			heroAlt: z.string(),
+			supportImage: image().optional(),
+			supportImageAlt: z.string().optional(),
+			keywords: z.array(z.string()).min(1),
+			author: z.object({
+				name: z.string(),
+			}),
+			sources: z.array(
+				z.object({
+					label: z.string(),
+					url: z.url(),
+				}),
+			),
+			publication: z.object({
+				publish: z.boolean(),
+			}),
+		}),
+});
+
+export const collections = { cases: caseStudies, blog: blogPosts };

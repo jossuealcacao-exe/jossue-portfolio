@@ -195,3 +195,51 @@ anteriores; añadir una nueva entrada que las reemplace.
 - **Consecuencia:** hero a viewport; secciones como puntos de anclaje; reduced-motion apaga
   snap y animaciones.
 - **Revisar cuando:** medición real en móvil muestre fricción o se autorice motion más denso.
+
+## D-021 · Estandarización internacional del rol vigente
+
+- **Estado:** aceptada (6 ago 2026).
+- **Decisión:** sustituir el título público `Chief Ecommerce Manager` por
+  `Head of E-commerce & Digital Growth` para WU Nutrition y Come Verde, en sitio, casos,
+  metadata, fuentes vigentes y CV descargable.
+- **Motivo:** el alcance confirmado incluye ownership de estrategia comercial digital,
+  presupuesto/P&L, liderazgo de equipo o proveedores y coordinación transversal de ecommerce,
+  growth, medios, datos y tecnología. `Chief Ecommerce Manager` no comunica ese nivel de forma
+  estándar internacional.
+- **Consecuencia:** el título se conserva en inglés también en la interfaz ES para mantener una
+  señal profesional consistente; la narrativa continúa explicando el alcance real y no añade
+  resultados sin evidencia.
+- **Revisar cuando:** cambie la responsabilidad sobre P&L, equipo, canales o la estructura de
+  las organizaciones.
+
+## D-022 · Blog en subdominio y monetización aislada
+
+- **Estado:** aceptada (8 ago 2026).
+- **Decisión:** publicar el blog como aplicación editorial autónoma en
+	`blog.jossuealcala.com`, con portada, categorías, entradas, navegación principal, buscador,
+	RSS y `BlogPosting`; reservar la carga de AdSense exclusivamente a esa aplicación y
+	mantenerla desactivada hasta que la cuenta esté aprobada y existan slots y CMP certificada.
+- **Motivo:** atraer tráfico orgánico con contenido útil sin convertir el portafolio principal
+  en un inventario publicitario ni degradar su UX, manteniendo una conexión clara entre ambos
+  sitios mediante enlaces recíprocos.
+- **Consecuencia:** las entradas revisadas pueden programarse con `publishedAt` y desplegarse
+  mediante el workflow diario del blog; el portafolio conserva solo un enlace a Blog en su
+  footer y redirige las rutas editoriales históricas. La generación masiva y publicación directa
+	por IA queda fuera por calidad editorial, trazabilidad y políticas de contenido útil. El
+	dominio principal ya publica la meta de verificación de AdSense y `ads.txt`.
+- **Revisar cuando:** exista cuenta AdSense aprobada, una CMP activa, datos de tráfico o una
+  fuente editorial automatizada con revisión humana verificable.
+
+## D-023 · Feed social con interacción verificable
+
+- **Estado:** aceptada (8 ago 2026).
+- **Decisión:** presentar la portada como feed editorial, conservar tres destacados con arte
+  original generado para sus categorías y ofrecer likes, shares y comentarios anónimos con
+  contadores reales en D1. Todo comentario nace pendiente y sólo aparece tras moderación.
+- **Motivo:** aumentar recurrencia y conversación sin simular audiencia ni atribuir actividad
+  ficticia a personas inexistentes.
+- **Consecuencia:** el menú concentra categorías, el buscador se expande desde la cabecera y
+  `/admin/moderacion/` permite aprobar o rechazar comentarios mediante un token secreto. Los
+  contadores comienzan en cero y no se rellenan con datos decorativos.
+- **Revisar cuando:** haya datos reales de participación, spam recurrente o necesidad de
+  autenticación, rate limiting adicional o notificaciones de moderación.

@@ -8,6 +8,8 @@ experiencia, educación, capacidades y fechas sin convertir inferencias en hecho
 - PDF para revisión y DOCX o Markdown para edición.
 - Mantener una copia original privada y una versión preparada para publicación.
 - Indicar fecha de actualización y responsable de validar el contenido.
+- La versión pública actual se genera con `scripts/generate-cv.py`; ese script debe actualizarse
+  junto con cualquier cambio de experiencia, título o contacto publicado.
 
 ## Confidencialidad
 

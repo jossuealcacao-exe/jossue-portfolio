@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BlogHeader from '../../components/BlogHeader.astro';
+import FeatureCarousel from '../../components/FeatureCarousel.astro';
+import PostCard from '../../components/PostCard.astro';
+import { publishedPosts, type Locale } from '../../data/blog';
+import BlogLayout from '../../layouts/BlogLayout.astro';
+
+export function getStaticPaths() { return [{ params: { lang: 'es' } }, { params: { lang: 'en' } }]; }
+const locale = Astro.params.lang as Locale;
+const es = locale === 'es';
+const posts = publishedPosts(await getCollection('blog'), locale);
+const featuredOrder = ['claude-code-vs-opencode', 'vibe-coding-no-es-desarrollo', 'black-hat-agentes-sandbox'];
+const curated = featuredOrder.map((slug) => posts.find((post) => post.data.slug === slug)).filter(Boolean) as typeof posts;
+const carouselPosts = curated.length === 3 ? curated : posts.slice(0, 3);
+---
+<BlogLayout locale={locale} pathname={`/${locale}/`} title={es ? 'Blog de tecnología, desarrollo e IA — Jossue Alcalá' : 'Technology, development, and AI blog — Jossue Alcalá'} description={es ? 'Artículos sobre tecnología, inteligencia artificial, desarrollo y ecommerce escritos por Jossue Alcalá.' : 'Articles about technology, artificial intelligence, development, and ecommerce by Jossue Alcalá.'} counterpart={`/${es ? 'en' : 'es'}/`}>
+	<BlogHeader slot="header" locale={locale} posts={posts} />
+	<div class="feed-shell">
+		{carouselPosts.length > 0 && <FeatureCarousel entries={carouselPosts} locale={locale} />}
+		<section class="feed" aria-labelledby="feed-heading">
+			<header class="feed__heading"><div><p>{es ? 'Publicaciones recientes' : 'Recent posts'}</p><h2 id="feed-heading">{es ? 'Artículos nuevos' : 'New articles'}</h2></div><span>{posts.length} {es ? 'publicaciones' : 'posts'}</span></header>
+			<div class="feed__list">{posts.map((post) => <PostCard entry={post} />)}</div>
+		</section>
+	</div>
+</BlogLayout>

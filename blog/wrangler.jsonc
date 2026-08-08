@@ -1,0 +1,26 @@
+{
+	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+	"name": "jossue-blog",
+	"main": "./worker/index.mjs",
+	"compatibility_date": "2026-08-08",
+	"routes": [
+		{
+			"pattern": "blog.jossuealcala.com",
+			"custom_domain": true
+		}
+	],
+	"assets": {
+		"directory": "./dist",
+		"binding": "ASSETS",
+		"html_handling": "force-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "jossue-blog-social",
+			"database_id": "a031570d-ff9b-44a8-9b26-8c4788bb7883",
+			"migrations_dir": "migrations"
+		}
+	]
+}

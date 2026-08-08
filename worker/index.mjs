@@ -203,6 +203,11 @@ async function handleSubmissions(request, env, origin) {
 
 export async function handleRequest(request, env) {
 	const url = new URL(request.url);
+	const legacyBlog = url.pathname.match(/^\/(es|en)\/blog(?:\/(.*))?\/?$/);
+	if (legacyBlog) {
+		const [, locale, tail = ''] = legacyBlog;
+		return Response.redirect(`https://blog.jossuealcala.com/${locale}/${tail}`, 301);
+	}
 	const origin = requestOrigin(request, env);
 	if (origin === false) return json(403, { ok: false, error: 'Origin not allowed' });
 

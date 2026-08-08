@@ -31,7 +31,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			summary: 'Dirección ecommerce de punta a punta: storefront Shopify, adquisición, analítica e IA aplicada conectadas en una experiencia que convierte y que el equipo puede operar.',
 			context: 'WU Nutrition comercializa suplementos DTC en Shopify y marketplaces. La operación exige conectar la promesa de campaña con el descubrimiento, la decisión de compra, el carrito y la relación posterior con el cliente.',
 			challenge: 'Convertir iniciativas dispersas de growth en un sistema ecommerce consistente, reutilizable y preparado para evolucionar sin añadir complejidad innecesaria al equipo.',
-			role: 'Como Chief Ecommerce Manager, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización.',
+			role: 'Como Head of E-commerce & Digital Growth, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización.',
 			approach: [
 				'Diseñar la experiencia como un recorrido continuo entre campaña, landing page, catálogo, producto y carrito.',
 				'Construir componentes Shopify configurables para que el equipo pueda operar campañas y contenidos con autonomía.',
@@ -54,7 +54,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			summary: 'End-to-end ecommerce leadership: Shopify storefront, acquisition, analytics, and applied AI connected into an experience that converts and the team can operate.',
 			context: 'WU Nutrition sells supplements through Shopify DTC and marketplaces. The operation needs campaign promises to continue through discovery, purchase decisions, cart, and the post-purchase relationship.',
 			challenge: 'Turn fragmented growth initiatives into a consistent, reusable ecommerce system that can evolve without adding unnecessary complexity for the team.',
-			role: 'As Chief Ecommerce Manager, I lead ecommerce strategy and work hands-on across design, Shopify development, UX/CRO, acquisition, analytics, and automation.',
+			role: 'As Head of E-commerce & Digital Growth, I lead ecommerce strategy and work hands-on across design, Shopify development, UX/CRO, acquisition, analytics, and automation.',
 			approach: [
 				'Design one continuous journey across campaigns, landing pages, catalog, product, and cart.',
 				'Build configurable Shopify components so the team can operate campaigns and content independently.',
@@ -197,7 +197,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			summary: 'Un sistema de medios y marca para una operación CPG que conecta estrategia, activaciones, marketplaces e IA aplicada.',
 			context: 'Come Verde comercializa snacks saludables en retail físico y marketplaces, donde la construcción de marca y la rotación en anaquel requieren una lógica distinta a la de un ecommerce DTC.',
 			challenge: 'Alinear marca, medios y medición alrededor de disponibilidad mental, distribución y ocasiones de consumo, sin reducir la estrategia a una métrica de venta directa.',
-			role: 'Como Chief Ecommerce Manager, dirijo la capa ecommerce y de medios, coordino con Brand y Comercial y diseño sistemas de planeación, activación y aprendizaje.',
+			role: 'Como Head of E-commerce & Digital Growth, dirijo la capa ecommerce y de medios, coordino con Brand y Comercial y diseño sistemas de planeación, activación y aprendizaje.',
 			approach: [
 				'Separar brand building, activaciones tácticas y performance de marketplaces.',
 				'Alinear geotargeting y creatividad con distribución, temporalidad y objetivo comercial.',
@@ -213,7 +213,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			summary: 'A media and brand operating system for a CPG business connecting strategy, activations, marketplaces, and applied AI.',
 			context: 'Come Verde sells healthy snacks through physical retail and marketplaces, where brand building and shelf velocity require a different logic from DTC ecommerce.',
 			challenge: 'Align brand, media, and measurement around mental availability, distribution, and consumption occasions without reducing strategy to a direct-sale metric.',
-			role: 'As Chief Ecommerce Manager, I lead ecommerce and media, coordinate with Brand and Commercial teams, and design systems for planning, activation, and learning.',
+			role: 'As Head of E-commerce & Digital Growth, I lead ecommerce and media, coordinate with Brand and Commercial teams, and design systems for planning, activation, and learning.',
 			approach: [
 				'Separate brand building, tactical activations, and marketplace performance.',
 				'Align geotargeting and creative with distribution, seasonality, and commercial goals.',

@@ -2,10 +2,10 @@
 
 ## Fase actual
 
-**Portafolio bilingüe rediseñado con narrativa comercial, visuales de producto y stacks por proyecto.**
+**Portafolio bilingüe con narrativa comercial y un blog editorial independiente para adquisición orgánica.**
 
 El repositorio estaba inicialmente vacío. Ahora contiene una implementación Astro 7.1.1
-estática con TypeScript strict, 29 páginas, ocho casos por dos idiomas, sistema visual,
+estática con TypeScript strict, 45 páginas HTML, nueve casos por dos idiomas, sistema visual,
 SEO técnico, `dataLayer` local, pruebas y documentación. El contenido público presenta valor,
 contribución, proceso, resultados y tecnología; fuentes, permisos y QA permanecen en la capa interna.
 
@@ -14,8 +14,9 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 - Astro SSG (`output: static`, `trailingSlash: always`) y TypeScript strict.
 - Rutas ES/EN exactas y `/` → `/es/` mediante redirección HTML estática; el HTTP 308 depende del hosting.
 - Selector ES/EN hacia página o caso equivalente.
-- 29 páginas HTML: raíz + 14 ES + 14 EN.
-- Colección `cases` estructurada: 8 casos × 2 idiomas.
+- 31 páginas HTML en el portafolio; la aplicación independiente `blog/` compila sus propias
+  portadas, categorías, entradas y feeds RSS ES/EN para `blog.jossuealcala.com`.
+- Colección `cases` estructurada: 9 casos × 2 idiomas.
 - Header, footer, breadcrumbs, tokens responsive y fuentes variables locales.
 - Canales directos accesibles; el formulario no se renderiza mientras no exista un endpoint.
 - Canonical, `hreflang`, sitemap, robots, OG/Twitter y JSON-LD.
@@ -55,8 +56,25 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
   y formato; no se presentan placeholders como evidencia terminada.
 - Correo, LinkedIn y WhatsApp centralizados y publicados con autorización explícita.
 - CV integrado con descarga pública `/cv/Jossue-Alcala-CV.pdf`, KPIs del CV, rol
-  Chief Ecommerce Manager (WU/Come Verde), capacidades AI/automatización desde
+  Head of E-commerce & Digital Growth (WU/Come Verde), capacidades AI/automatización desde
   `master_portfolio_ai`; métricas Bloqio 57/45 siguen fuera.
+- Blog ES/EN independiente en `blog.jossuealcala.com`, con portada en forma de feed, cinco
+  categorías dentro del menú, buscador expandible, carrusel con tres portadas originales,
+  seis artículos ES (uno bilingüe), firma enlazada al perfil, `BlogPosting`, RSS, sitemap y
+  enlaces recíprocos.
+- Interacción social real preparada con likes, shares y comentarios anónimos en D1; los
+  comentarios quedan pendientes hasta aprobarse en `/admin/moderacion/`. No se sembró
+  actividad ficticia.
+- Publicación programada preparada con contenido fechado, validación editorial y workflow
+  diario de Cloudflare; despliegue automático inactivo hasta configurar secretos del repositorio.
+- Cuenta AdSense `ca-pub-5612202849073748` declarada mediante meta de verificación en el
+  dominio principal y el blog; `ads.txt` raíz contiene el publisher autorizado. Los scripts y
+  slots siguen aislados y desactivados hasta contar con revisión aprobada y CMP certificada.
+- Portafolio y blog desplegados en Cloudflare el 8 de agosto de 2026. El dominio principal usa
+  la versión `b688cb70-c79a-4f95-8709-32eae1f5f8c2`; el blog y su secreto de moderación quedaron
+  activos en la versión `ec7f6a55-610d-46e1-bbed-3528309b4874`.
+- D1 `jossue-blog-social` creada, migración social aplicada y moderación protegida mediante
+  `ADMIN_TOKEN`; las métricas reales comienzan en cero.
 - 238 archivos de proyecto y un CV en español recibidos e inventariados.
 - CV con PII y archivo confidencial de La Carnicería Virtual excluidos de Git.
 
@@ -70,30 +88,28 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 
 ## Pendiente
 
-- Dominio real y `PUBLIC_SITE_URL`.
-- GitHub, descarga pública del PDF del CV y endpoint de formulario autorizados.
+- Configurar secretos de Cloudflare en GitHub para activar publicación programada.
+- Completar la revisión de AdSense, crear slots de blog y activar una CMP certificada antes de
+  cargar publicidad real.
 - Activos de marca: logotipo SVG, variantes, isotipo, favicon, guía y tipografía/licencias
   oficiales (Zappicon ya integrado en subconjunto curado; ver D-018).
 - Auditoría manual WCAG 2.2 AA, lector de pantalla y contraste.
 - Medición Lighthouse/CWV del portafolio; no existen resultados registrados.
-- Decisión legal y técnica sobre GTM/GA4, Search Console, consentimiento y privacidad.
+- Cerrar configuración operativa de Search Console y consentimiento publicitario.
 - Evidencia y permisos para los demás casos.
-- Reescritura y maquetación del PDF de CV; el sitio ya usa copy actualizado, pero el PDF
-  descargable conserva la edición del 13 abr 2026.
 - Capturas aprobadas de onboarding, editor, auditoría y experiencia móvil de Bloqio Builder.
 - Capturas y artefactos específicos de Come Verde.
 
 ## Bloqueos
 
-- **Publicación:** `.invalid` debe reemplazarse por dominio HTTPS real.
-- **Formulario:** no hay endpoint ni política de privacidad configurados; los canales directos sí funcionan.
+- **Monetización del blog:** publisher, meta de verificación y `ads.txt` ya están configurados;
+  faltan aprobación de AdSense, slots y CMP. Ningún script publicitario se carga todavía.
 - **Bloqio Builder:** faltan activos visuales aprobados; el repositorio fuente es privado.
 - **Bloqio CRO Apps:** capturas son demos de producto; falta permiso para métricas de installs.
 - **Come Verde:** hay playbooks verificados; faltan capturas visuales y permiso para cifras comerciales.
 - **WU técnico:** la captura pública detectó errores JavaScript en la PDP; requieren diagnóstico separado.
 - **Marca propia:** aún no hay logotipo/isotipo oficiales de Jossue; Zappicon Free curado
   (D-018) y logos de clientes/empleadores en `/cv/brands` (D-019) sí están.
-- **Analítica externa:** no hay IDs, proveedor, consentimiento ni política aprobados.
 - **MIAWSEO:** las capturas permanecen retenidas hasta verificar atribución y derechos de publicación.
 - **Casa Tecalli:** faltan capturas desde una Shopify development store autorizada.
 - **Métricas Bloqio:** 57 usuarios y 45 páginas son solo datos proporcionados; no tienen fecha
@@ -103,7 +119,8 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 
 - Astro 7.1.1 + TypeScript strict + SSG.
 - Español como destino determinista de `/`; selector explícito para inglés.
-- Rutas bilingües equivalentes y cinco slugs compartidos.
+- Rutas bilingües equivalentes para portafolio y casos; el blog mantiene sus propias rutas
+  bilingües equivalentes en el subdominio.
 - `.invalid` como fallback técnico y release gate.
 - Inter Tight local como display principal; Source Sans 3 local para lectura, con fallbacks de sistema.
 - WCAG 2.2 AA como objetivo, sin declarar conformidad manual todavía.
@@ -118,7 +135,7 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 - **Configuración:** `package.json`, `package-lock.json`, `astro.config.mjs`,
   `tsconfig.json`, `eslint.config.js`.
 - **Rutas:** `src/pages/index.astro`, `src/pages/[lang]/index.astro`,
-  `src/pages/[lang]/[...path].astro`, `src/pages/robots.txt.ts`.
+	`src/pages/[lang]/[...path].astro`, `src/pages/robots.txt.ts`; blog en `blog/src/pages/**`.
 - **Contenido/datos:** `src/content.config.ts`, `src/data/i18n.ts`,
   `src/data/contact.ts`, `src/data/analytics.ts`.
 - **UI/layout:** `src/layouts/BaseLayout.astro`, `src/components/**`,
@@ -129,12 +146,12 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 ## Validaciones ejecutadas
 
 - `npm install`: completado.
-- `npm run check`: 46 archivos, 0 errores, 0 warnings, 0 hints.
+- `npm run check`: 68 archivos, 0 errores, 0 warnings, 0 hints.
 - `npm run lint`: pasa.
-- `npm run build`: 29 páginas construidas.
-- Rutas: 29 verificadas + `robots.txt` y sitemap; gate de claims restringidos pasa.
-- Enlaces: 485 enlaces locales verificados.
-- Playwright: 168/168 pasan en Chromium contra el build de producción, en viewports de 320, 375,
+- `npm run build`: 45 páginas HTML y dos feeds RSS construidos.
+- Rutas: 35 verificadas + `robots.txt`, sitemap, `llms.txt` y RSS; gate de claims restringidos pasa.
+- Enlaces: 1,083 enlaces locales verificados.
+- Playwright: 216/216 pasan en Chromium contra el build local, en viewports de 320, 375,
   390, 430, 768, 1024, 1280 y 1440 px; las rutas representativas no presentan overflow ni errores de consola.
 - Revisión visual actual: Inicio, Trabajo, Servicios y Bloqio CRO Apps aprobados en 390 y 1440 px.
 - HTTP local: MIAWSEO, Vinería y Casa Tecalli responden 200 después de reiniciar Astro background.
@@ -151,5 +168,6 @@ contribución, proceso, resultados y tecnología; fuentes, permisos y QA permane
 
 ## Próxima acción exacta
 
-Verificar la atribución de MIAWSEO y producir las capturas de Casa Tecalli desde una Shopify
-development store autorizada.
+Esperar la revisión de AdSense. Cuando la cuenta y el sitio aparezcan como `Listo`, crear los
+slots responsivos, activar una CMP certificada e integrar la carga publicitaria exclusivamente
+en `blog.jossuealcala.com` antes de una nueva validación y publicación.

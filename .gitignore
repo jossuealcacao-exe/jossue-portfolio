@@ -2,6 +2,10 @@
 dist/
 # generated types
 .astro/
+blog/.astro/
+blog/dist/
+blog/.wrangler/
+tmp/
 
 # dependencies
 node_modules/

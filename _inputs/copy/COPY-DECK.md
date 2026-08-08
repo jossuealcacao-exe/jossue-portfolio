@@ -200,7 +200,7 @@
 | ID | Texto actual | ✏️ Nuevo texto | Intención |
 |---|---|---|---|
 | HOME.PROF.TITLE | Estrategia de negocio con capacidad de construir. | | |
-| HOME.PROF.HEADLINE | Chief Ecommerce Manager · WU Nutrition / Come Verde | | Cargo actual |
+| HOME.PROF.HEADLINE | Head of E-commerce & Digital Growth · WU Nutrition / Come Verde | | Cargo actual |
 | HOME.PROF.X | Trabajo entre dirección y ejecución para que las ideas no terminen en una presentación: se conviertan en una experiencia que el equipo pueda lanzar, medir y mejorar. | | |
 | HOME.PROF.CTA1 | Conocer mi experiencia | | |
 | HOME.PROF.CTA2 | Iniciar conversación | | |
@@ -283,7 +283,7 @@
 | ID | Texto actual | ✏️ Nuevo texto | Intención |
 |---|---|---|---|
 | ABOUT.EYEBROW | Perfil profesional | | |
-| ABOUT.HEADLINE | Chief Ecommerce Manager · WU Nutrition / Come Verde | | (mismo que HOME.PROF.HEADLINE) |
+| ABOUT.HEADLINE | Head of E-commerce & Digital Growth · WU Nutrition / Come Verde | | (mismo que HOME.PROF.HEADLINE) |
 | ABOUT.SUB | Más de ocho años conectando estrategia comercial, ecommerce, paid media, producto digital y ejecución técnica. | | |
 | ABOUT.CTA.CV | Descargar CV | | |
 | ABOUT.S1.TITLE | Experiencia en tecnología, retail, salud y consumo. | | Marcas |
@@ -304,7 +304,7 @@
 
 ## 6.2 Timeline de experiencia (bullets por rol)
 
-**WU Nutrition / Come Verde — Chief Ecommerce Manager (Nov 2025 – Actualidad)**
+**WU Nutrition / Come Verde — Head of E-commerce & Digital Growth (Nov 2025 – Actualidad)**
 
 | ID | Texto actual | ✏️ Nuevo texto |
 |---|---|---|
@@ -417,7 +417,7 @@
 | CASE.WU.SUMMARY | Dirección ecommerce de punta a punta: storefront Shopify, adquisición, analítica e IA aplicada conectadas en una experiencia que convierte y que el equipo puede operar. | |
 | CASE.WU.CONTEXT | WU Nutrition comercializa suplementos DTC en Shopify y marketplaces. La operación exige conectar la promesa de campaña con el descubrimiento, la decisión de compra, el carrito y la relación posterior con el cliente. | |
 | CASE.WU.CHALLENGE | Convertir iniciativas dispersas de growth en un sistema ecommerce consistente, reutilizable y preparado para evolucionar sin añadir complejidad innecesaria al equipo. | |
-| CASE.WU.ROLE | Como Chief Ecommerce Manager, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización. | |
+| CASE.WU.ROLE | Como Head of E-commerce & Digital Growth, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización. | |
 | CASE.WU.AP.1 | Diseñar la experiencia como un recorrido continuo entre campaña, landing page, catálogo, producto y carrito. | |
 | CASE.WU.AP.2 | Construir componentes Shopify configurables para que el equipo pueda operar campañas y contenidos con autonomía. | |
 | CASE.WU.AP.3 | Usar IA y automatización dentro de flujos con datos comerciales validados y decisiones humanas. | |
@@ -497,7 +497,7 @@
 | CASE.CV.SUMMARY | Un sistema de medios y marca para una operación CPG que conecta estrategia, activaciones, marketplaces e IA aplicada. | |
 | CASE.CV.CONTEXT | Come Verde comercializa snacks saludables en retail físico y marketplaces, donde la construcción de marca y la rotación en anaquel requieren una lógica distinta a la de un ecommerce DTC. | |
 | CASE.CV.CHALLENGE | Alinear marca, medios y medición alrededor de disponibilidad mental, distribución y ocasiones de consumo, sin reducir la estrategia a una métrica de venta directa. | |
-| CASE.CV.ROLE | Como Chief Ecommerce Manager, dirijo la capa ecommerce y de medios, coordino con Brand y Comercial y diseño sistemas de planeación, activación y aprendizaje. | |
+| CASE.CV.ROLE | Como Head of E-commerce & Digital Growth, dirijo la capa ecommerce y de medios, coordino con Brand y Comercial y diseño sistemas de planeación, activación y aprendizaje. | |
 | CASE.CV.AP.1 | Separar brand building, activaciones tácticas y performance de marketplaces. | |
 | CASE.CV.AP.2 | Alinear geotargeting y creatividad con distribución, temporalidad y objetivo comercial. | |
 | CASE.CV.AP.3 | Usar IA para acelerar briefs, variantes y síntesis dentro de una estrategia definida por el equipo. | |

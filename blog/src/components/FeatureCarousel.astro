@@ -1,0 +1,70 @@
+---
+import { Image } from 'astro:assets';
+import type { BlogEntry, Locale } from '../data/blog';
+import { categoryPath, postPath } from '../data/blog';
+interface Props { entries: BlogEntry[]; locale: Locale; }
+const { entries, locale } = Astro.props;
+const es = locale === 'es';
+---
+
+<section class="feature-carousel" aria-labelledby="featured-heading" data-carousel>
+	<div class="section-heading">
+		<div><p>{es ? 'Selección' : 'Selected'}</p><h1 id="featured-heading">{es ? 'Tres artículos para empezar.' : 'Three articles to start with.'}</h1></div>
+		<div class="carousel-controls">
+			<button type="button" data-carousel-prev aria-label={es ? 'Artículo anterior' : 'Previous article'}>←</button>
+			<button type="button" data-carousel-next aria-label={es ? 'Artículo siguiente' : 'Next article'}>→</button>
+		</div>
+	</div>
+	<div class="feature-carousel__track" data-carousel-track>
+		{entries.slice(0, 3).map((entry, index) => (
+			<article class:list={['feature-slide', `feature-slide--${index + 1}`]}>
+				<a class="feature-slide__image" href={postPath(entry)}><Image src={entry.data.heroImage} alt={entry.data.heroAlt} widths={[800, 1200, 1600]} sizes="(min-width: 60rem) 72rem, 92vw" loading={index === 0 ? 'eager' : 'lazy'} /></a>
+				<div class="feature-slide__copy">
+					<a class="feature-slide__category" href={categoryPath(locale, entry.data.categorySlug)}>{entry.data.category}</a>
+					<p>0{index + 1} / 03</p>
+					<h2><a href={postPath(entry)}>{entry.data.title}</a></h2>
+					<span>{entry.data.readMinutes} min · {es ? 'Opinión' : 'Opinion'}</span>
+				</div>
+			</article>
+		))}
+	</div>
+	<div class="carousel-dots" role="tablist" aria-label={es ? 'Artículos destacados' : 'Featured articles'}>
+		{entries.slice(0, 3).map((_, index) => <button type="button" data-carousel-dot={index} aria-label={`${es ? 'Ir al artículo' : 'Go to article'} ${index + 1}`} aria-selected={index === 0 ? 'true' : 'false'}></button>)}
+	</div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((carousel) => {
+		const track = carousel.querySelector<HTMLElement>('[data-carousel-track]');
+		const slides = [...(track?.querySelectorAll<HTMLElement>('.feature-slide') ?? [])];
+		const dots = [...carousel.querySelectorAll<HTMLButtonElement>('[data-carousel-dot]')];
+		let active = 0;
+		let autoplay: number | undefined;
+		const go = (index: number) => {
+			if (!track || !slides.length) return;
+			active = (index + slides.length) % slides.length;
+			track.scrollTo({ left: slides[active].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+			dots.forEach((dot, dotIndex) => dot.setAttribute('aria-selected', String(dotIndex === active)));
+		};
+		const stopAutoplay = () => { if (autoplay !== undefined) window.clearInterval(autoplay); autoplay = undefined; };
+		const startAutoplay = () => {
+			stopAutoplay();
+			if (slides.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches || document.hidden) return;
+			autoplay = window.setInterval(() => go(active + 1), 5000);
+		};
+		const navigate = (index: number) => { go(index); startAutoplay(); };
+		carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', () => navigate(active - 1));
+		carousel.querySelector('[data-carousel-next]')?.addEventListener('click', () => navigate(active + 1));
+		dots.forEach((dot, index) => dot.addEventListener('click', () => navigate(index)));
+		carousel.addEventListener('mouseenter', stopAutoplay);
+		carousel.addEventListener('mouseleave', startAutoplay);
+		carousel.addEventListener('focusin', stopAutoplay);
+		carousel.addEventListener('focusout', (event) => { if (!carousel.contains(event.relatedTarget as Node)) startAutoplay(); });
+		document.addEventListener('visibilitychange', () => { if (document.hidden) stopAutoplay(); else startAutoplay(); });
+		track?.addEventListener('scroll', () => {
+			const next = slides.reduce((closest, slide, index) => Math.abs(slide.offsetLeft - track.scrollLeft) < Math.abs(slides[closest].offsetLeft - track.scrollLeft) ? index : closest, 0);
+			if (next !== active) { active = next; dots.forEach((dot, index) => dot.setAttribute('aria-selected', String(index === active))); }
+		}, { passive: true });
+		startAutoplay();
+	});
+</script>

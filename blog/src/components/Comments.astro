@@ -1,0 +1,58 @@
+---
+interface Props { slug: string; locale: 'es' | 'en'; }
+const { slug, locale } = Astro.props;
+const es = locale === 'es';
+---
+
+<section class="comments" id="comments" data-comments data-post-slug={slug}>
+	<div class="comments__heading"><div><p>{es ? 'Comentarios' : 'Comments'}</p><h2>{es ? '¿Qué opinas?' : 'What do you think?'}</h2></div><span data-comments-total>0</span></div>
+	<form class="comment-form">
+		<label for={`comment-${slug}`}>{es ? 'Tu comentario' : 'Your comment'}</label>
+		<textarea id={`comment-${slug}`} name="body" minlength="3" maxlength="1000" required placeholder={es ? 'Escribe tu opinión o comparte una experiencia relacionada.' : 'Share your opinion or a related experience.'}></textarea>
+		<label class="comment-form__trap" aria-hidden="true">Sitio web<input name="website" tabindex="-1" autocomplete="off" /></label>
+		<div><p>{es ? 'Es anónimo y aparecerá después de ser revisado.' : 'It is anonymous and will appear after review.'}</p><button type="submit">{es ? 'Enviar a moderación' : 'Send for review'}</button></div>
+		<p class="comment-form__status" data-comment-status aria-live="polite"></p>
+	</form>
+	<div class="comments__list" data-comments-list><p>{es ? 'Todavía no hay comentarios aprobados.' : 'There are no approved comments yet.'}</p></div>
+</section>
+
+<script>
+	document.querySelectorAll<HTMLElement>('[data-comments]').forEach((root) => {
+		const apiBase = import.meta.env.DEV ? 'http://localhost:8788' : '';
+		const slug = root.dataset.postSlug ?? '';
+		const form = root.querySelector<HTMLFormElement>('form');
+		const list = root.querySelector<HTMLElement>('[data-comments-list]');
+		const total = root.querySelector<HTMLElement>('[data-comments-total]');
+		const status = root.querySelector<HTMLElement>('[data-comment-status]');
+		const es = document.documentElement.lang === 'es';
+		const render = (comments: Array<{ id: string; body: string; createdAt: string }>) => {
+			if (!list || !total) return;
+			total.textContent = String(comments.length);
+			list.replaceChildren();
+			if (!comments.length) { const empty = document.createElement('p'); empty.textContent = es ? 'Todavía no hay comentarios aprobados.' : 'There are no approved comments yet.'; list.append(empty); return; }
+			comments.forEach((comment) => {
+				const article = document.createElement('article');
+				const avatar = document.createElement('span'); avatar.textContent = 'A';
+				const copy = document.createElement('div');
+				const meta = document.createElement('p'); meta.textContent = `${es ? 'Anónimo' : 'Anonymous'} · ${new Intl.DateTimeFormat(es ? 'es-MX' : 'en-US', { dateStyle: 'medium' }).format(new Date(comment.createdAt))}`;
+				const body = document.createElement('p'); body.textContent = comment.body;
+				copy.append(meta, body); article.append(avatar, copy); list.append(article);
+			});
+		};
+		fetch(`${apiBase}/api/posts/${encodeURIComponent(slug)}/social`).then((response) => response.ok ? response.json() : Promise.reject()).then((data) => render(data.comments ?? [])).catch(() => {});
+		form?.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			const data = new FormData(form);
+			if (data.get('website')) return;
+			const button = form.querySelector<HTMLButtonElement>('button');
+			if (button) button.disabled = true;
+			try {
+				const response = await fetch(`${apiBase}/api/posts/${encodeURIComponent(slug)}/comments`, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ body: data.get('body') }) });
+				if (!response.ok) throw new Error();
+				form.reset();
+				if (status) status.textContent = es ? 'Gracias. Tu comentario quedó pendiente de moderación.' : 'Thank you. Your comment is pending review.';
+			} catch { if (status) status.textContent = es ? 'No pudimos enviarlo por ahora. Intenta nuevamente.' : 'We could not send it. Please try again.'; }
+			finally { if (button) button.disabled = false; }
+		});
+	});
+</script>

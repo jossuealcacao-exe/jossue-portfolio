@@ -8,8 +8,8 @@ export const profile = {
 	sourcePack: '_inputs/profile/master_portfolio_ai/',
 	cvDownload: '/cv/Jossue-Alcala-CV.pdf',
 	headline: {
-		es: 'Chief Ecommerce Manager · WU Nutrition / Come Verde',
-		en: 'Chief Ecommerce Manager · WU Nutrition / Come Verde',
+		es: 'Head of E-commerce & Digital Growth · WU Nutrition / Come Verde',
+		en: 'Head of E-commerce & Digital Growth · WU Nutrition / Come Verde',
 	},
 	subheadline: {
 		es: 'Shopify Product · UX/CRO · Desarrollo web · IA aplicada',
@@ -112,8 +112,8 @@ export const profile = {
 	experience: [
 		{
 			role: {
-				es: 'Chief Ecommerce Manager',
-				en: 'Chief Ecommerce Manager',
+				es: 'Head of E-commerce & Digital Growth',
+				en: 'Head of E-commerce & Digital Growth',
 			},
 			org: 'WU Nutrition / Come Verde',
 			period: { es: 'Nov 2025 – Actualidad', en: 'Nov 2025 – Present' },

@@ -1,6 +1,13 @@
 import { expect, test } from '@playwright/test';
 
-const routes = ['/es/', '/es/trabajo/', '/es/servicios/', '/es/ia-y-sistemas/', '/es/acerca/', '/es/contacto/'];
+const routes = [
+	'/es/',
+	'/es/trabajo/',
+	'/es/servicios/',
+	'/es/ia-y-sistemas/',
+	'/es/acerca/',
+	'/es/contacto/',
+];
 const legacyPublicCopy = [
 	'Resultados documentados en el CV',
 	'Implementación revisada',
@@ -52,6 +59,15 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 
 	await page.goto('/es/servicios/');
 	await expect(page.locator('main a[href="/es/ia-y-sistemas/"]')).toBeVisible();
+});
+
+test('Portfolio connects to the independent blog only from the footer', async ({ page }) => {
+	await page.goto('/es/');
+	await expect(page.locator('header .nav__links')).not.toContainText('Blog');
+	await expect(page.locator('footer a[data-analytics-event="click_blog"]')).toHaveAttribute('href', 'https://blog.jossuealcala.com/es/');
+	await expect(page.locator('meta[name="google-adsense-account"]')).toHaveAttribute('content', 'ca-pub-5612202849073748');
+	await expect(page.locator('[data-ad-scope="blog"]')).toHaveCount(0);
+	await expect(page.locator('script[data-blog-adsense]')).toHaveCount(0);
 });
 
 test('contact page prioritizes direct working channels', async ({ page }) => {
@@ -132,7 +148,7 @@ test('section motion starts on intersection and reduced motion remains static', 
 test('About presents experience, impact, brands, and CV without internal notes', async ({ page }) => {
 	await page.goto('/es/acerca/');
 	await expect(page.locator('main h1')).toHaveText('Jossue Alcalá');
-	await expect(page.locator('main')).toContainText('Chief Ecommerce Manager');
+	await expect(page.locator('main')).toContainText('Head of E-commerce & Digital Growth');
 	await expect(page.locator('main')).toContainText('WU Nutrition / Come Verde');
 	await expect(page.locator('main')).toContainText('+21% MX');
 	await expect(page.locator('main')).toContainText('>$1 MDP/mes');
