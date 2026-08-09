@@ -1,7 +1,7 @@
 ---
 lang: es
 slug: claude-code-vs-opencode
-counterpartSlug: claude-code-vs-opencode
+counterpartSlug: claude-code-vs-opencode-for-real-projects
 title: "Claude Code u OpenCode: cuál conviene para trabajar en un proyecto real"
 description: "Ambas herramientas pueden modificar un repositorio desde la terminal. La diferencia está en la configuración, los modelos disponibles y el control que quieres conservar."
 excerpt: "Claude Code ofrece una experiencia más integrada. OpenCode permite elegir proveedores y modelos. La mejor opción depende de cómo trabaja tu equipo."

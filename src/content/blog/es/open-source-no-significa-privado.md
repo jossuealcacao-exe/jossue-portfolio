@@ -1,7 +1,7 @@
 ---
 lang: es
 slug: open-source-no-significa-privado
-counterpartSlug: open-source-no-significa-privado
+counterpartSlug: open-source-does-not-mean-private
 title: "Un agente open source también puede enviar tu código a terceros"
 description: "La licencia de una herramienta no determina por sí sola dónde se procesan el código, los prompts y el contexto del proyecto."
 excerpt: "Para saber si una herramienta es privada hay que revisar el modelo, el proveedor, las extensiones y la configuración completa."

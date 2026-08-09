@@ -1,7 +1,7 @@
 ---
 lang: es
 slug: mas-codigo-menos-producto
-counterpartSlug: mas-codigo-menos-producto
+counterpartSlug: more-code-less-product
 title: "La IA puede escribir mucho código y aun así no resolver el problema"
 description: "Generar funciones y archivos más rápido ayuda, pero la calidad del producto depende de las decisiones, las pruebas y el mantenimiento."
 excerpt: "Si el equipo todavía no sabe qué necesita el usuario, producir código más rápido no mejora el resultado."

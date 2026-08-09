@@ -4,6 +4,7 @@ import path from 'node:path';
 const contentRoot = path.join(process.cwd(), 'src', 'content', 'blog');
 const failures = [];
 const identities = new Set();
+const counterparts = [];
 
 async function markdownFiles(directory) {
 	const entries = await readdir(directory, { withFileTypes: true });
@@ -36,9 +37,12 @@ for (const file of files) {
 
 	const lang = scalar(frontmatter, 'lang');
 	const slug = scalar(frontmatter, 'slug');
+	const counterpartSlug = scalar(frontmatter, 'counterpartSlug');
 	const identity = `${lang}/${slug}`;
 	if (identities.has(identity)) failures.push(`${relative}: duplicate blog identity ${identity}.`);
 	identities.add(identity);
+	if (!counterpartSlug) failures.push(`${relative}: missing counterpartSlug.`);
+	else counterparts.push({ relative, lang, slug, counterpartSlug });
 
 	const readMinutes = Number(scalar(frontmatter, 'readMinutes'));
 	const words = body.replace(/\[[^\]]+\]\([^)]+\)/g, ' ').replace(/[#*_`>-]/g, ' ').trim().split(/\s+/).filter(Boolean).length;
@@ -56,6 +60,22 @@ for (const file of files) {
 		} catch {
 			failures.push(`${relative}: hero image not found at ${imageValue}.`);
 		}
+	}
+}
+
+for (const entry of counterparts) {
+	const counterpartLang = entry.lang === 'es' ? 'en' : 'es';
+	const counterpartIdentity = `${counterpartLang}/${entry.counterpartSlug}`;
+	if (!identities.has(counterpartIdentity)) {
+		failures.push(`${entry.relative}: counterpart ${counterpartIdentity} does not exist.`);
+		continue;
+	}
+
+	const reciprocal = counterparts.find(
+		(candidate) => candidate.lang === counterpartLang && candidate.slug === entry.counterpartSlug,
+	);
+	if (reciprocal?.counterpartSlug !== entry.slug) {
+		failures.push(`${entry.relative}: counterpart ${counterpartIdentity} does not link back to ${entry.lang}/${entry.slug}.`);
 	}
 }
 

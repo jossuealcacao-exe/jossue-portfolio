@@ -1,7 +1,7 @@
 ---
 lang: es
 slug: vibe-coding-no-es-desarrollo
-counterpartSlug: vibe-coding-no-es-desarrollo
+counterpartSlug: vibe-coding-is-not-software-development
 title: "El vibe coding sirve para prototipar, pero no reemplaza el desarrollo de software"
 description: "Crear una aplicación con instrucciones escritas puede ser muy rápido. Convertirla en un producto seguro y mantenible requiere otro tipo de trabajo."
 excerpt: "Una aplicación puede funcionar en una demostración y fallar con usuarios reales. La diferencia está en las pruebas, la seguridad y el mantenimiento."

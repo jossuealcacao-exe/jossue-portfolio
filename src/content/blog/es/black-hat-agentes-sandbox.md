@@ -1,7 +1,7 @@
 ---
 lang: es
 slug: black-hat-agentes-sandbox
-counterpartSlug: black-hat-agentes-sandbox
+counterpartSlug: black-hat-ai-agents-production-sandbox
 title: "Black Hat 2026: por qué un agente de IA no debería entrar directo a producción"
 description: "La agenda de Black Hat USA 2026 incluyó sesiones sobre guardrails, red teaming y sandboxing para agentes con acceso a credenciales e infraestructura."
 excerpt: "Un agente puede editar código y ejecutar comandos. Si además recibe acceso amplio a producción, un error pequeño puede afectar datos, credenciales o servicios completos."
