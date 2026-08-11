@@ -8,9 +8,11 @@ declare global {
 }
 
 export function track(event: AnalyticsEvent): void {
-	if (typeof window === 'undefined') return;
-	window.dataLayer ??= [];
-	window.dataLayer.push(event);
+	if (typeof window === 'undefined' || !window.gtag) return;
+	window.gtag('event', event.event, {
+		...(event.label ? { event_label: event.label } : {}),
+		...(event.path ? { page_path: event.path } : {}),
+	});
 }
 
 export function bindAnalyticsEvents(root: ParentNode = document): void {

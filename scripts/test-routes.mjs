@@ -79,6 +79,16 @@ for (const asset of ['robots.txt', 'sitemap-index.xml', 'llms.txt']) {
 	}
 }
 
+try {
+	const sitemap = await readFile(path.join(dist, 'sitemap-0.xml'), 'utf8');
+	const sitemapUrls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
+	if (sitemapUrls.some((url) => new URL(url).pathname === '/')) {
+		failures.push('The negotiated root URL must not be listed in the sitemap.');
+	}
+} catch {
+	failures.push('Unable to inspect sitemap-0.xml.');
+}
+
 const rootHtml = await readFile(path.join(dist, 'index.html'), 'utf8');
 if (!rootHtml.includes('/es/')) failures.push('Root redirect does not point to /es/.');
 const homeHtml = await readFile(path.join(dist, 'es', 'index.html'), 'utf8');
@@ -90,6 +100,9 @@ if (!homeHtml.includes('<meta name="google-adsense-account" content="ca-pub-5612
 if (process.env.PUBLIC_GA4_ID) {
 	if (!homeHtml.includes(`data-ga4-configured="true"`) || !homeHtml.includes(process.env.PUBLIC_GA4_ID)) {
 		failures.push('Production build does not contain the configured GA4 measurement ID.');
+	}
+	if (!homeHtml.includes('push(arguments)')) {
+		failures.push('GA4 must enqueue command arguments using the gtag.js transport contract.');
 	}
 }
 const robots = await readFile(path.join(dist, 'robots.txt'), 'utf8');

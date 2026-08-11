@@ -43,9 +43,11 @@ function fakeDatabase() {
 
 function environment() {
 	const emails = [];
+	const assetRequests = [];
 	return {
 		DB: fakeDatabase(),
 		emails,
+		assetRequests,
 		CONTACT_EMAIL_TO: 'owner@example.com',
 		CONTACT_EMAIL: {
 			async send(message) {
@@ -55,7 +57,12 @@ function environment() {
 		ADMIN_TOKEN: 'test-admin-token',
 		RATE_LIMIT_SALT: 'test-rate-limit-salt',
 		ALLOWED_ORIGINS: 'https://jossuealcala.com',
-		ASSETS: { fetch: async () => new Response('asset') },
+		ASSETS: {
+			fetch: async (request) => {
+				assetRequests.push(request);
+				return new Response('asset');
+			},
+		},
 	};
 }
 
@@ -70,6 +77,28 @@ function validForm() {
 		consent: 'yes',
 	});
 }
+
+test('redirects the root directly to the preferred canonical locale', async () => {
+	const cases = [
+		{ language: 'en-US,en;q=0.9,es;q=0.8', expected: 'https://jossuealcala.com/en/?utm_source=test' },
+		{ language: 'fr-FR,es-MX;q=0.9,en;q=0.8', expected: 'https://jossuealcala.com/es/?utm_source=test' },
+		{ language: null, expected: 'https://jossuealcala.com/es/?utm_source=test' },
+	];
+
+	for (const { language, expected } of cases) {
+		const env = environment();
+		const headers = language ? { 'Accept-Language': language } : undefined;
+		const response = await handleRequest(
+			new Request('https://www.jossuealcala.com/?utm_source=test', { headers, redirect: 'manual' }),
+			env,
+		);
+		assert.equal(response.status, 302);
+		assert.equal(response.headers.get('Location'), expected);
+		assert.equal(response.headers.get('Vary'), 'Accept-Language');
+		assert.match(response.headers.get('Cache-Control'), /no-store/);
+		assert.equal(env.assetRequests.length, 0);
+	}
+});
 
 test('stores a valid contact and exposes it only with the admin token', async () => {
 	const env = environment();

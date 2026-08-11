@@ -1,6 +1,42 @@
 const MAX_BODY_BYTES = 64 * 1024;
 const RATE_LIMIT_MS = 60_000;
 const CONTACT_FROM = 'hola@jossuealcala.com';
+const CANONICAL_ORIGIN = 'https://jossuealcala.com';
+const DEFAULT_LOCALE = 'es';
+const SUPPORTED_LOCALES = new Set(['es', 'en']);
+
+function preferredLocale(acceptLanguage) {
+	const preferences = String(acceptLanguage ?? '')
+		.split(',')
+		.map((entry, index) => {
+			const [languageRange, ...parameters] = entry.trim().split(';');
+			const qualityParameter = parameters.find((parameter) => parameter.trim().startsWith('q='));
+			const quality = qualityParameter ? Number(qualityParameter.trim().slice(2)) : 1;
+			return {
+				locale: languageRange.toLowerCase().split('-')[0],
+				quality: Number.isFinite(quality) ? quality : 0,
+				index,
+			};
+		})
+		.filter(({ quality }) => quality > 0)
+		.sort((left, right) => right.quality - left.quality || left.index - right.index);
+
+	return preferences.find(({ locale }) => SUPPORTED_LOCALES.has(locale))?.locale ?? DEFAULT_LOCALE;
+}
+
+function localeRedirect(request, url) {
+	const locale = preferredLocale(request.headers.get('Accept-Language'));
+	const destination = new URL(`/${locale}/`, CANONICAL_ORIGIN);
+	destination.search = url.search;
+	return new Response(null, {
+		status: 302,
+		headers: {
+			'Cache-Control': 'private, no-store',
+			Location: destination.toString(),
+			Vary: 'Accept-Language',
+		},
+	});
+}
 
 function clean(value, maxLength) {
 	return String(value ?? '').trim().slice(0, maxLength);
@@ -203,6 +239,9 @@ async function handleSubmissions(request, env, origin) {
 
 export async function handleRequest(request, env) {
 	const url = new URL(request.url);
+	if (url.pathname === '/' && (request.method === 'GET' || request.method === 'HEAD')) {
+		return localeRedirect(request, url);
+	}
 	const legacyBlog = url.pathname.match(/^\/(es|en)\/blog(?:\/(.*))?\/?$/);
 	if (legacyBlog) {
 		const [, locale, tail = ''] = legacyBlog;

@@ -47,8 +47,9 @@ const copy = locale === 'es'
 	function loadAnalytics(measurementId: string) {
 		if (document.querySelector(`script[data-ga4="${measurementId}"]`)) return;
 		window.dataLayer ??= [];
-		window.gtag = function gtag(...args: unknown[]) {
-			window.dataLayer?.push(args);
+		window.gtag = function gtag() {
+			// eslint-disable-next-line prefer-rest-params -- gtag.js consumes the Arguments object.
+			window.dataLayer?.push(arguments);
 		};
 		window.gtag('js', new Date());
 		window.gtag('config', measurementId, { anonymize_ip: true });
