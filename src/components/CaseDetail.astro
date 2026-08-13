@@ -23,6 +23,7 @@ const brand = brandForCaseSlug(data.slug);
 const publishableMedia = data.media;
 const publishableDiagrams = data.diagrams?.length ? data.diagrams : undefined;
 const projectLinks = data.projectLinks?.length ? data.projectLinks : undefined;
+const isAhpPlus = data.slug === 'ahp-plus';
 const presentation = casePresentation(data.slug, locale);
 if (!presentation) throw new Error(`Missing public presentation for ${locale}/${data.slug}`);
 const chapters = [
@@ -32,6 +33,7 @@ const chapters = [
 	...(publishableDiagrams ? [{ id: 'signals', heading: es ? 'Gráficos' : 'Signals' }] : []),
 	...(publishableMedia ? [{ id: 'gallery', heading: es ? 'El producto' : 'The product' }] : []),
 	{ id: 'outcome', heading: es ? 'Resultado' : 'Outcome' },
+	...(isAhpPlus ? [{ id: 'command-atlas', heading: es ? 'Guía de comandos' : 'Command guide' }] : []),
 	{ id: 'technology', heading: es ? 'Tecnología' : 'Technology' },
 	...(projectLinks ? [{ id: 'links', heading: es ? 'Repos y consulta' : 'Repos and links' }] : []),
 ];
@@ -131,6 +133,16 @@ const linkKindCopy = {
 			</div>
 		</div>
 	</section>
+	{isAhpPlus && (
+		<section id="command-atlas" class="section case-grid" data-case-section>
+			<p class="index">{sectionNumber('command-atlas')} / {es ? 'Guía de comandos' : 'Command guide'}</p>
+			<div class="flow">
+				<h2>{es ? 'Instala y opera AHP+ en cualquier plataforma.' : 'Install and operate AHP+ on any platform.'}</h2>
+				<p>{es ? 'Consulta la referencia bilingüe con instalación por sistema operativo, 40 patrones CLI, adaptadores y comandos directos para Cursor, OpenCode, Codex, Claude Code y ChatGPT.' : 'Use the bilingual reference for operating-system installation, 40 CLI patterns, adapters, and direct commands for Cursor, OpenCode, Codex, Claude Code, and ChatGPT.'}</p>
+				<a class="button" href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">{es ? 'Abrir Command Atlas' : 'Open Command Atlas'}</a>
+			</div>
+		</section>
+	)}
 	<section id="technology" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('technology')} / {es ? 'Tecnología' : 'Technology'}</p>
 		<div class="flow">

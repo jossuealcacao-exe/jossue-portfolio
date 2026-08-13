@@ -22,6 +22,7 @@ const routes = [
 	'/es/ia-y-sistemas/',
 	'/es/acerca/',
 	'/es/contacto/',
+	'/es/recursos/ahp-plus/',
 	'/en/',
 	'/en/work/',
 	...caseSlugs.map((slug) => `/en/work/${slug}/`),
@@ -29,6 +30,7 @@ const routes = [
 	'/en/ai-and-systems/',
 	'/en/about/',
 	'/en/contact/',
+	'/en/resources/ahp-plus/',
 ];
 
 const failures = [];
@@ -93,7 +95,15 @@ const rootHtml = await readFile(path.join(dist, 'index.html'), 'utf8');
 if (!rootHtml.includes('/es/')) failures.push('Root redirect does not point to /es/.');
 const homeHtml = await readFile(path.join(dist, 'es', 'index.html'), 'utf8');
 const caseHtml = await readFile(path.join(dist, 'es', 'trabajo', 'ahp-plus', 'index.html'), 'utf8');
+const atlasEsHtml = await readFile(path.join(dist, 'es', 'recursos', 'ahp-plus', 'index.html'), 'utf8');
+const atlasEnHtml = await readFile(path.join(dist, 'en', 'resources', 'ahp-plus', 'index.html'), 'utf8');
 if (!caseHtml.includes('"@type":"CreativeWork"')) failures.push('Case studies must expose CreativeWork structured data.');
+if (!caseHtml.includes('AHP+ 1.1.0') || !caseHtml.includes('Producto open source')) failures.push('AHP+ case must present the independent 1.1.0 product.');
+if (caseHtml.includes('AHP+ 1.0') || caseHtml.includes('Producto propio / Pangea OS')) failures.push('AHP+ case still contains superseded 1.0 positioning.');
+if (!caseHtml.includes('https://github.com/jossuealcacao-exe/ahp_plus') || !caseHtml.includes('https://www.npmjs.com/package/@jossuealcala/ahp-plus')) failures.push('AHP+ case must expose official GitHub and npm links.');
+if (!atlasEsHtml.includes('npx ahp verify . --strict') || !atlasEsHtml.includes('data-ahp-command')) failures.push('Spanish AHP+ atlas must expose the CLI catalog in static HTML.');
+if (!atlasEnHtml.includes('Commands by platform') || !atlasEnHtml.includes('/ahp verify strict')) failures.push('English AHP+ atlas must expose platform chat commands.');
+if (!atlasEsHtml.includes('/en/resources/ahp-plus/')) failures.push('Spanish AHP+ atlas must link to its English equivalent.');
 if (!homeHtml.includes('<meta name="google-adsense-account" content="ca-pub-5612202849073748">')) {
 	failures.push('Home must expose the AdSense ownership verification meta tag.');
 }

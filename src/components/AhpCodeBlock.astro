@@ -1,0 +1,20 @@
+---
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	command: string;
+	label: string;
+	locale: Locale;
+	compact?: boolean;
+}
+
+const { command, label, locale, compact = false } = Astro.props;
+---
+
+<div class:list={['ahp-atlas__code', { 'ahp-atlas__code--compact': compact }]}>
+	<div>
+		<span>{label}</span>
+		<button type="button" data-copy-value={command} aria-label={locale === 'es' ? 'Copiar comando' : 'Copy command'}>{locale === 'es' ? 'Copiar' : 'Copy'}</button>
+	</div>
+	<pre><code>{command}</code></pre>
+</div>

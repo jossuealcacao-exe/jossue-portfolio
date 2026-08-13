@@ -1,6 +1,6 @@
 export const locales = ['es', 'en'] as const;
 export type Locale = (typeof locales)[number];
-export type PageKey = 'home' | 'work' | 'services' | 'ai' | 'about' | 'contact';
+export type PageKey = 'home' | 'work' | 'services' | 'ai' | 'about' | 'contact' | 'ahpAtlas';
 
 export const routes: Record<Locale, Record<PageKey, string>> = {
 	es: {
@@ -10,6 +10,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
 		ai: '/es/ia-y-sistemas/',
 		about: '/es/acerca/',
 		contact: '/es/contacto/',
+		ahpAtlas: '/es/recursos/ahp-plus/',
 	},
 	en: {
 		home: '/en/',
@@ -18,6 +19,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
 		ai: '/en/ai-and-systems/',
 		about: '/en/about/',
 		contact: '/en/contact/',
+		ahpAtlas: '/en/resources/ahp-plus/',
 	},
 };
 
@@ -62,6 +64,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			title: 'Contacto — Jossue Alcalá',
 			description: 'Correo, LinkedIn y WhatsApp para hablar sobre Shopify, UX/CRO, desarrollo web o producto.',
 		},
+		ahpAtlas: {
+			title: 'AHP+ Command Atlas — Guía oficial de comandos',
+			description: 'Referencia bilingüe de instalación, gestión, comandos de terminal y comandos por plataforma para AHP+ 1.1.0.',
+		},
 	},
 	en: {
 		home: {
@@ -87,6 +93,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		contact: {
 			title: 'Contact — Jossue Alcalá',
 			description: 'Email, LinkedIn, and WhatsApp for Shopify, UX/CRO, web development, or product conversations.',
+		},
+		ahpAtlas: {
+			title: 'AHP+ Command Atlas — Official command guide',
+			description: 'Bilingual reference for AHP+ 1.1.0 installation, management, terminal commands, and platform-specific chat commands.',
 		},
 	},
 };

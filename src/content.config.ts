@@ -2479,15 +2479,15 @@ const cases = [
 		counterpartSlug: 'ahp-plus',
 		positioning: 'owned-product',
 		title: 'AHP+ — Agent Handoff Protocol Plus',
-		client: 'Producto propio / Pangea OS',
+		client: 'Producto propio / Open source',
 		summary:
-			'Protocolo Git-backed para continuidad entre agentes de IA: memoria canónica, certeza, evidencia, QA, handoffs y estado operativo versionado.',
+			'Protocolo abierto y CLI pública para continuidad verificable entre agentes, IDEs, cuentas y máquinas mediante estado canónico en Git.',
 		context:
-			'AHP+ nace dentro de Pangea OS para resolver un problema práctico: cuando un proyecto pasa entre Codex, Cursor, Claude Code, OpenCode, ChatGPT u otro agente, el trabajo no puede depender de que el modelo recuerde la conversación anterior.',
+			'AHP+ nació para resolver un problema práctico: cuando un proyecto pasa entre Codex, Cursor, Claude Code, OpenCode, ChatGPT u otro agente, el trabajo no puede depender de que el modelo recuerde la conversación anterior. Desde la versión 1.1 funciona como producto independiente dentro de cada repositorio Git.',
 		problem:
-			'Los agentes de IA pueden producir código rápido, pero pierden continuidad cuando el contexto vive en chats, resúmenes o memoria privada. El reto fue convertir esa continuidad en un sistema verificable dentro del repositorio.',
+			'Los agentes de IA pueden producir código rápido, pero pierden continuidad cuando el contexto vive en chats, resúmenes o memoria privada. El reto fue convertir esa continuidad en un protocolo portable, verificable y agnóstico de plataforma.',
 		role:
-			'Creador y arquitecto de AHP+. Definí el fundamento, la especificación, los niveles de certeza, el modelo de registros, la CLI, la integración con Pangea OS y el marco de autoría para CV y portafolio.',
+			'Creador y arquitecto de AHP+. Definí el fundamento, la especificación 1.1, los niveles de certeza, el modelo de registros, la CLI pública, los adaptadores, la estrategia de distribución y los límites de autoridad.',
 		diagnosis: [
 			'La memoria conversacional no es suficiente para gobernar cambios de código, QA o decisiones de producto.',
 			'Los handoffs entre herramientas suelen perder commit base, riesgos, estado real del árbol y próximos pasos verificables.',
@@ -2495,10 +2495,10 @@ const cases = [
 			'El sistema debía ser agnóstico de plataforma: útil en Codex, Cursor, Claude Code, OpenCode, ChatGPT y hosts locales.',
 		],
 		intervention: [
-			'Especificación AHP+ 1.0 con fuente canónica en `/agent`, niveles de certeza, registros normativos y reglas de escritura segura.',
-			'Runtime CLI en Node.js para `verify`, `status`, `context`, `brief`, registros de evidencia, QA, locks cooperativos y handoffs.',
-			'Integración con Pangea OS para operar proyectos web con estado activo, evidencia, QA receipts y continuidad entre sesiones.',
-			'Documentación foundation, comandos, execution bible y wording de autoría para comunicar el producto sin prometer estándares legales inexistentes.',
+			'Especificación AHP+ 1.1 con estado canónico en `.ahp/`, identidad por repositorio, niveles de certeza, registros normativos y reglas de escritura segura.',
+			'CLI pública en Node.js para `verify`, `status`, `context`, `brief`, evidencia, QA, checkpoints, locks cooperativos y handoffs.',
+			'Adaptadores para Cursor, OpenCode, Codex, Claude Code, ChatGPT y agentes genéricos sin cambiar la semántica del protocolo.',
+			'Documentación bilingüe, licencia Apache-2.0, canales stable/dev y distribución mediante npm y GitHub Releases.',
 		],
 		decisions: [
 			'Usar Git como transporte, historial y punto de conciliación, no como base de datos en tiempo real.',
@@ -2509,27 +2509,26 @@ const cases = [
 		stack: [
 			'Node.js',
 			'JSON',
+			'npm',
 			'GitHub',
-			'TypeScript',
-			'Astro',
-			'Playwright',
 			'Codex',
-			'Claude',
-			'Pangea OS',
-			'AHP+ 1.0',
+			'Cursor',
+			'Claude Code',
+			'OpenCode',
+			'ChatGPT',
+			'AHP+ 1.1.0',
 		],
 		evidence: [
-			'knowledge/ahp-plus/SPECIFICATION.md define alcance, fuente canónica, certeza, registros, estados, evidencia, handoff y conformidad.',
-			'knowledge/ahp-plus/COMMANDS.md documenta la interfaz semántica `/agent` y su CLI portable.',
-			'tools/ahp-plus/ahp.mjs implementa verificación, status, context, brief, record, handoff y locks.',
-			'core/10_HANDOFF_AHP_PLUS.md integra AHP+ como plano de estado dentro de Pangea OS.',
-			'docs/legal/CV_PORTFOLIO_WORDING.md y docs/legal/AUTHORSHIP_PROTECTION_PLAN.md fijan wording de autoría y límites legales.',
+			'El repositorio público `jossuealcacao-exe/ahp_plus` contiene la especificación, la CLI de referencia, la documentación bilingüe y la suite de conformidad.',
+			'El paquete `@jossuealcala/ahp-plus@1.1.0` está publicado en npm bajo el canal `latest`.',
+			'La matriz CI verifica Ubuntu, macOS y Windows con Node.js 20 y 22.',
+			'La instalación desde npm, todos los adaptadores y un handoff real Codex→Cursor fueron aceptados en un repositorio consumidor.',
 		],
 		results: [
-			'AHP+ 1.0 quedó integrado como plano de continuidad de Pangea OS.',
-			'El runtime local valida `/agent`, genera briefs operativos y sostiene registros de evidencia y QA por proyecto.',
-			'El portafolio, tienda Shopify y proyectos anidados ya pueden dejar estado verificable para continuidad entre agentes.',
-			'No se publican métricas de adopción externa, estándar formal, patente ni marca registrada.',
+			'AHP+ 1.1.0 quedó publicado como producto independiente en npm y GitHub.',
+			'La CLI valida `.ahp/`, genera contexto acotado y sostiene evidencia, QA, checkpoints y handoffs por repositorio.',
+			'Los adaptadores instalan el mismo contrato operativo en seis superficies sin vincular AHP+ a un proveedor específico.',
+			'No se presentan métricas de adopción externa ni se afirma que AHP+ sea un estándar formal, patente o marca registrada.',
 		],
 		limitations: [
 			'AHP+ no sustituye revisión humana, control de Git ni aprobación para acciones externas.',
@@ -2543,6 +2542,11 @@ const cases = [
 			'Un handoff útil debe decir qué pasó, qué falta, qué se verificó y desde qué commit continuar.',
 		],
 		cta: 'Hablemos de cómo convertir flujos con IA en sistemas operables, auditables y listos para equipos reales.',
+		projectLinks: [
+			{ label: 'Repositorio oficial', href: 'https://github.com/jossuealcacao-exe/ahp_plus', kind: 'repo' },
+			{ label: 'Paquete en npm', href: 'https://www.npmjs.com/package/@jossuealcala/ahp-plus', kind: 'reference' },
+			{ label: 'Última versión', href: 'https://github.com/jossuealcacao-exe/ahp_plus/releases/latest', kind: 'reference' },
+		],
 		diagrams: [
 			{
 				id: 'ahp-continuity',
@@ -2551,7 +2555,7 @@ const cases = [
 				kind: 'flow',
 				items: [
 					{ label: 'Proyecto web', value: 1, detail: 'Código, assets, pruebas y documentación viven en el repo.' },
-					{ label: '/agent', value: 2, detail: 'AHP+ guarda estado actual, evidencia, QA, riesgos y handoffs.' },
+					{ label: '.ahp/', value: 2, detail: 'AHP+ guarda estado actual, evidencia, QA, riesgos y handoffs.' },
 					{ label: 'Agente siguiente', value: 3, detail: 'Antes de continuar, verifica el repositorio y lee el estado canónico.' },
 				],
 				note: 'El protocolo registra contexto operativo; no reemplaza la revisión humana.',
@@ -2573,7 +2577,7 @@ const cases = [
 			{
 				id: 'AHP-01',
 				title: 'Mapa de continuidad',
-				description: 'Diagrama del flujo repositorio, `/agent`, QA, handoff y agente receptor.',
+				description: 'Diagrama del flujo repositorio, `.ahp/`, QA, handoff y agente receptor.',
 				ratio: '16:9',
 				recommendedSize: '1600×900',
 				format: 'AVIF',
@@ -2598,7 +2602,7 @@ const cases = [
 				capture: 'Portada móvil del caso en el portafolio.',
 			},
 		],
-		verification: { status: 'verified', asOf: '2026-07-30', source: 'knowledge/ahp-plus, tools/ahp-plus, core/10_HANDOFF_AHP_PLUS.md and docs/legal wording' },
+		verification: { status: 'verified', asOf: '2026-08-13', source: 'AHP+ public repository, npm 1.1.0 release, GitHub release, cross-platform CI, and Iris consumer handoff acceptance' },
 		publication: { publish: true, featured: false },
 	},
 	{
@@ -2609,15 +2613,15 @@ const cases = [
 		counterpartSlug: 'ahp-plus',
 		positioning: 'owned-product',
 		title: 'AHP+ — Agent Handoff Protocol Plus',
-		client: 'Owned product / Pangea OS',
+		client: 'Owned product / Open source',
 		summary:
-			'A Git-backed continuity protocol for AI agents: canonical memory, certainty, evidence, QA, handoffs, and versioned operational state.',
+			'An open protocol and public CLI for verifiable continuity across agents, IDEs, accounts, and machines through canonical Git state.',
 		context:
-			'AHP+ was created inside Pangea OS to solve a practical problem: when a project moves between Codex, Cursor, Claude Code, OpenCode, ChatGPT, or another agent, the work cannot depend on the model remembering the prior conversation.',
+			'AHP+ was created to solve a practical problem: when a project moves between Codex, Cursor, Claude Code, OpenCode, ChatGPT, or another agent, the work cannot depend on the model remembering the prior conversation. Since version 1.1, it operates as an independent product inside each Git repository.',
 		problem:
-			'AI agents can produce code quickly, but continuity breaks when context lives in chats, summaries, or private memory. The challenge was turning that continuity into a verifiable system inside the repository.',
+			'AI agents can produce code quickly, but continuity breaks when context lives in chats, summaries, or private memory. The challenge was turning that continuity into a portable, verifiable, platform-agnostic protocol.',
 		role:
-			'Creator and architect of AHP+. I defined the foundation, specification, certainty levels, record model, CLI, Pangea OS integration, and authorship framing for CV and portfolio use.',
+			'Creator and architect of AHP+. I defined the foundation, 1.1 specification, certainty levels, record model, public CLI, adapters, distribution strategy, and authority boundaries.',
 		diagnosis: [
 			'Conversational memory is not enough to govern code changes, QA, or product decisions.',
 			'Tool-to-tool handoffs often lose base commit, risks, real working-tree state, and verifiable next steps.',
@@ -2625,10 +2629,10 @@ const cases = [
 			'The system needed to be platform-agnostic: useful in Codex, Cursor, Claude Code, OpenCode, ChatGPT, and local hosts.',
 		],
 		intervention: [
-			'AHP+ 1.0 specification with canonical `/agent` source, certainty levels, normative records, and safe write rules.',
-			'Node.js CLI runtime for `verify`, `status`, `context`, `brief`, evidence records, QA, cooperative locks, and handoffs.',
-			'Pangea OS integration for operating web projects with active state, evidence, QA receipts, and continuity across sessions.',
-			'Foundation documentation, command references, execution bible, and authorship wording that explains the product without claiming nonexistent legal standards.',
+			'AHP+ 1.1 specification with canonical `.ahp/` state, per-repository identity, certainty levels, normative records, and safe write rules.',
+			'Public Node.js CLI for `verify`, `status`, `context`, `brief`, evidence, QA, checkpoints, cooperative locks, and handoffs.',
+			'Adapters for Cursor, OpenCode, Codex, Claude Code, ChatGPT, and generic agents without changing protocol semantics.',
+			'Bilingual documentation, Apache-2.0 licensing, stable/dev channels, and distribution through npm and GitHub Releases.',
 		],
 		decisions: [
 			'Use Git as transport, history, and reconciliation layer, not as a real-time database.',
@@ -2639,27 +2643,26 @@ const cases = [
 		stack: [
 			'Node.js',
 			'JSON',
+			'npm',
 			'GitHub',
-			'TypeScript',
-			'Astro',
-			'Playwright',
 			'Codex',
-			'Claude',
-			'Pangea OS',
-			'AHP+ 1.0',
+			'Cursor',
+			'Claude Code',
+			'OpenCode',
+			'ChatGPT',
+			'AHP+ 1.1.0',
 		],
 		evidence: [
-			'knowledge/ahp-plus/SPECIFICATION.md defines scope, canonical source, certainty, records, states, evidence, handoff, and conformance.',
-			'knowledge/ahp-plus/COMMANDS.md documents the semantic `/agent` interface and portable CLI.',
-			'tools/ahp-plus/ahp.mjs implements verification, status, context, brief, record, handoff, and locks.',
-			'core/10_HANDOFF_AHP_PLUS.md integrates AHP+ as the state plane inside Pangea OS.',
-			'docs/legal/CV_PORTFOLIO_WORDING.md and docs/legal/AUTHORSHIP_PROTECTION_PLAN.md define authorship wording and legal boundaries.',
+			'The public `jossuealcacao-exe/ahp_plus` repository contains the specification, reference CLI, bilingual documentation, and conformance suite.',
+			'The `@jossuealcala/ahp-plus@1.1.0` package is published on npm under the `latest` channel.',
+			'The CI matrix verifies Ubuntu, macOS, and Windows with Node.js 20 and 22.',
+			'Installation from npm, every adapter, and a real Codex-to-Cursor handoff were accepted in a consumer repository.',
 		],
 		results: [
-			'AHP+ 1.0 is integrated as the continuity plane for Pangea OS.',
-			'The local runtime validates `/agent`, generates operational briefs, and supports evidence and QA records by project.',
-			'The portfolio, Shopify theme, and nested projects can now leave verifiable state for cross-agent continuity.',
-			'No external adoption metrics, formal standard status, patent, or registered trademark are published.',
+			'AHP+ 1.1.0 is published as an independent product on npm and GitHub.',
+			'The CLI validates `.ahp/`, generates bounded context, and supports evidence, QA, checkpoints, and handoffs per repository.',
+			'Adapters install the same operating contract across six surfaces without binding AHP+ to a specific provider.',
+			'No external adoption metrics are presented, and AHP+ is not claimed to be a formal standard, patent, or registered trademark.',
 		],
 		limitations: [
 			'AHP+ does not replace human review, Git control, or approval for external actions.',
@@ -2673,6 +2676,11 @@ const cases = [
 			'A useful handoff must say what happened, what remains, what was verified, and which commit to continue from.',
 		],
 		cta: 'Let’s discuss how to turn AI workflows into operable, auditable systems built for real teams.',
+		projectLinks: [
+			{ label: 'Official repository', href: 'https://github.com/jossuealcacao-exe/ahp_plus', kind: 'repo' },
+			{ label: 'Package on npm', href: 'https://www.npmjs.com/package/@jossuealcala/ahp-plus', kind: 'reference' },
+			{ label: 'Latest release', href: 'https://github.com/jossuealcacao-exe/ahp_plus/releases/latest', kind: 'reference' },
+		],
 		diagrams: [
 			{
 				id: 'ahp-continuity',
@@ -2681,7 +2689,7 @@ const cases = [
 				kind: 'flow',
 				items: [
 					{ label: 'Web project', value: 1, detail: 'Code, assets, tests, and documentation live in the repo.' },
-					{ label: '/agent', value: 2, detail: 'AHP+ stores current state, evidence, QA, risks, and handoffs.' },
+					{ label: '.ahp/', value: 2, detail: 'AHP+ stores current state, evidence, QA, risks, and handoffs.' },
 					{ label: 'Next agent', value: 3, detail: 'Before continuing, it verifies the repository and reads canonical state.' },
 				],
 				note: 'The protocol records operational context; it does not replace human review.',
@@ -2703,7 +2711,7 @@ const cases = [
 			{
 				id: 'AHP-01',
 				title: 'Continuity map',
-				description: 'Diagram of repository, `/agent`, QA, handoff, and receiving agent flow.',
+				description: 'Diagram of repository, `.ahp/`, QA, handoff, and receiving agent flow.',
 				ratio: '16:9',
 				recommendedSize: '1600×900',
 				format: 'AVIF',
@@ -2728,7 +2736,7 @@ const cases = [
 				capture: 'Mobile case cover in the portfolio.',
 			},
 		],
-		verification: { status: 'verified', asOf: '2026-07-30', source: 'knowledge/ahp-plus, tools/ahp-plus, core/10_HANDOFF_AHP_PLUS.md and docs/legal wording' },
+		verification: { status: 'verified', asOf: '2026-08-13', source: 'AHP+ public repository, npm 1.1.0 release, GitHub release, cross-platform CI, and Iris consumer handoff acceptance' },
 		publication: { publish: true, featured: false },
 	},
 	{

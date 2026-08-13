@@ -7,6 +7,8 @@ const routes = [
 	'/es/ia-y-sistemas/',
 	'/es/acerca/',
 	'/es/contacto/',
+	'/es/recursos/ahp-plus/',
+	'/en/resources/ahp-plus/',
 ];
 const legacyPublicCopy = [
 	'Resultados documentados en el CV',
@@ -40,6 +42,23 @@ test('root redirects and language preserves the equivalent route', async ({ page
 	await page.goto('/es/servicios/');
 	await page.locator('a.language').click();
 	await expect(page).toHaveURL(/\/en\/services\/$/);
+});
+
+test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', async ({ page }) => {
+	await page.goto('/es/recursos/ahp-plus/');
+	await expect(page.locator('[data-ahp-command]')).toHaveCount(40);
+	await expect(page.locator('[data-ahp-count]')).toContainText('40 comandos visibles');
+	await page.locator('[data-ahp-search]').fill('handoff');
+	await expect(page.locator('[data-ahp-count]')).not.toContainText('40 comandos visibles');
+	await page.locator('[data-ahp-filter="package"]').click();
+	await expect(page.locator('[data-ahp-count]')).toContainText('0 comandos visibles');
+	await page.locator('[data-ahp-search]').fill('');
+	await expect(page.locator('[data-ahp-count]')).toContainText('4 comandos visibles');
+	await expect(page.locator('.ahp-atlas__platform')).toHaveCount(6);
+	await expect(page.locator('main')).toContainText('Directamente en el chat');
+	await page.locator('a.language').click();
+	await expect(page).toHaveURL(/\/en\/resources\/ahp-plus\/$/);
+	await expect(page.locator('main h1')).toContainText('Command Atlas');
 });
 
 test('header keeps navigation focused and mobile menu supports Escape', async ({ page }) => {
@@ -205,7 +224,7 @@ for (const project of [
 	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Estrategia CPG · Growth', categoryEn: 'CPG strategy · Growth', media: 0 },
 	{ slug: 'miawseo', title: 'MIAWSEO — Michiteca', categoryEs: 'Producto editorial · Full-stack', categoryEn: 'Editorial product · Full-stack', media: 6 },
 	{ slug: 'vineria', title: 'Vinería', categoryEs: 'Producto editorial · Front-end', categoryEn: 'Editorial product · Front-end', media: 5 },
-	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Sistema IA · Protocolo operativo', categoryEn: 'AI systems · Operating protocol', media: 0 },
+	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Producto open source · Protocolo para agentes', categoryEn: 'Open-source product · Agent protocol', media: 0 },
 	{ slug: 'tiendaonline', title: 'Casa Tecalli — Shopify OS 2.0', categoryEs: 'Concepto Shopify · Storefront', categoryEn: 'Shopify concept · Storefront', media: 4 },
 ]) {
 	test(`${project.slug} presents a commercial bilingual project narrative`, async ({ page }) => {
@@ -220,6 +239,11 @@ for (const project of [
 		if (project.slug === 'ahp-plus') {
 			await expect(page.locator('.case-brand img[src*="ahp-plus.svg"]')).toBeVisible();
 			await expect(page.locator('.case-cover img[src*="ahp-plus.svg"]')).toBeVisible();
+			await expect(page.locator('main')).toContainText('AHP+ 1.1.0');
+			await expect(page.locator('main')).toContainText('.ahp/');
+			await expect(page.locator('main')).not.toContainText('AHP+ 1.0');
+			await expect(page.locator('#links a[href="https://github.com/jossuealcacao-exe/ahp_plus"]')).toBeVisible();
+			await expect(page.locator('#links a[href="https://www.npmjs.com/package/@jossuealcala/ahp-plus"]')).toBeVisible();
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();

@@ -1,5 +1,6 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
+import AhpCommandAtlas from '../../components/AhpCommandAtlas.astro';
 import CaseDetail from '../../components/CaseDetail.astro';
 import PageView from '../../components/PageView.astro';
 import { casePresentation } from '../../data/casePresentation';
@@ -12,7 +13,7 @@ type PageProps =
 
 export async function getStaticPaths() {
 	const paths: Array<{ params: { lang: Locale; path: string }; props: PageProps }> = [];
-	const pageKeys = ['work', 'services', 'ai', 'about', 'contact'] as const;
+	const pageKeys = ['work', 'services', 'ai', 'about', 'contact', 'ahpAtlas'] as const;
 
 	for (const locale of ['es', 'en'] as const) {
 		for (const pageKey of pageKeys) {
@@ -58,6 +59,8 @@ const description = publicCase?.summary ?? meta!.description;
 	{
 		entry ? (
 			<CaseDetail entry={entry} locale={locale} />
+		) : pageKey === 'ahpAtlas' ? (
+			<AhpCommandAtlas locale={locale} />
 		) : (
 			<PageView locale={locale} pageKey={pageKey as PageKey} cases={cases} />
 		)

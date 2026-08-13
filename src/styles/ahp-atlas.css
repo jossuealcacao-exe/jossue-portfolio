@@ -1,0 +1,452 @@
+@layer components {
+	.ahp-atlas {
+		--atlas-code: #141a22;
+		--atlas-code-line: #303844;
+		--atlas-code-text: #eef3f8;
+		padding-bottom: var(--space-5);
+	}
+
+	.ahp-atlas__hero {
+		display: grid;
+		gap: 1.5rem;
+		padding-block: clamp(5rem, 10vw, 9rem) var(--space-5);
+	}
+
+	.ahp-atlas__hero h1 span {
+		display: block;
+		color: var(--accent);
+	}
+
+	.ahp-atlas__hero .hero__lede {
+		max-width: 62ch;
+	}
+
+	.ahp-atlas__stats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		margin-top: clamp(1rem, 3vw, 2.5rem);
+		border-block: 1px solid var(--line-strong);
+	}
+
+	.ahp-atlas__stats p {
+		display: grid;
+		gap: 0.25rem;
+		margin: 0;
+		padding: 1.25rem;
+		border-right: 1px solid var(--line);
+	}
+
+	.ahp-atlas__stats p:last-child {
+		border-right: 0;
+	}
+
+	.ahp-atlas__stats strong {
+		font: 650 clamp(1.8rem, 4vw, 3rem) / 1 var(--heading);
+		letter-spacing: -0.04em;
+	}
+
+	.ahp-atlas__stats span,
+	.ahp-atlas__section-heading p,
+	.ahp-atlas__panel > p,
+	.ahp-atlas__channel-grid article > p,
+	.ahp-atlas__platform > p,
+	.ahp-atlas__steps p,
+	.ahp-atlas__after-code,
+	.ahp-atlas__fineprint {
+		color: var(--muted);
+	}
+
+	.ahp-atlas__index {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem 1.25rem;
+		padding-top: 1rem;
+	}
+
+	.ahp-atlas__index a {
+		color: var(--ink);
+		font-size: 0.84rem;
+		font-weight: 650;
+		text-decoration-color: var(--line-strong);
+	}
+
+	.ahp-atlas__index a:hover {
+		color: var(--accent);
+		text-decoration-color: currentColor;
+	}
+
+	.ahp-atlas__section {
+		display: grid;
+		gap: clamp(1.5rem, 4vw, 3rem);
+		padding-block: var(--space-5);
+		border-top: 1px solid var(--line-strong);
+		scroll-margin-top: calc(var(--header-h) + 1.5rem);
+	}
+
+	.ahp-atlas__section-heading {
+		display: grid;
+		grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+		gap: var(--space-4);
+		align-items: start;
+	}
+
+	.ahp-atlas__section-heading > div {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.ahp-atlas__section-heading h2 {
+		max-width: 18ch;
+	}
+
+	.ahp-atlas__section-heading > div > p {
+		max-width: 58ch;
+		font-size: 1.1rem;
+	}
+
+	.ahp-atlas__two-col,
+	.ahp-atlas__platform-grid,
+	.ahp-atlas__command-grid {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.ahp-atlas__panel,
+	.ahp-atlas__platform,
+	.ahp-atlas__channel-grid article,
+	.ahp-atlas__command {
+		display: grid;
+		gap: 1rem;
+		align-content: start;
+		padding: clamp(1rem, 2vw, 1.5rem);
+		border: 1px solid var(--line);
+		background: var(--surface);
+	}
+
+	.ahp-atlas__panel h3,
+	.ahp-atlas__platform h3,
+	.ahp-atlas__channel-grid h3,
+	.ahp-atlas__command h3,
+	.ahp-atlas__steps h3 {
+		font-size: clamp(1.35rem, 2.3vw, 2rem);
+		letter-spacing: -0.035em;
+	}
+
+	.ahp-atlas__label,
+	.ahp-atlas__surface {
+		margin: 0;
+		color: var(--muted);
+		font-size: 0.7rem;
+		font-weight: 750;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.ahp-atlas__notice {
+		display: grid;
+		grid-template-columns: minmax(8rem, 0.35fr) minmax(0, 1fr);
+		gap: var(--space-4);
+		padding: 1.25rem 0;
+		border-block: 1px solid var(--accent);
+	}
+
+	.ahp-atlas__notice strong {
+		color: var(--accent);
+	}
+
+	.ahp-atlas__notice p {
+		max-width: 70ch;
+	}
+
+	.ahp-atlas__notice--warning {
+		border-color: #b35e00;
+	}
+
+	.ahp-atlas__notice--warning strong {
+		color: #8a4800;
+	}
+
+	.ahp-atlas__tabs,
+	.ahp-atlas__filters {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+		border-bottom: 1px solid var(--line-strong);
+	}
+
+	.ahp-atlas__tabs button,
+	.ahp-atlas__filters button {
+		padding: 0.65rem 0;
+		border: 0;
+		border-bottom: 3px solid transparent;
+		color: var(--muted);
+		background: transparent;
+		cursor: pointer;
+	}
+
+	.ahp-atlas__tabs button:hover,
+	.ahp-atlas__filters button:hover,
+	.ahp-atlas__tabs button[aria-selected='true'],
+	.ahp-atlas__filters button[aria-pressed='true'] {
+		border-bottom-color: var(--accent);
+		color: var(--ink);
+		font-weight: 750;
+	}
+
+	.ahp-atlas__os-panel {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.ahp-atlas__os-panel[hidden] {
+		display: none;
+	}
+
+	.ahp-atlas__os-panel > p {
+		max-width: 68ch;
+		color: var(--muted);
+	}
+
+	.ahp-atlas__channel-grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+	}
+
+	.ahp-atlas__code {
+		min-width: 0;
+		border: 1px solid var(--atlas-code-line);
+		color: var(--atlas-code-text);
+		background: var(--atlas-code);
+	}
+
+	.ahp-atlas__code > div {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.55rem 0.75rem;
+		border-bottom: 1px solid var(--atlas-code-line);
+		color: #aab7c7;
+		font: 700 0.68rem / 1 var(--body);
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.ahp-atlas__code button,
+	.ahp-atlas__platform li button {
+		padding: 0;
+		border: 0;
+		color: #9ec2ff;
+		background: transparent;
+		font: 700 0.72rem / 1 var(--body);
+		cursor: pointer;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.ahp-atlas__code pre {
+		margin: 0;
+		padding: 1rem;
+		overflow: auto;
+		white-space: pre;
+	}
+
+	.ahp-atlas__code code,
+	.ahp-atlas__platform li code {
+		font: 500 0.83rem / 1.55 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+	}
+
+	.ahp-atlas__code--compact pre {
+		padding: 0.8rem;
+	}
+
+	.ahp-atlas__search {
+		display: grid;
+		gap: 0.5rem;
+		max-width: 46rem;
+		font-weight: 700;
+	}
+
+	.ahp-atlas__search input {
+		width: 100%;
+		padding: 0.9rem 1rem;
+		border: 1px solid var(--line-strong);
+		border-radius: 0;
+		color: var(--ink);
+		background: var(--surface);
+		font: inherit;
+	}
+
+	.ahp-atlas__count {
+		margin: -1.25rem 0 0;
+		color: var(--muted);
+		font-size: 0.85rem;
+	}
+
+	.ahp-atlas__command[hidden] {
+		display: none;
+	}
+
+	.ahp-atlas__command > div:first-child {
+		display: grid;
+		gap: 0.6rem;
+	}
+
+	.ahp-atlas__command > div:first-child > p:last-child {
+		color: var(--muted);
+	}
+
+	.ahp-atlas__empty {
+		padding: 2rem;
+		border: 1px dashed var(--line-strong);
+		text-align: center;
+	}
+
+	.ahp-atlas__platform-head {
+		display: flex;
+		align-items: center;
+		gap: 0.9rem;
+	}
+
+	.ahp-atlas__platform-head > span {
+		display: grid;
+		place-items: center;
+		width: 2.75rem;
+		aspect-ratio: 1;
+		border: 1px solid var(--accent);
+		color: var(--accent);
+		font: 750 0.72rem / 1 var(--body);
+	}
+
+	.ahp-atlas__platform-head > div {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.ahp-atlas__platform ul {
+		display: grid;
+		gap: 0.6rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.ahp-atlas__platform li {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		gap: 0.75rem;
+		align-items: start;
+		padding: 0.75rem;
+		border-left: 3px solid var(--line-strong);
+		background: var(--surface-soft);
+	}
+
+	.ahp-atlas__platform li code {
+		overflow-wrap: anywhere;
+	}
+
+	.ahp-atlas__steps {
+		display: grid;
+		gap: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.ahp-atlas__steps > li {
+		display: grid;
+		grid-template-columns: minmax(3rem, 0.14fr) minmax(0, 1fr);
+		gap: 1rem;
+		padding-block: 1.5rem;
+		border-top: 1px solid var(--line);
+	}
+
+	.ahp-atlas__steps > li > span {
+		color: var(--accent);
+		font-weight: 750;
+	}
+
+	.ahp-atlas__steps > li > div {
+		display: grid;
+		gap: 0.8rem;
+	}
+
+	.ahp-atlas__authority {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.55rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.ahp-atlas__authority li {
+		padding: 0.55rem 0.75rem;
+		border: 1px solid var(--line-strong);
+		background: var(--surface);
+	}
+
+	.ahp-atlas__links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+	}
+
+	.ahp-atlas__fineprint {
+		max-width: 72ch;
+		font-size: 0.88rem;
+	}
+
+	@media (max-width: 760px) {
+		.ahp-atlas__stats,
+		.ahp-atlas__section-heading,
+		.ahp-atlas__notice,
+		.ahp-atlas__two-col,
+		.ahp-atlas__platform-grid,
+		.ahp-atlas__command-grid,
+		.ahp-atlas__channel-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.ahp-atlas__stats p {
+			border-right: 0;
+			border-bottom: 1px solid var(--line);
+		}
+
+		.ahp-atlas__stats p:last-child {
+			border-bottom: 0;
+		}
+
+		.ahp-atlas__section-heading,
+		.ahp-atlas__notice {
+			gap: 1rem;
+		}
+
+		.ahp-atlas__platform li {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media print {
+		.ahp-atlas__index,
+		.ahp-atlas__tabs,
+		.ahp-atlas__filters,
+		.ahp-atlas__search,
+		.ahp-atlas__code button,
+		.ahp-atlas__platform li button {
+			display: none;
+		}
+
+		.ahp-atlas__os-panel[hidden],
+		.ahp-atlas__command[hidden] {
+			display: grid;
+		}
+
+		.ahp-atlas__section {
+			break-inside: avoid;
+		}
+	}
+}
