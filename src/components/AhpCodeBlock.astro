@@ -1,5 +1,6 @@
 ---
 import type { Locale } from '../data/i18n';
+import CopyGlyph from './CopyGlyph.astro';
 
 interface Props {
 	command: string;
@@ -14,7 +15,10 @@ const { command, label, locale, compact = false } = Astro.props;
 <div class:list={['ahp-atlas__code', { 'ahp-atlas__code--compact': compact }]}>
 	<div>
 		<span>{label}</span>
-		<button type="button" data-copy-value={command} aria-label={locale === 'es' ? 'Copiar comando' : 'Copy command'}>{locale === 'es' ? 'Copiar' : 'Copy'}</button>
+		<button type="button" data-copy-value={command} title={locale === 'es' ? 'Copiar comando' : 'Copy command'}>
+			<CopyGlyph />
+			<span class="sr-only" data-copy-feedback>{locale === 'es' ? 'Copiar comando' : 'Copy command'}</span>
+		</button>
 	</div>
 	<pre><code>{command}</code></pre>
 </div>

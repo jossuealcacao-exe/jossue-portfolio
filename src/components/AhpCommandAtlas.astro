@@ -3,6 +3,7 @@ import { ahpAtlasCategories, ahpAtlasCommands, ahpAtlasPlatforms } from '../data
 import { routes, type Locale } from '../data/i18n';
 import '../styles/ahp-atlas.css';
 import CodeBlock from './AhpCodeBlock.astro';
+import CopyGlyph from './CopyGlyph.astro';
 
 interface Props {
 	locale: Locale;
@@ -25,10 +26,10 @@ npx ahp handoff inspect HOF-... .
 npx ahp handoff receive HOF-... .
 npx ahp sync check . --require-remote`;
 const osOptions = [
-	{ id: 'macos', label: 'macOS', shell: 'zsh', note: es ? 'Ejecuta cada operación desde Terminal en la raíz del repositorio.' : 'Run each operation from Terminal at the repository root.' },
-	{ id: 'linux', label: 'Linux', shell: 'bash', note: es ? 'Los comandos son iguales en Bash y deben ejecutarse desde la raíz Git.' : 'Commands are identical in Bash and must run from the Git root.' },
-	{ id: 'powershell', label: 'Windows PowerShell', shell: 'powershell', note: es ? 'Usa una línea por comando. PowerShell usa el acento grave para continuar líneas, no la barra invertida de Bash.' : 'Use one line per command. PowerShell uses the backtick for continuation, not Bash’s backslash.' },
-	{ id: 'cmd', label: 'Windows CMD', shell: 'cmd', note: es ? 'Mantén cada operación en una sola línea. Cambia el shell, no el protocolo.' : 'Keep each operation on one line. The shell changes; the protocol does not.' },
+	{ id: 'macos', label: 'macOS', icon: '/tools/apple.svg', shell: 'zsh', note: es ? 'Ejecuta cada operación desde Terminal en la raíz del repositorio.' : 'Run each operation from Terminal at the repository root.' },
+	{ id: 'linux', label: 'Linux', icon: '/tools/linux.svg', shell: 'bash', note: es ? 'Los comandos son iguales en Bash y deben ejecutarse desde la raíz Git.' : 'Commands are identical in Bash and must run from the Git root.' },
+	{ id: 'powershell', label: 'Windows PowerShell', icon: '/tools/powershell.svg', shell: 'powershell', note: es ? 'Usa una línea por comando. PowerShell usa el acento grave para continuar líneas, no la barra invertida de Bash.' : 'Use one line per command. PowerShell uses the backtick for continuation, not Bash’s backslash.' },
+	{ id: 'cmd', label: 'Windows CMD', icon: '/tools/windows-terminal.svg', shell: 'cmd', note: es ? 'Mantén cada operación en una sola línea. Cambia el shell, no el protocolo.' : 'Keep each operation on one line. The shell changes; the protocol does not.' },
 ];
 const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => category.id === id)?.label[locale] ?? id;
 ---
@@ -88,7 +89,7 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 			<div><h2 id="install-title">{es ? 'Instalación por sistema operativo.' : 'Installation by operating system.'}</h2><p>{es ? 'Ejecuta desde la raíz de un repositorio Git existente, con al menos un commit y Node.js 20 o superior.' : 'Run from the root of an existing Git repository with at least one commit and Node.js 20 or newer.'}</p></div>
 		</div>
 		<div class="ahp-atlas__tabs" role="tablist" aria-label={es ? 'Sistema operativo' : 'Operating system'}>
-			{osOptions.map((os, index) => <button type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`os-${os.id}`} id={`tab-${os.id}`} data-os-tab={os.id}>{os.label}</button>)}
+			{osOptions.map((os, index) => <button type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`os-${os.id}`} id={`tab-${os.id}`} data-os-tab={os.id}><img src={os.icon} alt="" width="20" height="20" aria-hidden="true" />{os.label}</button>)}
 		</div>
 		{osOptions.map((os, index) => (
 			<div class="ahp-atlas__os-panel" id={`os-${os.id}`} role="tabpanel" aria-labelledby={`tab-${os.id}`} hidden={index !== 0} data-os-panel={os.id}>
@@ -141,12 +142,12 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 		<div class="ahp-atlas__platform-grid">
 			{ahpAtlasPlatforms.map((platform) => (
 				<article class="ahp-atlas__platform">
-					<div class="ahp-atlas__platform-head"><span aria-hidden="true">{platform.short}</span><div><p class="ahp-atlas__label">IDE / APP</p><h3>{platform.name}</h3></div></div>
+					<div class="ahp-atlas__platform-head"><span class:list={['ahp-atlas__platform-mark', { 'ahp-atlas__platform-mark--wide': platform.adapter === 'opencode' }]} aria-hidden="true"><img src={platform.logo} alt="" width="96" height="36" loading="lazy" /></span><div><p class="ahp-atlas__label">IDE / APP</p><h3>{platform.name}</h3></div></div>
 					<p>{platform.description[locale]}</p>
 					<p class="ahp-atlas__surface">{es ? 'En terminal' : 'In terminal'}</p>
 					<CodeBlock command={`npx ahp adapter install ${platform.adapter} . --apply`} label="terminal" locale={locale} compact />
 					<p class="ahp-atlas__surface">{es ? 'Directamente en el chat' : 'Directly in chat'}</p>
-					<ul>{platform.prompts.map((prompt) => <li><code>{prompt[locale]}</code><button type="button" data-copy-value={prompt[locale]} aria-label={es ? 'Copiar prompt' : 'Copy prompt'}>{es ? 'Copiar' : 'Copy'}</button></li>)}</ul>
+					<ul>{platform.prompts.map((prompt) => <li><div class="ahp-atlas__prompt-head"><span>CHAT</span><button type="button" data-copy-value={prompt[locale]} title={es ? 'Copiar prompt' : 'Copy prompt'}><CopyGlyph /><span class="sr-only" data-copy-feedback>{es ? 'Copiar prompt' : 'Copy prompt'}</span></button></div><code>{prompt[locale]}</code></li>)}</ul>
 				</article>
 			))}
 		</div>
@@ -158,10 +159,10 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 			<div><h2 id="handoff-title">{es ? 'Continuidad entre plataformas.' : 'Cross-platform continuity.'}</h2><p>{es ? 'Un handoff sella contexto e identidad. Git lo transporta; la persona autoriza el commit y el push por separado.' : 'A handoff seals context and identity. Git transports it; a person authorizes commit and push separately.'}</p></div>
 		</div>
 		<ol class="ahp-atlas__steps">
-			<li><span>01</span><div><h3>{es ? 'Checkpoint en el emisor' : 'Checkpoint on the sender'}</h3><p>{es ? 'Conserva un límite recuperable antes de cambiar de host.' : 'Preserve a recoverable boundary before changing hosts.'}</p><CodeBlock command={'npx ahp checkpoint . --session feature-x --platform codex --actor "Codex" --summary "Límite validado" --next-action "Recibir y continuar"'} label="terminal" locale={locale} /></div></li>
-			<li><span>02</span><div><h3>{es ? 'Crear el handoff' : 'Create the handoff'}</h3><p>{es ? 'Declara plataforma de origen, destino y resumen.' : 'Declare the source platform, destination, and summary.'}</p><CodeBlock command={'npx ahp handoff create . --from codex --to cursor --session feature-x --summary "Continuar desde el límite validado"'} label="terminal" locale={locale} /></div></li>
-			<li><span>03</span><div><h3>{es ? 'Transportar con autoridad' : 'Transport with authority'}</h3><p>{es ? 'El handoff debe quedar confirmado y disponible en el remoto. AHP+ no ejecuta Git ni concede permiso para publicarlo.' : 'The handoff must be committed and remotely available. AHP+ neither runs Git nor grants permission to publish it.'}</p></div></li>
-			<li><span>04</span><div><h3>{es ? 'Verificar y recibir' : 'Verify and receive'}</h3><p>{es ? 'El receptor valida integridad, identidad y relación Git antes de editar.' : 'The receiver validates integrity, identity, and Git relationship before editing.'}</p><CodeBlock command={handoffReceive} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>01</span><div><h3>{es ? 'Checkpoint en el emisor' : 'Checkpoint on the sender'}</h3><p>{es ? 'Conserva un límite recuperable antes de cambiar de host.' : 'Preserve a recoverable boundary before changing hosts.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp checkpoint . --session feature-x --platform codex --actor "Codex" --summary "Límite validado" --next-action "Recibir y continuar"'} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>02</span><div><h3>{es ? 'Crear el handoff' : 'Create the handoff'}</h3><p>{es ? 'Declara plataforma de origen, destino y resumen.' : 'Declare the source platform, destination, and summary.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp handoff create . --from codex --to cursor --session feature-x --summary "Continuar desde el límite validado"'} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>03</span><div><h3>{es ? 'Transportar con autoridad' : 'Transport with authority'}</h3><p>{es ? 'El handoff debe quedar confirmado y disponible en el remoto. AHP+ no ejecuta Git ni concede permiso para publicarlo.' : 'The handoff must be committed and remotely available. AHP+ neither runs Git nor grants permission to publish it.'}</p></div></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>04</span><div><h3>{es ? 'Verificar y recibir' : 'Verify and receive'}</h3><p>{es ? 'El receptor valida integridad, identidad y relación Git antes de editar.' : 'The receiver validates integrity, identity, and Git relationship before editing.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={handoffReceive} label="terminal" locale={locale} /></div></li>
 		</ol>
 	</section>
 
@@ -238,14 +239,25 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 		for (const button of atlas.querySelectorAll<HTMLButtonElement>('[data-copy-value]')) {
 			button.addEventListener('click', async () => {
 				const value = button.dataset.copyValue ?? '';
+				const feedback = button.querySelector<HTMLElement>('[data-copy-feedback]');
+				const originalFeedback = feedback?.textContent ?? '';
+				const originalTitle = button.title;
+				const setCopyState = (message: string, state: 'success' | 'error') => {
+					if (feedback) feedback.textContent = message;
+					button.title = message;
+					button.dataset.copyState = state;
+				};
 				try {
 					await navigator.clipboard.writeText(value);
-					const original = button.textContent;
-					button.textContent = locale === 'es' ? 'Copiado' : 'Copied';
-					window.setTimeout(() => { button.textContent = original; }, 1600);
+					setCopyState(locale === 'es' ? 'Copiado' : 'Copied', 'success');
 				} catch {
-					button.textContent = locale === 'es' ? 'Selecciona y copia' : 'Select and copy';
+					setCopyState(locale === 'es' ? 'No se pudo copiar' : 'Could not copy', 'error');
 				}
+				window.setTimeout(() => {
+					if (feedback) feedback.textContent = originalFeedback;
+					button.title = originalTitle;
+					delete button.dataset.copyState;
+				}, 1600);
 			});
 		}
 	}

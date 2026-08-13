@@ -1995,6 +1995,7 @@
 
 	.deliverable-grid {
 		display: grid;
+		grid-template-columns: minmax(0, 1fr);
 		gap: 1px;
 		padding: 1px;
 		border-radius: var(--radius-lg);
@@ -2004,18 +2005,12 @@
 	}
 
 	.deliverable-grid li {
-		min-height: 10rem;
+		min-height: 0;
 		padding: clamp(1.25rem, 3vw, 2rem);
 		background: var(--surface);
 		font-family: var(--heading);
 		font-size: clamp(1.15rem, 2vw, 1.55rem);
 		line-height: 1.25;
-	}
-
-	@media (min-width: 52rem) {
-		.deliverable-grid {
-			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
 	}
 
 	.outcome-list {

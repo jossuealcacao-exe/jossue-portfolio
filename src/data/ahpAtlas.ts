@@ -21,7 +21,7 @@ export interface AhpAtlasCommand {
 
 export interface AhpAtlasPlatform {
 	name: string;
-	short: string;
+	logo: string;
 	adapter: 'cursor' | 'opencode' | 'codex' | 'claude' | 'chatgpt' | 'generic';
 	description: Localized;
 	prompts: Localized[];
@@ -84,7 +84,7 @@ export const ahpAtlasCommands: AhpAtlasCommand[] = [
 
 export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 	{
-		name: 'Cursor', short: 'CU', adapter: 'cursor',
+		name: 'Cursor', logo: '/tools/cursor.svg', adapter: 'cursor',
 		description: { es: 'Instala un comando /ahp local para usarlo directamente en el chat de Cursor.', en: 'Installs a local /ahp command for direct use in Cursor chat.' },
 		prompts: [
 			{ es: '/ahp doctor', en: '/ahp doctor' }, { es: '/ahp verify strict', en: '/ahp verify strict' }, { es: '/ahp context', en: '/ahp context' },
@@ -93,7 +93,7 @@ export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 		],
 	},
 	{
-		name: 'OpenCode', short: 'OC', adapter: 'opencode',
+		name: 'OpenCode', logo: '/tools/opencode.svg', adapter: 'opencode',
 		description: { es: 'Instala el mismo vocabulario /ahp en .opencode/commands.', en: 'Installs the same /ahp vocabulary in .opencode/commands.' },
 		prompts: [
 			{ es: '/ahp status', en: '/ahp status' }, { es: '/ahp verify strict', en: '/ahp verify strict' },
@@ -101,7 +101,7 @@ export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 		],
 	},
 	{
-		name: 'Codex', short: 'CX', adapter: 'codex',
+		name: 'Codex', logo: '/tools/openai.svg', adapter: 'codex',
 		description: { es: 'Instala la skill local $ahp y mantiene AGENTS.md como límite de instrucciones.', en: 'Installs the local $ahp skill and keeps AGENTS.md as the instruction boundary.' },
 		prompts: [
 			{ es: 'Usa $ahp para verificar este repositorio y mostrar el contexto canónico.', en: 'Use $ahp to verify this repository and show its canonical context.' },
@@ -110,7 +110,7 @@ export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 		],
 	},
 	{
-		name: 'Claude Code', short: 'CL', adapter: 'claude',
+		name: 'Claude Code', logo: '/tools/anthropic.svg', adapter: 'claude',
 		description: { es: 'Conecta CLAUDE.md con AHP_INSTRUCTIONS.md. Usa prompts naturales; no instala un slash command propio.', en: 'Connects CLAUDE.md to AHP_INSTRUCTIONS.md. Use natural prompts; it does not install its own slash command.' },
 		prompts: [
 			{ es: 'Usa AHP+ para ejecutar doctor, verify --strict y context antes de continuar.', en: 'Use AHP+ to run doctor, verify --strict, and context before continuing.' },
@@ -119,7 +119,7 @@ export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 		],
 	},
 	{
-		name: 'ChatGPT / Mobile', short: 'CH', adapter: 'chatgpt',
+		name: 'ChatGPT / Mobile', logo: '/tools/openai.svg', adapter: 'chatgpt',
 		description: { es: 'Instala AHP_MOBILE.md. Con terminal puede ejecutar; con solo lectura debe declarar sus límites.', en: 'Installs AHP_MOBILE.md. With a shell it can execute; read-only hosts must disclose their limits.' },
 		prompts: [
 			{ es: 'Lee AHP_INSTRUCTIONS.md. Usa el AHP+ instalado para ejecutar el pulso de inicio y muestra project_id, commit, portabilidad, bloqueos y siguiente acción.', en: 'Read AHP_INSTRUCTIONS.md. Use the installed AHP+ to run the start heartbeat and show project_id, commit, portability, blockers, and next action.' },
@@ -127,7 +127,7 @@ export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 		],
 	},
 	{
-		name: 'Agente genérico', short: 'AI', adapter: 'generic',
+		name: 'Agente genérico', logo: '/cv/brands/ahp-plus.svg', adapter: 'generic',
 		description: { es: 'Instala AHP_INSTRUCTIONS.md y un bloque administrado en AGENTS.md para cualquier agente compatible.', en: 'Installs AHP_INSTRUCTIONS.md and a managed AGENTS.md block for any compatible agent.' },
 		prompts: [
 			{ es: 'Sigue las instrucciones AHP+ de este repositorio. Verifica antes de escribir y usa el estado Git confirmado como fuente canónica.', en: 'Follow this repository’s AHP+ instructions. Verify before writing and use confirmed Git state as the canonical source.' },

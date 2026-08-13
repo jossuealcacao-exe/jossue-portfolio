@@ -55,6 +55,25 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 	await page.locator('[data-ahp-search]').fill('');
 	await expect(page.locator('[data-ahp-count]')).toContainText('4 comandos visibles');
 	await expect(page.locator('.ahp-atlas__platform')).toHaveCount(6);
+	await expect(page.locator('[data-os-tab] img')).toHaveCount(4);
+	await expect(page.locator('.ahp-atlas__platform-mark img')).toHaveCount(6);
+	const copyButtons = page.locator('[data-copy-value]');
+	await expect(copyButtons.first()).toBeVisible();
+	await expect(page.locator('.ahp-copy-icon')).toHaveCount(await copyButtons.count());
+	await expect(page.getByText('Copiar', { exact: true })).toHaveCount(0);
+	await expect(page.getByRole('button', { name: 'Copiar comando' }).first()).toBeVisible();
+	const promptRows = page.locator('.ahp-atlas__platform li');
+	await expect(page.locator('.ahp-atlas__prompt-head')).toHaveCount(await promptRows.count());
+	await expect(page.locator('.ahp-atlas__prompt-head').first()).toContainText('CHAT');
+	await expect(page.locator('.ahp-atlas__prompt-head').first()).toHaveCSS('justify-content', 'space-between');
+	const handoffLayout = await page.locator('#handoff .ahp-atlas__steps > li').first().evaluate((element) => ({
+		columns: getComputedStyle(element).gridTemplateColumns.split(' ').length,
+		rowWidth: element.getBoundingClientRect().width,
+		listWidth: element.parentElement?.getBoundingClientRect().width ?? 0,
+	}));
+	expect(Math.abs(handoffLayout.rowWidth - handoffLayout.listWidth)).toBeLessThan(1);
+	const handoffColumns = handoffLayout.columns;
+	expect(handoffColumns).toBe((page.viewportSize()?.width ?? 0) > 760 ? 2 : 1);
 	await expect(page.locator('main')).toContainText('Directamente en el chat');
 	await page.locator('a.language').click();
 	await expect(page).toHaveURL(/\/en\/resources\/ahp-plus\/$/);
@@ -244,6 +263,15 @@ for (const project of [
 			await expect(page.locator('main')).not.toContainText('AHP+ 1.0');
 			await expect(page.locator('#links a[href="https://github.com/jossuealcacao-exe/ahp_plus"]')).toBeVisible();
 			await expect(page.locator('#links a[href="https://www.npmjs.com/package/@jossuealcala/ahp-plus"]')).toBeVisible();
+
+			const deliveryColumns = await page.locator('#delivery .deliverable-grid').evaluate((element) =>
+				getComputedStyle(element).gridTemplateColumns.split(' ').length,
+			);
+			expect(deliveryColumns).toBe(1);
+			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(246, 246, 242)');
+			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(246, 246, 242)');
+			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(17, 17, 15)');
+			await expect(page.locator('.site-footer__brand h2')).toHaveCSS('color', 'rgb(247, 247, 242)');
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();

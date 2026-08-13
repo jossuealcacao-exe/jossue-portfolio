@@ -1,3 +1,5 @@
+@layer reset, tokens, base, layout, components, utilities;
+
 @layer components {
 	.ahp-atlas {
 		--atlas-code: #141a22;
@@ -185,6 +187,18 @@
 		cursor: pointer;
 	}
 
+	.ahp-atlas__tabs button {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.48rem;
+	}
+
+	.ahp-atlas__tabs img {
+		width: 1.15rem;
+		height: 1.15rem;
+		object-fit: contain;
+	}
+
 	.ahp-atlas__tabs button:hover,
 	.ahp-atlas__filters button:hover,
 	.ahp-atlas__tabs button[aria-selected='true'],
@@ -236,14 +250,47 @@
 
 	.ahp-atlas__code button,
 	.ahp-atlas__platform li button {
-		padding: 0;
-		border: 0;
-		color: #9ec2ff;
+		display: grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		padding: 0.35rem;
+		border: 1px solid transparent;
 		background: transparent;
-		font: 700 0.72rem / 1 var(--body);
 		cursor: pointer;
-		text-decoration: underline;
-		text-underline-offset: 0.2em;
+	}
+
+	.ahp-atlas__code button {
+		margin: -0.35rem;
+		color: #9ec2ff;
+	}
+
+	.ahp-atlas__platform li button {
+		margin: -0.35rem -0.35rem -0.35rem 0;
+		color: var(--accent);
+	}
+
+	.ahp-atlas__code button:hover,
+	.ahp-atlas__platform li button:hover,
+	.ahp-atlas__code button:focus-visible,
+	.ahp-atlas__platform li button:focus-visible {
+		border-color: currentColor;
+		outline: 0;
+	}
+
+	.ahp-atlas__code button[data-copy-state='success'],
+	.ahp-atlas__platform li button[data-copy-state='success'] {
+		color: #3fbf75;
+	}
+
+	.ahp-atlas__code button[data-copy-state='error'],
+	.ahp-atlas__platform li button[data-copy-state='error'] {
+		color: #f08a79;
+	}
+
+	.ahp-copy-icon {
+		width: 1.05rem;
+		height: 1.05rem;
 	}
 
 	.ahp-atlas__code pre {
@@ -310,14 +357,24 @@
 		gap: 0.9rem;
 	}
 
-	.ahp-atlas__platform-head > span {
+	.ahp-atlas__platform-mark {
 		display: grid;
 		place-items: center;
-		width: 2.75rem;
-		aspect-ratio: 1;
-		border: 1px solid var(--accent);
-		color: var(--accent);
-		font: 750 0.72rem / 1 var(--body);
+		width: 3.5rem;
+		height: 3.25rem;
+		padding: 0.55rem;
+		border: 1px solid var(--line-strong);
+		background: var(--surface-soft);
+	}
+
+	.ahp-atlas__platform-mark--wide {
+		width: 5.6rem;
+	}
+
+	.ahp-atlas__platform-mark img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
 	}
 
 	.ahp-atlas__platform-head > div {
@@ -335,12 +392,27 @@
 
 	.ahp-atlas__platform li {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		gap: 0.75rem;
-		align-items: start;
-		padding: 0.75rem;
+		gap: 0;
+		padding: 0;
 		border-left: 3px solid var(--line-strong);
 		background: var(--surface-soft);
+	}
+
+	.ahp-atlas__prompt-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 0.55rem 0.75rem;
+		border-bottom: 1px solid var(--line);
+		color: var(--muted);
+		font: 750 0.68rem / 1 var(--body);
+		letter-spacing: 0.08em;
+	}
+
+	.ahp-atlas__prompt-head + code {
+		display: block;
+		padding: 0.85rem 1rem;
 	}
 
 	.ahp-atlas__platform li code {
@@ -357,20 +429,32 @@
 
 	.ahp-atlas__steps > li {
 		display: grid;
-		grid-template-columns: minmax(3rem, 0.14fr) minmax(0, 1fr);
-		gap: 1rem;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: clamp(1.5rem, 4vw, 4rem);
+		align-items: start;
+		max-width: none;
 		padding-block: 1.5rem;
 		border-top: 1px solid var(--line);
 	}
 
-	.ahp-atlas__steps > li > span {
+	.ahp-atlas__step-copy {
+		display: grid;
+		grid-template-columns: minmax(3rem, 0.14fr) minmax(0, 1fr);
+		gap: 1rem;
+	}
+
+	.ahp-atlas__step-copy > span {
 		color: var(--accent);
 		font-weight: 750;
 	}
 
-	.ahp-atlas__steps > li > div {
+	.ahp-atlas__step-copy > div {
 		display: grid;
 		gap: 0.8rem;
+	}
+
+	.ahp-atlas__step-command {
+		min-width: 0;
 	}
 
 	.ahp-atlas__authority {
@@ -427,6 +511,11 @@
 
 		.ahp-atlas__platform li {
 			grid-template-columns: 1fr;
+		}
+
+		.ahp-atlas__steps > li {
+			grid-template-columns: 1fr;
+			gap: 1rem;
 		}
 	}
 
