@@ -26,10 +26,10 @@ npx ahp handoff inspect HOF-... .
 npx ahp handoff receive HOF-... .
 npx ahp sync check . --require-remote`;
 const osOptions = [
-	{ id: 'macos', label: 'macOS', icon: '/tools/apple.svg', shell: 'zsh', note: es ? 'Ejecuta cada operación desde Terminal en la raíz del repositorio.' : 'Run each operation from Terminal at the repository root.' },
-	{ id: 'linux', label: 'Linux', icon: '/tools/linux.svg', shell: 'bash', note: es ? 'Los comandos son iguales en Bash y deben ejecutarse desde la raíz Git.' : 'Commands are identical in Bash and must run from the Git root.' },
-	{ id: 'powershell', label: 'Windows PowerShell', icon: '/tools/powershell.svg', shell: 'powershell', note: es ? 'Usa una línea por comando. PowerShell usa el acento grave para continuar líneas, no la barra invertida de Bash.' : 'Use one line per command. PowerShell uses the backtick for continuation, not Bash’s backslash.' },
-	{ id: 'cmd', label: 'Windows CMD', icon: '/tools/windows-terminal.svg', shell: 'cmd', note: es ? 'Mantén cada operación en una sola línea. Cambia el shell, no el protocolo.' : 'Keep each operation on one line. The shell changes; the protocol does not.' },
+	{ id: 'macos', label: 'macOS', icon: '/tools/apple.svg', shell: 'zsh', note: es ? 'Abre Terminal y colócate en la carpeta principal del proyecto antes de ejecutar cada línea.' : 'Open Terminal and move into the project’s main folder before running each line.' },
+	{ id: 'linux', label: 'Linux', icon: '/tools/linux.svg', shell: 'bash', note: es ? 'Los comandos son idénticos. Ejecútalos desde la carpeta principal del repositorio.' : 'The commands are identical. Run them from the repository’s main folder.' },
+	{ id: 'powershell', label: 'Windows PowerShell', icon: '/tools/powershell.svg', shell: 'powershell', note: es ? 'Escribe un comando por línea. Si necesitas partir uno largo, PowerShell usa el acento grave (`), no la barra invertida.' : 'Type one command per line. To split a long one, PowerShell uses the backtick (`), not the backslash.' },
+	{ id: 'cmd', label: 'Windows CMD', icon: '/tools/windows-terminal.svg', shell: 'cmd', note: es ? 'Mantén cada comando en una sola línea. Lo que cambia es la terminal, no AHP+.' : 'Keep each command on a single line. The terminal changes, AHP+ does not.' },
 ];
 const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => category.id === id)?.label[locale] ?? id;
 ---
@@ -40,53 +40,54 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 		<h1>AHP+ <span>Command Atlas</span></h1>
 		<p class="hero__lede">
 			{es
-				? 'Instala, verifica, gestiona y transfiere el contexto de un proyecto entre terminales, IDEs y agentes sin confundir una petición en chat con evidencia de ejecución.'
-				: 'Install, verify, manage, and transfer project context across terminals, IDEs, and agents without confusing a chat request with execution evidence.'}
+				? 'Guía para instalar AHP+ y usarlo, ya sea escribiendo en la terminal o pidiéndolo en el chat de tu asistente de IA. Todos los comandos están listos para copiar.'
+				: 'A guide to installing AHP+ and using it, whether you type in the terminal or ask for it in your AI assistant’s chat. Every command is ready to copy.'}
 		</p>
 		<div class="ahp-atlas__stats" aria-label={es ? 'Resumen de la referencia' : 'Reference summary'}>
-			<p><strong>{ahpAtlasCommands.length}</strong><span>{es ? 'comandos y patrones CLI' : 'CLI commands and patterns'}</span></p>
-			<p><strong>{ahpAtlasPlatforms.length}</strong><span>{es ? 'adaptadores de plataforma' : 'platform adapters'}</span></p>
-			<p><strong>Git</strong><span>{es ? 'contrato canónico portable' : 'portable canonical contract'}</span></p>
+			<p><strong>{ahpAtlasCommands.length}</strong><span>{es ? 'comandos listos para copiar' : 'commands ready to copy'}</span></p>
+			<p><strong>{ahpAtlasPlatforms.length}</strong><span>{es ? 'plataformas con instalador' : 'platforms with an installer'}</span></p>
+			<p><strong>Git</strong><span>{es ? 'donde queda guardado todo' : 'where everything is stored'}</span></p>
 		</div>
 		<nav class="ahp-atlas__index" aria-label={es ? 'Contenido de la guía' : 'Guide contents'}>
 			<a href="#instalacion">01 · {es ? 'Instalación' : 'Installation'}</a>
-			<a href="#pulso">02 · {es ? 'Pulso' : 'Heartbeat'}</a>
+			<a href="#pulso">02 · {es ? 'Arranque' : 'Start-up'}</a>
 			<a href="#terminal">03 · Terminal</a>
 			<a href="#plataformas">04 · {es ? 'Plataformas' : 'Platforms'}</a>
-			<a href="#handoff">05 · Handoff</a>
-			<a href="#autoridad">06 · {es ? 'Autoridad' : 'Authority'}</a>
+			<a href="#handoff">05 · {es ? 'Entrega' : 'Handover'}</a>
+			<a href="#migracion">06 · {es ? 'Migración' : 'Migration'}</a>
+			<a href="#autoridad">07 · {es ? 'Límites' : 'Limits'}</a>
 		</nav>
 	</header>
 
 	<section class="ahp-atlas__section shell" aria-labelledby="surfaces-title">
 		<div class="ahp-atlas__section-heading">
 			<p class="index">00 / {es ? 'Orientación' : 'Orientation'}</p>
-			<div><h2 id="surfaces-title">{es ? 'Terminal y chat no son lo mismo.' : 'Terminal and chat are not the same.'}</h2><p>{es ? 'El protocolo es uno. La superficie determina cómo solicitas la operación y qué puede probarse.' : 'There is one protocol. The surface determines how you request an operation and what can be proven.'}</p></div>
+			<div><h2 id="surfaces-title">{es ? 'Terminal y chat no son lo mismo.' : 'Terminal and chat are not the same.'}</h2><p>{es ? 'AHP+ es uno solo. Lo que cambia es dónde lo pides y qué se puede comprobar después.' : 'There is only one AHP+. What changes is where you ask for it and what can be proven afterwards.'}</p></div>
 		</div>
 		<div class="ahp-atlas__two-col">
 			<article class="ahp-atlas__panel">
 				<p class="ahp-atlas__label">TERMINAL</p>
-				<h3>{es ? 'Ejecución verificable' : 'Verifiable execution'}</h3>
-				<p>{es ? 'Escribe comandos exactos con npx ahp. La salida del proceso puede convertirse en evidencia reproducible.' : 'Enter exact commands with npx ahp. Process output can become reproducible evidence.'}</p>
+				<h3>{es ? 'Aquí se ejecuta de verdad' : 'Here it actually runs'}</h3>
+				<p>{es ? 'Escribes el comando y la terminal responde. Esa respuesta sí sirve como prueba, porque cualquiera puede repetirla y obtener lo mismo.' : 'You type the command and the terminal answers. That answer counts as proof, because anyone can repeat it and get the same result.'}</p>
 				<CodeBlock command="npx ahp verify . --strict" label="shell" locale={locale} />
 			</article>
 			<article class="ahp-atlas__panel">
 				<p class="ahp-atlas__label">IDE / CHAT</p>
-				<h3>{es ? 'Intención semántica' : 'Semantic intent'}</h3>
-				<p>{es ? 'Pide la operación mediante el adaptador. El agente debe ejecutar la CLI y mostrar el resultado; su texto por sí solo no es evidencia.' : 'Request the operation through the adapter. The agent must run the CLI and show the result; model text alone is not evidence.'}</p>
+				<h3>{es ? 'Aquí solo lo pides' : 'Here you only ask for it'}</h3>
+				<p>{es ? 'Le pides la operación al asistente. Él tiene que ejecutar el comando y mostrarte la salida: que lo diga no significa que lo hizo.' : 'You ask the assistant for the operation. It has to run the command and show you the output: saying it did is not the same as doing it.'}</p>
 				<CodeBlock command="/ahp verify strict" label="chat" locale={locale} />
 			</article>
 		</div>
 		<aside class="ahp-atlas__notice">
 			<strong>{es ? 'Regla de oro' : 'Golden rule'}</strong>
-			<p>{es ? 'Si la plataforma no tiene repositorio y terminal, solo puede consumir una cápsula confirmada. Debe declarar que no ejecutó verificaciones, tests, commits ni pushes.' : 'If a platform has no repository and shell, it can only consume a committed capsule. It must disclose that it did not run verification, tests, commits, or pushes.'}</p>
+			<p>{es ? 'Si la plataforma no tiene el repositorio ni una terminal —por ejemplo el chat en el celular— solo puede leer lo que ya quedó guardado. Y debe decirlo con claridad: no revisó, no probó, no hizo commit ni push.' : 'If the platform has neither the repository nor a terminal — a chat on your phone, for instance — it can only read what was already saved. And it has to say so plainly: it did not check, test, commit, or push.'}</p>
 		</aside>
 	</section>
 
 	<section id="instalacion" class="ahp-atlas__section shell" aria-labelledby="install-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">01 / INSTALL</p>
-			<div><h2 id="install-title">{es ? 'Instalación por sistema operativo.' : 'Installation by operating system.'}</h2><p>{es ? 'Ejecuta desde la raíz de un repositorio Git existente, con al menos un commit y Node.js 20 o superior.' : 'Run from the root of an existing Git repository with at least one commit and Node.js 20 or newer.'}</p></div>
+			<p class="index">01 / {es ? 'Instalación' : 'Installation'}</p>
+			<div><h2 id="install-title">{es ? 'Instalación por sistema operativo.' : 'Installation by operating system.'}</h2><p>{es ? 'Necesitas un proyecto que ya use Git y tenga al menos un commit, además de Node.js 20 o más nuevo. Ejecuta los comandos desde la carpeta principal del proyecto.' : 'You need a project that already uses Git and has at least one commit, plus Node.js 20 or newer. Run the commands from the project’s main folder.'}</p></div>
 		</div>
 		<div class="ahp-atlas__tabs" role="tablist" aria-label={es ? 'Sistema operativo' : 'Operating system'}>
 			{osOptions.map((os, index) => <button type="button" role="tab" aria-selected={index === 0 ? 'true' : 'false'} aria-controls={`os-${os.id}`} id={`tab-${os.id}`} data-os-tab={os.id}><img src={os.icon} alt="" width="20" height="20" aria-hidden="true" />{os.label}</button>)}
@@ -98,27 +99,27 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 			</div>
 		))}
 		<div class="ahp-atlas__channel-grid">
-			<article><p class="ahp-atlas__label">STABLE</p><h3><code>@latest</code></h3><p>{es ? 'Canal recomendado para uso normal.' : 'Recommended channel for normal use.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@latest" label="terminal" locale={locale} /></article>
-			<article><p class="ahp-atlas__label">PINNED</p><h3><code>@1.1.0</code></h3><p>{es ? 'Reproducción exacta de esta referencia.' : 'Exact reproduction of this reference.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@1.1.0" label="terminal" locale={locale} /></article>
-			<article><p class="ahp-atlas__label">DEVELOPMENT</p><h3><code>@next</code></h3><p>{es ? 'Solo para probar candidatos y reportar mejoras.' : 'Only for testing candidates and reporting improvements.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@next" label="terminal" locale={locale} /></article>
+			<article><p class="ahp-atlas__label">STABLE</p><h3><code>@latest</code></h3><p>{es ? 'La opción normal: la última versión probada.' : 'The normal choice: the latest tested version.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@latest" label="terminal" locale={locale} /></article>
+			<article><p class="ahp-atlas__label">PINNED</p><h3><code>@1.1.0</code></h3><p>{es ? 'Fija exactamente la versión que documenta esta guía.' : 'Pins exactly the version this guide documents.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@1.1.0" label="terminal" locale={locale} /></article>
+			<article><p class="ahp-atlas__label">DEVELOPMENT</p><h3><code>@next</code></h3><p>{es ? 'Solo para probar lo que viene y reportar fallos.' : 'Only for trying out what is coming and reporting issues.'}</p><CodeBlock command="npm install --save-dev @jossuealcala/ahp-plus@next" label="terminal" locale={locale} /></article>
 		</div>
 	</section>
 
 	<section id="pulso" class="ahp-atlas__section shell" aria-labelledby="heartbeat-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">02 / START</p>
-			<div><h2 id="heartbeat-title">{es ? 'Pulso de inicio.' : 'Start heartbeat.'}</h2><p>{es ? 'Ejecuta esta secuencia al abrir el proyecto, cambiar de agente o recibir un handoff.' : 'Run this sequence when opening a project, changing agents, or receiving a handoff.'}</p></div>
+			<p class="index">02 / {es ? 'Arranque' : 'Start-up'}</p>
+			<div><h2 id="heartbeat-title">{es ? 'Revisión de arranque.' : 'Start-up check.'}</h2><p>{es ? 'Corre esta secuencia cada vez que abras el proyecto, cambies de asistente o recibas una entrega. Te dice dónde estás parado antes de tocar nada.' : 'Run this sequence whenever you open the project, switch assistants, or receive a handover. It tells you where you stand before you touch anything.'}</p></div>
 		</div>
 		<CodeBlock command={heartbeat} label="terminal · all OS" locale={locale} />
-		<p class="ahp-atlas__after-code">{es ? 'Después lee .ahp/manifest.json, .ahp/state/project.json y .ahp/INDEX.md. El contexto generado en vivo prevalece sobre un brief persistido antiguo.' : 'Then read .ahp/manifest.json, .ahp/state/project.json, and .ahp/INDEX.md. Live-generated context overrides a stale persisted brief.'}</p>
+		<p class="ahp-atlas__after-code">{es ? 'Después revisa los archivos .ahp/manifest.json, .ahp/state/project.json y .ahp/INDEX.md. Si el resumen guardado y lo que respondió el comando no coinciden, gana el comando: es lo que está pasando ahora.' : 'Then look at the .ahp/manifest.json, .ahp/state/project.json, and .ahp/INDEX.md files. If the saved summary and the command output disagree, the command wins: that is what is happening right now.'}</p>
 	</section>
 
 	<section id="terminal" class="ahp-atlas__section shell" aria-labelledby="terminal-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">03 / CLI</p>
-			<div><h2 id="terminal-title">{es ? 'Catálogo completo de terminal.' : 'Complete terminal catalog.'}</h2><p>{es ? 'Busca por intención, comando o categoría. Todos los ejemplos usan la instalación local mediante npx ahp.' : 'Search by intent, command, or category. Every example uses the local installation through npx ahp.'}</p></div>
+			<p class="index">03 / Terminal</p>
+			<div><h2 id="terminal-title">{es ? 'Todos los comandos.' : 'Every command.'}</h2><p>{es ? 'Busca por lo que quieres hacer, por el nombre del comando, o filtra por categoría. Todos los ejemplos usan la copia instalada en tu proyecto, con npx ahp.' : 'Search by what you want to do, by command name, or filter by category. Every example uses the copy installed in your project, through npx ahp.'}</p></div>
 		</div>
-		<label class="ahp-atlas__search"><span>{es ? 'Buscar' : 'Search'}</span><input type="search" data-ahp-search placeholder={es ? 'doctor, evidencia, handoff…' : 'doctor, evidence, handoff…'} autocomplete="off" /></label>
+		<label class="ahp-atlas__search"><span>{es ? 'Buscar' : 'Search'}</span><input type="search" data-ahp-search placeholder={es ? 'revisar, entrega, prueba…' : 'check, handover, proof…'} autocomplete="off" /></label>
 		<div class="ahp-atlas__filters" aria-label={es ? 'Filtrar comandos' : 'Filter commands'}>
 			{ahpAtlasCategories.map((category, index) => <button type="button" data-ahp-filter={category.id} aria-pressed={index === 0 ? 'true' : 'false'}>{category.label[locale]}</button>)}
 		</div>
@@ -137,7 +138,7 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 	<section id="plataformas" class="ahp-atlas__section shell" aria-labelledby="platforms-title">
 		<div class="ahp-atlas__section-heading">
 			<p class="index">04 / CHAT</p>
-			<div><h2 id="platforms-title">{es ? 'Comandos por plataforma.' : 'Commands by platform.'}</h2><p>{es ? 'Primero instala el adaptador desde terminal. Después usa el vocabulario semántico directamente en el chat.' : 'Install the adapter from a terminal first. Then use the semantic vocabulary directly in chat.'}</p></div>
+			<div><h2 id="platforms-title">{es ? 'Comandos por plataforma.' : 'Commands by platform.'}</h2><p>{es ? 'Primero instala el adaptador desde la terminal, una sola vez. Después ya puedes pedir las cosas dentro del chat, con las palabras que verás abajo.' : 'First install the adapter from the terminal, once. After that you can ask for things inside the chat, using the wording shown below.'}</p></div>
 		</div>
 		<div class="ahp-atlas__platform-grid">
 			{ahpAtlasPlatforms.map((platform) => (
@@ -155,33 +156,33 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 
 	<section id="handoff" class="ahp-atlas__section shell" aria-labelledby="handoff-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">05 / HANDOFF</p>
-			<div><h2 id="handoff-title">{es ? 'Continuidad entre plataformas.' : 'Cross-platform continuity.'}</h2><p>{es ? 'Un handoff sella contexto e identidad. Git lo transporta; la persona autoriza el commit y el push por separado.' : 'A handoff seals context and identity. Git transports it; a person authorizes commit and push separately.'}</p></div>
+			<p class="index">05 / {es ? 'Entrega' : 'Handover'}</p>
+			<div><h2 id="handoff-title">{es ? 'Pasar el trabajo a otra herramienta.' : 'Passing the work to another tool.'}</h2><p>{es ? 'Una entrega deja por escrito en qué punto quedó todo y a qué repositorio y commit pertenece. Git es el que la transporta, y el commit y el push los autorizas tú.' : 'A handover puts in writing where everything stands and which repository and commit it belongs to. Git is what carries it, and you authorize the commit and the push.'}</p></div>
 		</div>
 		<ol class="ahp-atlas__steps">
-			<li><div class="ahp-atlas__step-copy"><span>01</span><div><h3>{es ? 'Checkpoint en el emisor' : 'Checkpoint on the sender'}</h3><p>{es ? 'Conserva un límite recuperable antes de cambiar de host.' : 'Preserve a recoverable boundary before changing hosts.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp checkpoint . --session feature-x --platform codex --actor "Codex" --summary "Límite validado" --next-action "Recibir y continuar"'} label="terminal" locale={locale} /></div></li>
-			<li><div class="ahp-atlas__step-copy"><span>02</span><div><h3>{es ? 'Crear el handoff' : 'Create the handoff'}</h3><p>{es ? 'Declara plataforma de origen, destino y resumen.' : 'Declare the source platform, destination, and summary.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp handoff create . --from codex --to cursor --session feature-x --summary "Continuar desde el límite validado"'} label="terminal" locale={locale} /></div></li>
-			<li><div class="ahp-atlas__step-copy"><span>03</span><div><h3>{es ? 'Transportar con autoridad' : 'Transport with authority'}</h3><p>{es ? 'El handoff debe quedar confirmado y disponible en el remoto. AHP+ no ejecuta Git ni concede permiso para publicarlo.' : 'The handoff must be committed and remotely available. AHP+ neither runs Git nor grants permission to publish it.'}</p></div></div></li>
-			<li><div class="ahp-atlas__step-copy"><span>04</span><div><h3>{es ? 'Verificar y recibir' : 'Verify and receive'}</h3><p>{es ? 'El receptor valida integridad, identidad y relación Git antes de editar.' : 'The receiver validates integrity, identity, and Git relationship before editing.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={handoffReceive} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>01</span><div><h3>{es ? 'Marca dónde te quedaste' : 'Mark where you stopped'}</h3><p>{es ? 'Guarda un punto al que se pueda volver, antes de cambiar de herramienta.' : 'Save a point you can return to, before switching tools.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp checkpoint . --session feature-x --platform codex --actor "Codex" --summary "Límite validado" --next-action "Recibir y continuar"'} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>02</span><div><h3>{es ? 'Crea la entrega' : 'Create the handover'}</h3><p>{es ? 'Di de qué herramienta sale, a cuál va y qué falta por hacer.' : 'State which tool it comes from, which one it goes to, and what is left to do.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={'npx ahp handoff create . --from codex --to cursor --session feature-x --summary "Continuar desde el límite validado"'} label="terminal" locale={locale} /></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>03</span><div><h3>{es ? 'Súbelo tú' : 'You push it'}</h3><p>{es ? 'La entrega tiene que quedar confirmada en Git y disponible en el servidor. AHP+ no ejecuta Git ni te da permiso de publicarla: ese paso es tuyo.' : 'The handover has to be committed in Git and available on the server. AHP+ neither runs Git nor grants you permission to publish it: that step is yours.'}</p></div></div></li>
+			<li><div class="ahp-atlas__step-copy"><span>04</span><div><h3>{es ? 'Verifica antes de continuar' : 'Check before continuing'}</h3><p>{es ? 'Quien recibe comprueba que la entrega esté completa y que corresponda a este repositorio y a este commit. Solo entonces empieza a editar.' : 'Whoever receives it checks that the handover is complete and matches this repository and this commit. Only then do they start editing.'}</p></div></div><div class="ahp-atlas__step-command"><CodeBlock command={handoffReceive} label="terminal" locale={locale} /></div></li>
 		</ol>
 	</section>
 
-	<section class="ahp-atlas__section shell" aria-labelledby="migration-title">
+	<section id="migracion" class="ahp-atlas__section shell" aria-labelledby="migration-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">06 / MIGRATE</p>
-			<div><h2 id="migration-title">{es ? 'Migración desde /agent.' : 'Migration from /agent.'}</h2><p>{es ? 'Si AHP+ detecta estado 1.0 heredado, no vuelvas a inicializar el repositorio.' : 'If AHP+ detects legacy 1.0 state, do not initialize the repository again.'}</p></div>
+			<p class="index">06 / {es ? 'Migración' : 'Migration'}</p>
+			<div><h2 id="migration-title">{es ? 'Si vienes de la versión 1.0.' : 'If you are coming from version 1.0.'}</h2><p>{es ? 'Los proyectos de la versión 1.0 guardaban todo en una carpeta llamada agent/. Si es tu caso, no lo instales otra vez desde cero: usa la migración.' : 'Version 1.0 projects kept everything in a folder called agent/. If that is your case, do not install from scratch again: use the migration.'}</p></div>
 		</div>
 		<div class="ahp-atlas__two-col">
-			<article class="ahp-atlas__panel"><p class="ahp-atlas__label">READ ONLY</p><h3>{es ? '1. Revisar el plan' : '1. Review the plan'}</h3><CodeBlock command="npx ahp migrate . --plan" label="terminal" locale={locale} /><p>{es ? 'Informa conteos, destino y colisiones sin modificar archivos.' : 'Reports counts, destination, and collisions without changing files.'}</p></article>
-			<article class="ahp-atlas__panel"><p class="ahp-atlas__label">WRITE</p><h3>{es ? '2. Aplicar después de revisar' : '2. Apply after review'}</h3><CodeBlock command={'npx ahp migrate . --apply\nnpx ahp verify . --strict'} label="terminal" locale={locale} /><p>{es ? 'Preserva agent/. Si .ahp/ ya existe, AHP+ se detiene antes de mezclar estados.' : 'Preserves agent/. If .ahp/ already exists, AHP+ stops before merging state.'}</p></article>
+			<article class="ahp-atlas__panel"><p class="ahp-atlas__label">READ ONLY</p><h3>{es ? '1. Mira qué se movería' : '1. See what would move'}</h3><CodeBlock command="npx ahp migrate . --plan" label="terminal" locale={locale} /><p>{es ? 'Solo te informa qué encontró, a dónde iría y qué archivos podrían chocar. No modifica nada.' : 'It only reports what it found, where it would go, and which files might clash. It changes nothing.'}</p></article>
+			<article class="ahp-atlas__panel"><p class="ahp-atlas__label">WRITE</p><h3>{es ? '2. Hazlo cuando ya lo revisaste' : '2. Do it once you have reviewed it'}</h3><CodeBlock command={'npx ahp migrate . --apply\nnpx ahp verify . --strict'} label="terminal" locale={locale} /><p>{es ? 'Conserva la carpeta agent/ original. Si ya existe .ahp/, AHP+ se detiene en lugar de mezclar las dos.' : 'It keeps the original agent/ folder. If .ahp/ already exists, AHP+ stops instead of merging the two.'}</p></article>
 		</div>
-		<aside class="ahp-atlas__notice ahp-atlas__notice--warning"><strong>{es ? 'No ejecutes init sobre estado heredado' : 'Do not run init over legacy state'}</strong><p>{es ? 'Usa primero migrate --plan. No borres ni muevas colisiones sin revisar y conservar un rollback.' : 'Run migrate --plan first. Do not delete or move collisions without review and a retained rollback.'}</p></aside>
+		<aside class="ahp-atlas__notice ahp-atlas__notice--warning"><strong>{es ? 'No instales encima de lo que ya tenías' : 'Do not install on top of what you already had'}</strong><p>{es ? 'Corre primero migrate --plan. Y no borres ni muevas los archivos en conflicto sin revisarlos y sin poder volver atrás.' : 'Run migrate --plan first. And do not delete or move the conflicting files without reviewing them and having a way back.'}</p></aside>
 	</section>
 
 	<section id="autoridad" class="ahp-atlas__section shell" aria-labelledby="authority-title">
 		<div class="ahp-atlas__section-heading">
-			<p class="index">07 / AUTHORITY</p>
-			<div><h2 id="authority-title">{es ? 'AHP+ registra; no autoriza.' : 'AHP+ records; it does not authorize.'}</h2><p>{es ? 'READY o REMOTE_READY prueba compatibilidad o transporte, no permiso humano.' : 'READY or REMOTE_READY proves compatibility or transport, not human permission.'}</p></div>
+			<p class="index">07 / {es ? 'Límites' : 'Limits'}</p>
+			<div><h2 id="authority-title">{es ? 'AHP+ anota y comprueba; no autoriza.' : 'AHP+ records and checks; it does not authorize.'}</h2><p>{es ? 'Que una entrega diga READY significa que los datos cuadran, no que haya permiso para actuar. Estas acciones siempre las decide una persona:' : 'A handover saying READY means the data lines up, not that there is permission to act. These actions are always a person’s call:'}</p></div>
 		</div>
 		<ul class="ahp-atlas__authority">
 			{['commit', 'push', 'pull', 'merge', 'publish', 'deploy', es ? 'acciones destructivas' : 'destructive actions'].map((action) => <li><code>{action}</code></li>)}
@@ -191,7 +192,7 @@ const categoryLabel = (id: string) => ahpAtlasCategories.find((category) => cate
 			<a class="button button--secondary" href="https://www.npmjs.com/package/@jossuealcala/ahp-plus" rel="noreferrer" data-analytics-event="click_ahp_npm">npm</a>
 			<a class="text-link" href={`${routes[locale].work}ahp-plus/`}>{es ? 'Ver caso de producto' : 'View product case'}</a>
 		</div>
-		<p class="ahp-atlas__fineprint">{es ? 'Referencia portable preparada desde la documentación y CLI canónicas de AHP+ 1.1.0. Antes de reutilizar comandos de instalación, confirma la versión publicada y revisa el changelog oficial.' : 'Portable reference prepared from the canonical AHP+ 1.1.0 documentation and CLI. Before reusing installation commands, confirm the published version and review the official changelog.'}</p>
+		<p class="ahp-atlas__fineprint">{es ? 'Esta guía se preparó a partir de la documentación y la herramienta oficiales de AHP+ 1.1.0. Antes de copiar los comandos de instalación, confirma cuál es la versión publicada y revisa el changelog oficial.' : 'This guide was prepared from the official AHP+ 1.1.0 documentation and tool. Before copying the installation commands, confirm which version is published and review the official changelog.'}</p>
 	</section>
 </article>
 

@@ -66,7 +66,7 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		},
 		ahpAtlas: {
 			title: 'AHP+ Command Atlas — Guía oficial de comandos',
-			description: 'Referencia bilingüe de instalación, gestión, comandos de terminal y comandos por plataforma para AHP+ 1.1.0.',
+			description: 'Guía paso a paso para instalar AHP+ 1.1.0 y usarlo desde la terminal o desde el chat de Cursor, Codex, Claude Code, OpenCode y ChatGPT.',
 		},
 	},
 	en: {
@@ -96,7 +96,7 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		},
 		ahpAtlas: {
 			title: 'AHP+ Command Atlas — Official command guide',
-			description: 'Bilingual reference for AHP+ 1.1.0 installation, management, terminal commands, and platform-specific chat commands.',
+			description: 'A step-by-step guide to installing AHP+ 1.1.0 and using it from the terminal or from the chat in Cursor, Codex, Claude Code, OpenCode, and ChatGPT.',
 		},
 	},
 };

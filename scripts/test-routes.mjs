@@ -98,7 +98,7 @@ const caseHtml = await readFile(path.join(dist, 'es', 'trabajo', 'ahp-plus', 'in
 const atlasEsHtml = await readFile(path.join(dist, 'es', 'recursos', 'ahp-plus', 'index.html'), 'utf8');
 const atlasEnHtml = await readFile(path.join(dist, 'en', 'resources', 'ahp-plus', 'index.html'), 'utf8');
 if (!caseHtml.includes('"@type":"CreativeWork"')) failures.push('Case studies must expose CreativeWork structured data.');
-if (!caseHtml.includes('AHP+ 1.1.0') || !caseHtml.includes('Producto open source')) failures.push('AHP+ case must present the independent 1.1.0 product.');
+if (!caseHtml.includes('AHP+ 1.1.0') || !caseHtml.includes('Código abierto')) failures.push('AHP+ case must present the independent 1.1.0 product.');
 if (caseHtml.includes('AHP+ 1.0') || caseHtml.includes('Producto propio / Pangea OS')) failures.push('AHP+ case still contains superseded 1.0 positioning.');
 if (!caseHtml.includes('https://github.com/jossuealcacao-exe/ahp_plus') || !caseHtml.includes('https://www.npmjs.com/package/@jossuealcala/ahp-plus')) failures.push('AHP+ case must expose official GitHub and npm links.');
 if (!atlasEsHtml.includes('npx ahp verify . --strict') || !atlasEsHtml.includes('data-ahp-command')) failures.push('Spanish AHP+ atlas must expose the CLI catalog in static HTML.');

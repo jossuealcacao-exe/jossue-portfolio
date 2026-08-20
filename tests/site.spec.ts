@@ -243,7 +243,7 @@ for (const project of [
 	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Estrategia CPG · Growth', categoryEn: 'CPG strategy · Growth', media: 0 },
 	{ slug: 'miawseo', title: 'MIAWSEO — Michiteca', categoryEs: 'Producto editorial · Full-stack', categoryEn: 'Editorial product · Full-stack', media: 6 },
 	{ slug: 'vineria', title: 'Vinería', categoryEs: 'Producto editorial · Front-end', categoryEn: 'Editorial product · Front-end', media: 5 },
-	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Producto open source · Protocolo para agentes', categoryEn: 'Open-source product · Agent protocol', media: 0 },
+	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Producto propio · Código abierto', categoryEn: 'Owned product · Open source', media: 0 },
 	{ slug: 'tiendaonline', title: 'Casa Tecalli — Shopify OS 2.0', categoryEs: 'Concepto Shopify · Storefront', categoryEn: 'Shopify concept · Storefront', media: 4 },
 ]) {
 	test(`${project.slug} presents a commercial bilingual project narrative`, async ({ page }) => {
