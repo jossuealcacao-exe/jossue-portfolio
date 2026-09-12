@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.4.0",
+  "id": "DEC-20260912-987CCFA0",
+  "kind": "decision",
+  "project_id": "jossue-portfolio",
+  "title": "El portafolio se escribe en primera persona y en lenguaje comun: sin jerga de agencia ni sustantivos abstractos apilados",
+  "description": "",
+  "status": "ACCEPTED",
+  "confidence": "USER_CONFIRMED",
+  "created_at": "2026-09-12T21:14:52.379Z",
+  "updated_at": "2026-09-12T21:14:52.379Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [
+    "docs/AUDITORIA-VISUAL.md"
+  ],
+  "base_commit": "91400251553ac4627b85d3096b74c9ca3b57758d",
+  "tags": []
+}
