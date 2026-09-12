@@ -6,7 +6,7 @@
   "next_action": "Aplicar el mismo tratamiento a /trabajo, /servicios y /acerca, que siguen con la composicion anterior",
   "confidence": "USER_CONFIRMED",
   "blockers": [],
-  "base_commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
+  "base_commit": "05d2bcaaf41c3c8b3457a0c2580bdce2b68256b9",
   "created_at": "2026-09-12T19:03:35.220Z",
-  "updated_at": "2026-09-12T19:03:58.994Z"
+  "updated_at": "2026-09-12T19:10:22.269Z"
 }

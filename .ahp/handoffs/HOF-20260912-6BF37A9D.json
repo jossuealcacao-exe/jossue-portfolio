@@ -1,0 +1,80 @@
+{
+  "schema_version": "1.4.0",
+  "id": "HOF-20260912-6BF37A9D",
+  "kind": "handoff",
+  "from": "claude",
+  "to": "codex",
+  "project_id": "jossue-portfolio",
+  "objective": "Elevacion editorial del portafolio: reticula visible, contraste tipografico y bento asimetrico, inspirado en Obys y Apple",
+  "git": {
+    "branch": "master",
+    "commit": "05d2bcaaf41c3c8b3457a0c2580bdce2b68256b9",
+    "tree": "4b2f5f02feb12ef01f93742d23e55c3049f82734",
+    "working_tree": "DIRTY",
+    "changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      }
+    ],
+    "working_tree_digest": "7fc48e0a0abfe8a377e1a6d49033d9ff7d091a1aa2aa26a9d9eac4dedd6bccdb",
+    "project_working_tree": "CLEAN",
+    "project_changed_files": [],
+    "project_working_tree_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ahp_state_working_tree": "DIRTY",
+    "ahp_state_changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      }
+    ],
+    "upstream": "origin/master",
+    "ahead": 3,
+    "behind": 0,
+    "remote": "https://github.com/jossuealcacao-exe/jossue-portfolio.git"
+  },
+  "portability": {
+    "status": "PUSH_REQUIRED",
+    "reason": "Branch is ahead of upstream by 3 commit(s)."
+  },
+  "checkpoint_id": null,
+  "completed": [],
+  "in_progress": [],
+  "pending": [
+    "TASK-20260912-E796C68F"
+  ],
+  "decisions": [
+    "DEC-20260912-66DD74BB",
+    "DEC-20260912-2F935DE8"
+  ],
+  "validations": [],
+  "risks": [
+    "RISK-20260912-40815901",
+    "RISK-20260912-0B404B13"
+  ],
+  "requirements": [],
+  "relevant_files": [
+    ".ahp/state/project.json"
+  ],
+  "blockers": [],
+  "assumptions": [],
+  "next_action": "Ejecutar npx ahp set-state . --accept-head tras el pull, leer docs/AUDITORIA-VISUAL.md y propagar reticula, etiqueta rotada y bento a /es/trabajo/, /es/servicios/ y /es/acerca/",
+  "done_criteria": [
+    "npm run validate PASS",
+    "las tres paginas con el mismo tratamiento que la home"
+  ],
+  "notes": "Estado commiteado y listo para viajar: elevacion editorial en la home, AHP+ 1.4.1 instalado, auditoria en el repo",
+  "created_at": "2026-09-12T19:10:49.348Z",
+  "receiver_preflight": [
+    "Resolve the receiving Git repository root.",
+    "Run ahp verify --strict.",
+    "Compare project_id, branch, commit, tree, and working-tree digest.",
+    "Inspect active locks and portability status.",
+    "Do not pull, switch, merge, or overwrite without user authority."
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "ahp-canonical-json-v1",
+    "digest": "c7a183cf39059526477b05da506222b481565006d7f3f2faded7400c55c090a4"
+  }
+}
