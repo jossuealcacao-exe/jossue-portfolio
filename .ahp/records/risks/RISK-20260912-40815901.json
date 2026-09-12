@@ -5,10 +5,10 @@
   "project_id": "jossue-portfolio",
   "title": "Miniaturas de proyecto y pagina de servicios sin material fotografico real",
   "description": "",
-  "status": "OPEN",
+  "status": "CLOSED",
   "confidence": "VERIFIED",
   "created_at": "2026-09-12T19:05:55.499Z",
-  "updated_at": "2026-09-12T19:05:55.499Z",
+  "updated_at": "2026-09-12T21:48:45.678Z",
   "actor": {
     "name": "AI agent",
     "platform": "unknown",
@@ -18,5 +18,13 @@
     "docs/AUDITORIA-VISUAL.md"
   ],
   "base_commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
-  "tags": []
+  "tags": [],
+  "closed_at": "2026-09-12T21:48:45.679Z",
+  "closed_by": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "close_base_commit": "4f37b900eccffc33f0d84fbe2851b21531af2e3a",
+  "close_reason": "Come Verde ilustrado con 5 capturas y las 8 miniaturas de tarjeta ahora usan capturas reales del producto"
 }

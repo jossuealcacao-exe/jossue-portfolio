@@ -3644,3 +3644,89 @@
 		}
 	}
 }
+
+/* =========================================================================
+   MINIATURA DE PROYECTO — captura real del producto
+   Sustituye el panel abstracto por una foto del sitio en funcionamiento.
+   La identidad de marca sobrevive en un sello inferior, para que la rejilla
+   siga leyendose como un sistema y no como capturas sueltas.
+   ========================================================================= */
+@layer utilities {
+	.project-visual--shot {
+		background: var(--cover-bg);
+	}
+
+	.project-visual__shot {
+		position: relative;
+		display: block;
+		margin: 0;
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+
+	.project-visual__shot img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		/* Anclado a la izquierda: al recortar, el titular y el logo del sitio
+		   capturado sobreviven. Centrado los cortaba por ambos lados. */
+		object-position: top left;
+		display: block;
+	}
+
+	/* Sello de marca: el unico lugar donde el color de cada proyecto aparece,
+	   para que ocho capturas distintas sigan perteneciendo al mismo sistema. */
+	.project-visual__stamp {
+		position: absolute;
+		inset-inline: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding: 0.85rem clamp(0.85rem, 2.5vw, 1.35rem);
+		background: color-mix(in srgb, var(--cover-bg) 92%, transparent);
+		-webkit-backdrop-filter: blur(0.75rem) saturate(150%);
+		backdrop-filter: blur(0.75rem) saturate(150%);
+		color: var(--cover-ink);
+	}
+
+	.project-visual__stamp span {
+		font-size: 0.6875rem;
+		font-weight: 750;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: color-mix(in srgb, var(--cover-ink) 82%, transparent);
+	}
+
+	.project-visual__stamp strong {
+		font-size: 0.9rem;
+		font-weight: 800;
+		letter-spacing: -0.01em;
+	}
+
+	.project-visual__stamp .brand-mark img {
+		height: 1.05rem;
+		width: auto;
+		max-width: 7rem;
+		object-fit: contain;
+	}
+
+	/* La captura se acerca ligeramente al pasar el cursor: la tarjeta responde
+	   sin mover la retícula. */
+	.project-visual__shot img {
+		transition: scale var(--motion-base) var(--ease-out);
+	}
+
+	.case-card__link:hover .project-visual__shot img {
+		scale: 1.03;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.project-visual__shot img,
+		.case-card__link:hover .project-visual__shot img {
+			transition: none;
+			scale: 1;
+		}
+	}
+}

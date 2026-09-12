@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.4.0",
+  "id": "EVD-20260912-CD3F1770",
+  "kind": "evidence",
+  "project_id": "jossue-portfolio",
+  "title": "Miniaturas de tarjeta sustituidas por capturas reales del producto",
+  "description": "",
+  "status": "OBSERVED",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T21:48:45.179Z",
+  "updated_at": "2026-09-12T21:48:45.179Z",
+  "observed_at": "2026-09-12T21:48:45.179Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "4f37b900eccffc33f0d84fbe2851b21531af2e3a",
+  "tags": [],
+  "evidence_type": "screenshot",
+  "locator": "8 portadas 16:9 capturadas con Playwright el 2026-09-12 desde los sitios vivos; ahp-plus conserva panel de marca por no tener interfaz",
+  "result": "PASS: 8 tarjetas con captura real y 1 con panel; recorte anclado a la izquierda para no cortar titulares; gate 216/216",
+  "limitations": "",
+  "artifact_sha256": null,
+  "exit_code": 0
+}

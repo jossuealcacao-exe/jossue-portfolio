@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import type { Locale } from '../data/i18n';
 import { brandForCaseSlug } from '../data/brands';
 import BrandMark from './BrandMark.astro';
@@ -11,7 +13,7 @@ interface Props {
 	priority?: boolean;
 }
 
-const { slug, title, locale } = Astro.props;
+const { slug, title, locale, priority = false } = Astro.props;
 const brand = brandForCaseSlug(slug);
 const coverTheme: Record<string, { label: string; eyebrow: string; bg: string; ink: string; accent: string }> = {
 	'bloqio-builder': { label: 'Bloqio Builder', eyebrow: 'AI website builder', bg: '#dbe4ff', ink: '#13224f', accent: '#315efb' },
@@ -26,21 +28,48 @@ const coverTheme: Record<string, { label: string; eyebrow: string; bg: string; i
 };
 const theme = coverTheme[slug] ?? { label: title, eyebrow: locale === 'es' ? 'Proyecto digital' : 'Digital project', bg: '#11110f', ink: '#f6f6f2', accent: '#315efb' };
 const wordmark = theme.label;
+
+// A real capture of the live product, when one exists. AHP+ has no interface
+// to photograph, so it keeps the brand panel rather than inventing a screen.
+const covers = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/cover-*.{png,jpg,jpeg,webp}', {
+	eager: true,
+});
+let cover: ImageMetadata | undefined;
+for (const [path, mod] of Object.entries(covers)) {
+	if (path.endsWith(`/cover-${slug}.jpeg`) || path.endsWith(`/cover-${slug}.jpg`) || path.endsWith(`/cover-${slug}.png`) || path.endsWith(`/cover-${slug}.webp`)) {
+		cover = mod.default;
+	}
+}
+const shotAlt = locale === 'es'
+	? `Captura del sitio de ${theme.label} en funcionamiento.`
+	: `Screenshot of the live ${theme.label} site.`;
 ---
 
 <div
-	class:list={['project-visual', 'project-visual--brand-cover', `project-visual--${slug}`]}
+	class:list={['project-visual', cover ? 'project-visual--shot' : 'project-visual--brand-cover', `project-visual--${slug}`]}
 	style={`--cover-bg:${theme.bg};--cover-ink:${theme.ink};--cover-accent:${theme.accent};`}
 >
-	<div class="project-visual__cover">
-		<div class="project-visual__identity">
-			<span>{theme.eyebrow}</span>
-			{brand ? <BrandMark brand={brand} locale={locale} size="md" decorative={false} /> : <strong class="project-visual__wordmark">{wordmark}</strong>}
+	{cover ? (
+		<figure class="project-visual__shot">
+			<Image
+				src={cover}
+				alt={shotAlt}
+				widths={[520, 780, 1040]}
+				sizes="(min-width: 64rem) 26rem, 92vw"
+				loading={priority ? 'eager' : 'lazy'}
+				decoding={priority ? 'sync' : 'async'}
+			/>
+			<figcaption class="project-visual__stamp">
+				{brand ? <BrandMark brand={brand} locale={locale} size="sm" decorative /> : <strong>{wordmark}</strong>}
+				<span>{theme.eyebrow}</span>
+			</figcaption>
+		</figure>
+	) : (
+		<div class="project-visual__cover">
+			<div class="project-visual__identity">
+				<span>{theme.eyebrow}</span>
+				{brand ? <BrandMark brand={brand} locale={locale} size="md" decorative={false} /> : <strong class="project-visual__wordmark">{wordmark}</strong>}
+			</div>
 		</div>
-		<div class="project-visual__badge" aria-hidden="true">
-			<span></span>
-			<span></span>
-			<span></span>
-		</div>
-	</div>
+	)}
 </div>
