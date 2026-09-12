@@ -2064,8 +2064,8 @@ const cases = [
 		media: [
 			{
 				key: 'miawseo-home-lines',
-				alt: 'Portada con las líneas de la red: Michiteca, Michi Plaza y Arenero.',
-				caption: 'El museo como red de metro: tres líneas, tres maneras de entrar.',
+				alt: 'Portada de julio de 2026 con las dos líneas del museo, Michiteca y Michi Plaza, y el bloque de donaciones Arenero.',
+				caption: 'El museo como red de metro. En julio de 2026 la portada abría con las dos líneas —exposición de razas y muro de la comunidad— más un bloque de donaciones que después se retiró.',
 				sourceUrl: 'https://michimuseum.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
@@ -2205,8 +2205,8 @@ const cases = [
 		media: [
 			{
 				key: 'miawseo-home-lines',
-				alt: 'Home with the network lines: Michiteca, Michi Plaza, and Arenero.',
-				caption: 'The museum as a metro network: three lines, three ways in.',
+				alt: 'July 2026 home with the museum’s two lines, Michiteca and Michi Plaza, and the Arenero donations block.',
+				caption: 'The museum as a metro network. In July 2026 the home opened with the two lines — the breed exhibition and the community wall — plus a donations block that was later removed.',
 				sourceUrl: 'https://michimuseum.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',

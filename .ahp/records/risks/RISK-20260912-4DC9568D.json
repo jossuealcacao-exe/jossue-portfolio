@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.4.0",
+  "id": "RISK-20260912-4DC9568D",
+  "kind": "risk",
+  "project_id": "jossue-portfolio",
+  "title": "El enlace 'Abrir sandbox' del caso Casa Tecalli lleva a un muro de contrasena de Shopify",
+  "description": "",
+  "status": "OPEN",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T22:14:10.264Z",
+  "updated_at": "2026-09-12T22:14:10.264Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [
+    "EVD-20260912-FCEF97C4"
+  ],
+  "base_commit": "bcbcd0001116a633be6e64097d2d7dd83cb002ed",
+  "tags": []
+}
