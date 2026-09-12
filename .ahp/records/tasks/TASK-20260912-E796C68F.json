@@ -5,10 +5,10 @@
   "project_id": "jossue-portfolio",
   "title": "Llevar reticula visible, etiqueta rotada y bento a /trabajo, /servicios y /acerca",
   "description": "",
-  "status": "PLANNED",
+  "status": "COMPLETED",
   "confidence": "USER_CONFIRMED",
   "created_at": "2026-09-12T19:04:07.643Z",
-  "updated_at": "2026-09-12T19:04:07.643Z",
+  "updated_at": "2026-09-12T20:37:20.502Z",
   "actor": {
     "name": "AI agent",
     "platform": "unknown",
@@ -16,5 +16,13 @@
   },
   "source_refs": [],
   "base_commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
-  "tags": []
+  "tags": [],
+  "closed_at": "2026-09-12T20:37:20.503Z",
+  "closed_by": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "close_base_commit": "0b838105afbc3ee3a69430061d641fc30c421540",
+  "close_reason": "Reticula visible, etiqueta rotada y bento aplicados en trabajo, servicios y acerca; gate 216/216"
 }

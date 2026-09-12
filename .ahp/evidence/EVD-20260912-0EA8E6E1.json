@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.4.0",
+  "id": "EVD-20260912-0EA8E6E1",
+  "kind": "evidence",
+  "project_id": "jossue-portfolio",
+  "title": "Tratamiento editorial verificado en las tres paginas internas",
+  "description": "",
+  "status": "OBSERVED",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T20:37:20.018Z",
+  "updated_at": "2026-09-12T20:37:20.018Z",
+  "observed_at": "2026-09-12T20:37:20.018Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "0b838105afbc3ee3a69430061d641fc30c421540",
+  "tags": [],
+  "evidence_type": "test",
+  "locator": "Playwright 1440px sobre .page--work, .page--services, .page--about",
+  "result": "PASS: etiqueta rotada vertical (17x177/98/79 px, left 58) y reticula dibujada en las tres; sin scroll lateral",
+  "limitations": "",
+  "artifact_sha256": null,
+  "exit_code": 0
+}

@@ -3495,3 +3495,100 @@
 		line-height: 0.92;
 	}
 }
+
+/* =========================================================================
+   EVOLUCIÓN EDITORIAL — páginas internas
+   Propaga a trabajo, servicios y acerca el mismo tratamiento de la home:
+   retícula dibujada, etiqueta de sección rotada en el gutter y bento.
+   ========================================================================= */
+@layer utilities {
+	.page--work,
+	.page--services,
+	.page--about {
+		position: relative;
+		isolation: isolate;
+	}
+
+	/* La retícula se dibuja tambien aqui, al mismo 9% de tinta que la home. */
+	.page--work::before,
+	.page--services::before,
+	.page--about::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		background-image: repeating-linear-gradient(
+			to right,
+			var(--grid-line) 0 1px,
+			transparent 1px calc(100% / 6)
+		);
+	}
+
+	@media (min-width: 64rem) {
+		.page--work > .section,
+		.page--services > .section,
+		.page--about > .section {
+			padding-left: 3.25rem;
+		}
+
+		.page--work > .section > .section-heading,
+		.page--services > .section > .section-heading,
+		.page--about > .section > .section-heading {
+			position: relative;
+		}
+
+		.page--work > .section > .section-heading > .index,
+		.page--services > .section > .section-heading > .index,
+		.page--about > .section > .section-heading > .index {
+			position: absolute;
+			top: 0;
+			left: -3.25rem;
+			display: block;
+			width: auto;
+			max-width: none;
+			min-width: 0;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: none;
+			writing-mode: vertical-rl;
+			rotate: 180deg;
+			white-space: nowrap;
+			color: var(--muted);
+		}
+
+		.page--work > .section > .section-heading > .index::before,
+		.page--services > .section > .section-heading > .index::before,
+		.page--about > .section > .section-heading > .index::before {
+			content: none;
+		}
+	}
+
+	/* Los KPI de Acerca comparten el bento de las metricas de la home. */
+	.kpi-grid {
+		gap: var(--seam);
+		background: var(--line);
+		border: var(--seam) solid var(--line);
+	}
+
+	.kpi-grid > li {
+		padding: var(--cell-pad);
+		border: 0;
+		background: var(--surface);
+		max-width: none;
+		width: auto;
+	}
+
+	.kpi-grid__value {
+		font-size: clamp(2.75rem, 5.6vw, 5rem);
+		letter-spacing: -0.05em;
+		line-height: 0.92;
+	}
+
+	@media (min-width: 64rem) {
+		.kpi-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+}
