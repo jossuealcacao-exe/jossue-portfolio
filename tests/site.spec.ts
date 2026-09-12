@@ -267,7 +267,7 @@ for (const project of [
 	{ slug: 'bloqio-cro-apps', title: 'Bloqio CRO Apps — Prometeo / Hermes', categoryEs: 'Dos apps para vender más', categoryEn: 'Two apps for selling more', media: 11 },
 	{ slug: 'bloqio-builder', title: 'Bloqio Builder', categoryEs: 'Creador de páginas con IA', categoryEn: 'AI page builder', media: 7 },
 	{ slug: 'la-carniceria-virtual', title: 'La Carnicería Virtual', categoryEs: 'Diagnóstico de una tienda', categoryEn: 'Store diagnosis', media: 3 },
-	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Marca de alimentos · Crecimiento', categoryEn: 'Food brand · Growth', media: 0 },
+	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Marca de alimentos · Crecimiento', categoryEn: 'Food brand · Growth', media: 5 },
 	{ slug: 'miawseo', title: 'MIAWSEO — Michiteca', categoryEs: 'Sitio de contenido · Lo hice completo', categoryEn: 'Content site · Built end to end', media: 6 },
 	{ slug: 'vineria', title: 'Vinería', categoryEs: 'Guía de vinos', categoryEn: 'Wine guide', media: 5 },
 	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Producto propio · Código abierto', categoryEn: 'Owned product · Open source', media: 0 },
