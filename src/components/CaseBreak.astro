@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { Locale } from '../data/i18n';
+
+interface MediaItem {
+	key: string;
+	alt: string;
+	caption: string;
+	sourceUrl: string;
+	capturedAt: string;
+	viewport: string;
+}
+
+interface Props {
+	item: MediaItem;
+	locale: Locale;
+	index: number;
+}
+
+const { item, locale, index } = Astro.props;
+const es = locale === 'es';
+
+const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/*.{png,jpg,jpeg,webp}', {
+	eager: true,
+});
+const images: Record<string, ImageMetadata> = {};
+for (const [path, mod] of Object.entries(modules)) {
+	const name = path.split('/').pop()?.replace(/\.(png|jpe?g|webp)$/i, '');
+	if (name) images[name] = mod.default;
+}
+const image = images[item.key];
+const isPhone = image ? image.height / image.width > 1.7 : false;
+---
+
+{image && (
+	<figure class:list={['case-break', isPhone && 'case-break--phone']} data-reveal>
+		<div class="case-break__frame">
+			<Image
+				src={image}
+				alt={item.alt}
+				widths={isPhone ? [420, 620] : [720, 1100, 1440]}
+				sizes={isPhone ? '(min-width: 64rem) 20rem, 60vw' : '(min-width: 64rem) 58rem, 92vw'}
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
+		<figcaption>
+			<span class="case-break__index">{String(index + 1).padStart(2, '0')}</span>
+			<p>{item.caption}</p>
+			<span class="case-break__meta">{es ? 'Capturado' : 'Captured'} {item.capturedAt}</span>
+		</figcaption>
+	</figure>
+)}

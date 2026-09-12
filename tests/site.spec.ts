@@ -232,8 +232,10 @@ test('project gallery is visual, accessible, and free of audit annotations', asy
 	await expect(page.locator('main h1')).toHaveText('Bloqio CRO Apps — Prometeo / Hermes');
 	await expect(page.locator('main')).toContainText('Prometeo');
 	await expect(page.locator('main')).toContainText('Hermes');
-	await expect(page.locator('.evidence-figure img')).toHaveCount(11);
-	await expect(page.locator('.evidence-carousel__dot')).toHaveCount(11);
+	// Tres capturas viven ahora entre las secciones de texto, no en el carrusel.
+	await expect(page.locator('.case-break img')).toHaveCount(3);
+	await expect(page.locator('.evidence-figure img')).toHaveCount(8);
+	await expect(page.locator('.evidence-carousel__dot')).toHaveCount(8);
 	await expect(page.locator('.evidence-carousel__nav')).toHaveCount(2);
 	await expect(page.locator('.evidence-figure:not(.is-active)').first()).toHaveAttribute('inert', '');
 	await expect(page.locator('.evidence-figure:not(.is-active)').first()).toHaveAttribute('aria-hidden', 'true');
@@ -243,13 +245,22 @@ test('project gallery is visual, accessible, and free of audit annotations', asy
 	await expect(page.locator('.iphone').first()).toHaveCSS('box-shadow', 'none');
 
 	const galleryViewport = page.locator('.evidence-carousel__viewport');
-	await galleryViewport.scrollIntoViewIfNeeded();
+	await galleryViewport.evaluate((element) => element.scrollIntoView({ block: 'center', behavior: 'instant' as ScrollBehavior }));
+	await page.waitForTimeout(500);
 	const galleryBox = await galleryViewport.boundingBox();
 	expect(galleryBox).not.toBeNull();
 	if (galleryBox) {
-		await page.mouse.move(galleryBox.x + galleryBox.width * 0.75, galleryBox.y + galleryBox.height * 0.5);
+		// El carrusel mide casi 500px de alto, así que su centro puede quedar bajo
+		// el borde de la ventana. El punto de arrastre se acota a lo visible: si
+		// empieza fuera, no hay elemento bajo el cursor y el gesto no ocurre.
+		const windowHeight = page.viewportSize()?.height ?? 800;
+		const dragY = Math.max(
+			galleryBox.y + 24,
+			Math.min(galleryBox.y + galleryBox.height * 0.5, windowHeight - 24),
+		);
+		await page.mouse.move(galleryBox.x + galleryBox.width * 0.75, dragY);
 		await page.mouse.down();
-		await page.mouse.move(galleryBox.x + galleryBox.width * 0.2, galleryBox.y + galleryBox.height * 0.5, { steps: 8 });
+		await page.mouse.move(galleryBox.x + galleryBox.width * 0.2, dragY, { steps: 8 });
 		await page.mouse.up();
 		await expect.poll(() => galleryViewport.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
 	}
@@ -302,7 +313,9 @@ for (const project of [
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
-		await expect(page.locator('.evidence-figure img')).toHaveCount(project.media);
+		// El caso debe mostrar toda su media declarada, repartida entre los
+		// respiros intercalados y el carrusel de la galería.
+		await expect(page.locator('.case-break img, .evidence-figure img')).toHaveCount(project.media);
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		await expect(page.locator('.status, [data-verification-status]')).toHaveCount(0);
 		await expect(page.locator('main a[href^="http://127.0.0.1"], main a[href^="http://localhost"]')).toHaveCount(0);
