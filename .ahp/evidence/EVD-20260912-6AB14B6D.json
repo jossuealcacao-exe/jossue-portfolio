@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.4.0",
+  "id": "EVD-20260912-6AB14B6D",
+  "kind": "evidence",
+  "project_id": "jossue-portfolio",
+  "title": "Lenguaje reescrito en servicios, IA, acerca y contacto",
+  "description": "",
+  "status": "OBSERVED",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T21:20:24.969Z",
+  "updated_at": "2026-09-12T21:20:24.969Z",
+  "observed_at": "2026-09-12T21:20:24.969Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "943f071357a991e009f9dee4e4f338168380501c",
+  "tags": [],
+  "evidence_type": "command",
+  "locator": "npm run validate",
+  "result": "PASS: 216/216 tras reescribir servicios (6), sistemas de IA (4), pilares (3) y los encabezados de las cuatro paginas restantes en ES y EN",
+  "limitations": "",
+  "artifact_sha256": null,
+  "exit_code": 0
+}
