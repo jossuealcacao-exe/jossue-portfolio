@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.4.0",
+  "id": "EVD-20260912-FB90571F",
+  "kind": "evidence",
+  "project_id": "jossue-portfolio",
+  "title": "Reescritura de lenguaje en home y casos verificada por el gate",
+  "description": "",
+  "status": "OBSERVED",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T21:06:44.907Z",
+  "updated_at": "2026-09-12T21:06:44.907Z",
+  "observed_at": "2026-09-12T21:06:44.907Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "b981aea1b4fafe4cc8cdcad9da59f4fcdc083992",
+  "tags": [],
+  "evidence_type": "command",
+  "locator": "npm run validate",
+  "result": "PASS: 216/216 tras reescribir hero, secciones de home, categorias y resumenes de 8 casos, y encabezados compartidos de caso",
+  "limitations": "",
+  "artifact_sha256": null,
+  "exit_code": 0
+}

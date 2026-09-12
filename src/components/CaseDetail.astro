@@ -27,15 +27,15 @@ const isAhpPlus = data.slug === 'ahp-plus';
 const presentation = casePresentation(data.slug, locale);
 if (!presentation) throw new Error(`Missing public presentation for ${locale}/${data.slug}`);
 const chapters = [
-	{ id: 'challenge', heading: es ? 'El reto' : 'The challenge' },
+	{ id: 'challenge', heading: es ? 'El problema' : 'The problem' },
 	{ id: 'approach', heading: es ? 'El enfoque' : 'The approach' },
-	{ id: 'delivery', heading: es ? 'Trabajo realizado' : 'What I delivered' },
+	{ id: 'delivery', heading: es ? 'Qué construí' : 'What I built' },
 	...(publishableDiagrams ? [{ id: 'signals', heading: es ? 'Gráficos' : 'Signals' }] : []),
 	...(publishableMedia ? [{ id: 'gallery', heading: es ? 'El producto' : 'The product' }] : []),
-	{ id: 'outcome', heading: es ? 'Resultado' : 'Outcome' },
+	{ id: 'outcome', heading: es ? 'Cómo quedó' : 'How it turned out' },
 	...(isAhpPlus ? [{ id: 'command-atlas', heading: es ? 'Guía de comandos' : 'Command guide' }] : []),
 	{ id: 'technology', heading: es ? 'Tecnología' : 'Technology' },
-	...(projectLinks ? [{ id: 'links', heading: es ? 'Repos y consulta' : 'Repos and links' }] : []),
+	...(projectLinks ? [{ id: 'links', heading: es ? 'Verlo tú mismo' : 'See it yourself' }] : []),
 ];
 const sectionNumber = (id: string) => String(chapters.findIndex((chapter) => chapter.id === id) + 1).padStart(2, '0');
 const linkKindCopy = {
@@ -70,7 +70,7 @@ const linkKindCopy = {
 				<p class="hero__lede">{presentation.summary}</p>
 			</div>
 			<dl class="case-hero__facts">
-				<div><dt>{es ? 'Contribución' : 'Contribution'}</dt><dd>{presentation.role}</dd></div>
+				<div><dt>{es ? 'Qué hice yo' : 'What I did'}</dt><dd>{presentation.role}</dd></div>
 				<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
 			</dl>
 		</div>
@@ -81,7 +81,7 @@ const linkKindCopy = {
 	<section id="challenge" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('challenge')} / {es ? 'El reto' : 'The challenge'}</p>
 		<div class="case-prose flow">
-			<h2>{es ? 'Entender el negocio antes de diseñar la solución.' : 'Understand the business before designing the solution.'}</h2>
+			<h2>{es ? 'Qué estaba pasando.' : 'What was going on.'}</h2>
 			<p>{presentation.context}</p>
 			<p>{presentation.challenge}</p>
 		</div>
@@ -89,7 +89,7 @@ const linkKindCopy = {
 	<section id="approach" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('approach')} / {es ? 'El enfoque' : 'The approach'}</p>
 		<div class="flow">
-			<h2>{es ? 'Una dirección clara para producto, experiencia y operación.' : 'A clear direction for product, experience, and operations.'}</h2>
+			<h2>{es ? 'Cómo decidí resolverlo.' : 'How I decided to solve it.'}</h2>
 			<ol class="approach-list">
 				{presentation.approach.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><p>{item}</p></li>)}
 			</ol>
@@ -98,7 +98,7 @@ const linkKindCopy = {
 	<section id="delivery" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('delivery')} / {es ? 'Trabajo realizado' : 'What I delivered'}</p>
 		<div class="flow">
-			<h2>{es ? 'Del criterio a una solución que el equipo puede usar.' : 'From product judgment to a solution the team can use.'}</h2>
+			<h2>{es ? 'Lo que quedó hecho.' : 'What got built.'}</h2>
 			<ul class="deliverable-grid">
 				{presentation.deliverables.map((item) => <li>{item}</li>)}
 			</ul>
@@ -108,7 +108,7 @@ const linkKindCopy = {
 		<section id="signals" class="section case-grid case-signals" data-case-section>
 			<p class="index">{sectionNumber('signals')} / {es ? 'Gráficos' : 'Signals'}</p>
 			<div class="flow">
-				<h2>{es ? 'Evidencia traducida a lectura visual.' : 'Evidence translated into visual reading.'}</h2>
+				<h2>{es ? 'Lo mismo, en imagen.' : 'The same thing, as a picture.'}</h2>
 				<CaseDiagrams diagrams={publishableDiagrams} locale={locale} />
 			</div>
 		</section>
@@ -125,10 +125,10 @@ const linkKindCopy = {
 	<section id="outcome" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('outcome')} / {es ? 'Resultado' : 'Outcome'}</p>
 		<div class="flow">
-			<h2>{es ? 'Lo que el proyecto dejó construido.' : 'What the project put in place.'}</h2>
+			<h2>{es ? 'Qué cambió al final.' : 'What changed in the end.'}</h2>
 			<ul class="outcome-list">{presentation.outcomes.map((item) => <li>{item}</li>)}</ul>
 			<div class="principles-block">
-				<p class="eyebrow">{es ? 'Principios aplicados' : 'Principles applied'}</p>
+				<p class="eyebrow">{es ? 'Lo que no negocié' : 'What I would not compromise on'}</p>
 				<ul>{presentation.principles.map((item) => <li>{item}</li>)}</ul>
 			</div>
 		</div>
@@ -146,7 +146,7 @@ const linkKindCopy = {
 	<section id="technology" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('technology')} / {es ? 'Tecnología' : 'Technology'}</p>
 		<div class="flow">
-			<h2>{es ? 'Stack elegido para la solución.' : 'A stack selected for the solution.'}</h2>
+			<h2>{es ? 'Con qué está hecho.' : 'What it is made with.'}</h2>
 			<StackList stack={data.stack} locale={locale} />
 		</div>
 	</section>
@@ -154,7 +154,7 @@ const linkKindCopy = {
 		<section id="links" class="section case-grid case-links" data-case-section>
 			<p class="index">{sectionNumber('links')} / {es ? 'Repos y consulta' : 'Repos and links'}</p>
 			<div class="flow">
-				<h2>{es ? 'Dónde revisar el proyecto.' : 'Where to review the project.'}</h2>
+				<h2>{es ? 'Ábrelo y compruébalo.' : 'Open it and check for yourself.'}</h2>
 				<ul class="project-link-list">
 					{projectLinks.map((link) => (
 						<li>
@@ -173,7 +173,7 @@ const linkKindCopy = {
 	)}
 
 	<section class="section case-grid case-cta">
-		<p class="index">{es ? 'Siguiente paso' : 'Next step'}</p>
+		<p class="index">{es ? '¿Te suena parecido?' : 'Sound familiar?'}</p>
 		<div class="flow">
 			<h2>{presentation.cta}</h2>
 			<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">

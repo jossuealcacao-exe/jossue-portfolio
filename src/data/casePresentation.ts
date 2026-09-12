@@ -27,8 +27,8 @@ export interface CasePresentation {
 const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	'wu-nutrition': {
 		es: {
-			category: 'Ecommerce DTC · Shopify',
-			summary: 'Dirección ecommerce de punta a punta: storefront Shopify, adquisición, analítica e IA aplicada conectadas en una experiencia que convierte y que el equipo puede operar.',
+			category: 'Tienda de suplementos · Shopify',
+			summary: 'Dirijo el ecommerce de una marca de suplementos: la tienda, la publicidad que trae gente, los números que dicen qué funciona y la IA que ayuda a vender. Todo conectado, y operable por el equipo sin depender de mí.',
 			context: 'WU Nutrition comercializa suplementos DTC en Shopify y marketplaces. La operación exige conectar la promesa de campaña con el descubrimiento, la decisión de compra, el carrito y la relación posterior con el cliente.',
 			challenge: 'Convertir iniciativas dispersas de growth en un sistema ecommerce consistente, reutilizable y preparado para evolucionar sin añadir complejidad innecesaria al equipo.',
 			role: 'Como Head of E-commerce & Digital Growth, dirijo la estrategia ecommerce y participo directamente en diseño, desarrollo Shopify, UX/CRO, adquisición, analítica y automatización.',
@@ -50,8 +50,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Hablemos de una experiencia Shopify que conecte adquisición, producto y conversión.',
 		},
 		en: {
-			category: 'DTC ecommerce · Shopify',
-			summary: 'End-to-end ecommerce leadership: Shopify storefront, acquisition, analytics, and applied AI connected into an experience that converts and the team can operate.',
+			category: 'Supplement store · Shopify',
+			summary: 'I run ecommerce for a supplement brand: the store, the advertising that brings people in, the numbers that say what works, and the AI that helps sell. All connected, and the team can operate it without me.',
 			context: 'WU Nutrition sells supplements through Shopify DTC and marketplaces. The operation needs campaign promises to continue through discovery, purchase decisions, cart, and the post-purchase relationship.',
 			challenge: 'Turn fragmented growth initiatives into a consistent, reusable ecommerce system that can evolve without adding unnecessary complexity for the team.',
 			role: 'As Head of E-commerce & Digital Growth, I lead ecommerce strategy and work hands-on across design, Shopify development, UX/CRO, acquisition, analytics, and automation.',
@@ -75,8 +75,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'bloqio-cro-apps': {
 		es: {
-			category: 'Producto Shopify · Apps',
-			summary: 'Dos apps Shopify que convierten patrones de conversión en herramientas configurables: una top bar promocional y un sticky add-to-cart.',
+			category: 'Dos apps para vender más',
+			summary: 'Dos apps que cualquier tienda Shopify puede instalar: una barra de avisos arriba para anunciar promociones, y un botón de compra que sigue visible mientras la gente baja por la página.',
 			context: 'Los equipos ecommerce necesitan activar mensajes, promociones y accesos de compra sin editar el theme para cada campaña ni comprometer la experiencia móvil.',
 			challenge: 'Productizar patrones CRO frecuentes para que funcionen con datos reales de Shopify y puedan operarse desde una interfaz clara.',
 			role: 'Concepto, dirección de producto, UX/CRO, diseño de configuración, desarrollo de las apps y preparación de su operación.',
@@ -95,8 +95,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Conversemos sobre una app Shopify diseñada alrededor de una necesidad comercial concreta.',
 		},
 		en: {
-			category: 'Shopify product · Apps',
-			summary: 'Two Shopify apps turning conversion patterns into configurable tools: a promotional top bar and a sticky add-to-cart.',
+			category: 'Two apps for selling more',
+			summary: 'Two apps any Shopify store can install: an announcement bar at the top for promotions, and a buy button that stays visible while people scroll down the page.',
 			context: 'Ecommerce teams need to activate messages, promotions, and purchase access without editing the theme for every campaign or compromising mobile UX.',
 			challenge: 'Productize common CRO patterns so they work with real Shopify data and remain easy to operate through a clear interface.',
 			role: 'Product concept, direction, UX/CRO, configuration design, app development, and operational preparation.',
@@ -117,7 +117,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'bloqio-builder': {
 		es: {
-			category: 'Producto con IA · SaaS',
+			category: 'Creador de páginas con IA',
 			summary: 'Creador web con IA donde el objetivo de negocio se vuelve una página estructurada y editable. La IA propone, la persona decide: de la idea a publicar sin caja negra.',
 			context: 'Crear una web todavía obliga a muchas personas a entender plantillas, componentes y decisiones de diseño antes de poder expresar lo que su negocio necesita.',
 			challenge: 'Reducir esa complejidad sin convertir la IA en una caja negra ni quitar al usuario el control sobre la estructura, el contenido y la publicación.',
@@ -137,7 +137,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Convirtamos una idea compleja en un producto que una persona real pueda entender y usar.',
 		},
 		en: {
-			category: 'AI product · SaaS',
+			category: 'AI page builder',
 			summary: 'An AI website builder where a business goal becomes a structured, editable page. AI proposes, the person decides — from idea to publish, with no black box.',
 			context: 'Building a website still asks many people to understand templates, components, and design decisions before they can express what their business actually needs.',
 			challenge: 'Reduce that complexity without turning AI into a black box or taking control of structure, content, and publishing away from the user.',
@@ -159,8 +159,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'la-carniceria-virtual': {
 		es: {
-			category: 'Estrategia Shopify · UX/CRO',
-			summary: 'Análisis integral de un storefront Shopify para convertir fricción de experiencia, rendimiento y medición en un roadmap de optimización.',
+			category: 'Diagnóstico de una tienda',
+			summary: 'Revisé una carnicería online de arriba a abajo para encontrar por qué la gente entraba y no compraba. El resultado es una lista de arreglos ordenada por lo que más mueve la aguja.',
 			context: 'La Carnicería Virtual contaba con un catálogo amplio, una propuesta comercial sólida y oportunidades claras para mejorar velocidad, descubrimiento y confianza de compra.',
 			challenge: 'Priorizar mejoras con impacto operativo y comercial sin empujar un rediseño innecesario ni confundir señales técnicas con resultados de negocio.',
 			role: 'Lideré el análisis de UX/CRO, performance, SEO técnico, medición y arquitectura Shopify, y traduje los hallazgos en una secuencia de trabajo accionable.',
@@ -175,8 +175,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Hablemos de una estrategia de optimización Shopify clara, priorizada y ejecutable.',
 		},
 		en: {
-			category: 'Shopify strategy · UX/CRO',
-			summary: 'A comprehensive Shopify storefront analysis translating experience, performance, and measurement friction into an optimization roadmap.',
+			category: 'Store diagnosis',
+			summary: 'I reviewed an online butcher shop top to bottom to find why people came in and did not buy. The result is a list of fixes ordered by what moves the needle most.',
 			context: 'La Carnicería Virtual had a broad catalog, a strong commercial proposition, and clear opportunities to improve speed, discovery, and purchase confidence.',
 			challenge: 'Prioritize improvements with operational and commercial relevance without forcing an unnecessary redesign or confusing technical signals with business outcomes.',
 			role: 'I led the UX/CRO, performance, technical SEO, measurement, and Shopify architecture analysis, then translated findings into an actionable sequence.',
@@ -193,8 +193,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'come-verde': {
 		es: {
-			category: 'Estrategia CPG · Growth',
-			summary: 'Un sistema de medios y marca para una operación CPG que conecta estrategia, activaciones, marketplaces e IA aplicada.',
+			category: 'Marca de alimentos · Crecimiento',
+			summary: 'Para una marca de alimentos: cómo se comunica, dónde se anuncia, cómo vende en Amazon y Mercado Libre, y qué parte de ese trabajo puede hacer la IA. Un solo sistema en lugar de esfuerzos sueltos.',
 			context: 'Come Verde comercializa snacks saludables en retail físico y marketplaces, donde la construcción de marca y la rotación en anaquel requieren una lógica distinta a la de un ecommerce DTC.',
 			challenge: 'Alinear marca, medios y medición alrededor de disponibilidad mental, distribución y ocasiones de consumo, sin reducir la estrategia a una métrica de venta directa.',
 			role: 'Como Head of E-commerce & Digital Growth, dirijo la capa ecommerce y de medios, coordino con Brand y Comercial y diseño sistemas de planeación, activación y aprendizaje.',
@@ -209,8 +209,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Construyamos un sistema de growth que conecte marca, retail y medición útil.',
 		},
 		en: {
-			category: 'CPG strategy · Growth',
-			summary: 'A media and brand operating system for a CPG business connecting strategy, activations, marketplaces, and applied AI.',
+			category: 'Food brand · Growth',
+			summary: 'For a food brand: how it speaks, where it advertises, how it sells on Amazon and Mercado Libre, and which part of that work AI can take. One system instead of scattered efforts.',
 			context: 'Come Verde sells healthy snacks through physical retail and marketplaces, where brand building and shelf velocity require a different logic from DTC ecommerce.',
 			challenge: 'Align brand, media, and measurement around mental availability, distribution, and consumption occasions without reducing strategy to a direct-sale metric.',
 			role: 'As Head of E-commerce & Digital Growth, I lead ecommerce and media, coordinate with Brand and Commercial teams, and design systems for planning, activation, and learning.',
@@ -227,7 +227,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'miawseo': {
 		es: {
-			category: 'Producto editorial · Full-stack',
+			category: 'Sitio de contenido · Lo hice completo',
 			summary: 'Producto editorial full-stack que vuelve intuitivo un catálogo profundo con wayfinding, narrativa y comunidad moderada. UX y desarrollo de extremo a extremo.',
 			context: 'MIAWSEO es un producto auto-iniciado que transforma contenido editorial sobre gatos en una experiencia de descubrimiento, orientación y comunidad.',
 			challenge: 'Organizar un catálogo profundo sin perder contexto y permitir contribuciones públicas sin comprometer la calidad del contenido.',
@@ -239,7 +239,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Hablemos de productos editoriales, catálogos complejos o comunidades digitales.',
 		},
 		en: {
-			category: 'Editorial product · Full-stack',
+			category: 'Content site · Built end to end',
 			summary: 'A full-stack editorial product that makes a deep catalog intuitive through wayfinding, narrative, and moderated community. UX and development, end to end.',
 			context: 'MIAWSEO is a self-initiated product transforming editorial content about cats into an experience of discovery, orientation, and community.',
 			challenge: 'Organize a deep catalog without losing context and enable public contributions without compromising content quality.',
@@ -253,8 +253,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	'vineria': {
 		es: {
-			category: 'Producto editorial · Front-end',
-			summary: 'Guía interactiva que hace accesible el vino con búsqueda, filtros y perfiles progresivos. UX editorial enfocada en claridad, descubrimiento y disfrute.',
+			category: 'Guía de vinos',
+			summary: 'Una guía para elegir vino sin saber de vino. Buscas, filtras por lo que te gusta y cada ficha te va contando más solo si quieres seguir leyendo.',
 			context: 'Vinería es un producto auto-iniciado para personas que quieren entender variedades, regiones, aromas y maridajes sin enfrentarse a una enciclopedia.',
 			challenge: 'Convertir investigación extensa en una experiencia clara, visual y agradable para quien apenas comienza a explorar el tema.',
 			role: 'Dirección editorial, diseño de producto, modelado de contenido e implementación front-end.',
@@ -265,8 +265,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Conversemos sobre experiencias editoriales, catálogos interactivos o productos educativos.',
 		},
 		en: {
-			category: 'Editorial product · Front-end',
-			summary: 'An interactive guide that makes wine approachable with search, filters, and progressive profiles. Editorial UX focused on clarity, discovery, and enjoyment.',
+			category: 'Wine guide',
+			summary: 'A guide for choosing wine without knowing about wine. You search, filter by what you like, and each entry tells you more only if you want to keep reading.',
 			context: 'Vinería is a self-initiated product for people who want to understand varieties, regions, aromas, and pairings without facing an encyclopedia.',
 			challenge: 'Turn extensive research into a clear, visual, and enjoyable experience for people beginning to explore the subject.',
 			role: 'Editorial direction, product design, content modeling, and front-end implementation.',
@@ -331,8 +331,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 	},
 	tiendaonline: {
 		es: {
-			category: 'Concepto Shopify · Storefront',
-			summary: 'Un theme Shopify OS 2.0 para una marca premium, diseñado alrededor de merchandising flexible, descubrimiento y compra móvil.',
+			category: 'Tienda de ejemplo · Concepto',
+			summary: 'Una tienda de ejemplo que armé para mostrar cómo trabajo: pensada para que la marca se sienta cara, el producto se encuentre rápido y comprar desde el celular sea cómodo.',
 			context: 'Casa Tecalli explora cómo una marca de alimentos premium puede traducir narrativa, catálogo y señales de confianza a una arquitectura nativa de Shopify.',
 			challenge: 'Crear una experiencia comercial editable que funcione con las capacidades del Theme Editor y mantenga una ruta clara de catálogo a carrito.',
 			role: 'Concepto, arquitectura del theme, diseño de storefront e implementación en Liquid, CSS y JavaScript.',
@@ -343,8 +343,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			cta: 'Hablemos de themes Shopify, secciones comerciales o una mejora concreta de storefront.',
 		},
 		en: {
-			category: 'Shopify concept · Storefront',
-			summary: 'A Shopify OS 2.0 theme for a premium brand, designed around flexible merchandising, discovery, and mobile purchase.',
+			category: 'Sample store · Concept',
+			summary: 'A sample store I built to show how I work: made so the brand feels premium, products are easy to find, and buying from a phone is comfortable.',
 			context: 'Casa Tecalli explores how a premium food brand can translate narrative, catalog, and confidence signals into a native Shopify architecture.',
 			challenge: 'Create an editable commerce experience that works through the Theme Editor and keeps a clear path from catalog to cart.',
 			role: 'Concept, theme architecture, storefront design, and implementation in Liquid, CSS, and JavaScript.',

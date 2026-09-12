@@ -263,15 +263,15 @@ test('project gallery is visual, accessible, and free of audit annotations', asy
 });
 
 for (const project of [
-	{ slug: 'wu-nutrition', title: 'WU Nutrition', categoryEs: 'Ecommerce DTC · Shopify', categoryEn: 'DTC ecommerce · Shopify', media: 5 },
-	{ slug: 'bloqio-cro-apps', title: 'Bloqio CRO Apps — Prometeo / Hermes', categoryEs: 'Producto Shopify · Apps', categoryEn: 'Shopify product · Apps', media: 11 },
-	{ slug: 'bloqio-builder', title: 'Bloqio Builder', categoryEs: 'Producto con IA · SaaS', categoryEn: 'AI product · SaaS', media: 7 },
-	{ slug: 'la-carniceria-virtual', title: 'La Carnicería Virtual', categoryEs: 'Estrategia Shopify · UX/CRO', categoryEn: 'Shopify strategy · UX/CRO', media: 3 },
-	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Estrategia CPG · Growth', categoryEn: 'CPG strategy · Growth', media: 0 },
-	{ slug: 'miawseo', title: 'MIAWSEO — Michiteca', categoryEs: 'Producto editorial · Full-stack', categoryEn: 'Editorial product · Full-stack', media: 6 },
-	{ slug: 'vineria', title: 'Vinería', categoryEs: 'Producto editorial · Front-end', categoryEn: 'Editorial product · Front-end', media: 5 },
+	{ slug: 'wu-nutrition', title: 'WU Nutrition', categoryEs: 'Tienda de suplementos · Shopify', categoryEn: 'Supplement store · Shopify', media: 5 },
+	{ slug: 'bloqio-cro-apps', title: 'Bloqio CRO Apps — Prometeo / Hermes', categoryEs: 'Dos apps para vender más', categoryEn: 'Two apps for selling more', media: 11 },
+	{ slug: 'bloqio-builder', title: 'Bloqio Builder', categoryEs: 'Creador de páginas con IA', categoryEn: 'AI page builder', media: 7 },
+	{ slug: 'la-carniceria-virtual', title: 'La Carnicería Virtual', categoryEs: 'Diagnóstico de una tienda', categoryEn: 'Store diagnosis', media: 3 },
+	{ slug: 'come-verde', title: 'Come Verde', categoryEs: 'Marca de alimentos · Crecimiento', categoryEn: 'Food brand · Growth', media: 0 },
+	{ slug: 'miawseo', title: 'MIAWSEO — Michiteca', categoryEs: 'Sitio de contenido · Lo hice completo', categoryEn: 'Content site · Built end to end', media: 6 },
+	{ slug: 'vineria', title: 'Vinería', categoryEs: 'Guía de vinos', categoryEn: 'Wine guide', media: 5 },
 	{ slug: 'ahp-plus', title: 'AHP+ — Agent Handoff Protocol Plus', categoryEs: 'Producto propio · Código abierto', categoryEn: 'Owned product · Open source', media: 0 },
-	{ slug: 'tiendaonline', title: 'Casa Tecalli — Shopify OS 2.0', categoryEs: 'Concepto Shopify · Storefront', categoryEn: 'Shopify concept · Storefront', media: 4 },
+	{ slug: 'tiendaonline', title: 'Casa Tecalli — Shopify OS 2.0', categoryEs: 'Tienda de ejemplo · Concepto', categoryEn: 'Sample store · Concept', media: 4 },
 ]) {
 	test(`${project.slug} presents a commercial bilingual project narrative`, async ({ page }) => {
 		await page.goto(`/es/trabajo/${project.slug}/`);
