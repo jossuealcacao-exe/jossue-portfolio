@@ -11,7 +11,13 @@
 	.ahp-atlas__hero {
 		display: grid;
 		gap: 1.5rem;
+		min-height: min(52rem, calc(100svh - var(--header-h)));
+		align-content: center;
 		padding-block: clamp(5rem, 10vw, 9rem) var(--space-5);
+	}
+
+	.ahp-atlas__hero h1 {
+		max-width: 12ch;
 	}
 
 	.ahp-atlas__hero h1 span {
@@ -21,6 +27,13 @@
 
 	.ahp-atlas__hero .hero__lede {
 		max-width: 62ch;
+	}
+
+	.ahp-atlas__hero-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		align-items: center;
 	}
 
 	.ahp-atlas__stats {
@@ -104,6 +117,164 @@
 	.ahp-atlas__section-heading > div > p {
 		max-width: 58ch;
 		font-size: 1.1rem;
+	}
+
+	.ahp-atlas__capability-grid {
+		display: grid;
+		grid-template-columns: repeat(6, minmax(0, 1fr));
+		border-top: 1px solid var(--line-strong);
+		border-left: 1px solid var(--line-strong);
+	}
+
+	.ahp-atlas__capability {
+		display: grid;
+		grid-column: span 2;
+		gap: clamp(2rem, 6vw, 5rem);
+		min-height: 19rem;
+		align-content: space-between;
+		padding: clamp(1.25rem, 3vw, 2.5rem);
+		border-right: 1px solid var(--line-strong);
+		border-bottom: 1px solid var(--line-strong);
+		background: var(--surface);
+	}
+
+	.ahp-atlas__capability--lead,
+	.ahp-atlas__capability--boundary {
+		grid-column: span 4;
+	}
+
+	.ahp-atlas__capability--lead {
+		background: var(--ink);
+		color: var(--paper);
+	}
+
+	.ahp-atlas__capability--boundary {
+		background: var(--surface-soft);
+	}
+
+	.ahp-atlas__capability > span {
+		color: var(--accent);
+		font: 750 0.72rem / 1 var(--body);
+		letter-spacing: 0.12em;
+	}
+
+	.ahp-atlas__capability > div {
+		display: grid;
+		gap: 0.85rem;
+	}
+
+	.ahp-atlas__capability h3 {
+		max-width: 16ch;
+		font-size: clamp(1.55rem, 3vw, 2.65rem);
+		letter-spacing: -0.045em;
+	}
+
+	.ahp-atlas__capability p {
+		max-width: 42ch;
+		color: var(--muted);
+	}
+
+	.ahp-atlas__capability--lead p {
+		color: #b8b8b0;
+	}
+
+	.ahp-atlas__capability--lead h3 {
+		color: var(--paper);
+	}
+
+	.ahp-atlas__section--proof {
+		padding-bottom: clamp(6rem, 10vw, 10rem);
+	}
+
+	.ahp-atlas__proof-stage {
+		display: grid;
+		gap: 0;
+		border: 1px solid var(--ink);
+		background: var(--ink);
+	}
+
+	.ahp-atlas__proof-flow {
+		display: grid;
+		grid-template-columns: 1fr auto 1fr auto 1fr;
+		align-items: center;
+		gap: clamp(0.75rem, 2.5vw, 2.5rem);
+		padding: clamp(2rem, 6vw, 5rem);
+		color: var(--paper);
+	}
+
+	.ahp-atlas__proof-flow > div {
+		display: grid;
+		gap: 0.65rem;
+		min-width: 0;
+	}
+
+	.ahp-atlas__proof-flow span,
+	.ahp-atlas__proof-flow small {
+		color: #a9a9a2;
+		font-size: 0.72rem;
+		font-style: normal;
+		font-weight: 700;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.ahp-atlas__proof-flow strong {
+		font: 650 clamp(1.8rem, 5vw, 4rem) / 0.95 var(--heading);
+		letter-spacing: -0.05em;
+	}
+
+	.ahp-atlas__proof-flow i {
+		color: var(--accent);
+		font-size: clamp(1.25rem, 3vw, 2.25rem);
+		font-style: normal;
+	}
+
+	.ahp-atlas__evidence-grid {
+		display: grid;
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		border-top: 1px solid #44443f;
+	}
+
+	.ahp-atlas__evidence-grid article {
+		display: grid;
+		gap: 0.65rem;
+		align-content: start;
+		padding: 1.25rem;
+		border-right: 1px solid #44443f;
+		color: var(--paper);
+	}
+
+	.ahp-atlas__evidence-grid article:last-child {
+		border-right: 0;
+	}
+
+	.ahp-atlas__evidence-grid p {
+		margin: 0;
+		color: #a9a9a2;
+		font-size: 0.68rem;
+		font-weight: 750;
+		letter-spacing: 0.1em;
+	}
+
+	.ahp-atlas__evidence-grid strong {
+		font: 650 clamp(1.15rem, 2.5vw, 2rem) / 1 var(--heading);
+		letter-spacing: -0.035em;
+		overflow-wrap: anywhere;
+	}
+
+	.ahp-atlas__evidence-grid strong.is-long {
+		font-size: clamp(1rem, 1.8vw, 1.4rem);
+		letter-spacing: -0.02em;
+	}
+
+	.ahp-atlas__evidence-grid span {
+		color: #c8c8c1;
+		font-size: 0.78rem;
+		overflow-wrap: anywhere;
+	}
+
+	.ahp-atlas__notice--evidence {
+		margin-top: -1rem;
 	}
 
 	.ahp-atlas__two-col,
@@ -226,6 +397,10 @@
 		display: grid;
 		grid-template-columns: repeat(3, minmax(0, 1fr));
 		gap: 1rem;
+	}
+
+	.ahp-atlas__channel-grid--install {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
 	.ahp-atlas__code {
@@ -491,8 +666,43 @@
 		.ahp-atlas__two-col,
 		.ahp-atlas__platform-grid,
 		.ahp-atlas__command-grid,
-		.ahp-atlas__channel-grid {
+		.ahp-atlas__channel-grid,
+		.ahp-atlas__evidence-grid {
 			grid-template-columns: 1fr;
+		}
+
+		.ahp-atlas__hero {
+			min-height: auto;
+		}
+
+		.ahp-atlas__capability-grid {
+			grid-template-columns: 1fr;
+		}
+
+		.ahp-atlas__capability,
+		.ahp-atlas__capability--lead,
+		.ahp-atlas__capability--boundary {
+			grid-column: 1;
+			min-height: 15rem;
+		}
+
+		.ahp-atlas__proof-flow {
+			grid-template-columns: 1fr;
+			align-items: start;
+		}
+
+		.ahp-atlas__proof-flow i {
+			transform: rotate(90deg);
+			transform-origin: left center;
+		}
+
+		.ahp-atlas__evidence-grid article {
+			border-right: 0;
+			border-bottom: 1px solid #44443f;
+		}
+
+		.ahp-atlas__evidence-grid article:last-child {
+			border-bottom: 0;
 		}
 
 		.ahp-atlas__stats p {

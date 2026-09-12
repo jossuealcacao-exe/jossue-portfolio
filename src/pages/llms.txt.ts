@@ -31,7 +31,7 @@ export const GET: APIRoute = async ({ site }) => {
 		`- [Trabajo seleccionado](${new URL('/es/trabajo/', origin).href})`,
 		`- [Servicios](${new URL('/es/servicios/', origin).href})`,
 		`- [IA y sistemas](${new URL('/es/ia-y-sistemas/', origin).href})`,
-		`- [AHP+ Command Atlas](${new URL('/es/recursos/ahp-plus/', origin).href}): Referencia oficial de instalacion, gestion, CLI, adaptadores y handoffs de AHP+ 1.1.0.`,
+		`- [AHP+ 1.4.1 y Command Atlas](${new URL('/es/recursos/ahp-plus/', origin).href}): Explicacion, evidencia local, instalacion, CLI, adaptadores, handoffs, mensajeria causal y salas de proyecto.`,
 		`- [Perfil y experiencia](${new URL('/es/acerca/', origin).href})`,
 		`- [Blog](${new URL('/es/', blogOrigin).href})`,
 		`- [English version](${new URL('/en/', origin).href})`,

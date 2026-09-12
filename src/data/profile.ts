@@ -41,14 +41,14 @@ export const profile = {
 		es: [
 			'IA en producto: asistentes con acciones tipadas, validación server-side, rate limits, fallback y reversión (Blob en Bloqio Builder; Daniela en WU).',
 			'Desarrollo asistido por agentes con flujo contexto → alcance → plan → ejecución → build/tests → handoff → documentación.',
-			'Sistemas operativos de IA: SO de Ingeniería de Prompts v1.0.0 (15 jul 2026) y AHP+ 1.1.0, el protocolo abierto que guarda el estado del proyecto dentro del repositorio y se instala en seis plataformas.',
+			'Sistemas operativos de IA: SO de Ingeniería de Prompts v1.0.0 (15 jul 2026) y AHP+ 1.4.1, el protocolo abierto que conserva contexto verificable dentro del repositorio y se integra con seis superficies.',
 			'IA empresarial: copiloto con fuentes Odoo/Shopify/GA4/ads/Klaviyo, discrepancias visibles y sin acciones automáticas sin autorización.',
 			'Análisis comercial asistido: auditorías Meta, inventario creativo, planes de recuperación, scorecards y síntesis ejecutiva.',
 		],
 		en: [
 			'Product AI: assistants with typed actions, server-side validation, rate limits, fallback, and revert (Blob in Bloqio Builder; Daniela at WU).',
 			'Agent-assisted development with context → scope → plan → execution → build/tests → handoff → documentation.',
-			'AI operating systems: Prompt Engineering OS v1.0.0 (15 Jul 2026) and AHP+ 1.1.0, the open protocol that keeps project state inside the repository and installs on six platforms.',
+			'AI operating systems: Prompt Engineering OS v1.0.0 (15 Jul 2026) and AHP+ 1.4.1, the open protocol that keeps verifiable context inside the repository and integrates with six surfaces.',
 			'Enterprise AI: copilot over Odoo/Shopify/GA4/ads/Klaviyo sources, visible discrepancies, no automatic actions without approval.',
 			'Assisted commercial analysis: Meta audits, creative inventory, recovery plans, scorecards, and executive synthesis.',
 		],

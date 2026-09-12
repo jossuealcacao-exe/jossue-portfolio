@@ -65,8 +65,8 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			description: 'Correo, LinkedIn y WhatsApp para hablar sobre Shopify, UX/CRO, desarrollo web o producto.',
 		},
 		ahpAtlas: {
-			title: 'AHP+ Command Atlas — Guía oficial de comandos',
-			description: 'Guía paso a paso para instalar AHP+ 1.1.0 y usarlo desde la terminal o desde el chat de Cursor, Codex, Claude Code, OpenCode y ChatGPT.',
+			title: 'AHP+ 1.4.1 — Continuidad verificable y Command Atlas',
+			description: 'Entiende, instala y usa AHP+ 1.4.1 con evidencia real, ejemplos humanos y comandos para proyectos que cambian de asistente.',
 		},
 	},
 	en: {
@@ -95,8 +95,8 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			description: 'Email, LinkedIn, and WhatsApp for Shopify, UX/CRO, web development, or product conversations.',
 		},
 		ahpAtlas: {
-			title: 'AHP+ Command Atlas — Official command guide',
-			description: 'A step-by-step guide to installing AHP+ 1.1.0 and using it from the terminal or from the chat in Cursor, Codex, Claude Code, OpenCode, and ChatGPT.',
+			title: 'AHP+ 1.4.1 — Verifiable continuity and Command Atlas',
+			description: 'Understand, install, and use AHP+ 1.4.1 with real evidence, human examples, and commands for projects that move between assistants.',
 		},
 	},
 };

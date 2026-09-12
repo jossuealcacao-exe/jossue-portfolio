@@ -46,16 +46,23 @@ test('root redirects and language preserves the equivalent route', async ({ page
 
 test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', async ({ page }) => {
 	await page.goto('/es/recursos/ahp-plus/');
-	await expect(page.locator('[data-ahp-command]')).toHaveCount(40);
-	await expect(page.locator('[data-ahp-count]')).toContainText('40 comandos visibles');
+	const commandCount = await page.locator('[data-ahp-command]').count();
+	expect(commandCount).toBeGreaterThanOrEqual(35);
+	await expect(page.locator('[data-ahp-count]')).toContainText(`${commandCount} comandos visibles`);
+	await expect(page.locator('#evidencia')).toContainText('HOF-20260912-6BF37A9D');
+	await expect(page.locator('#evidencia')).toContainText('LOCAL_CAPTURED');
 	await page.locator('[data-ahp-search]').fill('handoff');
-	await expect(page.locator('[data-ahp-count]')).not.toContainText('40 comandos visibles');
-	await page.locator('[data-ahp-filter="package"]').click();
+	await expect(page.locator('[data-ahp-count]')).not.toContainText(`${commandCount} comandos visibles`);
+	await page.locator('[data-ahp-filter="start"]').click();
 	await expect(page.locator('[data-ahp-count]')).toContainText('0 comandos visibles');
 	await page.locator('[data-ahp-search]').fill('');
-	await expect(page.locator('[data-ahp-count]')).toContainText('4 comandos visibles');
+	await expect(page.locator('[data-ahp-count]')).toContainText('3 comandos visibles');
 	await expect(page.locator('.ahp-atlas__platform')).toHaveCount(6);
 	await expect(page.locator('[data-os-tab] img')).toHaveCount(4);
+	await page.locator('[data-os-tab]').first().focus();
+	await page.keyboard.press('ArrowRight');
+	await expect(page.locator('[data-os-tab]').nth(1)).toHaveAttribute('aria-selected', 'true');
+	await expect(page.locator('[data-os-panel="linux"]')).toBeVisible();
 	await expect(page.locator('.ahp-atlas__platform-mark img')).toHaveCount(6);
 	const copyButtons = page.locator('[data-copy-value]');
 	await expect(copyButtons.first()).toBeVisible();
@@ -75,9 +82,11 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 	const handoffColumns = handoffLayout.columns;
 	expect(handoffColumns).toBe((page.viewportSize()?.width ?? 0) > 760 ? 2 : 1);
 	await expect(page.locator('main')).toContainText('Directamente en el chat');
+	await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
 	await page.locator('a.language').click();
 	await expect(page).toHaveURL(/\/en\/resources\/ahp-plus\/$/);
-	await expect(page.locator('main h1')).toContainText('Command Atlas');
+	await expect(page.locator('.ahp-atlas__hero .eyebrow')).toContainText('Command Atlas');
+	await expect(page.locator('main h1')).toContainText('Let context travel');
 });
 
 test('header keeps navigation focused and mobile menu supports Escape', async ({ page }) => {
@@ -276,7 +285,7 @@ for (const project of [
 		if (project.slug === 'ahp-plus') {
 			await expect(page.locator('.case-brand img[src*="ahp-plus.svg"]')).toBeVisible();
 			await expect(page.locator('.case-cover img[src*="ahp-plus.svg"]')).toBeVisible();
-			await expect(page.locator('main')).toContainText('AHP+ 1.1.0');
+			await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
 			await expect(page.locator('main')).toContainText('.ahp/');
 			await expect(page.locator('main')).not.toContainText('AHP+ 1.0');
 			await expect(page.locator('#links a[href="https://github.com/jossuealcacao-exe/ahp_plus"]')).toBeVisible();

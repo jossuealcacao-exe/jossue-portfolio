@@ -1,14 +1,14 @@
 import type { Locale } from './i18n';
 
 export type AhpAtlasCategory =
-	| 'repository'
-	| 'context'
+	| 'start'
+	| 'project'
+	| 'session'
+	| 'conversation'
 	| 'records'
 	| 'handoff'
-	| 'concurrency'
-	| 'migration'
-	| 'adapters'
-	| 'package';
+	| 'security'
+	| 'integration';
 
 type Localized = Record<Locale, string>;
 
@@ -29,109 +29,112 @@ export interface AhpAtlasPlatform {
 
 export const ahpAtlasCategories: Array<{ id: 'all' | AhpAtlasCategory; label: Localized }> = [
 	{ id: 'all', label: { es: 'Todos', en: 'All' } },
-	{ id: 'repository', label: { es: 'Repositorio', en: 'Repository' } },
-	{ id: 'context', label: { es: 'Contexto', en: 'Context' } },
-	{ id: 'records', label: { es: 'Anotaciones', en: 'Records' } },
-	{ id: 'handoff', label: { es: 'Entrega', en: 'Handover' } },
-	{ id: 'concurrency', label: { es: 'Varios a la vez', en: 'Working in parallel' } },
-	{ id: 'migration', label: { es: 'Migración', en: 'Migration' } },
-	{ id: 'adapters', label: { es: 'Instaladores', en: 'Installers' } },
-	{ id: 'package', label: { es: 'Versiones', en: 'Versions' } },
+	{ id: 'start', label: { es: 'Empezar', en: 'Start' } },
+	{ id: 'project', label: { es: 'Proyecto', en: 'Project' } },
+	{ id: 'session', label: { es: 'Sesión', en: 'Session' } },
+	{ id: 'conversation', label: { es: 'Conversación', en: 'Conversation' } },
+	{ id: 'records', label: { es: 'Evidencia', en: 'Evidence' } },
+	{ id: 'handoff', label: { es: 'Continuidad', en: 'Continuity' } },
+	{ id: 'security', label: { es: 'Seguridad', en: 'Security' } },
+	{ id: 'integration', label: { es: 'Integración', en: 'Integration' } },
 ];
 
 export const ahpAtlasCommands: AhpAtlasCommand[] = [
-	{ category: 'repository', title: { es: 'Empezar', en: 'Set up' }, description: { es: 'Crea la carpeta .ahp/ dentro del repositorio en el que estás.', en: 'Creates the .ahp/ folder inside the repository you are in.' }, command: 'npx ahp init . --owner "Tu nombre" --project mi-proyecto' },
-	{ category: 'repository', title: { es: 'Confirmar dónde estás', en: 'Confirm where you are' }, description: { es: 'Te dice qué repositorio y qué carpeta .ahp/ está usando, para no anotar en el proyecto equivocado.', en: 'Tells you which repository and which .ahp/ folder it is using, so you do not write into the wrong project.' }, command: 'npx ahp root .' },
-	{ category: 'repository', title: { es: 'Revisión general', en: 'Health check' }, description: { es: 'Comprueba de una vez el proyecto, el alcance, la estructura de archivos y si todo es válido.', en: 'Checks the project, the scope, the file structure, and whether everything is valid, all at once.' }, command: 'npx ahp doctor .' },
-	{ category: 'repository', title: { es: 'Revisión a fondo', en: 'Strict check' }, description: { es: 'Revisa estructura, referencias e integridad, y avisa si se colaron datos secretos.', en: 'Reviews structure, references, and integrity, and warns if any secrets slipped in.' }, command: 'npx ahp verify . --strict' },
-	{ category: 'repository', title: { es: '¿Cómo va el proyecto?', en: 'Where the project stands' }, description: { es: 'Muestra en qué punto va, el estado de Git, los avisos activos y si el trabajo ya salió de tu computadora.', en: 'Shows where it stands, the state of Git, any active notices, and whether the work has left your computer yet.' }, command: 'npx ahp status .' },
-	{ category: 'repository', title: { es: '¿Ya está respaldado?', en: 'Is it backed up?' }, description: { es: 'Compara lo que tienes en local con el servidor. Con --require-remote falla si todavía no subiste nada.', en: 'Compares what you have locally with the server. With --require-remote it fails if nothing has been pushed yet.' }, command: 'npx ahp sync check . --require-remote' },
-	{ category: 'context', title: { es: 'Resumen para máquinas', en: 'Summary for machines' }, description: { es: 'Entrega el resumen del proyecto en JSON, listo para que otro programa lo lea.', en: 'Returns the project summary as JSON, ready for another program to read.' }, command: 'npx ahp context . --format json --budget 8000' },
-	{ category: 'context', title: { es: 'Resumen para personas', en: 'Summary for people' }, description: { es: 'El mismo resumen en texto, para leerlo tú o pegarlo en un chat.', en: 'The same summary in plain text, to read yourself or paste into a chat.' }, command: 'npx ahp context . --format markdown --budget 8000' },
-	{ category: 'context', title: { es: 'Actualizar el resumen guardado', en: 'Refresh the saved summary' }, description: { es: 'Reescribe el archivo .ahp/INDEX.md con el estado más reciente.', en: 'Rewrites the .ahp/INDEX.md file with the latest state.' }, command: 'npx ahp brief . --budget 8000' },
-	{ category: 'context', title: { es: 'Marcar dónde te quedaste', en: 'Mark where you stopped' }, description: { es: 'Guarda un punto de la sesión al que puedas volver después.', en: 'Saves a point in the session you can come back to later.' }, command: 'npx ahp checkpoint . --session mi-sesion --summary "Límite validado" --next-action "Continuar"' },
-	{ category: 'context', title: { es: 'Ver el historial', en: 'See the history' }, description: { es: 'Lista los puntos guardados y las entregas hechas hasta ahora.', en: 'Lists the saved points and the handovers made so far.' }, command: 'npx ahp history .' },
-	{ category: 'context', title: { es: 'Historial de una sesión', en: 'History of one session' }, description: { es: 'Filtra ese historial para ver solo una sesión de trabajo.', en: 'Filters that history down to a single work session.' }, command: 'npx ahp history . --session mi-sesion' },
-	{ category: 'context', title: { es: 'Anotar el rumbo', en: 'Update the direction' }, description: { es: 'Actualiza en qué fase va el proyecto, cuál es el objetivo y cuál es el siguiente paso.', en: 'Updates the phase the project is in, the objective, and the next step.' }, command: 'npx ahp set-state . --phase IN_PROGRESS --objective "Objetivo" --next-action "Siguiente paso" --confidence USER_CONFIRMED' },
-	{ category: 'records', title: { es: 'Decisión', en: 'Decision' }, description: { es: 'Deja por escrito una decisión, para que después nadie tenga que recordarla de memoria.', en: 'Puts a decision in writing, so nobody has to recall it from memory later.' }, command: 'npx ahp record decision . --title "Decisión" --status ACCEPTED --confidence USER_CONFIRMED' },
-	{ category: 'records', title: { es: 'Pendiente', en: 'To-do' }, description: { es: 'Anota algo por hacer y en qué estado está.', en: 'Notes something to be done and the state it is in.' }, command: 'npx ahp record task . --title "Implementar mejora" --status PLANNED --confidence USER_CONFIRMED' },
-	{ category: 'records', title: { es: 'Error', en: 'Bug' }, description: { es: 'Anota un error que se puede reproducir a voluntad.', en: 'Notes an error that can be reproduced on demand.' }, command: 'npx ahp record bug . --title "Fallo reproducible" --status OPEN --confidence VERIFIED' },
-	{ category: 'records', title: { es: 'Riesgo', en: 'Risk' }, description: { es: 'Deja anotado un riesgo abierto para que no se olvide.', en: 'Keeps an open risk written down so it is not forgotten.' }, command: 'npx ahp record risk . --title "Riesgo de migración" --status OPEN --confidence VERIFIED' },
-	{ category: 'records', title: { es: 'Revisión aprobada o rechazada', en: 'Review passed or failed' }, description: { es: 'Aprueba o rechaza una revisión de calidad. Para poner PASS hay que citar una prueba concreta (EVD-...).', en: 'Passes or fails a quality review. To mark PASS you must cite a concrete piece of proof (EVD-...).' }, command: 'npx ahp record qa . --title "Gate de aceptación" --status PASS --confidence VERIFIED --source EVD-...' },
-	{ category: 'records', title: { es: 'Requisito', en: 'Requirement' }, description: { es: 'Anota algo que el proyecto tiene que cumplir.', en: 'Notes something the project has to satisfy.' }, command: 'npx ahp record requirement . --title "Debe ser portable" --status ACCEPTED --confidence USER_CONFIRMED' },
-	{ category: 'records', title: { es: 'Prueba de que algo pasó', en: 'Proof that something happened' }, description: { es: 'Guarda el resultado real de algo que se ejecutó: el comando, lo que devolvió y si terminó bien.', en: 'Stores the real result of something that ran: the command, what it returned, and whether it finished cleanly.' }, command: 'npx ahp record evidence . --title "Validación local" --type test --locator "npm test" --result "PASS: 18 pruebas" --confidence VERIFIED --exit-code 0' },
-	{ category: 'records', title: { es: 'Ver anotaciones', en: 'See the records' }, description: { es: 'Lista todas las anotaciones o solo las de un tipo.', en: 'Lists every record, or only those of one kind.' }, command: 'npx ahp list risk .' },
-	{ category: 'records', title: { es: 'Ver solo lo abierto', en: 'See only what is open' }, description: { es: 'Deja fuera lo que ya se cerró.', en: 'Leaves out anything already closed.' }, command: 'npx ahp list task . --active' },
-	{ category: 'records', title: { es: 'Cerrar una anotación', en: 'Close a record' }, description: { es: 'Cierra una anotación explicando por qué.', en: 'Closes a record with the reason why.' }, command: 'npx ahp close RISK-... . --status CLOSED --reason "Mitigación verificada"' },
-	{ category: 'records', title: { es: 'Cambiar de decisión', en: 'Change a decision' }, description: { es: 'Sustituye una decisión ya aceptada creando una nueva: la original nunca se reescribe, queda en el historial.', en: 'Replaces an accepted decision by creating a new one: the original is never rewritten, it stays in the history.' }, command: 'npx ahp supersede DEC-... . --title "Decisión revisada" --accept --confidence USER_CONFIRMED' },
-	{ category: 'handoff', title: { es: 'Preparar la entrega', en: 'Prepare the handover' }, description: { es: 'Empaqueta el contexto para pasárselo a otra herramienta.', en: 'Packages the context so it can be passed to another tool.' }, command: 'npx ahp handoff create . --from codex --to cursor --session feature-x --summary "Continuar"' },
-	{ category: 'handoff', title: { es: 'Revisarla antes de aceptar', en: 'Review before accepting' }, description: { es: 'Abre la entrega y comprueba que esté completa, sin aceptarla todavía.', en: 'Opens the handover and checks it is complete, without accepting it yet.' }, command: 'npx ahp handoff inspect HOF-... .' },
-	{ category: 'handoff', title: { es: 'Aceptar la entrega', en: 'Accept the handover' }, description: { es: 'La acepta solo si el proyecto, el contenido y el commit coinciden con lo que dice.', en: 'Accepts it only if the project, the contents, and the commit match what it claims.' }, command: 'npx ahp handoff receive HOF-... .' },
-	{ category: 'concurrency', title: { es: 'Escribir sin pisar a nadie', en: 'Write without overwriting anyone' }, description: { es: 'Cancela la escritura si alguien más movió el repositorio mientras tú trabajabas.', en: 'Cancels the write if someone else moved the repository while you were working.' }, command: 'npx ahp checkpoint . --summary "Límite" --expected-head COMMIT --expected-state DIGEST' },
-	{ category: 'concurrency', title: { es: 'Avisar que estás trabajando', en: 'Flag that you are working' }, description: { es: 'Deja un aviso de que estás en una parte del proyecto. Es un aviso de cortesía, no un candado.', en: 'Leaves a notice that you are inside one part of the project. It is a courtesy notice, not a lock.' }, command: 'npx ahp lock acquire . --scope src/editor --owner codex --minutes 60' },
-	{ category: 'concurrency', title: { es: 'Retirar el aviso', en: 'Remove the notice' }, description: { es: 'Quita tu aviso al terminar. El historial se conserva.', en: 'Removes your notice when you are done. The history is kept.' }, command: 'npx ahp lock release LOCK-... . --owner codex' },
-	{ category: 'migration', title: { es: 'Ver qué se movería', en: 'See what would move' }, description: { es: 'Revisa la carpeta agent/ de la versión 1.0 y te dice qué haría, sin tocar ningún archivo.', en: 'Reviews the version 1.0 agent/ folder and tells you what it would do, without touching any file.' }, command: 'npx ahp migrate . --plan' },
-	{ category: 'migration', title: { es: 'Hacer el cambio', en: 'Make the change' }, description: { es: 'Crea la estructura de la versión 1.1 y conserva intacta la carpeta agent/ original.', en: 'Creates the version 1.1 structure and leaves the original agent/ folder untouched.' }, command: 'npx ahp migrate . --apply' },
-	{ category: 'adapters', title: { es: 'Ver qué plataformas hay', en: 'See the available platforms' }, description: { es: 'Muestra para qué programas y asistentes existe instalador.', en: 'Shows which programs and assistants have an installer.' }, command: 'npx ahp adapter list' },
-	{ category: 'adapters', title: { es: 'Ver qué instalaría', en: 'See what it would install' }, description: { es: 'Muestra qué archivos crearía y con cuáles podría chocar, sin instalar nada.', en: 'Shows which files it would create and which it might clash with, without installing anything.' }, command: 'npx ahp adapter install all .' },
-	{ category: 'adapters', title: { es: 'Instalar en todas', en: 'Install on all of them' }, description: { es: 'Instala los seis: agente genérico, Claude, Cursor, OpenCode, Codex y ChatGPT.', en: 'Installs all six: generic agent, Claude, Cursor, OpenCode, Codex, and ChatGPT.' }, command: 'npx ahp adapter install all . --apply' },
-	{ category: 'adapters', title: { es: 'Instalar en una sola', en: 'Install on just one' }, description: { es: 'Cambia PLATFORM por generic, claude, cursor, opencode, codex o chatgpt.', en: 'Replace PLATFORM with generic, claude, cursor, opencode, codex, or chatgpt.' }, command: 'npx ahp adapter install PLATFORM . --apply' },
-	{ category: 'package', title: { es: 'Instalar la versión estable', en: 'Install the stable version' }, description: { es: 'Instala la última versión probada. Es la opción normal.', en: 'Installs the latest tested version. This is the normal choice.' }, command: 'npm install --save-dev @jossuealcala/ahp-plus@latest' },
-	{ category: 'package', title: { es: 'Fijar una versión exacta', en: 'Pin an exact version' }, description: { es: 'Instala exactamente la 1.1.0, la misma que documenta esta guía.', en: 'Installs exactly 1.1.0, the same version this guide documents.' }, command: 'npm install --save-dev @jossuealcala/ahp-plus@1.1.0' },
-	{ category: 'package', title: { es: 'Probar lo que viene', en: 'Try what is coming' }, description: { es: 'Instala la versión en preparación. Solo para probar y reportar fallos, no para producción.', en: 'Installs the in-progress version. For testing and reporting issues only, not for production.' }, command: 'npm install --save-dev @jossuealcala/ahp-plus@next' },
-	{ category: 'package', title: { es: 'Desinstalar', en: 'Uninstall' }, description: { es: 'Quita el programa. Tus anotaciones en .ahp/ y los instaladores siguen ahí.', en: 'Removes the program. Your records in .ahp/ and the installers stay where they are.' }, command: 'npm uninstall @jossuealcala/ahp-plus' },
+	{ category: 'start', title: { es: 'Instalar y configurar', en: 'Install and configure' }, description: { es: 'Fija AHP+ 1.4.1, prepara .ahp/, Codex y Claude, crea identidades locales y ejecuta las comprobaciones iniciales.', en: 'Pins AHP+ 1.4.1, prepares .ahp/, Codex and Claude, creates local identities, and runs the initial checks.' }, command: 'npx @jossuealcala/ahp-plus@1.4.1 setup .' },
+	{ category: 'start', title: { es: 'Instalar solo para Codex', en: 'Install for Codex only' }, description: { es: 'Evita integraciones que no usarás y deja únicamente la superficie de Codex.', en: 'Avoids integrations you will not use and keeps only the Codex surface.' }, command: 'npx @jossuealcala/ahp-plus@1.4.1 setup . --platforms codex' },
+	{ category: 'start', title: { es: 'Ver el catálogo oficial', en: 'View the official catalog' }, description: { es: 'Lista la gramática y los comandos disponibles en la versión instalada.', en: 'Lists the grammar and commands available in the installed version.' }, command: 'npx ahp catalog' },
+	{ category: 'project', title: { es: 'Pulso recomendado', en: 'Recommended pulse' }, description: { es: 'Resume de una vez identidad, estructura, verificación, preparación y transporte del proyecto.', en: 'Summarizes project identity, structure, verification, readiness, and transport in one pass.' }, command: 'npx ahp project check . --platform codex' },
+	{ category: 'project', title: { es: 'Confirmar la raíz', en: 'Confirm the root' }, description: { es: 'Muestra qué repositorio y qué carpeta .ahp/ está usando antes de escribir.', en: 'Shows which repository and .ahp/ folder it will use before writing.' }, command: 'npx ahp project root .' },
+	{ category: 'project', title: { es: 'Diagnosticar la instalación', en: 'Diagnose the installation' }, description: { es: 'Comprueba identidad, estructura y portabilidad sin alterar el proyecto.', en: 'Checks identity, structure, and portability without altering the project.' }, command: 'npx ahp project doctor .' },
+	{ category: 'project', title: { es: 'Diagnosticar Git', en: 'Diagnose Git' }, description: { es: 'Añade una lectura del estado Git del host al diagnóstico.', en: 'Adds a reading of the host Git state to the diagnosis.' }, command: 'npx ahp project doctor . --diagnose-git' },
+	{ category: 'project', title: { es: 'Verificar a fondo', en: 'Run a strict verification' }, description: { es: 'Valida estructura, referencias, integridad y advertencias.', en: 'Validates structure, references, integrity, and warnings.' }, command: 'npx ahp project verify . --strict' },
+	{ category: 'project', title: { es: 'Ver el estado', en: 'See project status' }, description: { es: 'Explica la fase, el estado de Git, los bloqueos y la portabilidad.', en: 'Explains phase, Git state, locks, and portability.' }, command: 'npx ahp project status .' },
+	{ category: 'project', title: { es: 'Separar local de remoto', en: 'Separate local from remote' }, description: { es: 'Distingue que el proyecto esté listo aquí de que ya pueda continuar en otra máquina.', en: 'Distinguishes being ready here from being ready to continue on another machine.' }, command: 'npx ahp project ready . --platform codex' },
+	{ category: 'project', title: { es: 'Aceptar el commit actual', en: 'Accept the current commit' }, description: { es: 'Confirma deliberadamente la frontera canónica después de revisar el diff; no hace commit ni push.', en: 'Deliberately confirms the canonical boundary after reviewing the diff; it does not commit or push.' }, command: 'npx ahp project state . --accept-head' },
+	{ category: 'session', title: { es: 'Leer el contexto', en: 'Read the context' }, description: { es: 'Genera un resumen acotado para una persona o un agente.', en: 'Generates a bounded summary for a person or agent.' }, command: 'npx ahp session context . --format markdown --budget 8000' },
+	{ category: 'session', title: { es: 'Actualizar el brief', en: 'Refresh the brief' }, description: { es: 'Regenera el resumen guardado dentro del repositorio.', en: 'Regenerates the summary stored inside the repository.' }, command: 'npx ahp session brief . --budget 8000' },
+	{ category: 'session', title: { es: 'Crear un checkpoint', en: 'Create a checkpoint' }, description: { es: 'Guarda dónde terminaste y cuál es la siguiente acción verificable.', en: 'Stores where you stopped and the next verifiable action.' }, command: 'npx ahp session checkpoint . --summary "Límite validado" --next-action "Crear handoff"' },
+	{ category: 'session', title: { es: 'Revisar el historial', en: 'Review history' }, description: { es: 'Lista checkpoints y handoffs de la sesión.', en: 'Lists checkpoints and handoffs for the session.' }, command: 'npx ahp session history .' },
+	{ category: 'conversation', title: { es: 'Enviar un mensaje causal', en: 'Send a causal message' }, description: { es: 'Guarda un mensaje operativo con huella verificable dentro del proyecto.', en: 'Stores an operational message with a verifiable fingerprint inside the project.' }, command: 'npx ahp message send "Continúa desde el límite verificado" --from codex --to claude' },
+	{ category: 'conversation', title: { es: 'Leer el inbox', en: 'Read the inbox' }, description: { es: 'Muestra los mensajes dirigidos a una plataforma.', en: 'Shows messages addressed to a platform.' }, command: 'npx ahp message inbox . --for claude' },
+	{ category: 'conversation', title: { es: 'Responder un mensaje', en: 'Reply to a message' }, description: { es: 'Vincula la respuesta con el evento que la originó.', en: 'Links the reply to the event that originated it.' }, command: 'npx ahp message reply EVT-... "Recibido y verificado" --from claude' },
+	{ category: 'conversation', title: { es: 'Verificar una huella', en: 'Verify a fingerprint' }, description: { es: 'Comprueba que un evento no cambió después de crearse.', en: 'Checks that an event has not changed since it was created.' }, command: 'npx ahp message verify EVT-... .' },
+	{ category: 'conversation', title: { es: 'Pedir una segunda opinión', en: 'Ask for a second opinion' }, description: { es: 'Solicita una sola respuesta de solo lectura a Claude desde Codex.', en: 'Requests one read-only answer from Claude from Codex.' }, command: 'npx ahp agent ask claude "¿Qué riesgo ves en este cambio?" --from codex' },
+	{ category: 'conversation', title: { es: 'Abrir una sala', en: 'Open a room' }, description: { es: 'Crea una conversación durable para participantes del mismo proyecto.', en: 'Creates a durable conversation for participants in the same project.' }, command: 'npx ahp conversation open "Revisión de arquitectura" --participants codex,claude --from codex' },
+	{ category: 'conversation', title: { es: 'Enviar a la sala', en: 'Send to the room' }, description: { es: 'Añade un evento nuevo a una sala compartida.', en: 'Adds a new event to a shared room.' }, command: 'npx ahp conversation send conv-... "Revisa el siguiente paso" --from codex --to claude' },
+	{ category: 'conversation', title: { es: 'Esperar una respuesta', en: 'Wait for a reply' }, description: { es: 'Hace una espera explícita; no despierta ni escribe en el chat nativo de otra app.', en: 'Performs an explicit wait; it does not wake or write into another app’s native chat.' }, command: 'npx ahp conversation wait conv-... --for codex --timeout 60' },
+	{ category: 'records', title: { es: 'Guardar evidencia', en: 'Store evidence' }, description: { es: 'Registra el resultado observado de una prueba o artefacto.', en: 'Records the observed result of a test or artifact.' }, command: 'npx ahp record add evidence . --title "Verificación local"' },
+	{ category: 'records', title: { es: 'Guardar una decisión', en: 'Store a decision' }, description: { es: 'Deja una decisión explícita y revisable dentro del proyecto.', en: 'Keeps an explicit, reviewable decision inside the project.' }, command: 'npx ahp record add decision . --title "Mantener autoridad humana"' },
+	{ category: 'records', title: { es: 'Listar pendientes activos', en: 'List active tasks' }, description: { es: 'Muestra solo lo que todavía requiere atención.', en: 'Shows only what still requires attention.' }, command: 'npx ahp record list task . --active' },
+	{ category: 'records', title: { es: 'Cerrar un registro', en: 'Close a record' }, description: { es: 'Cierra un registro con un estado explícito; el historial se conserva.', en: 'Closes a record with an explicit status; history is preserved.' }, command: 'npx ahp record close TASK-... . --status CLOSED' },
+	{ category: 'handoff', title: { es: 'Crear la entrega', en: 'Create the handoff' }, description: { es: 'Sella el contexto necesario para continuar en otra plataforma.', en: 'Seals the context needed to continue on another platform.' }, command: 'npx ahp handoff create . --from codex --to claude --summary "Continuar desde el límite validado"' },
+	{ category: 'handoff', title: { es: 'Inspeccionar la entrega', en: 'Inspect the handoff' }, description: { es: 'Comprueba contenido e integridad sin aceptarla todavía.', en: 'Checks contents and integrity without accepting it yet.' }, command: 'npx ahp handoff inspect HOF-... .' },
+	{ category: 'handoff', title: { es: 'Recibir la entrega', en: 'Receive the handoff' }, description: { es: 'La acepta solo si corresponde con el proyecto y su frontera Git.', en: 'Accepts it only if it matches the project and its Git boundary.' }, command: 'npx ahp handoff receive HOF-... .' },
+	{ category: 'handoff', title: { es: 'Comprobar transporte', en: 'Check transport' }, description: { es: 'Verifica si la continuidad ya está disponible en el remoto; no ejecuta Git.', en: 'Checks whether continuity is available remotely; it does not run Git.' }, command: 'npx ahp sync check . --require-remote' },
+	{ category: 'handoff', title: { es: 'Reservar un alcance', en: 'Reserve a scope' }, description: { es: 'Publica un lock cooperativo para evitar que dos agentes pisen la misma zona.', en: 'Publishes a cooperative lock so two agents do not overwrite the same area.' }, command: 'npx ahp lock acquire . --scope src/editor --owner codex' },
+	{ category: 'handoff', title: { es: 'Liberar el alcance', en: 'Release the scope' }, description: { es: 'Retira el lock cooperativo al terminar.', en: 'Removes the cooperative lock when the work is done.' }, command: 'npx ahp lock release LOCK-... . --owner codex' },
+	{ category: 'security', title: { es: 'Listar identidades', en: 'List identities' }, description: { es: 'Muestra las identidades locales de dispositivo disponibles.', en: 'Shows the available local device identities.' }, command: 'npx ahp identity list .' },
+	{ category: 'security', title: { es: 'Verificar una identidad', en: 'Verify an identity' }, description: { es: 'Comprueba la identidad de firma y cifrado de un dispositivo.', en: 'Checks a device signing and encryption identity.' }, command: 'npx ahp identity verify DEV-... .' },
+	{ category: 'security', title: { es: 'Enviar cifrado por red', en: 'Send encrypted over the network' }, description: { es: 'Cifra y firma un evento para un dispositivo concreto mediante un hub autorizado.', en: 'Encrypts and signs an event for a specific device through an authorized hub.' }, command: 'npx ahp secure network send EVT-... --from-device DEV-... --to-device DEV-... --url HTTPS_URL --token-file FILE' },
+	{ category: 'security', title: { es: 'Recibir cifrado', en: 'Receive encrypted' }, description: { es: 'Descarga y abre mensajes destinados a una identidad local.', en: 'Downloads and opens messages addressed to a local identity.' }, command: 'npx ahp secure network receive --as-device DEV-... --url HTTPS_URL --token-file FILE' },
+	{ category: 'security', title: { es: 'Confirmar con recibo', en: 'Confirm with a receipt' }, description: { es: 'Devuelve un recibo firmado por el dispositivo receptor.', en: 'Returns a receipt signed by the receiving device.' }, command: 'npx ahp secure network confirm --as-device DEV-... --url HTTPS_URL --token-file FILE' },
+	{ category: 'integration', title: { es: 'Ver plataformas', en: 'See platforms' }, description: { es: 'Lista los adaptadores que la versión instalada reconoce.', en: 'Lists the adapters recognized by the installed version.' }, command: 'npx ahp adapter list' },
+	{ category: 'integration', title: { es: 'Previsualizar adaptadores', en: 'Preview adapters' }, description: { es: 'Muestra qué archivos se instalarían y detecta conflictos, sin escribir.', en: 'Shows which files would be installed and detects conflicts, without writing.' }, command: 'npx ahp adapter install all .' },
+	{ category: 'integration', title: { es: 'Aplicar adaptadores', en: 'Apply adapters' }, description: { es: 'Instala las superficies para los asistentes elegidos.', en: 'Installs surfaces for the selected assistants.' }, command: 'npx ahp adapter install all . --apply' },
 ];
 
 export const ahpAtlasPlatforms: AhpAtlasPlatform[] = [
 	{
 		name: 'Cursor', logo: '/tools/cursor.svg', adapter: 'cursor',
-		description: { es: 'Añade el comando /ahp al chat de Cursor, para pedirlo sin salir del editor.', en: 'Adds the /ahp command to Cursor chat, so you can ask for it without leaving the editor.' },
+		description: { es: 'Instala /ahp en Cursor. El adaptador traduce la intención al CLI local y debe mostrar la salida real.', en: 'Installs /ahp in Cursor. The adapter translates intent to the local CLI and must show real output.' },
 		prompts: [
-			{ es: '/ahp doctor', en: '/ahp doctor' }, { es: '/ahp verify strict', en: '/ahp verify strict' }, { es: '/ahp context', en: '/ahp context' },
-			{ es: '/ahp checkpoint resumen="Límite validado" siguiente="Crear handoff"', en: '/ahp checkpoint summary="Validated boundary" next="Create handoff"' },
-			{ es: '/ahp handoff to codex', en: '/ahp handoff to codex' }, { es: '/ahp receive HOF-...', en: '/ahp receive HOF-...' },
+			{ es: '/ahp project check', en: '/ahp project check' },
+			{ es: '/ahp session checkpoint resumen="Límite validado" siguiente="Crear handoff"', en: '/ahp session checkpoint summary="Validated boundary" next="Create handoff"' },
+			{ es: '/ahp conversation inbox room=conv-... for=cursor', en: '/ahp conversation inbox room=conv-... for=cursor' },
+			{ es: '/ahp receive HOF-...', en: '/ahp receive HOF-...' },
 		],
 	},
 	{
 		name: 'OpenCode', logo: '/tools/opencode.svg', adapter: 'opencode',
-		description: { es: 'Añade el mismo comando /ahp en OpenCode. Se escribe igual que en Cursor.', en: 'Adds the same /ahp command in OpenCode. You type it exactly as in Cursor.' },
+		description: { es: 'Instala el mismo vocabulario /ahp en OpenCode.', en: 'Installs the same /ahp vocabulary in OpenCode.' },
 		prompts: [
-			{ es: '/ahp status', en: '/ahp status' }, { es: '/ahp verify strict', en: '/ahp verify strict' },
-			{ es: '/ahp handoff to claude', en: '/ahp handoff to claude' }, { es: '/ahp receive HOF-...', en: '/ahp receive HOF-...' },
+			{ es: '/ahp status', en: '/ahp status' },
+			{ es: '/ahp verify strict', en: '/ahp verify strict' },
+			{ es: '/ahp handoff to claude', en: '/ahp handoff to claude' },
 		],
 	},
 	{
 		name: 'Codex', logo: '/tools/openai.svg', adapter: 'codex',
-		description: { es: 'Instala la habilidad $ahp y deja las reglas del proyecto en AGENTS.md.', en: 'Installs the $ahp skill and keeps the project rules in AGENTS.md.' },
+		description: { es: 'Instala la skill $ahp y conserva el contrato del proyecto en AGENTS.md.', en: 'Installs the $ahp skill and keeps the project contract in AGENTS.md.' },
 		prompts: [
-			{ es: 'Usa $ahp para revisar este repositorio y mostrarme en qué punto va el proyecto.', en: 'Use $ahp to check this repository and show me where the project stands.' },
-			{ es: 'Usa $ahp para marcar dónde nos quedamos y preparar la entrega a Cursor.', en: 'Use $ahp to mark where we stopped and prepare the handover to Cursor.' },
-			{ es: 'Usa $ahp para aceptar la entrega HOF-... y no edites nada si el resultado no dice READY.', en: 'Use $ahp to accept handover HOF-... and do not edit anything unless the result says READY.' },
+			{ es: 'Usa $ahp para comprobar este proyecto y mostrar project_id, commit, portabilidad, bloqueos y siguiente acción. No edites archivos.', en: 'Use $ahp to check this project and show project_id, commit, portability, locks, and next action. Do not edit files.' },
+			{ es: 'Usa $ahp para preguntarle a Claude qué riesgo ve en este cambio, solo lectura.', en: 'Use $ahp to ask Claude what risk it sees in this change, read-only.' },
+			{ es: 'Usa $ahp para recibir HOF-... y no edites si el resultado no es READY.', en: 'Use $ahp to receive HOF-... and do not edit unless the outcome is READY.' },
 		],
 	},
 	{
 		name: 'Claude Code', logo: '/tools/anthropic.svg', adapter: 'claude',
-		description: { es: 'Conecta CLAUDE.md con las instrucciones de AHP+. Aquí se pide con lenguaje normal: no hay comando con barra.', en: 'Connects CLAUDE.md to the AHP+ instructions. Here you ask in plain language: there is no slash command.' },
+		description: { es: 'Conecta CLAUDE.md con AHP_INSTRUCTIONS.md. Se usa con lenguaje natural, no con un slash command propio.', en: 'Connects CLAUDE.md with AHP_INSTRUCTIONS.md. It uses natural language, not its own slash command.' },
 		prompts: [
-			{ es: 'Antes de continuar, corre con AHP+ la revisión general, la revisión a fondo y el resumen del proyecto.', en: 'Before continuing, use AHP+ to run the health check, the strict check, and the project summary.' },
-			{ es: 'Marca dónde nos quedamos y prepara la entrega de Claude a Codex, sin hacer commit ni push.', en: 'Mark where we stopped and prepare the handover from Claude to Codex, without committing or pushing.' },
-			{ es: 'Acepta la entrega HOF-... con AHP+ y detente si algo no coincide.', en: 'Accept handover HOF-... with AHP+ and stop if anything does not match.' },
+			{ es: 'Usa AHP+ para ejecutar el pulso del proyecto y mostrarme la salida real antes de continuar.', en: 'Use AHP+ to run the project pulse and show me the real output before continuing.' },
+			{ es: 'Usa AHP+ para pedirle a Codex una revisión de solo lectura y una sola respuesta.', en: 'Use AHP+ to ask Codex for one read-only review and one response.' },
+			{ es: 'Recibe HOF-... con AHP+ y detente si requiere reconciliación.', en: 'Receive HOF-... with AHP+ and stop if it requires reconciliation.' },
 		],
 	},
 	{
 		name: 'ChatGPT / Mobile', logo: '/tools/openai.svg', adapter: 'chatgpt',
-		description: { es: 'Instala AHP_MOBILE.md. Si el chat tiene terminal, puede ejecutar; si solo lee, tiene que decirlo.', en: 'Installs AHP_MOBILE.md. If the chat has a terminal it can run commands; if it can only read, it has to say so.' },
+		description: { es: 'Con repositorio y terminal puede ejecutar. Si solo lee archivos, debe declarar esa limitación.', en: 'With repository and terminal access it can run. If it only reads files, it must declare that limitation.' },
 		prompts: [
-			{ es: 'Lee AHP_INSTRUCTIONS.md. Corre la revisión de arranque con AHP+ y dime el proyecto, el commit, si el trabajo ya está respaldado, qué está bloqueado y cuál es el siguiente paso.', en: 'Read AHP_INSTRUCTIONS.md. Run the start check with AHP+ and tell me the project, the commit, whether the work is backed up, what is blocked, and the next step.' },
-			{ es: 'Si no tienes terminal: lee AHP_MOBILE.md, .ahp/INDEX.md y la entrega más reciente. No digas que revisaste, probaste, hiciste commit ni push, porque no puedes.', en: 'If you have no terminal: read AHP_MOBILE.md, .ahp/INDEX.md, and the latest handover. Do not say you checked, tested, committed, or pushed, because you cannot.' },
+			{ es: 'Lee AHP_INSTRUCTIONS.md. Ejecuta el pulso de inicio y muéstrame la salida real.', en: 'Read AHP_INSTRUCTIONS.md. Run the start-up pulse and show me the real output.' },
+			{ es: 'Si no tienes terminal, usa AHP_MOBILE.md y no digas que verificaste, probaste, hiciste commit ni push.', en: 'If you have no terminal, use AHP_MOBILE.md and do not say you verified, tested, committed, or pushed.' },
 		],
 	},
 	{
 		name: 'Cualquier otro agente', logo: '/cv/brands/ahp-plus.svg', adapter: 'generic',
-		description: { es: 'Instala AHP_INSTRUCTIONS.md y un bloque en AGENTS.md, para agentes que no tienen instalador propio.', en: 'Installs AHP_INSTRUCTIONS.md and a block in AGENTS.md, for agents without their own installer.' },
+		description: { es: 'Instala instrucciones neutrales para cualquier agente con acceso al repositorio.', en: 'Installs provider-neutral instructions for any agent with repository access.' },
 		prompts: [
-			{ es: 'Sigue las instrucciones de AHP+ de este repositorio. Revisa antes de escribir y toma el repositorio como fuente de verdad, no la conversación.', en: 'Follow this repository’s AHP+ instructions. Check before writing and treat the repository as the source of truth, not the conversation.' },
-			{ es: 'Corre la revisión general, la revisión a fondo y el resumen del proyecto. Muéstrame la salida real y espera mi autorización antes de cualquier acción fuera del repositorio.', en: 'Run the health check, the strict check, and the project summary. Show me the real output and wait for my authorization before any action outside the repository.' },
+			{ es: 'Sigue las instrucciones AHP+ de este repositorio. Verifica antes de escribir y usa Git confirmado como fuente canónica.', en: 'Follow this repository’s AHP+ instructions. Verify before writing and use confirmed Git state as the canonical source.' },
+			{ es: 'Muéstrame la evidencia real y espera mi autorización antes de cualquier acción externa.', en: 'Show me the real evidence and wait for my authorization before any external action.' },
 		],
 	},
 ];

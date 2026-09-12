@@ -17,7 +17,7 @@ const { command, label, locale, compact = false } = Astro.props;
 		<span>{label}</span>
 		<button type="button" data-copy-value={command} title={locale === 'es' ? 'Copiar comando' : 'Copy command'}>
 			<CopyGlyph />
-			<span class="sr-only" data-copy-feedback>{locale === 'es' ? 'Copiar comando' : 'Copy command'}</span>
+			<span class="sr-only" aria-live="polite" data-copy-feedback>{locale === 'es' ? 'Copiar comando' : 'Copy command'}</span>
 		</button>
 	</div>
 	<pre><code>{command}</code></pre>
