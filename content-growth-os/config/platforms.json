@@ -1,0 +1,8 @@
+{
+  "x": { "label": "X", "copy_limit": 280, "asset": "landscape", "utm_source": "x", "utm_medium": "organic_social" },
+  "reddit": { "label": "Reddit", "copy_limit": 10000, "asset": "landscape", "utm_source": "reddit", "utm_medium": "community" },
+  "facebook_groups": { "label": "Facebook Groups", "copy_limit": 5000, "asset": "square", "utm_source": "facebook", "utm_medium": "community" },
+  "linkedin": { "label": "LinkedIn", "copy_limit": 3000, "asset": "portrait", "utm_source": "linkedin", "utm_medium": "organic_social" },
+  "instagram": { "label": "Instagram", "copy_limit": 2200, "asset": "portrait", "utm_source": "instagram", "utm_medium": "organic_social" },
+  "threads": { "label": "Threads", "copy_limit": 500, "asset": "square", "utm_source": "threads", "utm_medium": "organic_social" }
+}

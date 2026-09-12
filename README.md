@@ -22,6 +22,8 @@ Set `PUBLIC_SITE_URL` to the production origin before deployment. If absent, bui
 - `npm run test:links` — internal link checks against `dist`.
 - `npm run test:e2e` — responsive, redirect, contact, and console checks.
 - `npm run test:worker` — Cloudflare Worker API checks.
+- `npm run test:social` — Content Growth OS parser, copy limits, UTM, and visual checks.
+- `npm run social:campaign -- --slug <slug>` — generate a reviewed multired campaign from a blog entry.
 - `npm run submissions` — authenticated production message query.
 
 ## Contact API
@@ -52,6 +54,14 @@ Install the Playwright browser once with `npx playwright install chromium`.
 Case data lives in `src/content.config.ts` as an Astro Content Collection with a consistent bilingual schema. Public pages intentionally describe the current evidence state. Unverified Bloqio Builder figures are retained only as non-publishable internal claims and are never rendered.
 
 Navigation, route equivalents, and metadata live in `src/data/i18n.ts`. Contact data has one source in `src/data/contact.ts`; null values are not presented as real contact details.
+
+## Content Growth OS
+
+`content-growth-os/` turns a published blog entry into platform-specific drafts,
+UTM links, visual briefs, accessible SVG artwork, and upload-ready PNG variants.
+It supports X, Reddit, Facebook Groups, LinkedIn, Instagram, and Threads without
+publishing to any account. See `content-growth-os/README.md` for the editorial
+rules, community safeguards, and campaign workflow.
 
 ## Deployment
 
