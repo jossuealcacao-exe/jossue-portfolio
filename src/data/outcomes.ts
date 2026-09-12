@@ -16,8 +16,8 @@ const outcomes: HomeOutcome[] = [
 		value: { es: 'Δ3×', en: 'Δ3×' },
 		suffix: { es: 'CR', en: 'CR' },
 		detail: {
-			es: 'Incremento en ROAS con una estrategia UX consolidada y enfocada en CRO.',
-			en: 'ROAS lift from a consolidated, CRO-focused UX strategy.',
+			es: 'Incremento en tasa de conversión con una estrategia UX consolidada y enfocada en CRO.',
+			en: 'Conversion-rate lift from a consolidated, CRO-focused UX strategy.',
 		},
 		source: 'CV 2026-04-13',
 	},

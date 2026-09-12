@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.4.0",
+  "id": "DEC-20260912-66DD74BB",
+  "kind": "decision",
+  "project_id": "jossue-portfolio",
+  "title": "El acento #315EFB pasa de decoracion en iconos a marcar la entrada al trabajo",
+  "description": "",
+  "status": "ACCEPTED",
+  "confidence": "USER_CONFIRMED",
+  "created_at": "2026-09-12T19:04:07.181Z",
+  "updated_at": "2026-09-12T19:04:07.181Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
+  "tags": []
+}

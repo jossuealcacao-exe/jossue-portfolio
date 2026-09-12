@@ -142,7 +142,14 @@ test('Home leads with a commercial proposition and selected products', async ({ 
 	const selectedWorkHeading = await page.locator('.selected-work .section-heading').evaluate((element) => {
 		const index = element.querySelector('.index')?.getBoundingClientRect();
 		const heading = element.querySelector('h2')?.getBoundingClientRect();
-		return Boolean(index && heading && index.bottom < heading.top && Math.abs(index.left - heading.left) < 2);
+		if (!index || !heading) return false;
+		if (window.innerWidth >= 1024) {
+			// Desktop: the section index runs vertically in the left gutter, beside the heading.
+			const isVertical = index.height > index.width;
+			return isVertical && index.right <= heading.left;
+		}
+		// Below 1024px it stacks above the heading, flush left.
+		return index.bottom < heading.top && Math.abs(index.left - heading.left) < 2;
 	});
 	expect(selectedWorkHeading).toBe(true);
 	await expect(page.locator('.selected-work')).toContainText('AHP+');
@@ -158,16 +165,27 @@ test('Home leads with a commercial proposition and selected products', async ({ 
 	await expect(page.locator('main')).not.toContainText('↑ CR');
 });
 
-test('Work page presents product cards as horizontal sliders', async ({ page }) => {
+test('Work page rails the cards on mobile and shows every project on desktop', async ({ page }) => {
 	await page.goto('/es/trabajo/');
 	await expect(page.locator('.work-group .project-grid')).not.toHaveCount(0);
+	const isDesktop = (page.viewportSize()?.width ?? 0) >= 1024;
 	for (const grid of await page.locator('.work-group .project-grid').all()) {
-		await expect(grid).toHaveCSS('overflow-x', 'auto');
 		const gridState = await grid.evaluate((element) => ({
 			cardCount: element.querySelectorAll('.case-card').length,
 			scrolls: element.scrollWidth > element.clientWidth,
+			overflowX: getComputedStyle(element).overflowX,
+			columns: getComputedStyle(element).gridTemplateColumns.split(' ').length,
 		}));
-		if (gridState.cardCount > 1) expect(gridState.scrolls).toBe(true);
+		if (isDesktop) {
+			// A portfolio must not hide work behind a horizontal scroll on a desktop screen.
+			expect(gridState.overflowX).toBe('visible');
+			expect(gridState.scrolls).toBe(false);
+			expect(gridState.columns).toBe(2);
+		} else {
+			// Below 1024px the rail is the only workable pattern.
+			expect(gridState.overflowX).toBe('auto');
+			if (gridState.cardCount > 1) expect(gridState.scrolls).toBe(true);
+		}
 	}
 });
 

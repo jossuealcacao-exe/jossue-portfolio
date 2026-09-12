@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.4.0",
+  "protocol": "AHP+",
+  "protocol_version": "1.4.0",
+  "cli_version_created": "1.4.1",
+  "instance_id": "f7fca6cc-ff4b-4895-b615-90cfcc92cf5b",
+  "project_id": "jossue-portfolio",
+  "owner": "jossuealcacao-exe",
+  "root": ".ahp",
+  "created_at": "2026-09-12T19:03:35.220Z",
+  "certainty_levels": [
+    "VERIFIED",
+    "USER_CONFIRMED",
+    "INFERRED",
+    "UNVERIFIED",
+    "STALE",
+    "CONFLICTED"
+  ],
+  "governance": {
+    "source_of_truth": "git",
+    "state_scope": "one-instance-per-git-repository",
+    "network_mutations": "never",
+    "external_actions_require_authority": true
+  }
+}

@@ -1,0 +1,405 @@
+{
+  "schema_version": "1.4.0",
+  "id": "HOF-20260912-8BE63D18",
+  "kind": "handoff",
+  "from": "claude",
+  "to": "codex",
+  "project_id": "jossue-portfolio",
+  "objective": "Elevacion editorial del portafolio: reticula visible, contraste tipografico y bento asimetrico, inspirado en Obys y Apple",
+  "git": {
+    "branch": "master",
+    "commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
+    "tree": "e98229658a761e328d88a96618b21f960fce3054",
+    "working_tree": "DIRTY",
+    "changed_files": [
+      {
+        "code": " M",
+        "path": ".gitignore"
+      },
+      {
+        "code": " M",
+        "path": "AGENTS.md"
+      },
+      {
+        "code": " M",
+        "path": "README.md"
+      },
+      {
+        "code": " M",
+        "path": "package-lock.json"
+      },
+      {
+        "code": " M",
+        "path": "package.json"
+      },
+      {
+        "code": " M",
+        "path": "src/components/AnalyticsConsent.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/outcomes.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/global.css"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/redesign.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": ".agents/skills/ahp/SKILL.md"
+      },
+      {
+        "code": "??",
+        "path": ".agents/skills/ahp/agents/openai.yaml"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/INDEX.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/README.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/backups/adapters/20260912T190335665Z/AGENTS.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/events/conv-room-20260912-c233f7d7/EVT-20260912-0F5816C6.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/evidence/EVD-20260912-B29EE09B.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/identities/devices/DEV-20260912-BC0214FE.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/identities/devices/DEV-20260912-DF4EFF7B.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/manifest.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/decisions/DEC-20260912-2F935DE8.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/decisions/DEC-20260912-66DD74BB.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/risks/RISK-20260912-7D93358C.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/risks/RISK-20260912-C5DBE7C5.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/tasks/TASK-20260912-E796C68F.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/state/project.json"
+      },
+      {
+        "code": "??",
+        "path": ".codex/config.toml"
+      },
+      {
+        "code": "??",
+        "path": ".mcp.json"
+      },
+      {
+        "code": "??",
+        "path": "AHP_INSTRUCTIONS.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/README.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/SYSTEM_PROMPT.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/config/platforms.json"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/metrics-template.csv"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/references/platform-rules.md"
+      },
+      {
+        "code": "??",
+        "path": "docs/AUDITORIA-VISUAL.md"
+      },
+      {
+        "code": "??",
+        "path": "scripts/social/generate-campaign.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/social/generate-campaign.test.mjs"
+      }
+    ],
+    "working_tree_digest": "b4a03b9192d472d65a5142d889fdb213091f80e4885a62b2f7fdb2f90858aa11",
+    "project_working_tree": "DIRTY",
+    "project_changed_files": [
+      {
+        "code": " M",
+        "path": ".gitignore"
+      },
+      {
+        "code": " M",
+        "path": "AGENTS.md"
+      },
+      {
+        "code": " M",
+        "path": "README.md"
+      },
+      {
+        "code": " M",
+        "path": "package-lock.json"
+      },
+      {
+        "code": " M",
+        "path": "package.json"
+      },
+      {
+        "code": " M",
+        "path": "src/components/AnalyticsConsent.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/outcomes.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/global.css"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/redesign.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": ".agents/skills/ahp/SKILL.md"
+      },
+      {
+        "code": "??",
+        "path": ".agents/skills/ahp/agents/openai.yaml"
+      },
+      {
+        "code": "??",
+        "path": ".codex/config.toml"
+      },
+      {
+        "code": "??",
+        "path": ".mcp.json"
+      },
+      {
+        "code": "??",
+        "path": "AHP_INSTRUCTIONS.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/README.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/SYSTEM_PROMPT.md"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/config/platforms.json"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/metrics-template.csv"
+      },
+      {
+        "code": "??",
+        "path": "content-growth-os/references/platform-rules.md"
+      },
+      {
+        "code": "??",
+        "path": "docs/AUDITORIA-VISUAL.md"
+      },
+      {
+        "code": "??",
+        "path": "scripts/social/generate-campaign.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/social/generate-campaign.test.mjs"
+      }
+    ],
+    "project_working_tree_digest": "ffb91ef66012bdd6ff916bc5aedc2c839902096f10cbd85e621a052b77f120dd",
+    "ahp_state_working_tree": "DIRTY",
+    "ahp_state_changed_files": [
+      {
+        "code": "??",
+        "path": ".ahp/INDEX.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/README.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/backups/adapters/20260912T190335665Z/AGENTS.md"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/events/conv-room-20260912-c233f7d7/EVT-20260912-0F5816C6.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/evidence/EVD-20260912-B29EE09B.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/identities/devices/DEV-20260912-BC0214FE.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/identities/devices/DEV-20260912-DF4EFF7B.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/manifest.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/decisions/DEC-20260912-2F935DE8.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/decisions/DEC-20260912-66DD74BB.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/risks/RISK-20260912-7D93358C.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/risks/RISK-20260912-C5DBE7C5.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/records/tasks/TASK-20260912-E796C68F.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/state/project.json"
+      }
+    ],
+    "upstream": "origin/master",
+    "ahead": 1,
+    "behind": 0,
+    "remote": "https://github.com/jossuealcacao-exe/jossue-portfolio.git"
+  },
+  "portability": {
+    "status": "LOCAL_ONLY",
+    "reason": "Project working-tree changes are not transported by Git."
+  },
+  "checkpoint_id": null,
+  "completed": [],
+  "in_progress": [],
+  "pending": [
+    "TASK-20260912-E796C68F"
+  ],
+  "decisions": [
+    "DEC-20260912-66DD74BB",
+    "DEC-20260912-2F935DE8"
+  ],
+  "validations": [],
+  "risks": [
+    "RISK-20260912-7D93358C",
+    "RISK-20260912-C5DBE7C5"
+  ],
+  "requirements": [],
+  "relevant_files": [
+    ".agents/skills/ahp/SKILL.md",
+    ".agents/skills/ahp/agents/openai.yaml",
+    ".ahp/INDEX.md",
+    ".ahp/README.md",
+    ".ahp/backups/adapters/20260912T190335665Z/AGENTS.md",
+    ".ahp/events/conv-room-20260912-c233f7d7/EVT-20260912-0F5816C6.json",
+    ".ahp/evidence/EVD-20260912-B29EE09B.json",
+    ".ahp/identities/devices/DEV-20260912-BC0214FE.json",
+    ".ahp/identities/devices/DEV-20260912-DF4EFF7B.json",
+    ".ahp/manifest.json",
+    ".ahp/records/decisions/DEC-20260912-2F935DE8.json",
+    ".ahp/records/decisions/DEC-20260912-66DD74BB.json",
+    ".ahp/records/risks/RISK-20260912-7D93358C.json",
+    ".ahp/records/risks/RISK-20260912-C5DBE7C5.json",
+    ".ahp/records/tasks/TASK-20260912-E796C68F.json",
+    ".ahp/state/project.json",
+    ".codex/config.toml",
+    ".gitignore",
+    ".mcp.json",
+    "AGENTS.md",
+    "AHP_INSTRUCTIONS.md",
+    "README.md",
+    "content-growth-os/README.md",
+    "content-growth-os/SYSTEM_PROMPT.md",
+    "content-growth-os/config/platforms.json",
+    "content-growth-os/metrics-template.csv",
+    "content-growth-os/references/platform-rules.md",
+    "docs/AUDITORIA-VISUAL.md",
+    "package-lock.json",
+    "package.json",
+    "scripts/social/generate-campaign.mjs",
+    "scripts/social/generate-campaign.test.mjs",
+    "src/components/AnalyticsConsent.astro",
+    "src/data/outcomes.ts",
+    "src/styles/global.css",
+    "src/styles/redesign.css",
+    "tests/site.spec.ts"
+  ],
+  "blockers": [],
+  "assumptions": [],
+  "next_action": "Leer docs/AUDITORIA-VISUAL.md y aplicar reticula visible, etiqueta rotada y bento a /es/trabajo/, /es/servicios/ y /es/acerca/",
+  "done_criteria": [
+    "npm run validate PASS",
+    "las tres paginas con el mismo tratamiento que la home"
+  ],
+  "notes": "Elevacion editorial aplicada en la home; propagar a trabajo, servicios y acerca",
+  "created_at": "2026-09-12T19:05:16.268Z",
+  "receiver_preflight": [
+    "Resolve the receiving Git repository root.",
+    "Run ahp verify --strict.",
+    "Compare project_id, branch, commit, tree, and working-tree digest.",
+    "Inspect active locks and portability status.",
+    "Do not pull, switch, merge, or overwrite without user authority."
+  ],
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "ahp-canonical-json-v1",
+    "digest": "8b3b2feff439f8f57da92fdc205c653c3dc1dc7c37c6dd1b3138649e9cf279c8"
+  }
+}

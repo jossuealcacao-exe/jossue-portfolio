@@ -38,6 +38,7 @@ playwright-report/
 test-results/
 .tmp-venv/
 .wrangler-dry-run/
+.social-campaigns/
 
 # macOS-specific files
 .DS_Store
@@ -45,3 +46,10 @@ test-results/
 # jetbrains setting folder
 .idea/
 _inputs/media/
+
+# AHP+:BEGIN
+!.ahp/
+!.ahp/**
+.ahp/cache/
+.ahp/tmp/
+# AHP+:END

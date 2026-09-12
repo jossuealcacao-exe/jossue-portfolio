@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.4.0",
+  "id": "TASK-20260912-E796C68F",
+  "kind": "task",
+  "project_id": "jossue-portfolio",
+  "title": "Llevar reticula visible, etiqueta rotada y bento a /trabajo, /servicios y /acerca",
+  "description": "",
+  "status": "PLANNED",
+  "confidence": "USER_CONFIRMED",
+  "created_at": "2026-09-12T19:04:07.643Z",
+  "updated_at": "2026-09-12T19:04:07.643Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "3b733557e921d19fd0c7181b70f5520b8ec18aad",
+  "tags": []
+}

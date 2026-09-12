@@ -16,6 +16,18 @@
 		--space-3: 1.5rem;
 		--space-4: clamp(2.5rem, 6vw, 5rem);
 		--space-5: clamp(4rem, 9vw, 8rem);
+		/* Escala de espaciado de 7 pasos. */
+		--step-1: 0.25rem;
+		--step-2: 0.5rem;
+		--step-3: 0.75rem;
+		--step-4: 1rem;
+		--step-5: 1.5rem;
+		--step-6: 2rem;
+		--step-7: 3rem;
+		/* Tres compases de ritmo vertical en lugar de uno. */
+		--rhythm-tight: clamp(3rem, 7vw, 4.5rem);
+		--rhythm-base: clamp(4rem, 9vw, 8rem);
+		--rhythm-loose: clamp(5.5rem, 12vw, 12rem);
 		--header-h: 3.75rem;
 		--radius-sm: 0;
 		--radius-md: 0;
@@ -23,8 +35,8 @@
 		--radius-pill: 0;
 		--shadow-raised: 0 1.2rem 3.5rem color-mix(in srgb, var(--ink) 9%, transparent);
 		--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-		--motion-fast: 180ms;
-		--motion-base: 560ms;
+		--motion-fast: 140ms;
+		--motion-base: 420ms;
 		--motion-rise: 1.5rem;
 		--heading: 'Inter Tight Variable', 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Arial, sans-serif;
 		--body: 'Source Sans 3 Variable', Arial, sans-serif;
@@ -77,11 +89,12 @@
 		max-width: 16ch;
 		font-size: clamp(3rem, 7vw, 5.75rem);
 		line-height: 0.94;
+		font-weight: 700;
 	}
 
 	h2 {
 		max-width: 22ch;
-		font-size: clamp(2.25rem, 4.6vw, 4.5rem);
+		font-size: clamp(2.05rem, 4.6vw, 4.5rem);
 		line-height: 0.98;
 	}
 
@@ -133,8 +146,19 @@
 
 	.section {
 		gap: var(--space-4);
-		padding-block: var(--space-5);
+		padding-block: var(--rhythm-base);
 		border-top: 1px solid var(--line);
+	}
+
+	/* B: el espacio como puntuacion. Respiro amplio antes de lo que importa. */
+	.selected-work,
+	.profile-section {
+		padding-block: var(--rhythm-loose);
+	}
+
+	.capabilities-section,
+	.opportunity-section {
+		padding-block: var(--rhythm-tight) var(--rhythm-base);
 	}
 
 	.section-heading {
@@ -332,7 +356,7 @@
 
 	.nav a,
 	.nav summary {
-		min-height: 2.35rem;
+		min-height: 2.75rem;
 		padding-inline: 0.65rem;
 		border-radius: var(--radius-pill);
 		font-size: 0.95rem;
@@ -374,6 +398,9 @@
 	}
 
 	.language {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
 		font-family: var(--body);
 		font-size: 0.78rem;
 		font-weight: 700;
@@ -744,7 +771,7 @@
 		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
-		color: var(--muted);
+		color: color-mix(in srgb, var(--ink) 78%, var(--muted));
 		font-size: 0.72rem;
 		font-weight: 800;
 		letter-spacing: 0.08em;
@@ -764,9 +791,9 @@
 		align-items: center;
 		gap: 0.5rem;
 		min-height: 2.25rem;
-		padding-inline: 0.7rem;
-		border: 1px solid var(--line);
-		background: var(--surface);
+		padding-inline: 0 1.15rem;
+		border: 0;
+		background: transparent;
 		font-size: 0.78rem;
 		font-weight: 750;
 	}
@@ -944,6 +971,20 @@
 		}
 	}
 
+	/* C: el riel es una solucion movil. En escritorio, todo el trabajo a la vista. */
+	@media (min-width: 64rem) {
+		.work-group .project-grid {
+			grid-auto-flow: row;
+			grid-auto-columns: auto;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			gap: clamp(1rem, 2.2vw, 2rem);
+			margin-inline: 0;
+			padding-inline: 0;
+			overflow: visible;
+			scroll-snap-type: none;
+		}
+	}
+
 	.project-grid {
 		--carousel-gutter: clamp(0.75rem, 3vw, 2.25rem);
 		display: grid;
@@ -1047,7 +1088,18 @@
 		display: grid;
 		align-content: start;
 		gap: clamp(0.85rem, 2.4vw, var(--space-2));
-		padding: clamp(1.1rem, 3vw, 1.75rem);
+		/* 07: menos padding lateral en movil = ~10 caracteres mas por linea. */
+		padding: clamp(1.1rem, 3vw, 1.75rem) clamp(1.125rem, 3vw, 1.75rem);
+	}
+
+	/* 08: dos lineas reservadas para que los cuerpos arranquen a la misma altura. */
+	.case-card__content h3 {
+		min-height: 2em;
+	}
+
+	/* 07: cuerpo de tarjeta a 16px en movil para alargar la medida. */
+	.case-card__content p {
+		font-size: 1rem;
 	}
 
 	.case-card__meta {
@@ -1077,6 +1129,7 @@
 	}
 
 	.case-card__cta {
+		color: var(--accent);
 		display: inline-flex;
 		min-height: 2.75rem;
 		align-items: center;
@@ -1136,7 +1189,7 @@
 	}
 
 	.project-visual__identity > span {
-		color: color-mix(in srgb, var(--cover-ink) 68%, transparent);
+		color: var(--cover-ink);
 		font-size: clamp(0.58rem, 1.8vw, 0.72rem);
 		font-weight: 850;
 		letter-spacing: 0.1em;
@@ -2866,6 +2919,7 @@
 	.footer-links a {
 		display: inline-flex;
 		align-items: center;
+		min-height: 2.75rem;
 		gap: 0.45rem;
 		font-weight: 750;
 		text-decoration: none;
@@ -3154,7 +3208,7 @@
 		.nav a,
 		.nav summary,
 		.menu__toggle {
-			min-height: 2.35rem;
+			min-height: 2.75rem;
 		}
 
 		.section {
@@ -3176,11 +3230,11 @@
 		}
 
 		.hero-carousel__slide h2 {
-			font-size: clamp(2.9rem, 12vw, 4rem);
+			font-size: clamp(2.55rem, 10.4vw, 3.3rem);
 		}
 
 		.hero-carousel__slide h1 {
-			font-size: clamp(2.9rem, 11vw, 3.35rem);
+			font-size: clamp(3.05rem, 12.8vw, 3.75rem);
 		}
 
 		.hero-carousel__visual {
@@ -3189,8 +3243,8 @@
 
 		.hero-carousel__visual::after {
 			background:
-				linear-gradient(0deg, color-mix(in srgb, var(--surface-soft) 99%, transparent) 0%, color-mix(in srgb, var(--surface-soft) 86%, transparent) 48%, color-mix(in srgb, var(--surface-soft) 34%, transparent) 100%),
-				linear-gradient(90deg, color-mix(in srgb, var(--surface-soft) 90%, transparent), transparent);
+				linear-gradient(0deg, color-mix(in srgb, var(--surface-soft) 99%, transparent) 0%, color-mix(in srgb, var(--surface-soft) 94%, transparent) 68%, color-mix(in srgb, var(--surface-soft) 28%, transparent) 100%),
+				linear-gradient(90deg, color-mix(in srgb, var(--surface-soft) 92%, transparent), color-mix(in srgb, var(--surface-soft) 22%, transparent));
 		}
 
 		.hero-carousel__badges {
@@ -3221,8 +3275,8 @@
 		.hero-carousel__nav {
 			top: auto;
 			bottom: 4.6rem;
-			width: 2.5rem;
-			height: 2.5rem;
+			width: 2.75rem;
+			height: 2.75rem;
 			translate: 0;
 		}
 
@@ -3279,5 +3333,165 @@
 		.evidence-carousel__nav {
 			display: none;
 		}
+	}
+}
+
+/* =========================================================================
+   EVOLUCIÓN EDITORIAL
+   Rejilla visible, contraste tipográfico y celdas unidas por filete.
+   Referencias: la retícula expuesta de Obys y la modularidad bento de Apple,
+   traídas sin abandonar la esquina recta que define este sitio.
+   ========================================================================= */
+@layer utilities {
+	:root {
+		--seam: 1px;
+		--cell-pad: clamp(1.5rem, 3.2vw, 2.75rem);
+		--grid-line: color-mix(in srgb, var(--ink) 9%, transparent);
+	}
+
+	/* --- 1. Tipografía como objeto: el salto pasa de 1.3:1 a ~9:1 --------- */
+	.hero-carousel__slide h1,
+	.hero-carousel__slide h2 {
+		max-width: 12ch;
+		font-size: clamp(3.4rem, 9.4vw, 8.75rem);
+		line-height: 0.86;
+		letter-spacing: -0.058em;
+	}
+
+	.hero-carousel__slide h2 {
+		font-size: clamp(3rem, 8.2vw, 7.6rem);
+	}
+
+	.hero__lede {
+		max-width: 34ch;
+		font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+		line-height: 1.45;
+	}
+
+	/* Etiquetas pequeñas y fijas: el contrapunto que hace grande al titular. */
+	.eyebrow,
+	.index,
+	.hero-visual__topline,
+	.case-card__meta {
+		font-size: 0.6875rem;
+		letter-spacing: 0.16em;
+	}
+
+	/* --- 2. La retícula deja de ser andamio invisible y se dibuja --------- */
+	.selected-work,
+	.capabilities-section {
+		position: relative;
+		isolation: isolate;
+	}
+
+	.selected-work::before,
+	.capabilities-section::before {
+		content: '';
+		position: absolute;
+		inset-block: 0;
+		inset-inline: 0;
+		z-index: -1;
+		pointer-events: none;
+		background-image: repeating-linear-gradient(
+			to right,
+			var(--grid-line) 0 1px,
+			transparent 1px calc(100% / 6)
+		);
+	}
+
+	/* --- 3. Etiqueta de sección rotada sobre el filete -------------------- */
+	@media (min-width: 64rem) {
+		.selected-work,
+		.capabilities-section,
+		.opportunity-section {
+			/* El gutter se conserva: la etiqueta vive dentro de el, no fuera de la pantalla. */
+			padding-left: calc(var(--gutter) + 3.25rem);
+		}
+
+		.selected-work > .section-heading,
+		.capabilities-section > .section-heading,
+		.opportunity-section > .section-heading {
+			position: relative;
+		}
+
+		.selected-work > .section-heading > .index,
+		.capabilities-section > .section-heading > .index,
+		.opportunity-section > .section-heading > .index {
+			position: absolute;
+			top: 0;
+			left: -3.25rem;
+			display: block;
+			width: auto;
+			max-width: none;
+			min-width: 0;
+			margin: 0;
+			padding: 0;
+			border: 0;
+			background: none;
+			writing-mode: vertical-rl;
+			rotate: 180deg;
+			white-space: nowrap;
+			color: var(--muted);
+		}
+
+		.selected-work > .section-heading > .index::before,
+		.capabilities-section > .section-heading > .index::before,
+		.opportunity-section > .section-heading > .index::before {
+			content: none;
+		}
+	}
+
+	/* --- 4. Bento: celdas unidas por filete, aire generoso adentro -------- */
+	.outcomes-grid,
+	.capability-grid {
+		gap: var(--seam);
+		background: var(--line);
+		border: var(--seam) solid var(--line);
+	}
+
+	.outcomes-grid > li,
+	.capability-grid > article {
+		padding: var(--cell-pad);
+		border: 0;
+		background: var(--surface);
+		/* La celda del bento ocupa su track completo: la medida de lectura
+		   se limita en el parrafo, no en el contenedor. */
+		max-width: none;
+		width: auto;
+	}
+
+	.outcomes-grid__detail,
+	.capability-grid > article > p {
+		max-width: 46ch;
+	}
+
+	/* La primera celda pesa el doble: jerarquía dentro del bento. */
+	@media (min-width: 64rem) {
+		/* Bento asimetrico: la celda ancha abre, la angosta cierra la fila. */
+		.capability-grid {
+			grid-template-columns: repeat(6, minmax(0, 1fr));
+			grid-auto-rows: minmax(16rem, auto);
+		}
+
+		.capability-grid > article:nth-child(1) { grid-column: span 4; }
+		.capability-grid > article:nth-child(2) { grid-column: span 2; }
+		.capability-grid > article:nth-child(3) { grid-column: span 2; }
+		.capability-grid > article:nth-child(4) { grid-column: span 4; }
+
+		/* Metricas: cuatro celdas de igual peso, 2 x 2. */
+		.outcomes-grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.outcomes-grid > li {
+			grid-column: auto;
+		}
+	}
+
+	/* --- 5. La cifra como objeto, no como dato --------------------------- */
+	.outcomes-grid__value {
+		font-size: clamp(2.75rem, 5.6vw, 5rem);
+		letter-spacing: -0.05em;
+		line-height: 0.92;
 	}
 }
