@@ -1466,8 +1466,8 @@ const cases = [
 		media: [
 			{
 				key: 'lcv-home-hero',
-				alt: 'Home móvil con Cortes excepcionales, propuesta de valor y CTA de compra.',
-				caption: 'Hero premium con promesa clara: calidad, maduración y envío refrigerado.',
+				alt: 'Portada móvil de la tienda en julio de 2026, con el hero Cortes excepcionales y sus cuatro pilares de confianza.',
+				caption: 'Así abría la tienda en julio de 2026, cuando hice el análisis: la promesa en cuatro pilares — calidad, maduración, envío refrigerado y gente que sabe de carne. El sitio cambió de portada desde entonces.',
 				sourceUrl: 'https://lacarniceriavirtual.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
@@ -1611,8 +1611,8 @@ const cases = [
 		media: [
 			{
 				key: 'lcv-home-hero',
-				alt: 'Mobile home with exceptional cuts, value proposition, and purchase CTA.',
-				caption: 'A premium hero with a clear promise: quality, aging, and refrigerated delivery.',
+				alt: 'Mobile storefront home in July 2026, with the exceptional cuts hero and its four trust pillars.',
+				caption: 'How the store opened in July 2026, when I ran the analysis: the promise in four pillars — quality, aging, refrigerated delivery, and people who know meat. The site has changed its hero since.',
 				sourceUrl: 'https://lacarniceriavirtual.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',

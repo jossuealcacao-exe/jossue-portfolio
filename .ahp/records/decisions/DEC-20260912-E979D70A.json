@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.4.0",
+  "id": "DEC-20260912-E979D70A",
+  "kind": "decision",
+  "project_id": "jossue-portfolio",
+  "title": "Las galerias de julio no se recapturan con Playwright: son capturas de iPhone y el automatismo produce otro artefacto y arrastra popups",
+  "description": "",
+  "status": "ACCEPTED",
+  "confidence": "USER_CONFIRMED",
+  "created_at": "2026-09-12T22:02:53.849Z",
+  "updated_at": "2026-09-12T22:02:53.849Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [
+    "EVD-20260912-0D543794"
+  ],
+  "base_commit": "119ce1bccdaa93136eb2886cd4769fd01562aa10",
+  "tags": []
+}
