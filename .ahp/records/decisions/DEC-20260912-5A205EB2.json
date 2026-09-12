@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.4.0",
+  "id": "DEC-20260912-5A205EB2",
+  "kind": "decision",
+  "project_id": "jossue-portfolio",
+  "title": "No sacar imagenes de los carruseles iPhone: el respiro intercalado se revierte y la galeria conserva todas las capturas",
+  "description": "",
+  "status": "ACCEPTED",
+  "confidence": "USER_CONFIRMED",
+  "created_at": "2026-09-12T22:56:07.996Z",
+  "updated_at": "2026-09-12T22:56:07.996Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [
+    "EVD-20260912-CB61FB2B"
+  ],
+  "base_commit": "45cac1fc169c9885dbd6bdd3b2e396d053c36cba",
+  "tags": []
+}

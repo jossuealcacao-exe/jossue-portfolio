@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.4.0",
+  "id": "RISK-20260912-BD509CA9",
+  "kind": "risk",
+  "project_id": "jossue-portfolio",
+  "title": "No hay herramienta de generacion de imagenes disponible en esta sesion: las imagenes lifestyle no las puedo producir",
+  "description": "",
+  "status": "OPEN",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T22:56:08.579Z",
+  "updated_at": "2026-09-12T22:56:08.579Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [
+    "docs/AUDITORIA-VISUAL.md"
+  ],
+  "base_commit": "45cac1fc169c9885dbd6bdd3b2e396d053c36cba",
+  "tags": []
+}
