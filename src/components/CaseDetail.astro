@@ -6,7 +6,6 @@ import { routes, type Locale } from '../data/i18n';
 import BrandMark from './BrandMark.astro';
 import Breadcrumbs from './Breadcrumbs.astro';
 import CaseDiagrams from './CaseDiagrams.astro';
-import CaseBreak from './CaseBreak.astro';
 import CaseMedia from './CaseMedia.astro';
 import Icon from './Icon.astro';
 import ProjectVisual from './ProjectVisual.astro';
@@ -21,15 +20,7 @@ const { entry, locale } = Astro.props;
 const es = locale === 'es';
 const data = entry.data;
 const brand = brandForCaseSlug(data.slug);
-// El recorrido alternaba cuatro secciones de texto seguidas antes de la primera
-// imagen. Tres capturas salen de la galeria y se intercalan entre secciones,
-// para que la lectura sea texto - imagen - texto en vez de un bloque solido.
-const allMedia = data.media;
-// Hasta tres respiros, pero la galería nunca se queda por debajo de dos piezas:
-// un caso con tres capturas perdía la galería entera.
-const breakCount = Math.min(3, Math.max(0, (allMedia?.length ?? 0) - 2));
-const breaks = allMedia?.slice(0, breakCount) ?? [];
-const publishableMedia = allMedia && allMedia.length > breakCount ? allMedia.slice(breakCount) : undefined;
+const publishableMedia = data.media;
 const publishableDiagrams = data.diagrams?.length ? data.diagrams : undefined;
 const projectLinks = data.projectLinks?.length ? data.projectLinks : undefined;
 const isAhpPlus = data.slug === 'ahp-plus';
@@ -95,7 +86,6 @@ const linkKindCopy = {
 			<p>{presentation.challenge}</p>
 		</div>
 	</section>
-	{breaks[0] && <CaseBreak item={breaks[0]} locale={locale} index={0} />}
 	<section id="approach" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('approach')} / {es ? 'El enfoque' : 'The approach'}</p>
 		<div class="flow">
@@ -105,7 +95,6 @@ const linkKindCopy = {
 			</ol>
 		</div>
 	</section>
-	{breaks[1] && <CaseBreak item={breaks[1]} locale={locale} index={1} />}
 	<section id="delivery" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('delivery')} / {es ? 'Trabajo realizado' : 'What I delivered'}</p>
 		<div class="flow">
@@ -133,7 +122,6 @@ const linkKindCopy = {
 			</div>
 		</section>
 	)}
-	{breaks[2] && <CaseBreak item={breaks[2]} locale={locale} index={2} />}
 	<section id="outcome" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('outcome')} / {es ? 'Resultado' : 'Outcome'}</p>
 		<div class="flow">
