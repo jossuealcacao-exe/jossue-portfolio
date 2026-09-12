@@ -6,7 +6,7 @@
   "next_action": "Pendiente de autorizacion: push de feat/editorial-inner-pages. Sin autorizar aun: micro-etiquetas, pesos de filete y capturas reales de producto",
   "confidence": "USER_CONFIRMED",
   "blockers": [],
-  "base_commit": "0b838105afbc3ee3a69430061d641fc30c421540",
+  "base_commit": "14c2f5e2bc49413cdda96da7899e446651f0a269",
   "created_at": "2026-09-12T19:03:35.220Z",
-  "updated_at": "2026-09-12T20:37:29.240Z"
+  "updated_at": "2026-09-12T20:37:52.156Z"
 }
