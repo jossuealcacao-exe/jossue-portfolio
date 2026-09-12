@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.4.0",
+  "id": "EVD-20260912-0D543794",
+  "kind": "evidence",
+  "project_id": "jossue-portfolio",
+  "title": "Peso de imagen servida reducido 59% al optimizar el visor",
+  "description": "",
+  "status": "OBSERVED",
+  "confidence": "VERIFIED",
+  "created_at": "2026-09-12T21:54:19.106Z",
+  "updated_at": "2026-09-12T21:54:19.106Z",
+  "observed_at": "2026-09-12T21:54:19.106Z",
+  "actor": {
+    "name": "AI agent",
+    "platform": "unknown",
+    "model": "unknown"
+  },
+  "source_refs": [],
+  "base_commit": "e7b667994870148c5f2554bcb4fd5728c9c9c4fb",
+  "tags": [],
+  "evidence_type": "command",
+  "locator": "conteo de referencias a /_astro/ en los 33 HTML del build",
+  "result": "PASS: 19.24 MB -> 7.83 MB. Antes 36 jpeg (11.19 MB) + 11 png (4.18 MB) + 85 webp; ahora 131 webp (7.66 MB) + 1 jpeg. Visor verificado: abre, carga y 0 peticiones fallidas",
+  "limitations": "",
+  "artifact_sha256": null,
+  "exit_code": 0
+}
