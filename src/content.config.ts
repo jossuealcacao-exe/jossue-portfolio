@@ -1229,6 +1229,21 @@ const cases = [
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
 			},
 		],
+		diagrams: [
+			{
+				id: 'BB-LOOP',
+				title: 'El ciclo de trabajo',
+				caption: 'Pedir, ver y corregir ocurren en la misma pantalla; publicar es una decisión aparte.',
+				kind: 'flow',
+				items: [
+					{ label: 'Pides', value: 1, detail: 'Describes en el chat lo que necesita tu negocio.' },
+					{ label: 'Propone', value: 2, detail: 'La IA arma bloques con nombre, no un resultado opaco.' },
+					{ label: 'Corriges', value: 3, detail: 'Editas a mano cualquier bloque, o deshaces lo propuesto.' },
+					{ label: 'Publicas', value: 4, detail: 'La publicación la decides tú, nunca la IA.' },
+				],
+				note: 'Describe el flujo del producto; no representa tiempos de uso medidos.',
+			},
+		],
 		projectLinks: [
 			{ label: 'Abrir Builder', href: 'https://builder.bloqio.app/', kind: 'live' },
 			{ label: 'Sitio comercial Bloqio', href: 'https://bloqio.app/', kind: 'reference' },
@@ -1374,6 +1389,21 @@ const cases = [
 				sourceUrl: 'https://bloqio.app/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
+			},
+		],
+		diagrams: [
+			{
+				id: 'BB-LOOP',
+				title: 'The working loop',
+				caption: 'Asking, seeing, and fixing happen on one screen; publishing is a separate decision.',
+				kind: 'flow',
+				items: [
+					{ label: 'You ask', value: 1, detail: 'You describe in chat what your business needs.' },
+					{ label: 'It proposes', value: 2, detail: 'The AI assembles named blocks, not an opaque result.' },
+					{ label: 'You fix', value: 3, detail: 'Edit any block by hand, or undo what was proposed.' },
+					{ label: 'You publish', value: 4, detail: 'Publishing is your call, never the AI’s.' },
+				],
+				note: 'Describes the product flow; it does not represent measured usage times.',
 			},
 		],
 		projectLinks: [
@@ -2111,6 +2141,20 @@ const cases = [
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
 			},
 		],
+		diagrams: [
+			{
+				id: 'MIAW-RED',
+				title: 'La red del museo',
+				caption: 'Dos líneas para recorrer y una puerta para que la gente aporte.',
+				kind: 'flow',
+				items: [
+					{ label: 'Michiteca', value: 1, detail: 'La exposición de razas: estaciones y rutas.' },
+					{ label: 'Michi Plaza', value: 2, detail: 'El muro donde la comunidad cuelga sus fotos.' },
+					{ label: 'Moderación', value: 3, detail: 'Nada se publica sin pasar por revisión.' },
+				],
+				note: 'Estructura del producto en julio de 2026; la portada ha cambiado desde entonces.',
+			},
+		],
 		projectLinks: [
 			{ label: 'Abrir MIAWSEO', href: 'https://michimuseum.com/', kind: 'live' },
 			{ label: 'Repo MIAWSEO', href: 'https://github.com/jossuealcacao-exe/miawseo', kind: 'repo' },
@@ -2252,6 +2296,20 @@ const cases = [
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
 			},
 		],
+		diagrams: [
+			{
+				id: 'MIAW-RED',
+				title: 'The museum network',
+				caption: 'Two lines to travel and one door for people to contribute.',
+				kind: 'flow',
+				items: [
+					{ label: 'Michiteca', value: 1, detail: 'The breed exhibition: stations and routes.' },
+					{ label: 'Michi Plaza', value: 2, detail: 'The wall where the community posts its photos.' },
+					{ label: 'Moderation', value: 3, detail: 'Nothing publishes without going through review.' },
+				],
+				note: 'Product structure as of July 2026; the home has changed since.',
+			},
+		],
 		projectLinks: [
 			{ label: 'Open MIAWSEO', href: 'https://michimuseum.com/', kind: 'live' },
 			{ label: 'MIAWSEO repo', href: 'https://github.com/jossuealcacao-exe/miawseo', kind: 'repo' },
@@ -2382,6 +2440,21 @@ const cases = [
 				sourceUrl: 'https://vineria.up.railway.app/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
+			},
+		],
+		diagrams: [
+			{
+				id: 'VIN-PROF',
+				title: 'La profundidad aparece si la pides',
+				caption: 'Se empieza con pocas opciones y el detalle se revela solo al avanzar.',
+				kind: 'flow',
+				items: [
+					{ label: 'Buscas', value: 1, detail: 'Un campo de búsqueda, sin vocabulario técnico.' },
+					{ label: 'Filtras', value: 2, detail: 'Cuatro filtros por lo que te gusta, no treinta.' },
+					{ label: 'Abres', value: 3, detail: 'La ficha llega con lo esencial primero.' },
+					{ label: 'Profundizas', value: 4, detail: 'Origen, maridaje y glosario, si decides seguir.' },
+				],
+				note: 'Describe el recorrido diseñado; no representa comportamiento medido de usuarios.',
 			},
 		],
 		projectLinks: [
@@ -2515,6 +2588,21 @@ const cases = [
 				sourceUrl: 'https://vineria.up.railway.app/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
+			},
+		],
+		diagrams: [
+			{
+				id: 'VIN-PROF',
+				title: 'Depth shows up only if you ask',
+				caption: 'It starts with few options and the detail appears only as you go.',
+				kind: 'flow',
+				items: [
+					{ label: 'You search', value: 1, detail: 'One search field, with no technical vocabulary.' },
+					{ label: 'You filter', value: 2, detail: 'Four filters by what you like, not thirty.' },
+					{ label: 'You open', value: 3, detail: 'The entry leads with the essentials.' },
+					{ label: 'You go deeper', value: 4, detail: 'Origin, pairing, and glossary, if you choose to continue.' },
+				],
+				note: 'Describes the designed journey; it does not represent measured user behaviour.',
 			},
 		],
 		projectLinks: [
@@ -2909,6 +2997,20 @@ const cases = [
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
 			},
 		],
+		diagrams: [
+			{
+				id: 'TEC-NAT',
+				title: 'Todo con lo que Shopify ya trae',
+				caption: 'El concepto responde a una pregunta: hasta dónde se llega sin instalar aplicaciones de terceros.',
+				kind: 'layers',
+				items: [
+					{ label: 'Datos de Shopify', value: 40, detail: 'Precio, variante y stock salen siempre de la tienda.' },
+					{ label: 'Secciones del theme', value: 40, detail: 'Cada bloque se mueve y edita desde el panel.' },
+					{ label: 'Apps de terceros', value: 0, detail: 'Ninguna: cada app instalada es algo que se puede romper.' },
+				],
+				note: 'Reparto cualitativo de responsabilidades del theme; no son porcentajes de código.',
+			},
+		],
 		projectLinks: [
 			{ label: 'Abrir sandbox', href: 'https://bloqio-sandbox.myshopify.com/', kind: 'live' },
 			{ label: 'Colección demo', href: 'https://bloqio-sandbox.myshopify.com/collections/all', kind: 'reference' },
@@ -3029,6 +3131,20 @@ const cases = [
 				sourceUrl: 'https://bloqio-sandbox.myshopify.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
+			},
+		],
+		diagrams: [
+			{
+				id: 'TEC-NAT',
+				title: 'Everything from what Shopify already gives you',
+				caption: 'The concept answers one question: how far you get without installing third-party apps.',
+				kind: 'layers',
+				items: [
+					{ label: 'Shopify data', value: 40, detail: 'Price, variant, and stock always come from the store.' },
+					{ label: 'Theme sections', value: 40, detail: 'Every block moves and edits from the panel.' },
+					{ label: 'Third-party apps', value: 0, detail: 'None: every app you install is one more thing that can break.' },
+				],
+				note: 'Qualitative split of theme responsibilities; these are not percentages of code.',
 			},
 		],
 		projectLinks: [
