@@ -54,6 +54,15 @@ const caseSchema = z.object({
 			}),
 		)
 		.optional(),
+	ambience: z
+		.object({
+			key: z.string(),
+			alt: z.string(),
+			caption: z.string(),
+			generatedWith: z.string(),
+			generatedAt: z.string(),
+		})
+		.optional(),
 	mediaPlan: z
 		.array(
 			z.object({
@@ -113,6 +122,126 @@ const caseSchema = z.object({
 		)
 		.optional(),
 });
+
+const ambienceBySlug = {
+	'wu-nutrition': {
+		key: 'ambience-wu-nutrition',
+		copy: {
+			es: {
+				alt: 'Shaker de acero, proteína en polvo y bolsa de gimnasio sobre una cocina de uso diario.',
+				caption: 'La experiencia digital acompaña una rutina que empieza fuera de la pantalla.',
+			},
+			en: {
+				alt: 'Steel shaker, protein powder, and a gym bag on an everyday kitchen counter.',
+				caption: 'The digital experience supports a routine that begins away from the screen.',
+			},
+		},
+	},
+	'bloqio-cro-apps': {
+		key: 'ambience-bloqio-cro-apps',
+		copy: {
+			es: {
+				alt: 'Comerciante trabajando en una laptop sin contenido visible dentro del almacén de una tienda pequeña.',
+				caption: 'Herramientas pensadas para el lugar real donde una persona prepara su operación.',
+			},
+			en: {
+				alt: 'Merchant working on a laptop with no visible content in a small shop stockroom.',
+				caption: 'Tools designed for the real place where someone prepares their operation.',
+			},
+		},
+	},
+	'bloqio-builder': {
+		key: 'ambience-bloqio-builder',
+		copy: {
+			es: {
+				alt: 'Dueña de una florería concentrada frente a una laptop y un teléfono con pantallas ocultas.',
+				caption: 'Construir una página también puede sentirse como una tarea acompañada, no técnica.',
+			},
+			en: {
+				alt: 'Flower shop owner concentrating on a laptop and phone with their screens hidden.',
+				caption: 'Building a page can feel like a guided task rather than a technical one.',
+			},
+		},
+	},
+	'la-carniceria-virtual': {
+		key: 'ambience-la-carniceria-virtual',
+		copy: {
+			es: {
+				alt: 'Cortes frescos, báscula sin marcas, cuchillo y teléfono boca abajo sobre el mostrador de una carnicería.',
+				caption: 'El diagnóstico digital parte de una operación física, concreta y cotidiana.',
+			},
+			en: {
+				alt: 'Fresh cuts, an unmarked scale, a cleaver, and a face-down phone on a butcher counter.',
+				caption: 'The digital diagnosis begins with a physical, concrete, everyday operation.',
+			},
+		},
+	},
+	'come-verde': {
+		key: 'ambience-come-verde',
+		copy: {
+			es: {
+				alt: 'Mano retirando una bolsa verde sin marca de un anaquel de supermercado con empaques lisos.',
+				caption: 'Ambientación temporal y genérica; la fotografía real de Come Verde conserva prioridad como registro del trabajo.',
+			},
+			en: {
+				alt: 'Hand lifting an unbranded green pouch from a supermarket shelf of plain packages.',
+				caption: 'Temporary generic ambience; real Come Verde photography remains the primary record of the work.',
+			},
+		},
+	},
+	miawseo: {
+		key: 'ambience-miawseo',
+		copy: {
+			es: {
+				alt: 'Gato de pelo corto sentado de perfil en una ventana con la ciudad desenfocada al fondo.',
+				caption: 'Una mirada precisa al sujeto antes de convertir información compleja en una ruta clara.',
+			},
+			en: {
+				alt: 'Short-haired cat sitting in profile on a window with a softly blurred city behind.',
+				caption: 'A precise look at the subject before turning complex information into a clear route.',
+			},
+		},
+	},
+	vineria: {
+		key: 'ambience-vineria',
+		copy: {
+			es: {
+				alt: 'Persona indecisa frente a un muro de botellas con etiquetas completamente lisas.',
+				caption: 'Demasiadas opciones explican por qué elegir necesita una guía, no más información.',
+			},
+			en: {
+				alt: 'Undecided shopper facing a wall of bottles with completely blank labels.',
+				caption: 'Too many options show why choosing needs guidance, not more information.',
+			},
+		},
+	},
+	'ahp-plus': {
+		key: 'ambience-ahp-plus',
+		copy: {
+			es: {
+				alt: 'Dos laptops cerradas junto a una libreta abierta bajo la luz de una lámpara nocturna.',
+				caption: 'El trabajo puede detenerse en una máquina y continuar en otra sin perder el límite.',
+			},
+			en: {
+				alt: 'Two closed laptops beside an open notebook under a desk lamp at night.',
+				caption: 'Work can stop on one machine and continue on another without losing its boundary.',
+			},
+		},
+	},
+	tiendaonline: {
+		key: 'ambience-tiendaonline',
+		copy: {
+			es: {
+				alt: 'Ingredientes y recipientes artesanales sin marca sobre una superficie de piedra iluminada por el sol.',
+				caption: 'Una dirección material para una marca conceptual que todavía no tiene fotografía propia.',
+			},
+			en: {
+				alt: 'Unbranded artisanal ingredients and vessels on a sunlit stone surface.',
+				caption: 'A material direction for a conceptual brand that does not yet have its own photography.',
+			},
+		},
+	},
+} as const;
 
 const shared = {
 	stack: ['Discovery', 'Information architecture', 'Interface design'],
@@ -3186,7 +3315,20 @@ const cases = [
 ];
 
 const caseStudies = defineCollection({
-	loader: async () => cases,
+	loader: async () =>
+		cases.map((caseStudy) => {
+			const ambience = ambienceBySlug[caseStudy.slug as keyof typeof ambienceBySlug];
+			const localizedCopy = ambience.copy[caseStudy.lang as 'es' | 'en'];
+			return {
+				...caseStudy,
+				ambience: {
+					key: ambience.key,
+					...localizedCopy,
+					generatedWith: 'GPT Image · Codex',
+					generatedAt: '2026-09-14',
+				},
+			};
+		}),
 	schema: caseSchema,
 });
 

@@ -2114,6 +2114,78 @@
 		max-width: none;
 	}
 
+	.case-context-scene > .flow {
+		max-width: none;
+	}
+
+	.case-ambience {
+		display: grid;
+		gap: 0;
+		margin: var(--space-2) 0 0;
+		border: 1px solid var(--line);
+		background: var(--surface);
+	}
+
+	.case-ambience__frame {
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--ink);
+	}
+
+	.case-ambience__frame img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.case-ambience__caption {
+		display: grid;
+		gap: var(--space-2);
+		padding: clamp(1.25rem, 3vw, 2rem);
+		border-top: 1px solid var(--line);
+	}
+
+	.case-ambience__summary {
+		display: grid;
+		gap: 0.55rem;
+		max-width: 54ch;
+	}
+
+	.case-ambience__summary > p:last-child {
+		font-family: var(--heading);
+		font-size: clamp(1.25rem, 2.5vw, 2rem);
+		font-weight: 800;
+		line-height: 1.15;
+	}
+
+	.case-ambience__provenance {
+		display: grid;
+		align-content: start;
+		gap: 0.35rem;
+		color: var(--muted);
+		font-size: 0.78rem;
+		line-height: 1.4;
+	}
+
+	.case-ambience__provenance strong {
+		color: var(--ink);
+		font-size: 0.72rem;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		/* La advertencia es la linea que sostiene la honestidad del bloque.
+		   Sin esto parte en "AMBIENTACION, NO / CAPTURA." y deja huerfana
+		   justo la palabra que hace el trabajo. */
+		text-wrap: balance;
+	}
+
+	@media (min-width: 64rem) {
+		.case-ambience__caption {
+			grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.5fr);
+			align-items: start;
+		}
+	}
+
 	.case-signals > .flow,
 	.case-links > .flow {
 		max-width: none;

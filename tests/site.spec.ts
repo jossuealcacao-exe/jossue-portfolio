@@ -282,6 +282,11 @@ for (const project of [
 			await expect(page.locator('main')).not.toContainText('La experiencia en contexto.');
 		}
 		await expect(page.locator('.case-cover .project-visual')).toBeVisible();
+		await expect(page.locator('[data-case-ambience]')).toHaveCount(1);
+		await expect(page.locator('[data-case-ambience] img')).toBeVisible();
+		await expect(page.locator('[data-case-ambience]')).toContainText('Imagen generada · ambientación, no captura.');
+		await expect(page.locator('[data-case-ambience]')).toContainText('GPT Image · Codex');
+		expect(await page.locator('[data-case-ambience] img').getAttribute('src')).toContain('ambience-');
 		if (project.slug === 'ahp-plus') {
 			await expect(page.locator('.case-brand img[src*="ahp-plus.svg"]')).toBeVisible();
 			await expect(page.locator('.case-cover img[src*="ahp-plus.svg"]')).toBeVisible();
@@ -318,6 +323,7 @@ for (const project of [
 		await expect(page).toHaveURL(new RegExp(`/en/work/${project.slug}/$`));
 		await expect(page.locator('main h1')).toHaveText(project.title);
 		await expect(page.locator('.case-hero .eyebrow')).toContainText(project.categoryEn);
+		await expect(page.locator('[data-case-ambience]')).toContainText('Generated image · ambience, not a screenshot.');
 		if (project.media > 0) await expect(page.locator('main')).toContainText('Explore the project');
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		if (!['la-carniceria-virtual', 'miawseo', 'ahp-plus'].includes(project.slug)) {

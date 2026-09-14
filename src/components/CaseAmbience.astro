@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface AmbienceItem {
+	key: string;
+	alt: string;
+	caption: string;
+	generatedWith: string;
+	generatedAt: string;
+}
+
+interface Props {
+	ambience: AmbienceItem;
+	locale: 'es' | 'en';
+}
+
+const { ambience, locale } = Astro.props;
+const es = locale === 'es';
+const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/*.{png,jpg,jpeg,webp}', {
+	eager: true,
+});
+const imageEntry = Object.entries(modules).find(([path]) => {
+	const name = path.split('/').pop()?.replace(/\.(png|jpe?g|webp)$/i, '');
+	return name === ambience.key;
+});
+
+if (!imageEntry) throw new Error(`Missing ambience asset: ${ambience.key}`);
+const image = imageEntry[1].default;
+const copy = {
+	label: es ? 'Escena de contexto' : 'Context scene',
+	disclosure: es ? 'Imagen generada · ambientación, no captura.' : 'Generated image · ambience, not a screenshot.',
+	provenance: es ? 'Generada con' : 'Generated with',
+	date: es ? 'Fecha' : 'Date',
+};
+---
+
+<figure class="case-ambience" data-case-ambience>
+	<div class="case-ambience__frame">
+		<Image
+			src={image}
+			alt={ambience.alt}
+			width={1600}
+			format="webp"
+			quality={84}
+			loading="lazy"
+			decoding="async"
+		/>
+	</div>
+	<figcaption class="case-ambience__caption">
+		<div class="case-ambience__summary">
+			<p class="eyebrow">{copy.label}</p>
+			<p>{ambience.caption}</p>
+		</div>
+		<div class="case-ambience__provenance">
+			<strong>{copy.disclosure}</strong>
+			<span>{copy.provenance}: {ambience.generatedWith}</span>
+			<span>{copy.date}: {ambience.generatedAt}</span>
+		</div>
+	</figcaption>
+</figure>
