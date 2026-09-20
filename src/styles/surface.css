@@ -1333,3 +1333,139 @@
 		}
 	}
 }
+
+@layer components {
+	/* ============================================================
+	   UNA BARRA A LA VEZ
+
+	   Tenia dos navegaciones pegajosas apiladas: 135px de cromo fijo, el
+	   15% del alto de pantalla, en toda la pagina. Apple no hace eso. En
+	   una PDP suya el nav global SE VA al bajar y el nav de producto queda
+	   solo, anclado arriba. Hay una jerarquia: mientras lees un producto,
+	   el producto manda.
+
+	   Donde hay barra de capitulo, el encabezado del sitio deja de ser
+	   pegajoso y se va con el scroll. Para recuperarlo se sube al inicio,
+	   que es exactamente el gesto que pide Apple.
+	   ============================================================ */
+	body:has(.chapter-nav) .site-header {
+		/* En flujo, no fuera de el: sacarlo con absolute hace que la barra
+		   de capitulo suba a y=0 y las dos se superpongan al inicio. */
+		position: static;
+		box-shadow: none;
+	}
+
+	body:has(.chapter-nav) .chapter-nav { top: 0; }
+
+	/* Sin encabezado pegajoso, el ancla de scroll la fija el capitulo. */
+	body:has(.chapter-nav) { scroll-padding-top: 3.5rem; }
+}
+
+@layer components {
+	/* ============================================================
+	   UNA SOLA REGLA DE ALINEACION
+
+	   Medido antes: en la PDP los titulares arrancaban en 272, 96, 172 y
+	   282px, alternando centro e izquierda sin criterio. El ojo no llegaba
+	   a asentarse en ningun borde.
+
+	   La regla de Apple es simple y es la que se adopta:
+	     · el ENCABEZADO de seccion (rotulo, titular, entradilla corta) va
+	       centrado, porque es un anuncio;
+	     · el CONTENIDO (listas, rieles, specs, tarjetas) va a la izquierda,
+	       porque es lectura.
+
+	   Asi solo existen dos posiciones en toda la pagina: el eje central y
+	   el borde del contenedor. Nada mas.
+	   ============================================================ */
+	.stage__inner > .stage__eyebrow,
+	.stage__inner > .stage__title,
+	.stage__inner > .stage__lede {
+		text-align: center;
+		margin-inline: auto;
+	}
+
+	/* 20ch era la medida del heroe aplicada a todo: partia los encabezados
+	   de seccion en mas lineas de las necesarias. Cada nivel lleva la suya. */
+	.stage__inner > .stage__title { max-width: 26ch; }
+	.stage__inner > .stage__lede { max-width: 54ch; text-wrap: pretty; }
+	.stage--hero .stage__inner > .stage__title { max-width: 16ch; }
+
+	/* El encabezado partido de la home se apila y se centra como los demas:
+	   era la ultima excepcion que rompia la regla. */
+	.home-surface__head {
+		grid-template-columns: minmax(0, 1fr);
+		justify-items: center;
+		text-align: center;
+	}
+
+	@media (min-width: 52rem) {
+		.home-surface__head { grid-template-columns: minmax(0, 1fr); align-items: center; }
+	}
+
+	.home-surface__head > div { display: contents; }
+
+	/* El contenido conserva su borde: un solo eje izquierdo en todo el sitio. */
+	.stage__inner > .bento,
+	.stage__inner > .gallery,
+	.stage__inner > .showcase,
+	.stage__inner > .specs,
+	.stage__inner > .home-surface__tiles,
+	.stage__inner > .pdp__proof,
+	.stage__inner > .catalog__list,
+	.stage__inner > .madre__boundaries {
+		text-align: start;
+	}
+
+	/* ============================================================
+	   JERARQUIA: DOS PESOS DE h3, NO TRES
+
+	   La PDP renderizaba h3 a 34, 28 y 22px. Tres tamaños para un mismo
+	   nivel se leen como tres niveles distintos que no existen.
+	   Queda: destacado (riel y showcase) y tarjeta (bento y tiles).
+	   ============================================================ */
+	.showcase__beat h3,
+	.gallery-card h3 {
+		font-size: clamp(1.3rem, 2.1vw, 1.7rem);
+		line-height: 1.14;
+	}
+
+	.bento__cell h3,
+	.tile__body h3,
+	.madre__transcript strong {
+		font-size: clamp(1.02rem, 1.5vw, 1.2rem);
+	}
+
+	.catalog__body h3 { font-size: clamp(1.3rem, 2.1vw, 1.7rem); }
+
+	/* ============================================================
+	   ESPACIO: UN SOLO COMPAS
+
+	   Medido: 144 / 99 / 0 / 54px de padding superior en la misma pagina.
+	   Los paneles pasan al mismo compas que las secciones, y cierran a cero
+	   por abajo para que el medio a sangre desemboque en la seccion
+	   siguiente sin una franja muerta en medio.
+	   ============================================================ */
+	.panel { padding-block: calc(var(--stage-pad) * 1.45) 0; }
+	.panel--overlay { padding-block: 0; }
+	.panel + .stage { padding-top: calc(var(--stage-pad) * 1.45); }
+}
+
+@layer components {
+	/* ============================================================
+	   TRES NIVELES, Y SOLO TRES
+
+	   Los encabezados de seccion median 48px en la home y 76px en la PDP:
+	   el mismo nivel con dos voces distintas segun la pagina. La escala
+	   queda cerrada en tres pasos y se aplica igual en todo el sitio:
+
+	     112px  h1 del heroe        — una vez por pagina
+	      76px  declaracion         — cierre y panel inmersivo
+	      48px  encabezado de seccion
+	   ============================================================ */
+	.stage__inner > .stage__title { font-size: var(--display-3); }
+	.stage--hero .stage__inner > .stage__title { font-size: var(--display-1); }
+	.home-surface__close .stage__title,
+	.pdp__close .stage__title,
+	.panel__copy .stage__title { font-size: var(--display-2); }
+}
