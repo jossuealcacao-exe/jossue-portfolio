@@ -5,9 +5,9 @@ import { commercialProducts, productHref } from '../data/products';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
-import Bento from './surface/Bento.astro';
-import BentoCell from './surface/BentoCell.astro';
 import ChapterNav from './surface/ChapterNav.astro';
+import Gallery from './surface/Gallery.astro';
+import Panel from './surface/Panel.astro';
 import MediaSlot from './surface/MediaSlot.astro';
 import Showcase from './surface/Showcase.astro';
 import Specs from './surface/Specs.astro';
@@ -95,27 +95,39 @@ const specGroups = [
 			<a class="pill pill--soft" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
 		</div>
 		{product.status && <p class="pdp__status">{product.status[locale]}</p>}
-		<div class="pdp__hero-media" data-rise="lift">
-			<MediaSlot
-				id={`product-${product.slug}-hero`}
-				ratio="16:9"
-				label={es ? `Apertura de ${product.title[locale]}` : `${product.title[locale]} opening`}
-				note={es
-					? 'La imagen que sostiene la promesa: el entregable real, la pantalla de trabajo o la escena donde este producto ocurre.'
-					: 'The image that carries the promise: the real deliverable, the working screen, or the scene where this product happens.'}
-			/>
-		</div>
 	</Stage>
 
-	<Stage id="encaje" align="center" size="loose">
-		<p class="stage__eyebrow">01 · {es ? 'Para quién es' : 'Who it is for'}</p>
+	<Panel
+		slotId={`product-${product.slug}-hero`}
+		ratio="21:9"
+		label={es ? `Apertura de ${product.title[locale]}` : `${product.title[locale]} opening`}
+		note={es
+			? 'A sangre, de borde a borde. La imagen que sostiene la promesa: el entregable real, la pantalla de trabajo o la escena donde este producto ocurre.'
+			: 'Full bleed, edge to edge. The image that carries the promise: the real deliverable, the working screen, or the scene where this product happens.'}
+	/>
+
+	<Stage id="alcance" size="loose">
+		<p class="stage__eyebrow">01 · {es ? 'Qué incluye' : 'What is included'}</p>
+		<h2 class="stage__title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+		<Gallery label={es ? 'Lo que incluye este producto' : 'What this product includes'} class="pdp__gallery">
+			{product.included[locale].map((item, index) => (
+				<article class="gallery-card">
+					<p class="gallery-card__kicker">{String(index + 1).padStart(2, '0')}</p>
+					<h3>{item}</h3>
+				</article>
+			))}
+		</Gallery>
+	</Stage>
+
+	<Stage id="encaje" tone="ink" align="center" size="loose">
+		<p class="stage__eyebrow">02 · {es ? 'Para quién es' : 'Who it is for'}</p>
 		<h2 class="stage__title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
 		<p class="stage__lede">{product.idealFor[locale]}</p>
 	</Stage>
 
-	<Stage id="alcance" size="loose">
-		<p class="stage__eyebrow">02 · {es ? 'Qué incluye' : 'What is included'}</p>
-		<h2 class="stage__title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+	<Stage id="recorrido" size="loose">
+		<p class="stage__eyebrow">03 · {es ? 'Recorrido' : 'Process'}</p>
+		<h2 class="stage__title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
 		<Showcase class="pdp__showcase showcase--compact">
 			<MediaSlot
 				slot="media"
@@ -123,31 +135,29 @@ const specGroups = [
 				ratio="4:3"
 				label={es ? 'El entregable' : 'The deliverable'}
 				note={es
-					? 'Queda fija mientras se lee el alcance. Una sola pieza: el documento, el tablero o la interfaz que se entrega.'
-					: 'Stays pinned while the scope is read. A single piece: the document, the board, or the interface delivered.'}
+					? 'Queda fija mientras se lee el recorrido. Una sola pieza: el documento, el tablero o la interfaz que se entrega.'
+					: 'Stays pinned while the process is read. A single piece: the document, the board, or the interface delivered.'}
 			/>
-			{product.included[locale].map((item, index) => (
+			{product.process[locale].map((step, index) => (
 				<div class="showcase__beat" data-rise>
-					<span class="showcase__index">{String(index + 1).padStart(2, '0')}</span>
-					<p>{item}</p>
+					<span class="showcase__index">{es ? `Paso ${index + 1}` : `Step ${index + 1}`}</span>
+					<h3>{step}</h3>
 				</div>
 			))}
 		</Showcase>
 	</Stage>
 
-	<Stage id="recorrido" size="loose">
-		<p class="stage__eyebrow">03 · {es ? 'Recorrido' : 'Process'}</p>
-		<h2 class="stage__title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
-		<Bento class="pdp__process">
-			{product.process[locale].map((step, index) => (
-				<BentoCell span={index === 0 ? 4 : 2}>
-					<p class="bento__kicker">{es ? `Paso ${index + 1}` : `Step ${index + 1}`}</p>
-					<p class="bento__metric">{String(index + 1).padStart(2, '0')}</p>
-					<h3>{step}</h3>
-				</BentoCell>
-			))}
-		</Bento>
-	</Stage>
+	<Panel
+		tone="ink"
+		overlay
+		slotId={`product-${product.slug}-statement`}
+		ratio="21:9"
+		label={es ? 'Panel inmersivo' : 'Immersive panel'}
+		note={es
+			? 'A sangre y oscura, con la frase impresa encima. Debe tolerar texto claro sobre ella: sin zonas muy luminosas al centro.'
+			: 'Full bleed and dark, with the line printed over it. It must tolerate light text: no bright areas in the centre.'}
+		title={es ? 'Sin evidencia, no es una mejora: es una opinión.' : 'Without evidence it is not an improvement, it is an opinion.'}
+	/>
 
 	{proofCases.length > 0 && (
 		<Stage id="pruebas" size="loose">
@@ -198,6 +208,17 @@ const specGroups = [
 			</a>
 		</div>
 	</Stage>
+
+	<div class="action-bar">
+		<span class="action-bar__label">
+			<strong>{product.title[locale]}</strong>
+			<span>{es ? 'El alcance se define en conversación' : 'Scope is defined in conversation'}</span>
+		</span>
+		<a class="pill" href={contactHref} data-analytics-event="contact_product_bar">
+			{es ? 'Hablar' : 'Talk'}
+			<Icon name="arrow-right" />
+		</a>
+	</div>
 
 	<Stage size="tight" class="pdp__related">
 		<p class="stage__eyebrow">{es ? 'Otras rutas' : 'Other routes'}</p>

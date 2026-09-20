@@ -11,10 +11,12 @@ interface Props {
 	align?: 'start' | 'center';
 	tall?: boolean;
 	hero?: boolean;
+	/** Sin canaleta: el contenido llega al borde de la ventana. */
+	bleed?: boolean;
 	class?: string;
 }
 
-const { id, tone = 'paper', size = 'base', align = 'start', tall = false, hero = false, class: extra } = Astro.props;
+const { id, tone = 'paper', size = 'base', align = 'start', tall = false, hero = false, bleed = false, class: extra } = Astro.props;
 ---
 
 <section
@@ -25,6 +27,7 @@ const { id, tone = 'paper', size = 'base', align = 'start', tall = false, hero =
 		align === 'center' && 'stage--center',
 		tall && 'stage--tall',
 		hero && 'stage--hero',
+		bleed && 'stage--bleed',
 		extra,
 	]}
 	data-tone={tone === 'ink' ? 'ink' : undefined}

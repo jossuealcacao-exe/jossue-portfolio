@@ -1,0 +1,54 @@
+---
+/**
+ * Panel inmersivo: el medio ocupa el ancho completo de la ventana y la
+ * frase va encima o sobre el. Es el recurso que mas separa una PDP de
+ * Apple de una pagina de servicios: la imagen no se enmarca, se habita.
+ */
+import MediaSlot from './MediaSlot.astro';
+
+interface Props {
+	id?: string;
+	slotId: string;
+	label: string;
+	note?: string;
+	ratio?: '21:9' | '16:9' | '3:2' | '4:3';
+	tone?: 'paper' | 'ink';
+	eyebrow?: string;
+	title?: string;
+	lede?: string;
+	/** La frase se imprime sobre el medio en vez de ir encima de el. */
+	overlay?: boolean;
+	class?: string;
+}
+
+const {
+	id,
+	slotId,
+	label,
+	note,
+	ratio = '21:9',
+	tone = 'paper',
+	eyebrow,
+	title,
+	lede,
+	overlay = false,
+	class: extra,
+} = Astro.props;
+---
+
+<section
+	id={id}
+	class:list={['panel', overlay && 'panel--overlay', extra]}
+	data-tone={tone === 'ink' ? 'ink' : undefined}
+>
+	{(eyebrow || title || lede) && (
+		<div class="panel__copy">
+			{eyebrow && <p class="stage__eyebrow">{eyebrow}</p>}
+			{title && <h2 class="stage__title">{title}</h2>}
+			{lede && <p class="stage__lede">{lede}</p>}
+		</div>
+	)}
+	<div class="panel__media" data-rise>
+		<MediaSlot id={slotId} ratio={ratio} label={label} note={note} variant="bleed" />
+	</div>
+</section>

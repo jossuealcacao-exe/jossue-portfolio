@@ -224,6 +224,9 @@
 		display: grid;
 		place-items: center;
 		width: 100%;
+		/* <figure> trae margen lateral del navegador: sin esto ningun slot
+		   llega al borde y los 31 campos quedan 40px cortos por lado. */
+		margin: 0;
 		aspect-ratio: var(--slot-ratio, 16 / 9);
 		border-radius: var(--radius-lg);
 		background: var(--surf-sunken);
@@ -1055,4 +1058,278 @@
 
 	.slot__label { font-size: clamp(0.95rem, 3.2vw, 1.25rem); }
 	.slot__note { font-size: clamp(0.78rem, 2.5vw, 0.85rem); }
+}
+
+@layer components {
+	/* ---------- PANEL A SANGRE ---------- */
+	.stage--bleed { padding-inline: 0; }
+	.stage--bleed > .stage__inner { width: 100%; }
+
+	.panel {
+		position: relative;
+		background: var(--surf-0);
+		color: var(--ink);
+		padding-block: var(--stage-pad);
+	}
+
+	.panel__copy {
+		width: min(100%, 62rem);
+		margin-inline: auto;
+		padding-inline: var(--gutter);
+		padding-bottom: clamp(2.5rem, 6vh, 4.5rem);
+		text-align: center;
+	}
+
+	.panel__copy .stage__lede { margin-inline: auto; text-align: center; text-wrap: balance; }
+	.panel__copy .stage__title { font-size: var(--display-2); }
+
+	/* El medio no se enmarca: llega al borde de la ventana. */
+	.panel__media .slot {
+		border-radius: 0;
+		box-shadow: none;
+		background: var(--surf-sunken);
+		min-height: clamp(16rem, 42vh, 34rem);
+	}
+
+	.panel__media .slot::before { opacity: 0.4; }
+
+	/* Variante con la frase impresa sobre el medio. */
+	.panel--overlay { display: grid; padding-block: 0; }
+	.panel--overlay > * { grid-area: 1 / 1; }
+
+	.panel--overlay .panel__copy {
+		position: relative;
+		z-index: 2;
+		align-self: center;
+		padding-block: clamp(3rem, 10vh, 7rem);
+		text-shadow: 0 1px 24px color-mix(in srgb, var(--paper) 55%, transparent);
+	}
+
+	.panel--overlay .panel__media .slot { min-height: clamp(22rem, 62vh, 44rem); }
+
+	/* ---------- RIEL DE HIGHLIGHTS ---------- */
+	.gallery {
+		display: grid;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(min(78vw, 21rem), 1fr);
+		gap: clamp(0.85rem, 1.6vw, 1.25rem);
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: var(--gutter);
+		padding: 0.75rem var(--gutter) 1.75rem;
+		margin-inline: calc(var(--gutter) * -1);
+		scrollbar-width: thin;
+		overscroll-behavior-x: contain;
+	}
+
+	.gallery > * { scroll-snap-align: start; }
+
+	.gallery:focus-visible { outline: 2px solid var(--focus); outline-offset: 4px; border-radius: var(--radius-lg); }
+
+	@media (min-width: 64rem) {
+		.gallery { grid-auto-columns: minmax(24rem, 1fr); }
+	}
+
+	.gallery-card {
+		display: grid;
+		align-content: space-between;
+		gap: clamp(2rem, 6vw, 4rem);
+		min-height: clamp(19rem, 34vw, 26rem);
+		padding: clamp(1.35rem, 2.4vw, 2rem);
+		border-radius: var(--radius-xl);
+		background: var(--surf-1);
+		box-shadow: var(--lift-2);
+	}
+
+	.gallery-card__kicker {
+		font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+		font-size: 0.68rem;
+		letter-spacing: 0.11em;
+		text-transform: uppercase;
+		color: var(--muted);
+	}
+
+	.gallery-card h3 {
+		margin: 0;
+		font-family: var(--heading);
+		font-size: clamp(1.25rem, 2.2vw, 1.75rem);
+		font-weight: 650;
+		line-height: 1.12;
+		letter-spacing: var(--track-snug);
+		text-wrap: balance;
+	}
+
+	.gallery-card p {
+		margin: 0.5rem 0 0;
+		font-size: 0.95rem;
+		line-height: 1.55;
+		color: var(--muted);
+		text-wrap: pretty;
+	}
+
+	/* ---------- BARRA DE ACCION PERSISTENTE ---------- */
+	.action-bar {
+		position: sticky;
+		bottom: 0;
+		z-index: 45;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		width: min(100%, 78rem);
+		margin: 0 auto;
+		padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
+		background: color-mix(in srgb, var(--surf-0) 80%, transparent);
+		backdrop-filter: saturate(180%) blur(20px);
+		-webkit-backdrop-filter: saturate(180%) blur(20px);
+		border-top: 1px solid var(--hairline);
+	}
+
+	.action-bar__label { display: grid; gap: 0.1rem; min-width: 0; }
+
+	.action-bar__label strong {
+		font-family: var(--heading);
+		font-size: 0.98rem;
+		font-weight: 650;
+		letter-spacing: var(--track-snug);
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.action-bar__label span { font-size: 0.8rem; color: var(--muted); }
+
+	@media (max-width: 29.99rem) {
+		.action-bar__label span { display: none; }
+	}
+}
+
+@layer components {
+	/* En un panel con la frase encima, la etiqueta del slot no puede pelear
+	   con ella por el centro: se retira a la esquina. En la ronda 2 la
+	   etiqueta desaparece con el slot y la esquina queda limpia. */
+	.panel--overlay .slot { place-items: end start; }
+
+	.panel--overlay .slot__body {
+		justify-items: start;
+		text-align: left;
+		max-width: 26rem;
+		padding: clamp(0.9rem, 2vw, 1.5rem);
+		opacity: 0.62;
+	}
+
+	.panel--overlay .slot__label { font-size: 0.92rem; }
+	.panel--overlay .slot__note { font-size: 0.76rem; }
+
+	/* La barra de accion comparte el borde inferior con el asistente, que
+	   es fijo a la derecha. Sin esta reserva, el CTA queda debajo de el. */
+	.action-bar { padding-right: clamp(6rem, 12vw, 7rem); }
+
+	@media (min-width: 64rem) {
+		.action-bar { padding-right: clamp(5rem, 8vw, 8rem); }
+	}
+}
+
+@layer components {
+	/* ---------- PIE ---------- */
+	.site-footer--quiet {
+		margin-top: clamp(3rem, 8vh, 6rem);
+		padding-block: clamp(2.5rem, 6vw, 4rem);
+		padding-inline: var(--gutter);
+		background: var(--surf-sunken);
+		border-top: 1px solid var(--hairline);
+		color: var(--muted);
+		font-size: 0.82rem;
+		line-height: 1.55;
+	}
+
+	.site-footer--quiet .site-footer__inner {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr);
+		gap: clamp(1.75rem, 4vw, 2.75rem);
+		width: min(100%, 78rem);
+		margin-inline: auto;
+	}
+
+	.site-footer--quiet .site-footer__brand { display: grid; gap: 0.3rem; }
+
+	.site-footer--quiet .site-footer__wordmark {
+		margin: 0;
+		font-family: var(--heading);
+		font-size: 1.05rem;
+		font-weight: 700;
+		letter-spacing: var(--track-snug);
+		color: var(--ink);
+	}
+
+	.site-footer--quiet .site-footer__line {
+		margin: 0;
+		max-width: 46ch;
+		color: var(--muted);
+	}
+
+	.site-footer--quiet .site-footer__directory {
+		display: grid;
+		gap: clamp(1.5rem, 3vw, 2.5rem);
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+		padding-block: clamp(1.25rem, 3vw, 2rem);
+		border-block: 1px solid var(--hairline);
+	}
+
+	.site-footer--quiet .site-footer__group { display: grid; gap: 0.6rem; align-content: start; }
+
+	.site-footer--quiet .site-footer__group h2 {
+		margin: 0;
+		font-family: var(--body);
+		font-size: 0.78rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		color: var(--ink);
+	}
+
+	.site-footer--quiet .site-footer__group ul {
+		display: grid;
+		gap: 0.45rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.site-footer--quiet .site-footer__group a {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3rem;
+		min-height: 1.75rem;
+		color: var(--muted);
+		text-decoration: none;
+		transition: color var(--motion-fast) linear;
+	}
+
+	.site-footer--quiet .site-footer__group a:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 0.2em; }
+	.site-footer--quiet .site-footer__group a .icon { width: 0.7em; height: 0.7em; opacity: 0.7; }
+
+	.site-footer--quiet .site-footer__tags {
+		margin: 0;
+		font-size: 0.76rem;
+		color: var(--muted);
+		opacity: 0.85;
+	}
+
+	.site-footer--quiet .site-footer__legal {
+		display: grid;
+		gap: 0.35rem;
+		padding-top: clamp(1rem, 2.5vw, 1.5rem);
+		border-top: 1px solid var(--hairline);
+		font-size: 0.76rem;
+	}
+
+	.site-footer--quiet .site-footer__legal p { margin: 0; max-width: 62ch; }
+
+	@media (min-width: 52rem) {
+		.site-footer--quiet .site-footer__legal {
+			grid-template-columns: auto minmax(0, 1fr);
+			gap: 0.35rem 2.5rem;
+			align-items: baseline;
+		}
+	}
 }

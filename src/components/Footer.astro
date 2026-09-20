@@ -1,6 +1,6 @@
 ---
 import { contact } from '../data/contact';
-import { routes, type Locale } from '../data/i18n';
+import { navigation, routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -10,43 +10,85 @@ interface Props {
 const { locale } = Astro.props;
 const year = new Date().getFullYear();
 const es = locale === 'es';
+
+// Apple cierra con un directorio denso y callado, no con un titular. El pie
+// deja de competir con la pagina: es el lugar donde se encuentra algo, no
+// donde se vuelve a argumentar.
 const tags = es
-	? ['Shopify', 'UX/CRO', 'Ecommerce', 'IA aplicada', 'Growth', 'México', 'Guadalajara', 'Producto digital']
-	: ['Shopify', 'UX/CRO', 'Ecommerce', 'Applied AI', 'Growth', 'Mexico', 'Guadalajara', 'Digital product'];
+	? ['Shopify', 'UX/CRO', 'Ecommerce', 'IA aplicada', 'Growth', 'Producto digital']
+	: ['Shopify', 'UX/CRO', 'Ecommerce', 'Applied AI', 'Growth', 'Digital product'];
 ---
 
-<footer class="site-footer">
-	<div class="site-footer__inner shell">
-		<div class="site-footer__brand flow">
-			<p class="eyebrow">Jossue Alcalá / {year}</p>
-			<h2>{es ? 'Ecommerce, producto e IA aplicada, controlada y escalable.' : 'Ecommerce, product, and applied AI — controlled and scalable.'}</h2>
-			<p>{es ? 'Desarrollo Shopify, UX/CRO, growth y sistemas operativos para equipos que necesitan pasar de diagnóstico a ejecución.' : 'Shopify development, UX/CRO, growth, and operating systems for teams moving from diagnosis to execution.'}</p>
+<footer class="site-footer site-footer--quiet">
+	<div class="site-footer__inner">
+		<div class="site-footer__brand">
+			<p class="site-footer__wordmark">Jossue Alcalá</p>
+			<p class="site-footer__line">
+				{es
+					? 'Ecommerce, producto e IA aplicada. De diagnóstico a ejecución, con evidencia.'
+					: 'Ecommerce, product, and applied AI. From diagnosis to delivery, with evidence.'}
+			</p>
 		</div>
-		<div class="site-footer__directory">
-			<div>
-				<p class="eyebrow">{es ? 'Etiquetas' : 'Tags'}</p>
-				<ul class="footer-tags" aria-label={es ? 'Etiquetas SEO y GEO' : 'SEO and GEO tags'}>
-					{tags.map((tag) => <li>{tag}</li>)}
+
+		<nav class="site-footer__directory" aria-label={es ? 'Directorio del sitio' : 'Site directory'}>
+			<div class="site-footer__group">
+				<h2>{es ? 'Explorar' : 'Explore'}</h2>
+				<ul>
+					<li><a href={routes[locale].home}>{es ? 'Inicio' : 'Home'}</a></li>
+					{navigation[locale].map((item) => (
+						<li><a href={routes[locale][item.key]}>{item.label}</a></li>
+					))}
+					<li><a href={routes[locale].services}>{es ? 'Servicios' : 'Services'}</a></li>
+					<li><a href={routes[locale].ai}>{es ? 'IA y sistemas' : 'AI and systems'}</a></li>
 				</ul>
 			</div>
-			<div>
-				<p class="eyebrow">{es ? 'Recursos y perfiles' : 'Resources & profiles'}</p>
-				<ul class="footer-links">
-					<li><a href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">AHP+ Command Atlas<Icon name="arrow-right" /></a></li>
+
+			<div class="site-footer__group">
+				<h2>{es ? 'Recursos' : 'Resources'}</h2>
+				<ul>
+					<li><a href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">AHP+ Command Atlas</a></li>
 					<li><a href={`https://blog.jossuealcala.com/${locale}/`} data-analytics-event="click_blog">Blog<Icon name="arrow-up-right" /></a></li>
-					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin">LinkedIn<Icon name="arrow-up-right" /></a></li>}
-					{contact.github && <li><a href={contact.github} rel="noreferrer" data-analytics-event="click_github">GitHub<Icon name="arrow-up-right" /></a></li>}
-					{contact.cvEs && <li><a href={contact.cvEs} download data-analytics-event="download_cv">{es ? 'CV en PDF' : 'PDF resume'}<Icon name="download" /></a></li>}
+					{contact.cvEs && (
+						<li><a href={contact.cvEs} download data-analytics-event="download_cv">{es ? 'CV en PDF' : 'PDF resume'}<Icon name="download" /></a></li>
+					)}
 				</ul>
 			</div>
-			<div>
-				<p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
-				<ul class="footer-links">
-					{contact.email && <li><a href={`mailto:${contact.email}`} data-analytics-event="click_email">{contact.email}<Icon name="arrow-up-right" /></a></li>}
-					{contact.whatsapp && contact.phone && <li><a href={contact.whatsapp} rel="noreferrer" data-analytics-event="click_whatsapp">WhatsApp · {contact.phone}<Icon name="arrow-up-right" /></a></li>}
-					<li><a href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Formulario de contacto' : 'Contact form'}<Icon name="arrow-right" /></a></li>
+
+			<div class="site-footer__group">
+				<h2>{es ? 'Perfiles' : 'Profiles'}</h2>
+				<ul>
+					{contact.linkedin && (
+						<li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin">LinkedIn<Icon name="arrow-up-right" /></a></li>
+					)}
+					{contact.github && (
+						<li><a href={contact.github} rel="noreferrer" data-analytics-event="click_github">GitHub<Icon name="arrow-up-right" /></a></li>
+					)}
 				</ul>
 			</div>
+
+			<div class="site-footer__group">
+				<h2>{es ? 'Contacto' : 'Contact'}</h2>
+				<ul>
+					{contact.email && (
+						<li><a href={`mailto:${contact.email}`} data-analytics-event="click_email">{contact.email}</a></li>
+					)}
+					{contact.whatsapp && contact.phone && (
+						<li><a href={contact.whatsapp} rel="noreferrer" data-analytics-event="click_whatsapp">WhatsApp · {contact.phone}<Icon name="arrow-up-right" /></a></li>
+					)}
+					<li><a href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Formulario de contacto' : 'Contact form'}</a></li>
+				</ul>
+			</div>
+		</nav>
+
+		<p class="site-footer__tags">{tags.join(' · ')}</p>
+
+		<div class="site-footer__legal">
+			<p>© {year} Jossue Alcalá · Guadalajara, México</p>
+			<p>
+				{es
+					? 'Las cifras publicadas provienen de los proyectos citados y conservan su fecha y su método.'
+					: 'Published figures come from the cited projects and keep their date and method.'}
+			</p>
 		</div>
 	</div>
 </footer>

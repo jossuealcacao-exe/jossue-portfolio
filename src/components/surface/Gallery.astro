@@ -1,0 +1,22 @@
+---
+/**
+ * Riel de highlights: tarjetas que se recorren en horizontal con anclaje.
+ * En Apple es donde se resume el producto antes de explicarlo. Se navega
+ * con dedo, rueda o teclado; el riel es focalizable a proposito.
+ */
+interface Props {
+	label: string;
+	class?: string;
+}
+
+const { label, class: extra } = Astro.props;
+---
+
+<div
+	class:list={['gallery', extra]}
+	role="group"
+	aria-label={label}
+	tabindex="0"
+>
+	<slot />
+</div>

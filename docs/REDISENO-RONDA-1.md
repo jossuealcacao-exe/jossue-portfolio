@@ -52,7 +52,7 @@ src/components/surface/             siete primitivos
   ChapterNav.astro                  barra de capítulo
 ```
 
-## Ronda 2 — los 31 campos
+## Ronda 2 — los 35 campos
 
 Cada campo declara id, proporción y una etiqueta con su dirección de arte,
 visible en la página. Sustituir `<MediaSlot>` por `<Image>` conservando el
@@ -66,42 +66,46 @@ En móvil los campos se reencuadran solos: `21:9` pasa a `16:9` y `16:9` a
 `3:2` por debajo de 48rem. La imagen real necesitará el mismo tratamiento.
 
 ```
-  catalog-auditoria-ecommerce  ·  4:3
-  catalog-cro-crecimiento  ·  4:3
-  catalog-ia-aplicada  ·  4:3
-  catalog-madre  ·  4:3
-  catalog-shopify-desarrollo-web  ·  4:3
-  home-case-bloqio-builder  ·  4:3
-  home-case-come-verde  ·  4:3
-  home-case-la-carniceria-virtual  ·  4:3
-  home-hero  ·  21:9
-  home-method  ·  4:3
-  home-portrait  ·  4:5
-  madre-flow  ·  4:3
-  madre-hero  ·  16:9
-  madre-memory  ·  1:1
-  product-auditoria-ecommerce-hero  ·  16:9
-  product-auditoria-ecommerce-proof-la-carniceria-virtual  ·  4:3
-  product-auditoria-ecommerce-scope  ·  4:3
-  product-cro-crecimiento-hero  ·  16:9
-  product-cro-crecimiento-proof-bloqio-cro-apps  ·  4:3
-  product-cro-crecimiento-proof-come-verde  ·  4:3
-  product-cro-crecimiento-proof-wu-nutrition  ·  4:3
-  product-cro-crecimiento-scope  ·  4:3
-  product-ia-aplicada-hero  ·  16:9
-  product-ia-aplicada-proof-ahp-plus  ·  4:3
-  product-ia-aplicada-proof-bloqio-builder  ·  4:3
-  product-ia-aplicada-scope  ·  4:3
-  product-shopify-desarrollo-web-hero  ·  16:9
-  product-shopify-desarrollo-web-proof-come-verde  ·  4:3
-  product-shopify-desarrollo-web-proof-tiendaonline  ·  4:3
-  product-shopify-desarrollo-web-proof-wu-nutrition  ·  4:3
-  product-shopify-desarrollo-web-scope  ·  4:3
+catalog-auditoria-ecommerce  ·  4:3
+catalog-cro-crecimiento  ·  4:3
+catalog-ia-aplicada  ·  4:3
+catalog-madre  ·  4:3
+catalog-shopify-desarrollo-web  ·  4:3
+home-case-bloqio-builder  ·  4:3
+home-case-come-verde  ·  4:3
+home-case-la-carniceria-virtual  ·  4:3
+home-hero  ·  21:9
+home-method  ·  4:3
+home-portrait  ·  4:5
+madre-flow  ·  4:3
+madre-hero  ·  16:9
+madre-memory  ·  1:1
+product-auditoria-ecommerce-hero  ·  21:9
+product-auditoria-ecommerce-proof-la-carniceria-virtual  ·  4:3
+product-auditoria-ecommerce-scope  ·  4:3
+product-auditoria-ecommerce-statement  ·  21:9
+product-cro-crecimiento-hero  ·  21:9
+product-cro-crecimiento-proof-bloqio-cro-apps  ·  4:3
+product-cro-crecimiento-proof-come-verde  ·  4:3
+product-cro-crecimiento-proof-wu-nutrition  ·  4:3
+product-cro-crecimiento-scope  ·  4:3
+product-cro-crecimiento-statement  ·  21:9
+product-ia-aplicada-hero  ·  21:9
+product-ia-aplicada-proof-ahp-plus  ·  4:3
+product-ia-aplicada-proof-bloqio-builder  ·  4:3
+product-ia-aplicada-scope  ·  4:3
+product-ia-aplicada-statement  ·  21:9
+product-shopify-desarrollo-web-hero  ·  21:9
+product-shopify-desarrollo-web-proof-come-verde  ·  4:3
+product-shopify-desarrollo-web-proof-tiendaonline  ·  4:3
+product-shopify-desarrollo-web-proof-wu-nutrition  ·  4:3
+product-shopify-desarrollo-web-scope  ·  4:3
+product-shopify-desarrollo-web-statement  ·  21:9
 ```
 
 ## Lo que falta
 
-- **Ronda 2:** imágenes en los 31 campos y desarrollo de copy. Esta ronda
+- **Ronda 2:** imágenes en los 35 campos y desarrollo de copy. Esta ronda
   conservó el texto que ya existía; no se escribió copy nuevo salvo los
   cuatro pasos del método de la home.
 - **Ronda 3:** cableado y ajustes menores.

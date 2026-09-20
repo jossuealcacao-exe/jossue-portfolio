@@ -318,7 +318,11 @@ for (const project of [
 			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(246, 246, 242)');
 			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(246, 246, 242)');
 			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(17, 17, 15)');
-			await expect(page.locator('.site-footer__brand h2')).toHaveCSS('color', 'rgb(247, 247, 242)');
+			// El pie dejo de ser una losa oscura con titular: ahora es un
+			// directorio callado sobre fondo claro. El requisito sobrevive
+			// — su encabezado debe leerse contra su fondo.
+			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(17, 17, 15)');
+			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(17, 17, 15)');
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
