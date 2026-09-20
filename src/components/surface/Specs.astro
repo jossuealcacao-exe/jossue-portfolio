@@ -1,0 +1,35 @@
+---
+/**
+ * Tabla de especificaciones, al modo de la PDP: el detalle existe y es
+ * completo, pero no se cobra por adelantado. Cada grupo abre solo.
+ * El primero viene abierto para que se vea que hay algo dentro.
+ */
+export interface SpecGroup {
+	title: string;
+	rows: Array<{ term: string; detail: string }>;
+}
+
+interface Props {
+	groups: SpecGroup[];
+	openFirst?: boolean;
+	class?: string;
+}
+
+const { groups, openFirst = true, class: extra } = Astro.props;
+---
+
+<div class:list={['specs', extra]}>
+	{groups.map((group, index) => (
+		<details class="specs__group" open={openFirst && index === 0}>
+			<summary>{group.title}</summary>
+			<dl class="specs__rows">
+				{group.rows.map((row) => (
+					<div class="specs__row">
+						<dt>{row.term}</dt>
+						<dd>{row.detail}</dd>
+					</div>
+				))}
+			</dl>
+		</details>
+	))}
+</div>

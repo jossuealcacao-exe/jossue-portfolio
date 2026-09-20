@@ -18,6 +18,6 @@ const pathname = `/${locale}/`;
 const meta = metadata[locale].home;
 ---
 
-<BaseLayout locale={locale} title={meta.title} description={meta.description} pathname={pathname} theme="storefront">
+<BaseLayout locale={locale} title={meta.title} description={meta.description} pathname={pathname}>
 	<StorefrontHome locale={locale} cases={cases} />
 </BaseLayout>

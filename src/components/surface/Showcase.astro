@@ -1,0 +1,18 @@
+---
+/**
+ * El patron de la PDP: el medio queda fijo mientras los parrafos
+ * corren a su lado. En movil se apila, que es como Apple tambien lo
+ * resuelve, sin pegajosidad que estorbe en pantalla chica.
+ */
+interface Props {
+	flip?: boolean;
+	class?: string;
+}
+
+const { flip = false, class: extra } = Astro.props;
+---
+
+<div class:list={['showcase', flip && 'showcase--flip', extra]}>
+	<div class="showcase__media"><slot name="media" /></div>
+	<div class="showcase__copy"><slot /></div>
+</div>

@@ -1,0 +1,33 @@
+---
+/**
+ * Una idea por pantalla. Es la unidad de composicion del rediseño:
+ * en lugar de secciones que se empujan, cada bloque tiene su propio
+ * aire y su propio fondo.
+ */
+interface Props {
+	id?: string;
+	tone?: 'paper' | 'ink';
+	size?: 'tight' | 'base' | 'loose' | 'flush';
+	align?: 'start' | 'center';
+	tall?: boolean;
+	hero?: boolean;
+	class?: string;
+}
+
+const { id, tone = 'paper', size = 'base', align = 'start', tall = false, hero = false, class: extra } = Astro.props;
+---
+
+<section
+	id={id}
+	class:list={[
+		'stage',
+		size !== 'base' && `stage--${size}`,
+		align === 'center' && 'stage--center',
+		tall && 'stage--tall',
+		hero && 'stage--hero',
+		extra,
+	]}
+	data-tone={tone === 'ink' ? 'ink' : undefined}
+>
+	<div class="stage__inner"><slot /></div>
+</section>

@@ -1,0 +1,47 @@
+---
+/**
+ * Campo de imagen para la ronda 2.
+ *
+ * Reserva el espacio exacto que ocupara la imagen definitiva y declara,
+ * en la pagina, que va ahi y con que direccion de arte. En la ronda 2
+ * este componente se sustituye por <Image>: mismo id, misma proporcion,
+ * mismo hueco. Nada se recompone.
+ */
+const RATIOS = {
+	'21:9': '21 / 9',
+	'16:9': '16 / 9',
+	'3:2': '3 / 2',
+	'4:3': '4 / 3',
+	'1:1': '1 / 1',
+	'4:5': '4 / 5',
+	'9:16': '9 / 16',
+} as const;
+
+interface Props {
+	/** Identificador estable. Es la llave con la que se entrega la imagen en la ronda 2. */
+	id: string;
+	/** Que imagen va aqui, en una frase. Se lee en pantalla. */
+	label: string;
+	ratio?: keyof typeof RATIOS;
+	/** Direccion de arte: encuadre, tono, que debe y que no debe mostrar. */
+	note?: string;
+	variant?: 'sunken' | 'soft' | 'bleed';
+	class?: string;
+}
+
+const { id, label, ratio = '16:9', note, variant = 'sunken', class: extra } = Astro.props;
+---
+
+<figure
+	class:list={['slot', variant !== 'sunken' && `slot--${variant}`, extra]}
+	style={`--slot-ratio:${RATIOS[ratio]};`}
+	data-media-slot={id}
+	data-slot-ratio={ratio}
+>
+	<figcaption class="slot__body">
+		<span class="slot__tag">slot · {id}</span>
+		<p class="slot__label">{label}</p>
+		{note && <p class="slot__note">{note}</p>}
+	</figcaption>
+	<span class="slot__ratio" aria-hidden="true">{ratio}</span>
+</figure>

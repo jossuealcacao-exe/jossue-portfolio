@@ -1,8 +1,12 @@
 ---
 import type { Locale } from '../data/i18n';
-import { commercialProducts } from '../data/products';
-import CommercialProductCard from './CommercialProductCard.astro';
-import '../styles/storefront.css';
+import { routes } from '../data/i18n';
+import { commercialProducts, productHref } from '../data/products';
+import Icon from './Icon.astro';
+import Bento from './surface/Bento.astro';
+import BentoCell from './surface/BentoCell.astro';
+import MediaSlot from './surface/MediaSlot.astro';
+import Stage from './surface/Stage.astro';
 
 interface Props {
 	locale: Locale;
@@ -10,33 +14,83 @@ interface Props {
 
 const { locale } = Astro.props;
 const es = locale === 'es';
+
+const method = es
+	? ['Contexto', 'Prioridad', 'Construcción', 'Evidencia']
+	: ['Context', 'Priority', 'Build', 'Evidence'];
 ---
 
-<article class="storefront storefront-catalog" data-product-catalog>
-	<header class="storefront-catalog__hero commerce-shell">
-		<p class="commerce-meta">{es ? 'PRODUCTOS · SIN PRECIOS OCULTOS NI PAQUETES GENÉRICOS' : 'PRODUCTS · NO HIDDEN PRICING OR GENERIC PACKAGES'}</p>
-		<div>
-			<h1>{es ? 'Elige por lo que necesitas resolver.' : 'Choose by what you need to solve.'}</h1>
-			<p>{es ? 'Cada producto parte de un problema concreto, explica qué incluye y termina en una conversación para definir alcance. No publico precios porque el trabajo cambia con el contexto, no porque quiera ocultar el proceso.' : 'Each product starts from a concrete problem, explains what it includes, and ends in a conversation to define scope. I do not publish prices because the work changes with context, not because I want to hide the process.'}</p>
-		</div>
-	</header>
+<article class="catalog" data-product-catalog>
+	<Stage hero align="center" size="loose">
+		<p class="stage__eyebrow">
+			{es ? 'Productos · Sin precios ocultos ni paquetes genéricos' : 'Products · No hidden pricing or generic packages'}
+		</p>
+		<h1 class="stage__title">{es ? 'Elige por lo que necesitas resolver.' : 'Choose by what you need to solve.'}</h1>
+		<p class="stage__lede">
+			{es
+				? 'Cada producto parte de un problema concreto, explica qué incluye y termina en una conversación para definir alcance. No publico precios porque el trabajo cambia con el contexto, no porque quiera ocultar el proceso.'
+				: 'Each product starts from a concrete problem, explains what it includes, and ends in a conversation to define scope. I do not publish prices because the work changes with context, not because I want to hide the process.'}
+		</p>
+	</Stage>
 
-	<section class="commerce-shell commerce-section" aria-labelledby="catalog-title">
-		<div class="commerce-section__heading">
-			<p class="commerce-meta">01 · {es ? 'CATÁLOGO' : 'CATALOG'}</p>
-			<h2 id="catalog-title">{es ? 'Servicios diseñados como productos claros.' : 'Services designed as clear products.'}</h2>
+	<Stage id="catalogo" size="loose">
+		<p class="stage__eyebrow">01 · {es ? 'Catálogo' : 'Catalog'}</p>
+		<h2 class="stage__title">{es ? 'Servicios diseñados como productos claros.' : 'Services designed as clear products.'}</h2>
+		<div class="catalog__list">
+			{commercialProducts.map((product, index) => (
+				<article class="catalog__item surface surface--bare" data-rise>
+					<MediaSlot
+						id={`catalog-${product.slug}`}
+						ratio="4:3"
+						variant="soft"
+						label={es ? `Imagen de ${product.title[locale]}` : `${product.title[locale]} image`}
+						note={es
+							? 'Una escena o entregable que represente este producto sin prometer un resultado.'
+							: 'A scene or deliverable that represents this product without promising an outcome.'}
+					/>
+					<div class="catalog__body">
+						<p class="bento__kicker">{String(index + 1).padStart(2, '0')} · {product.category[locale]}</p>
+						<h3><a href={productHref(product, locale)}>{product.title[locale]}</a></h3>
+						<p class="catalog__promise">{product.promise[locale]}</p>
+						<p class="catalog__summary">{product.summary[locale]}</p>
+						{product.status && <p class="pdp__status">{product.status[locale]}</p>}
+						<div class="stage__actions">
+							<a class="pill pill--soft" href={productHref(product, locale)}>
+								{es ? 'Ver detalle' : 'View detail'}
+								<Icon name="arrow-right" />
+							</a>
+							<a class="pill pill--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>
+								{es ? 'Hablar de esto' : 'Talk about this'}
+							</a>
+						</div>
+					</div>
+				</article>
+			))}
 		</div>
-		<div class="commerce-product-grid commerce-product-grid--catalog">
-			{commercialProducts.map((product, index) => <CommercialProductCard product={product} locale={locale} index={index} />)}
-		</div>
-	</section>
+	</Stage>
 
-	<section class="commerce-method commerce-shell" aria-labelledby="method-title">
-		<p class="commerce-meta">02 · {es ? 'MÉTODO' : 'METHOD'}</p>
-		<h2 id="method-title">{es ? 'Del problema a una entrega revisable.' : 'From the problem to a reviewable delivery.'}</h2>
-		<ol>
-			{(es ? ['Contexto', 'Prioridad', 'Construcción', 'Evidencia'] : ['Context', 'Priority', 'Build', 'Evidence']).map((step, index) => <li><span>0{index + 1}</span><strong>{step}</strong></li>)}
-		</ol>
-	</section>
+	<Stage id="metodo" size="loose">
+		<p class="stage__eyebrow">02 · {es ? 'Método' : 'Method'}</p>
+		<h2 class="stage__title">{es ? 'Del problema a una entrega revisable.' : 'From the problem to a reviewable delivery.'}</h2>
+		<Bento class="catalog__method">
+			{method.map((step, index) => (
+				<BentoCell span={index === 0 ? 3 : index === 3 ? 3 : 3}>
+					<p class="bento__kicker">{String(index + 1).padStart(2, '0')}</p>
+					<h3>{step}</h3>
+				</BentoCell>
+			))}
+		</Bento>
+	</Stage>
+
+	<Stage tone="ink" align="center" size="loose" class="pdp__close">
+		<h2 class="stage__title">{es ? '¿No sabes cuál te toca?' : 'Not sure which one fits?'}</h2>
+		<p class="stage__lede">
+			{es
+				? 'Cuéntame el problema y te digo por dónde empezaría yo, aunque sea por ninguno de estos.'
+				: 'Tell me the problem and I will say where I would start, even if it is none of these.'}
+		</p>
+		<div class="stage__actions">
+			<a class="pill pill--soft" href={routes[locale].contact}>{es ? 'Escribirme' : 'Write to me'}<Icon name="arrow-right" /></a>
+		</div>
+	</Stage>
 </article>
-

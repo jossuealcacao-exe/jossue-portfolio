@@ -2,11 +2,16 @@
 import type { CollectionEntry } from 'astro:content';
 import type { CommercialProduct } from '../data/products';
 import { commercialProducts, productHref } from '../data/products';
+import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
-import CaseCard from './CaseCard.astro';
 import Icon from './Icon.astro';
-import ProjectVisual from './ProjectVisual.astro';
-import '../styles/storefront.css';
+import Bento from './surface/Bento.astro';
+import BentoCell from './surface/BentoCell.astro';
+import ChapterNav from './surface/ChapterNav.astro';
+import MediaSlot from './surface/MediaSlot.astro';
+import Showcase from './surface/Showcase.astro';
+import Specs from './surface/Specs.astro';
+import Stage from './surface/Stage.astro';
 
 interface Props {
 	locale: Locale;
@@ -21,75 +26,190 @@ const proofCases = product.proofSlugs.flatMap((slug) => {
 	return entry ? [entry] : [];
 });
 const siblingProducts = commercialProducts.filter((item) => item.slug !== product.slug).slice(0, 3);
+const contactHref = `${routes[locale].contact}?producto=${product.slug}`;
+
+const chapters = [
+	{ href: '#encaje', label: es ? 'Encaje' : 'Fit' },
+	{ href: '#alcance', label: es ? 'Alcance' : 'Scope' },
+	{ href: '#recorrido', label: es ? 'Recorrido' : 'Process' },
+	...(proofCases.length ? [{ href: '#pruebas', label: es ? 'Pruebas' : 'Proof' }] : []),
+	{ href: '#detalle', label: es ? 'Detalle' : 'Specs' },
+];
+
+// La tabla de detalle recoge lo que la pagina ya dijo, para que el dato
+// completo exista sin cobrarlo por adelantado en la lectura.
+const specGroups = [
+	{
+		title: es ? 'Qué incluye' : 'What is included',
+		rows: product.included[locale].map((item, index) => ({
+			term: `${String(index + 1).padStart(2, '0')}`,
+			detail: item,
+		})),
+	},
+	{
+		title: es ? 'Recorrido' : 'Process',
+		rows: product.process[locale].map((step, index) => ({
+			term: es ? `Paso ${index + 1}` : `Step ${index + 1}`,
+			detail: step,
+		})),
+	},
+	{
+		title: es ? 'Encaje y condiciones' : 'Fit and conditions',
+		rows: [
+			{ term: es ? 'Ideal para' : 'Ideal for', detail: product.idealFor[locale] },
+			{
+				term: es ? 'Tipo' : 'Type',
+				detail:
+					product.kind === 'owned-product'
+						? es ? 'Producto propio' : 'Owned product'
+						: es ? 'Servicio entregado como producto' : 'Service delivered as a product',
+			},
+			...(product.status ? [{ term: es ? 'Estado' : 'Status', detail: product.status[locale] }] : []),
+			{
+				term: es ? 'Precio' : 'Price',
+				detail: es
+					? 'No publicado: el alcance se define en conversación antes de cotizar.'
+					: 'Not published: scope is defined in conversation before quoting.',
+			},
+		],
+	},
+];
 ---
 
-<article class="storefront product-detail" data-product-detail={product.slug}>
-	<header class="product-detail__hero commerce-shell">
-		<div class="product-detail__copy">
-			<p class="commerce-meta">{product.category[locale]}</p>
-			<h1>{product.title[locale]}</h1>
-			<p class="product-detail__promise">{product.promise[locale]}</p>
-			<p class="product-detail__summary">{product.summary[locale]}</p>
-			<div class="commerce-actions">
-				<a class="commerce-button commerce-button--light" href={`${routes[locale].contact}?producto=${product.slug}`} data-analytics-event="contact_product">
-					{es ? 'Hablar sobre este producto' : 'Discuss this product'}
-					<Icon name="arrow-right" />
-				</a>
-				<a class="commerce-text-link" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
-			</div>
-			{product.status && <span class="commerce-status">{product.status[locale]}</span>}
-		</div>
-		<div class="product-detail__visual">
-			<ProjectVisual slug={product.visualSlug} title={product.title[locale]} stack={[]} locale={locale} priority />
-		</div>
-	</header>
+<article class="pdp" data-product-detail={product.slug}>
+	<ChapterNav
+		title={product.title[locale]}
+		links={chapters}
+		cta={{ href: contactHref, label: es ? 'Hablar' : 'Talk' }}
+	/>
 
-	<section class="product-detail__fit commerce-shell commerce-section" aria-labelledby="fit-title">
-		<p class="commerce-meta">01 · {es ? 'PARA QUIÉN ES' : 'WHO IT IS FOR'}</p>
-		<div>
-			<h2 id="fit-title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
-			<p>{product.idealFor[locale]}</p>
+	<Stage hero tall align="center" size="loose">
+		<p class="stage__eyebrow">{product.category[locale]}</p>
+		<h1 class="stage__title">{product.title[locale]}</h1>
+		<p class="stage__lede">{product.promise[locale]}</p>
+		<div class="stage__actions">
+			<a class="pill" href={contactHref} data-analytics-event="contact_product">
+				{es ? 'Hablar sobre este producto' : 'Discuss this product'}
+				<Icon name="arrow-right" />
+			</a>
+			<a class="pill pill--soft" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
 		</div>
-	</section>
-
-	<section class="commerce-shell commerce-section product-detail__scope" aria-labelledby="scope-title">
-		<div class="commerce-section__heading">
-			<p class="commerce-meta">02 · {es ? 'QUÉ INCLUYE' : 'WHAT IS INCLUDED'}</p>
-			<h2 id="scope-title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+		{product.status && <p class="pdp__status">{product.status[locale]}</p>}
+		<div class="pdp__hero-media" data-rise="lift">
+			<MediaSlot
+				id={`product-${product.slug}-hero`}
+				ratio="16:9"
+				label={es ? `Apertura de ${product.title[locale]}` : `${product.title[locale]} opening`}
+				note={es
+					? 'La imagen que sostiene la promesa: el entregable real, la pantalla de trabajo o la escena donde este producto ocurre.'
+					: 'The image that carries the promise: the real deliverable, the working screen, or the scene where this product happens.'}
+			/>
 		</div>
-		<ol>
-			{product.included[locale].map((item, index) => <li><span>0{index + 1}</span><p>{item}</p></li>)}
-		</ol>
-	</section>
+	</Stage>
 
-	<section class="commerce-method commerce-shell" aria-labelledby="process-title">
-		<p class="commerce-meta">03 · {es ? 'RECORRIDO' : 'PROCESS'}</p>
-		<h2 id="process-title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
-		<ol>{product.process[locale].map((step, index) => <li><span>0{index + 1}</span><strong>{step}</strong></li>)}</ol>
-	</section>
+	<Stage id="encaje" align="center" size="loose">
+		<p class="stage__eyebrow">01 · {es ? 'Para quién es' : 'Who it is for'}</p>
+		<h2 class="stage__title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
+		<p class="stage__lede">{product.idealFor[locale]}</p>
+	</Stage>
+
+	<Stage id="alcance" size="loose">
+		<p class="stage__eyebrow">02 · {es ? 'Qué incluye' : 'What is included'}</p>
+		<h2 class="stage__title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+		<Showcase class="pdp__showcase showcase--compact">
+			<MediaSlot
+				slot="media"
+				id={`product-${product.slug}-scope`}
+				ratio="4:3"
+				label={es ? 'El entregable' : 'The deliverable'}
+				note={es
+					? 'Queda fija mientras se lee el alcance. Una sola pieza: el documento, el tablero o la interfaz que se entrega.'
+					: 'Stays pinned while the scope is read. A single piece: the document, the board, or the interface delivered.'}
+			/>
+			{product.included[locale].map((item, index) => (
+				<div class="showcase__beat" data-rise>
+					<span class="showcase__index">{String(index + 1).padStart(2, '0')}</span>
+					<p>{item}</p>
+				</div>
+			))}
+		</Showcase>
+	</Stage>
+
+	<Stage id="recorrido" size="loose">
+		<p class="stage__eyebrow">03 · {es ? 'Recorrido' : 'Process'}</p>
+		<h2 class="stage__title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
+		<Bento class="pdp__process">
+			{product.process[locale].map((step, index) => (
+				<BentoCell span={index === 0 ? 4 : 2}>
+					<p class="bento__kicker">{es ? `Paso ${index + 1}` : `Step ${index + 1}`}</p>
+					<p class="bento__metric">{String(index + 1).padStart(2, '0')}</p>
+					<h3>{step}</h3>
+				</BentoCell>
+			))}
+		</Bento>
+	</Stage>
 
 	{proofCases.length > 0 && (
-		<section class="commerce-shell commerce-section" aria-labelledby="proof-title">
-			<div class="commerce-section__heading">
-				<p class="commerce-meta">04 · {es ? 'CASOS RELACIONADOS' : 'RELATED CASES'}</p>
-				<h2 id="proof-title">{es ? 'Trabajo que puedes revisar.' : 'Work you can review.'}</h2>
+		<Stage id="pruebas" size="loose">
+			<p class="stage__eyebrow">04 · {es ? 'Casos relacionados' : 'Related cases'}</p>
+			<h2 class="stage__title">{es ? 'Trabajo que puedes revisar.' : 'Work you can review.'}</h2>
+			<div class="pdp__proof">
+				{proofCases.map((entry) => {
+					const presented = casePresentation(entry.data.slug, locale);
+					return (
+					<a class="tile" href={`${routes[locale].work}${entry.data.slug}/`} data-rise>
+						<MediaSlot
+							id={`product-${product.slug}-proof-${entry.data.slug}`}
+							ratio="4:3"
+							variant="soft"
+							label={es ? `Portada de ${entry.data.title}` : `${entry.data.title} cover`}
+							note={es ? 'Captura real del proyecto.' : 'Real capture of the project.'}
+						/>
+						<div class="tile__body">
+							<h3>{entry.data.title}</h3>
+							<p>{presented?.summary ?? ''}</p>
+							<span class="tile__cue">{es ? 'Abrir caso' : 'Open case'}<Icon name="arrow-right" /></span>
+						</div>
+					</a>
+					);
+				})}
 			</div>
-			<div class="commerce-case-grid">{proofCases.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
-		</section>
+		</Stage>
 	)}
 
-	<section class="product-detail__cta commerce-shell">
-		<p class="commerce-meta">{es ? 'SIGUIENTE PASO' : 'NEXT STEP'}</p>
-		<h2>{es ? 'Cuéntame qué estás intentando resolver.' : 'Tell me what you are trying to solve.'}</h2>
-		<p>{es ? 'Con contexto suficiente puedo decirte si este producto encaja, qué falta definir o si conviene empezar por otra ruta.' : 'With enough context, I can tell you whether this product fits, what still needs definition, or whether another route makes more sense.'}</p>
-		<a class="commerce-button commerce-button--light" href={`${routes[locale].contact}?producto=${product.slug}`} data-analytics-event="contact_product_bottom">
-			{es ? 'Iniciar conversación' : 'Start a conversation'}
-			<Icon name="arrow-right" />
-		</a>
-	</section>
+	<Stage id="detalle" size="loose">
+		<p class="stage__eyebrow">05 · {es ? 'Detalle' : 'Specs'}</p>
+		<h2 class="stage__title">{es ? 'Todo el detalle, cuando lo quieras ver.' : 'Every detail, when you want to see it.'}</h2>
+		<div class="pdp__specs"><Specs groups={specGroups} /></div>
+	</Stage>
 
-	<nav class="commerce-shell commerce-related" aria-label={es ? 'Otros productos' : 'Other products'}>
-		<p class="commerce-meta">{es ? 'OTRAS RUTAS' : 'OTHER ROUTES'}</p>
-		<ul>{siblingProducts.map((item) => <li><a href={productHref(item, locale)}>{item.title[locale]}<Icon name="arrow-right" /></a></li>)}</ul>
-	</nav>
+	<Stage tone="ink" align="center" size="loose" class="pdp__close">
+		<p class="stage__eyebrow">{es ? 'Siguiente paso' : 'Next step'}</p>
+		<h2 class="stage__title">{es ? 'Cuéntame qué estás intentando resolver.' : 'Tell me what you are trying to solve.'}</h2>
+		<p class="stage__lede">
+			{es
+				? 'Con contexto suficiente puedo decirte si este producto encaja, qué falta definir o si conviene empezar por otra ruta.'
+				: 'With enough context, I can tell you whether this product fits, what still needs definition, or whether another route makes more sense.'}
+		</p>
+		<div class="stage__actions">
+			<a class="pill pill--soft" href={contactHref} data-analytics-event="contact_product_bottom">
+				{es ? 'Iniciar conversación' : 'Start a conversation'}
+				<Icon name="arrow-right" />
+			</a>
+		</div>
+	</Stage>
+
+	<Stage size="tight" class="pdp__related">
+		<p class="stage__eyebrow">{es ? 'Otras rutas' : 'Other routes'}</p>
+		<ul class="pdp__related-list">
+			{siblingProducts.map((item) => (
+				<li>
+					<a class="pill pill--soft" href={productHref(item, locale)}>
+						{item.title[locale]}
+						<Icon name="arrow-right" />
+					</a>
+				</li>
+			))}
+		</ul>
+	</Stage>
 </article>

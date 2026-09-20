@@ -1,110 +1,158 @@
 ---
 import { madreCopy } from '../data/madre';
 import { routes, type Locale } from '../data/i18n';
-import '../styles/madre.css';
+import Icon from './Icon.astro';
+import Bento from './surface/Bento.astro';
+import BentoCell from './surface/BentoCell.astro';
+import ChapterNav from './surface/ChapterNav.astro';
+import MediaSlot from './surface/MediaSlot.astro';
+import Showcase from './surface/Showcase.astro';
+import Stage from './surface/Stage.astro';
 
 interface Props {
 	locale: Locale;
 }
 
 const { locale } = Astro.props;
-const content = madreCopy(locale);
+const es = locale === 'es';
+const m = madreCopy(locale);
+
+const chapters = [
+	{ href: '#problema', label: m.problem.title.split(' ').slice(0, 2).join(' ') },
+	{ href: '#flujo', label: es ? 'Flujo' : 'Flow' },
+	{ href: '#equipo', label: es ? 'Equipo' : 'Crew' },
+	{ href: '#control', label: es ? 'Control' : 'Control' },
+	{ href: '#demo', label: es ? 'Demo' : 'Demo' },
+];
 ---
 
-<article class="madre" data-madre-page data-locale={locale}>
-	<header class="madre__hero shell">
-		<p class="eyebrow">{content.eyebrow}</p>
-		<h1>{content.title}</h1>
-		<p class="madre__lede">{content.lede}</p>
-		<div class="madre__actions">
-			<a class="button" href={routes[locale].contact} data-analytics-event="click_madre_contact">{content.primaryCta}</a>
-			<a class="text-link" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{content.secondaryCta}</a>
-		</div>
-	</header>
+<article class="madre" data-madre-page>
+	<ChapterNav title="MADRE" links={chapters} cta={{ href: routes[locale].contact, label: es ? 'Hablar' : 'Talk' }} />
 
-	<section class="madre__section shell" aria-labelledby="madre-problem">
-		<p class="index">{content.problem.index}</p>
-		<div class="madre__body">
-			<h2 id="madre-problem">{content.problem.title}</h2>
-			<p class="madre__intro">{content.problem.text}</p>
-			<ul class="madre__issue-grid">
-				{content.problem.points.map((point, index) => <li><span>0{index + 1}</span>{point}</li>)}
-			</ul>
+	<Stage hero tall size="loose">
+		<p class="stage__eyebrow">{m.eyebrow}</p>
+		<h1 class="stage__title">{m.title}</h1>
+		<p class="stage__lede">{m.lede}</p>
+		<div class="stage__actions">
+			<a class="pill" href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.primaryCta}<Icon name="arrow-right" /></a>
+			<a class="pill pill--soft" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.secondaryCta}</a>
 		</div>
-	</section>
+		<div class="pdp__hero-media" data-rise="lift">
+			<MediaSlot
+				id="madre-hero"
+				ratio="16:9"
+				label={es ? 'La sala compartida' : 'The shared room'}
+				note={es
+					? 'Interfaz real de MADRE o la escena de trabajo que representa. Sin capturas inventadas: si la interfaz aún no existe, va fotografía de contexto.'
+					: 'Real MADRE interface, or the working scene that stands for it. No invented captures: if the interface does not exist yet, use context photography.'}
+			/>
+		</div>
+	</Stage>
 
-	<section class="madre__section madre__section--dark" aria-labelledby="madre-definition">
-		<div class="shell madre__section-grid">
-			<p class="index">{content.definition.index}</p>
-			<div class="madre__body">
-				<h2 id="madre-definition">{content.definition.title}</h2>
-				<p class="madre__statement">{content.definition.text}</p>
+	<Stage id="problema" size="loose">
+		<p class="stage__eyebrow">{m.problem.index} · {es ? 'El problema' : 'The problem'}</p>
+		<h2 class="stage__title">{m.problem.title}</h2>
+		<p class="stage__lede">{m.problem.text}</p>
+		<Bento class="madre__issues">
+			{m.problem.points.map((point, index) => (
+				<BentoCell span={index === 0 ? 3 : 3}>
+					<p class="bento__kicker">{String(index + 1).padStart(2, '0')}</p>
+					<p>{point}</p>
+				</BentoCell>
+			))}
+		</Bento>
+	</Stage>
+
+	<Stage id="definicion" tone="ink" size="loose">
+		<p class="stage__eyebrow">{m.definition.index} · {es ? 'Qué es' : 'What it is'}</p>
+		<h2 class="stage__title">{m.definition.title}</h2>
+		<p class="stage__lede">{m.definition.text}</p>
+	</Stage>
+
+	<Stage id="flujo" size="loose">
+		<p class="stage__eyebrow">{m.flow.index} · {es ? 'Flujo' : 'Flow'}</p>
+		<h2 class="stage__title">{m.flow.title}</h2>
+		<p class="stage__lede">{m.flow.text}</p>
+		<Showcase class="madre__flow">
+			<MediaSlot
+				slot="media"
+				id="madre-flow"
+				ratio="4:3"
+				label={es ? 'El recorrido, en una imagen' : 'The flow, in one image'}
+				note={es ? 'Permanece fija mientras se leen los pasos.' : 'Stays pinned while the steps are read.'}
+			/>
+			{m.flow.steps.map((step) => (
+				<div class="showcase__beat" data-rise>
+					<span class="showcase__index">{step.number}</span>
+					<h3>{step.title}</h3>
+					<p>{step.text}</p>
+				</div>
+			))}
+		</Showcase>
+	</Stage>
+
+	<Stage id="equipo" size="loose">
+		<p class="stage__eyebrow">{m.crew.index} · {es ? 'Equipo' : 'Crew'}</p>
+		<h2 class="stage__title">{m.crew.title}</h2>
+		<p class="stage__lede">{m.crew.text}</p>
+		<Bento class="madre__roles">
+			{m.crew.roles.map((role) => (
+				<BentoCell span={2}>
+					<p class="bento__kicker">{role.label}</p>
+					<h3>{role.title}</h3>
+					<p>{role.text}</p>
+				</BentoCell>
+			))}
+		</Bento>
+	</Stage>
+
+	<Stage id="memoria" size="loose">
+		<div class="home-surface__profile">
+			<MediaSlot
+				id="madre-memory"
+				ratio="1:1"
+				variant="soft"
+				label={es ? 'Memoria comprobable' : 'Verifiable memory'}
+				note={es ? 'Un artefacto de registro: archivo, recibo o historial.' : 'A record artifact: a file, a receipt, or a history.'}
+			/>
+			<div class="u-stack">
+				<p class="stage__eyebrow">{m.memory.index} · {es ? 'Memoria' : 'Memory'}</p>
+				<h2 class="stage__title">{m.memory.title}</h2>
+				<p class="stage__lede">{m.memory.text}</p>
+				<p class="madre__note">{m.memory.note}</p>
 			</div>
 		</div>
-	</section>
+	</Stage>
 
-	<section class="madre__section shell" aria-labelledby="madre-flow">
-		<p class="index">{content.flow.index}</p>
-		<div class="madre__body">
-			<h2 id="madre-flow">{content.flow.title}</h2>
-			<p class="madre__intro">{content.flow.text}</p>
-			<ol class="madre__steps">
-				{content.flow.steps.map((step) => <li><span>{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}
+	<Stage id="control" size="loose">
+		<p class="stage__eyebrow">{m.control.index} · {es ? 'Control' : 'Control'}</p>
+		<h2 class="stage__title">{m.control.title}</h2>
+		<p class="stage__lede">{m.control.text}</p>
+		<ul class="madre__boundaries">
+			{m.control.boundaries.map((item) => <li class="surface surface--flat" data-rise>{item}</li>)}
+		</ul>
+	</Stage>
+
+	<Stage id="demo" size="loose">
+		<p class="stage__eyebrow">{m.demo.index} · {es ? 'Demostración' : 'Demo'}</p>
+		<h2 class="stage__title">{m.demo.title}</h2>
+		<p class="stage__lede">{m.demo.text}</p>
+		<div class="madre__demo surface surface--sunken" data-rise data-madre-explanatory>
+			<p class="bento__kicker">{m.demo.label}</p>
+			<ol class="madre__transcript">
+				{m.demo.transcript.map((line) => (
+					<li><strong>{line.speaker}</strong><span>{line.text}</span></li>
+				))}
 			</ol>
 		</div>
-	</section>
+	</Stage>
 
-	<section class="madre__section shell" aria-labelledby="madre-crew">
-		<p class="index">{content.crew.index}</p>
-		<div class="madre__body">
-			<h2 id="madre-crew">{content.crew.title}</h2>
-			<p class="madre__intro">{content.crew.text}</p>
-			<div class="madre__roles">
-				{content.crew.roles.map((role) => <article><p class="madre__label">{role.label}</p><h3>{role.title}</h3><p>{role.text}</p></article>)}
-			</div>
+	<Stage tone="ink" align="center" size="loose" class="pdp__close">
+		<h2 class="stage__title">{m.closing.title}</h2>
+		<p class="stage__lede">{m.closing.text}</p>
+		<div class="stage__actions">
+			<a class="pill pill--soft" href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.primaryCta}<Icon name="arrow-right" /></a>
+			<a class="pill pill--ghost" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.secondaryCta}</a>
 		</div>
-	</section>
-
-	<section class="madre__section madre__section--memory" aria-labelledby="madre-memory">
-		<div class="shell madre__section-grid">
-			<p class="index">{content.memory.index}</p>
-			<div class="madre__body">
-				<h2 id="madre-memory">{content.memory.title}</h2>
-				<p class="madre__intro">{content.memory.text}</p>
-				<aside class="madre__ledger"><span>LEDGER / EVIDENCE</span><p>{content.memory.note}</p></aside>
-			</div>
-		</div>
-	</section>
-
-	<section class="madre__section shell" aria-labelledby="madre-control">
-		<p class="index">{content.control.index}</p>
-		<div class="madre__body">
-			<h2 id="madre-control">{content.control.title}</h2>
-			<p class="madre__intro">{content.control.text}</p>
-			<ul class="madre__boundaries">{content.control.boundaries.map((boundary, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{boundary}</li>)}</ul>
-		</div>
-	</section>
-
-	<section class="madre__section shell" aria-labelledby="madre-demo" data-madre-explanatory>
-		<p class="index">{content.demo.index}</p>
-		<div class="madre__body">
-			<h2 id="madre-demo">{content.demo.title}</h2>
-			<p class="madre__intro">{content.demo.text}</p>
-			<div class="madre__demo">
-				<p class="madre__demo-label">{content.demo.label}</p>
-				<ol>{content.demo.transcript.map((line) => <li><span>{line.speaker}</span><p>{line.text}</p></li>)}</ol>
-			</div>
-		</div>
-	</section>
-
-	<section class="madre__closing">
-		<div class="shell">
-			<h2>{content.closing.title}</h2>
-			<p>{content.closing.text}</p>
-			<div class="madre__actions">
-				<a class="button" href={routes[locale].contact} data-analytics-event="click_madre_contact">{content.closing.primaryCta}</a>
-				<a class="text-link" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{content.closing.secondaryCta}</a>
-			</div>
-		</div>
-	</section>
+	</Stage>
 </article>

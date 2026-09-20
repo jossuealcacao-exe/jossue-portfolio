@@ -1,0 +1,15 @@
+---
+interface Props {
+	span?: 2 | 3 | 4 | 6;
+	tall?: boolean;
+	figure?: boolean;
+	class?: string;
+}
+const { span = 3, tall = false, figure = false, class: extra } = Astro.props;
+---
+<article
+	class:list={['bento__cell', `bento__cell--${span}`, tall && 'bento__cell--tall', figure && 'bento__cell--figure', extra]}
+	data-rise
+>
+	<slot />
+</article>

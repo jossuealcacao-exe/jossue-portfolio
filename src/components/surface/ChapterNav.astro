@@ -1,0 +1,28 @@
+---
+/**
+ * Barra de capitulo pegajosa, como la de una PDP: el nombre de lo que
+ * estas viendo, los saltos internos y la accion, siempre a la mano.
+ * Reutiliza la clase .case-jump para que el observador de scroll que
+ * ya existe en scripts/motion.ts marque el enlace activo sin codigo nuevo.
+ */
+interface Props {
+	title: string;
+	links: Array<{ href: string; label: string }>;
+	cta?: { href: string; label: string };
+	class?: string;
+}
+
+const { title, links, cta, class: extra } = Astro.props;
+---
+
+<nav class:list={['chapter-nav', 'case-jump', extra]} aria-label={title}>
+	<div class="chapter-nav__inner">
+		<span class="chapter-nav__title">{title}</span>
+		<ul class="chapter-nav__links">
+			{links.map((link) => (
+				<li><a href={link.href}>{link.label}</a></li>
+			))}
+		</ul>
+		{cta && <a class="pill" href={cta.href}>{cta.label}</a>}
+	</div>
+</nav>

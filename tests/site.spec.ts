@@ -111,8 +111,10 @@ test('MADRE is bilingual, explicit about evidence, and connected to contact and 
 test('commercial catalog presents MADRE as a product and keeps Apex access bounded', async ({ page }) => {
 	await page.goto('/es/productos/');
 	await expect(page.locator('[data-product-catalog]')).toBeVisible();
-	await expect(page.getByRole('link', { name: /MADRE/ })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.commerce-product-card')).toHaveCount(5);
+	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
+	await expect(page.locator('.catalog__item')).toHaveCount(5);
+	// Cada producto reserva su campo de imagen para la ronda 2.
+	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(5);
 	await page.locator('.jossue-assistant__launcher').click();
 	await expect(page.locator('.jossue-assistant__panel')).toBeVisible();
 	await expect(page.locator('.jossue-assistant__panel')).toContainText('Todavía no consulta auditorías ni datos de Apex');
@@ -134,7 +136,10 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 	await page.goto('/es/');
 	await expect(page.locator('.nav__links a')).toHaveCount(4);
 	await expect(page.locator('.nav__links .nav__cta')).toHaveText('Contacto');
-	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'storefront');
+	// El rediseño movio la home al tono papel; el cierre oscuro vive en su
+	// propia seccion, no en el tema del documento.
+	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'default');
+	await expect(page.locator('main .stage[data-tone="ink"]')).toHaveCount(1);
 	const headerColor = await page.locator('.site-header').evaluate((element) => getComputedStyle(element).backgroundColor);
 	expect(headerColor).not.toBe('rgba(0, 0, 0, 0)');
 
@@ -171,13 +176,13 @@ test('Home leads with a commercial proposition and selected products', async ({ 
 	await page.goto('/es/');
 	await expect(page.locator('[data-storefront-home]')).toBeVisible();
 	await expect(page.locator('main h1')).toHaveText('Convierte una auditoría en una mejora que sí llega a producción.');
-	await expect(page.locator('.storefront-hero__visual img')).toHaveCount(3);
-	await expect(page.locator('.storefront-hero__visual figcaption')).toContainText('Sin resultados inventados');
-	await expect(page.locator('.commerce-product-card')).toHaveCount(5);
-	await expect(page.getByRole('link', { name: /MADRE/ })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.commerce-proof .case-card')).toHaveCount(3);
-	await expect(page.locator('.commerce-method li')).toHaveCount(4);
-	await expect(page.locator('.commerce-profile__photo img')).toBeVisible();
+	await expect(page.locator('[data-media-slot="home-hero"]')).toBeVisible();
+	await expect(page.locator('[data-media-slot="home-hero"]')).toContainText('resultados inventados');
+	await expect(page.locator('.home-surface__bento .bento__cell')).toHaveCount(5);
+	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
+	await expect(page.locator('.home-surface__tiles .tile')).toHaveCount(3);
+	await expect(page.locator('.home-surface__showcase .showcase__beat')).toHaveCount(4);
+	await expect(page.locator('[data-media-slot="home-portrait"]')).toBeVisible();
 	for (const phrase of legacyPublicCopy) await expect(page.locator('main')).not.toContainText(phrase);
 	await expect(page.locator('main')).not.toContainText('57+');
 	await expect(page.locator('main')).not.toContainText('45 páginas');
@@ -344,3 +349,36 @@ for (const project of [
 		}
 	});
 }
+
+test('every image slot declares the contract round 2 depends on', async ({ page }) => {
+	// Un slot sin id, sin proporcion o sin etiqueta es un hueco que nadie
+	// sabra rellenar despues. Este guard existe para que la ronda 2 no
+	// tenga que adivinar nada.
+	const RATIOS = ['21:9', '16:9', '3:2', '4:3', '1:1', '4:5', '9:16'];
+	const seen = new Set<string>();
+
+	for (const route of ['/es/', '/es/productos/', '/es/productos/auditoria-ecommerce/', '/es/madre/']) {
+		await page.goto(route);
+		const slots = page.locator('[data-media-slot]');
+		const count = await slots.count();
+		expect(count, `${route} debe reservar al menos un campo de imagen`).toBeGreaterThan(0);
+
+		const ids: string[] = [];
+		for (let index = 0; index < count; index += 1) {
+			const slot = slots.nth(index);
+			const id = await slot.getAttribute('data-media-slot');
+			const ratio = await slot.getAttribute('data-slot-ratio');
+			expect(id, `${route}: un slot quedo sin id`).toBeTruthy();
+			expect(RATIOS, `${route}#${id}: proporcion fuera del catalogo`).toContain(ratio);
+			await expect(slot.locator('.slot__label'), `${route}#${id}: sin etiqueta legible`).not.toBeEmpty();
+			ids.push(id as string);
+		}
+
+		// Dentro de una misma pagina los ids no pueden repetirse: en la
+		// ronda 2 cada uno recibe un archivo distinto.
+		expect(new Set(ids).size, `${route}: ids de slot duplicados`).toBe(ids.length);
+		ids.forEach((id) => seen.add(id));
+	}
+
+	expect(seen.size).toBeGreaterThan(10);
+});

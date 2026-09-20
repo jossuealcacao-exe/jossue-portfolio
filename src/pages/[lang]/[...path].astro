@@ -76,7 +76,6 @@ const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.des
 	pathname={pathname}
 	counterpartSlug={entry?.data.counterpartSlug ?? product?.slug}
 	caseStudy={entry ? { title: entry.data.title, client: entry.data.client, role: entry.data.role, stack: entry.data.stack } : undefined}
-	theme={pageKey === 'products' || pageKey === 'product' ? 'storefront' : 'default'}
 >
 	{
 		entry ? (
