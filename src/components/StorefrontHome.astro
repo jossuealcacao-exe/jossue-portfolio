@@ -1,0 +1,103 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import profilePhoto from '../assets/profile.jpeg';
+import carniceriaScreen from '../assets/cases/la-carniceria-virtual/lcv-home-hero.jpeg';
+import comeVerdeScreen from '../assets/cases/come-verde/cv-home-desktop.jpeg';
+import tecalliScreen from '../assets/cases/tiendaonline/tecalli-home-hero.jpeg';
+import { routes, type Locale } from '../data/i18n';
+import { commercialProducts } from '../data/products';
+import { profileCopy } from '../data/profile';
+import CaseCard from './CaseCard.astro';
+import CommercialProductCard from './CommercialProductCard.astro';
+import Icon from './Icon.astro';
+import '../styles/storefront.css';
+
+interface Props {
+	locale: Locale;
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, cases } = Astro.props;
+const es = locale === 'es';
+const about = profileCopy(locale);
+const selectedCases = ['la-carniceria-virtual', 'come-verde', 'bloqio-builder'].flatMap((slug) => {
+	const entry = cases.find((item) => item.data.slug === slug);
+	return entry ? [entry] : [];
+});
+---
+
+<article class="storefront" data-storefront-home>
+	<section class="storefront-hero commerce-shell" aria-labelledby="storefront-title">
+		<div class="storefront-hero__copy">
+			<p class="commerce-meta">ECOMMERCE · IA · PRODUCTO · EJECUCIÓN</p>
+			<h1 id="storefront-title">{es ? 'Convierte una auditoría en una mejora que sí llega a producción.' : 'Turn an audit into an improvement that actually reaches production.'}</h1>
+			<p>{es ? 'Diagnóstico, producto y ejecución para ecommerce, web e IA.' : 'Diagnosis, product, and delivery for ecommerce, web, and AI.'}</p>
+			<div class="commerce-actions">
+				<a class="commerce-button commerce-button--light" href={routes[locale].contact} data-analytics-event="home_primary_contact">
+					{es ? 'Solicitar diagnóstico' : 'Request a diagnosis'}
+					<Icon name="arrow-right" />
+				</a>
+				<a class="commerce-text-link" href={routes[locale].work}>{es ? 'Ver casos' : 'View cases'}</a>
+			</div>
+		</div>
+		<figure class="storefront-hero__visual" aria-label={es ? 'Capturas reales de proyectos ecommerce' : 'Real screenshots from ecommerce projects'}>
+			<div class="storefront-hero__screen storefront-hero__screen--main">
+				<Image src={carniceriaScreen} alt={es ? 'Inicio de La Carnicería Virtual' : 'La Carnicería Virtual home page'} widths={[760, 1040, 1440]} sizes="(min-width: 64rem) 52vw, 100vw" loading="eager" decoding="sync" />
+			</div>
+			<div class="storefront-hero__screen storefront-hero__screen--secondary">
+				<Image src={comeVerdeScreen} alt={es ? 'Inicio de Come Verde' : 'Come Verde home page'} widths={[480, 760]} sizes="(min-width: 64rem) 22vw, 42vw" loading="eager" decoding="sync" />
+			</div>
+			<div class="storefront-hero__screen storefront-hero__screen--tertiary">
+				<Image src={tecalliScreen} alt={es ? 'Inicio conceptual de Casa Tecalli' : 'Casa Tecalli concept home page'} widths={[480, 760]} sizes="(min-width: 64rem) 20vw, 38vw" loading="eager" decoding="sync" />
+			</div>
+			<figcaption>{es ? 'Capturas reales de casos · Sin resultados inventados' : 'Real case screenshots · No invented outcomes'}</figcaption>
+		</figure>
+	</section>
+
+	<section class="commerce-shell commerce-section" aria-labelledby="products-title">
+		<div class="commerce-section__heading commerce-section__heading--split">
+			<div>
+				<p class="commerce-meta">01 · {es ? 'PRODUCTOS' : 'PRODUCTS'}</p>
+				<h2 id="products-title">{es ? 'Soluciones para construir y escalar tu negocio.' : 'Solutions to build and scale your business.'}</h2>
+			</div>
+			<a class="commerce-text-link" href={routes[locale].products}>{es ? 'Ver todos los productos' : 'View all products'}<Icon name="arrow-right" /></a>
+		</div>
+		<div class="commerce-product-grid">
+			{commercialProducts.map((product, index) => <CommercialProductCard product={product} locale={locale} index={index} compact />)}
+		</div>
+	</section>
+
+	<section class="commerce-shell commerce-section commerce-proof" aria-labelledby="proof-title">
+		<div class="commerce-section__heading commerce-section__heading--split">
+			<div>
+				<p class="commerce-meta">02 · {es ? 'CASOS REALES' : 'REAL CASES'}</p>
+				<h2 id="proof-title">{es ? 'Trabajo que habla por sí mismo.' : 'Work that speaks for itself.'}</h2>
+			</div>
+			<a class="commerce-text-link" href={routes[locale].work}>{es ? 'Explorar el catálogo' : 'Explore the catalog'}<Icon name="arrow-right" /></a>
+		</div>
+		<div class="commerce-case-grid">{selectedCases.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
+	</section>
+
+	<section class="commerce-method commerce-shell" aria-labelledby="home-method-title">
+		<p class="commerce-meta">03 · {es ? 'FORMA DE TRABAJAR' : 'WAY OF WORKING'}</p>
+		<h2 id="home-method-title">{es ? 'Del diagnóstico a lo que funciona.' : 'From diagnosis to what works.'}</h2>
+		<ol>
+			{(es ? ['Diagnóstico', 'Prioridad', 'Entrega', 'Evidencia'] : ['Diagnosis', 'Priority', 'Delivery', 'Evidence']).map((step, index) => <li><span>0{index + 1}</span><strong>{step}</strong></li>)}
+		</ol>
+	</section>
+
+	<section class="commerce-shell commerce-section commerce-profile" aria-labelledby="profile-title">
+		<div class="commerce-profile__photo"><Image src={profilePhoto} alt={es ? 'Retrato profesional de Jossue Alcalá' : 'Professional portrait of Jossue Alcalá'} width={640} height={800} loading="lazy" decoding="async" /></div>
+		<div class="commerce-profile__copy">
+			<p class="commerce-meta">04 · {es ? 'TRAYECTORIA VERIFICABLE' : 'VERIFIABLE TRACK RECORD'}</p>
+			<h2 id="profile-title">{es ? 'Estrategia de negocio con capacidad de construir.' : 'Business strategy with the ability to build.'}</h2>
+			<p>{about.summary}</p>
+			<div class="commerce-actions">
+				<a class="commerce-button commerce-button--dark" href={routes[locale].about}>{es ? 'Ver trayectoria' : 'View track record'}<Icon name="arrow-right" /></a>
+				<a class="commerce-text-link" href={routes[locale].contact}>{es ? 'Hablar conmigo' : 'Talk to me'}</a>
+			</div>
+		</div>
+	</section>
+</article>
+

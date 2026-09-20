@@ -322,7 +322,12 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					<li>{es ? 'Lo que hace se entiende y se puede deshacer. Nada pasa a tus espaldas.' : 'What it does is understandable and undoable. Nothing happens behind your back.'}</li>
 					<li>{es ? 'Usa los datos de verdad de tu negocio, respeta quién puede ver qué, y las decisiones importantes siguen siendo tuyas.' : 'It uses your real business data, respects who can see what, and the decisions that matter stay yours.'}</li>
 				</ul>
-				<a class="button" href={routes[locale].contact}>{es ? 'Quiero mi negocio con IA' : 'I want my business running on AI'}</a>
+				<div class="hero__actions">
+					<a class="button" href={routes[locale].contact}>{es ? 'Quiero mi negocio con IA' : 'I want my business running on AI'}</a>
+					<a class="button button--ghost" href={routes[locale].madre} data-analytics-event="click_madre">
+						{es ? 'Conocer MADRE' : 'Explore MADRE'}
+					</a>
+				</div>
 			</section>
 		</div>
 	)

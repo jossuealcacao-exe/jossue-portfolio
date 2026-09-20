@@ -2,23 +2,38 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import AhpCommandAtlas from '../../components/AhpCommandAtlas.astro';
 import CaseDetail from '../../components/CaseDetail.astro';
+import MadrePage from '../../components/MadrePage.astro';
 import PageView from '../../components/PageView.astro';
+import ProductCatalog from '../../components/ProductCatalog.astro';
+import ProductDetail from '../../components/ProductDetail.astro';
 import { casePresentation } from '../../data/casePresentation';
 import { metadata, routes, type Locale, type PageKey } from '../../data/i18n';
+import { commercialProduct, commercialProducts, type ProductSlug } from '../../data/products';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 type PageProps =
 	| { locale: Locale; pageKey: Exclude<PageKey, 'home'>; entry?: never }
-	| { locale: Locale; pageKey: 'case'; entry: CollectionEntry<'cases'> };
+	| { locale: Locale; pageKey: 'case'; entry: CollectionEntry<'cases'> }
+	| { locale: Locale; pageKey: 'product'; productSlug: ProductSlug; entry?: never };
 
 export async function getStaticPaths() {
 	const paths: Array<{ params: { lang: Locale; path: string }; props: PageProps }> = [];
-	const pageKeys = ['work', 'services', 'ai', 'about', 'contact', 'ahpAtlas'] as const;
+	const pageKeys = ['products', 'work', 'services', 'ai', 'about', 'contact', 'ahpAtlas', 'madre'] as const;
 
 	for (const locale of ['es', 'en'] as const) {
 		for (const pageKey of pageKeys) {
 			const path = routes[locale][pageKey].replace(`/${locale}/`, '').replace(/\/$/, '');
 			paths.push({ params: { lang: locale, path }, props: { locale, pageKey } });
+		}
+	}
+
+	for (const locale of ['es', 'en'] as const) {
+		const productSegment = routes[locale].products.replace(`/${locale}/`, '').replace(/\/$/, '');
+		for (const product of commercialProducts.filter((item) => item.slug !== 'madre')) {
+			paths.push({
+				params: { lang: locale, path: `${productSegment}/${product.slug}` },
+				props: { locale, pageKey: 'product', productSlug: product.slug },
+			});
 		}
 	}
 
@@ -42,10 +57,16 @@ const cases = (await getCollection('cases', ({ data }) => data.lang === locale &
 	a.data.title.localeCompare(b.data.title),
 );
 const entry = pageKey === 'case' ? props.entry : undefined;
-const meta = pageKey === 'case' ? undefined : metadata[locale][pageKey];
+const product = pageKey === 'product' ? commercialProduct(props.productSlug) : undefined;
+if (pageKey === 'product' && !product) throw new Error(`Unknown product: ${props.productSlug}`);
+const meta = pageKey === 'case' || pageKey === 'product' ? undefined : metadata[locale][pageKey];
 const publicCase = entry ? casePresentation(entry.data.slug, locale) : undefined;
-const title = entry ? `${entry.data.title} — ${locale === 'es' ? 'Proyecto' : 'Project'} — Jossue Alcalá` : meta!.title;
-const description = publicCase?.summary ?? meta!.description;
+const title = entry
+	? `${entry.data.title} — ${locale === 'es' ? 'Proyecto' : 'Project'} — Jossue Alcalá`
+	: product
+		? `${product.title[locale]} — Jossue Alcalá`
+		: meta!.title;
+const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.description;
 ---
 
 <BaseLayout
@@ -53,14 +74,21 @@ const description = publicCase?.summary ?? meta!.description;
 	title={title}
 	description={description}
 	pathname={pathname}
-	counterpartSlug={entry?.data.counterpartSlug}
+	counterpartSlug={entry?.data.counterpartSlug ?? product?.slug}
 	caseStudy={entry ? { title: entry.data.title, client: entry.data.client, role: entry.data.role, stack: entry.data.stack } : undefined}
+	theme={pageKey === 'products' || pageKey === 'product' ? 'storefront' : 'default'}
 >
 	{
 		entry ? (
 			<CaseDetail entry={entry} locale={locale} />
 		) : pageKey === 'ahpAtlas' ? (
 			<AhpCommandAtlas locale={locale} />
+		) : pageKey === 'madre' ? (
+			<MadrePage locale={locale} />
+		) : pageKey === 'products' ? (
+			<ProductCatalog locale={locale} />
+		) : product ? (
+			<ProductDetail locale={locale} product={product} cases={cases} />
 		) : (
 			<PageView locale={locale} pageKey={pageKey as PageKey} cases={cases} />
 		)

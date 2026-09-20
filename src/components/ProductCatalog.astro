@@ -1,0 +1,42 @@
+---
+import type { Locale } from '../data/i18n';
+import { commercialProducts } from '../data/products';
+import CommercialProductCard from './CommercialProductCard.astro';
+import '../styles/storefront.css';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+---
+
+<article class="storefront storefront-catalog" data-product-catalog>
+	<header class="storefront-catalog__hero commerce-shell">
+		<p class="commerce-meta">{es ? 'PRODUCTOS · SIN PRECIOS OCULTOS NI PAQUETES GENÉRICOS' : 'PRODUCTS · NO HIDDEN PRICING OR GENERIC PACKAGES'}</p>
+		<div>
+			<h1>{es ? 'Elige por lo que necesitas resolver.' : 'Choose by what you need to solve.'}</h1>
+			<p>{es ? 'Cada producto parte de un problema concreto, explica qué incluye y termina en una conversación para definir alcance. No publico precios porque el trabajo cambia con el contexto, no porque quiera ocultar el proceso.' : 'Each product starts from a concrete problem, explains what it includes, and ends in a conversation to define scope. I do not publish prices because the work changes with context, not because I want to hide the process.'}</p>
+		</div>
+	</header>
+
+	<section class="commerce-shell commerce-section" aria-labelledby="catalog-title">
+		<div class="commerce-section__heading">
+			<p class="commerce-meta">01 · {es ? 'CATÁLOGO' : 'CATALOG'}</p>
+			<h2 id="catalog-title">{es ? 'Servicios diseñados como productos claros.' : 'Services designed as clear products.'}</h2>
+		</div>
+		<div class="commerce-product-grid commerce-product-grid--catalog">
+			{commercialProducts.map((product, index) => <CommercialProductCard product={product} locale={locale} index={index} />)}
+		</div>
+	</section>
+
+	<section class="commerce-method commerce-shell" aria-labelledby="method-title">
+		<p class="commerce-meta">02 · {es ? 'MÉTODO' : 'METHOD'}</p>
+		<h2 id="method-title">{es ? 'Del problema a una entrega revisable.' : 'From the problem to a reviewable delivery.'}</h2>
+		<ol>
+			{(es ? ['Contexto', 'Prioridad', 'Construcción', 'Evidencia'] : ['Context', 'Priority', 'Build', 'Evidence']).map((step, index) => <li><span>0{index + 1}</span><strong>{step}</strong></li>)}
+		</ol>
+	</section>
+</article>
+

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import PageView from '../../components/PageView.astro';
+import StorefrontHome from '../../components/StorefrontHome.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { isLocale, metadata, type Locale } from '../../data/i18n';
 
@@ -18,6 +18,6 @@ const pathname = `/${locale}/`;
 const meta = metadata[locale].home;
 ---
 
-<BaseLayout locale={locale} title={meta.title} description={meta.description} pathname={pathname}>
-	<PageView locale={locale} pageKey="home" cases={cases} />
+<BaseLayout locale={locale} title={meta.title} description={meta.description} pathname={pathname} theme="storefront">
+	<StorefrontHome locale={locale} cases={cases} />
 </BaseLayout>

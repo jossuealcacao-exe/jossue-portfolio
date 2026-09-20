@@ -18,16 +18,28 @@ const routes = [
 	'/es/',
 	'/es/trabajo/',
 	...caseSlugs.map((slug) => `/es/trabajo/${slug}/`),
+	'/es/productos/',
+	'/es/productos/auditoria-ecommerce/',
+	'/es/productos/cro-crecimiento/',
+	'/es/productos/shopify-desarrollo-web/',
+	'/es/productos/ia-aplicada/',
 	'/es/servicios/',
 	'/es/ia-y-sistemas/',
+	'/es/madre/',
 	'/es/acerca/',
 	'/es/contacto/',
 	'/es/recursos/ahp-plus/',
 	'/en/',
 	'/en/work/',
 	...caseSlugs.map((slug) => `/en/work/${slug}/`),
+	'/en/products/',
+	'/en/products/auditoria-ecommerce/',
+	'/en/products/cro-crecimiento/',
+	'/en/products/shopify-desarrollo-web/',
+	'/en/products/ia-aplicada/',
 	'/en/services/',
 	'/en/ai-and-systems/',
+	'/en/madre/',
 	'/en/about/',
 	'/en/contact/',
 	'/en/resources/ahp-plus/',
@@ -87,6 +99,9 @@ try {
 	if (sitemapUrls.some((url) => new URL(url).pathname === '/')) {
 		failures.push('The negotiated root URL must not be listed in the sitemap.');
 	}
+	for (const pathname of ['/es/madre/', '/en/madre/']) {
+		if (!sitemapUrls.some((url) => new URL(url).pathname === pathname)) failures.push(`Sitemap must include ${pathname}.`);
+	}
 } catch {
 	failures.push('Unable to inspect sitemap-0.xml.');
 }
@@ -97,6 +112,10 @@ const homeHtml = await readFile(path.join(dist, 'es', 'index.html'), 'utf8');
 const caseHtml = await readFile(path.join(dist, 'es', 'trabajo', 'ahp-plus', 'index.html'), 'utf8');
 const atlasEsHtml = await readFile(path.join(dist, 'es', 'recursos', 'ahp-plus', 'index.html'), 'utf8');
 const atlasEnHtml = await readFile(path.join(dist, 'en', 'resources', 'ahp-plus', 'index.html'), 'utf8');
+const madreEsHtml = await readFile(path.join(dist, 'es', 'madre', 'index.html'), 'utf8');
+const madreEnHtml = await readFile(path.join(dist, 'en', 'madre', 'index.html'), 'utf8');
+const productsEsHtml = await readFile(path.join(dist, 'es', 'productos', 'index.html'), 'utf8');
+const aiProductEsHtml = await readFile(path.join(dist, 'es', 'productos', 'ia-aplicada', 'index.html'), 'utf8');
 if (!caseHtml.includes('"@type":"CreativeWork"')) failures.push('Case studies must expose CreativeWork structured data.');
 if (!caseHtml.includes('AHP+ 1.4.1') || !caseHtml.includes('Código abierto')) failures.push('AHP+ case must present the independent 1.4.1 product.');
 if (caseHtml.includes('AHP+ 1.0') || caseHtml.includes('Producto propio / Pangea OS')) failures.push('AHP+ case still contains superseded 1.0 positioning.');
@@ -104,6 +123,13 @@ if (!caseHtml.includes('https://github.com/jossuealcacao-exe/ahp_plus') || !case
 if (!atlasEsHtml.includes('npx ahp project verify . --strict') || !atlasEsHtml.includes('data-ahp-command')) failures.push('Spanish AHP+ atlas must expose the 1.4.1 CLI catalog in static HTML.');
 if (!atlasEnHtml.includes('Ask in human language') || !atlasEnHtml.includes('/ahp verify strict')) failures.push('English AHP+ atlas must expose platform chat commands.');
 if (!atlasEsHtml.includes('/en/resources/ahp-plus/')) failures.push('Spanish AHP+ atlas must link to its English equivalent.');
+if (!madreEsHtml.includes('data-madre-page') || !madreEnHtml.includes('data-madre-page')) failures.push('MADRE pages must expose their stable page marker.');
+if (!madreEsHtml.includes('/en/madre/') || !madreEnHtml.includes('/es/madre/')) failures.push('MADRE pages must link to their language equivalent.');
+if (!madreEsHtml.includes('data-madre-explanatory') || !madreEnHtml.includes('data-madre-explanatory')) failures.push('MADRE conceptual demonstrations must be labeled as explanatory.');
+if (!madreEsHtml.includes('/es/contacto/') || !madreEsHtml.includes('/es/recursos/ahp-plus/')) failures.push('Spanish MADRE page must expose contact and AHP+ calls to action.');
+if (!madreEnHtml.includes('/en/contact/') || !madreEnHtml.includes('/en/resources/ahp-plus/')) failures.push('English MADRE page must expose contact and AHP+ calls to action.');
+if (!productsEsHtml.includes('data-product-catalog') || !productsEsHtml.includes('/es/madre/')) failures.push('Spanish product catalog must include MADRE as a product.');
+if (!aiProductEsHtml.includes('data-product-detail="ia-aplicada"') || !aiProductEsHtml.includes('Todavía no consulta auditorías ni datos de Apex')) failures.push('Applied AI product must render with the bounded assistant disclosure.');
 if (!homeHtml.includes('<meta name="google-adsense-account" content="ca-pub-5612202849073748">')) {
 	failures.push('Home must expose the AdSense ownership verification meta tag.');
 }

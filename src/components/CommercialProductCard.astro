@@ -1,0 +1,38 @@
+---
+import type { CommercialProduct } from '../data/products';
+import { productHref } from '../data/products';
+import type { Locale } from '../data/i18n';
+import Icon from './Icon.astro';
+import ProjectVisual from './ProjectVisual.astro';
+
+interface Props {
+	product: CommercialProduct;
+	locale: Locale;
+	index: number;
+	compact?: boolean;
+}
+
+const { product, locale, index, compact = false } = Astro.props;
+---
+
+<article class:list={['commerce-product-card', compact && 'commerce-product-card--compact', product.slug === 'madre' && 'commerce-product-card--madre']}>
+	<a href={productHref(product, locale)} data-analytics-event="view_product">
+		{product.slug === 'madre' ? (
+			<figure class="commerce-product-card__madre-visual">
+				<img src="/assets/products/madre-banner.svg" alt={locale === 'es' ? 'Identidad visual de MADRE, producto para coordinar agentes de IA' : 'MADRE visual identity, a product for coordinating AI agents'} loading="lazy" />
+			</figure>
+		) : (
+			<ProjectVisual slug={product.visualSlug} title={product.title[locale]} stack={[]} locale={locale} priority={index === 0} />
+		)}
+		<div class="commerce-product-card__body">
+			<p class="commerce-meta"><span>{String(index + 1).padStart(2, '0')}</span><span>{product.category[locale]}</span></p>
+			<h3>{product.title[locale]}</h3>
+			<p>{product.promise[locale]}</p>
+			{product.status && <span class="commerce-status">{product.status[locale]}</span>}
+			<span class="commerce-product-card__cta">
+				{locale === 'es' ? 'Ver producto' : 'View product'}
+				<Icon name="arrow-right" />
+			</span>
+		</div>
+	</a>
+</article>

@@ -1,0 +1,81 @@
+---
+import { contact } from '../data/contact';
+import { routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
+import '../styles/storefront.css';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const choices = es
+	? [
+			['Quiero mejorar mi ecommerce', 'Puedo ayudarte a elegir entre una auditoría, CRO o una intervención de Shopify. Cuéntame qué vendes y qué te preocupa hoy.'],
+			['Necesito construir algo', 'La ruta de desarrollo sirve para una tienda, integración o producto web. El primer paso es delimitar el problema y quién lo va a operar.'],
+			['Quiero aplicar IA', 'Primero definimos una tarea concreta, sus datos y quién conserva la decisión. No necesito que llegues con una herramienta elegida.'],
+		]
+	: [
+			['I want to improve my ecommerce', 'I can help you choose between an audit, CRO, or a Shopify intervention. Tell me what you sell and what concerns you today.'],
+			['I need to build something', 'The development route can cover a store, integration, or web product. The first step is defining the problem and who will operate it.'],
+			['I want to apply AI', 'We start by defining a concrete task, its data, and who keeps decision authority. You do not need to arrive with a tool already chosen.'],
+		];
+---
+
+<aside class="jossue-assistant" data-jossue-assistant>
+	<button class="jossue-assistant__launcher" type="button" aria-expanded="false" aria-controls="jossue-assistant-panel">
+		<span class="jossue-assistant__pulse" aria-hidden="true"></span>
+		<span><strong>Jossue IA</strong><small>{es ? 'ORIENTA · COTIZA' : 'GUIDES · SCOPES'}</small></span>
+		<Icon name="chat" />
+	</button>
+	<section class="jossue-assistant__panel" id="jossue-assistant-panel" hidden aria-label={es ? 'Orientación comercial guiada' : 'Guided commercial orientation'}>
+		<header>
+			<div><p class="commerce-meta">JOSSUE IA · {es ? 'ORIENTACIÓN' : 'ORIENTATION'}</p><h2>{es ? '¿Qué quieres resolver?' : 'What do you want to solve?'}</h2></div>
+			<button type="button" data-assistant-close aria-label={es ? 'Cerrar asistente' : 'Close assistant'}><Icon name="close" /></button>
+		</header>
+		<p class="jossue-assistant__disclosure">{es ? 'Esta versión guía la conversación. Todavía no consulta auditorías ni datos de Apex.' : 'This version guides the conversation. It does not yet access audits or Apex data.'}</p>
+		<div class="jossue-assistant__choices">
+			{choices.map(([label, response]) => <button type="button" data-assistant-choice data-response={response}>{label}<Icon name="arrow-right" /></button>)}
+		</div>
+		<div class="jossue-assistant__response" data-assistant-response hidden aria-live="polite"></div>
+		<footer>
+			{contact.whatsapp && <a href={contact.whatsapp} rel="noreferrer" data-analytics-event="assistant_whatsapp">WhatsApp<Icon name="arrow-up-right" /></a>}
+			<a href={routes[locale].contact} data-analytics-event="assistant_contact">{es ? 'Formulario' : 'Contact form'}<Icon name="arrow-right" /></a>
+		</footer>
+	</section>
+</aside>
+
+<script>
+	const assistant = document.querySelector<HTMLElement>('[data-jossue-assistant]');
+	if (assistant) {
+		const launcher = assistant.querySelector<HTMLButtonElement>('.jossue-assistant__launcher');
+		const panel = assistant.querySelector<HTMLElement>('.jossue-assistant__panel');
+		const close = assistant.querySelector<HTMLButtonElement>('[data-assistant-close]');
+		const response = assistant.querySelector<HTMLElement>('[data-assistant-response]');
+		const setOpen = (open: boolean) => {
+			if (!launcher || !panel) return;
+			launcher.setAttribute('aria-expanded', String(open));
+			panel.hidden = !open;
+			if (open) close?.focus();
+		};
+		launcher?.addEventListener('click', () => setOpen(launcher.getAttribute('aria-expanded') !== 'true'));
+		close?.addEventListener('click', () => {
+			setOpen(false);
+			launcher?.focus();
+		});
+		assistant.querySelectorAll<HTMLButtonElement>('[data-assistant-choice]').forEach((button) => {
+			button.addEventListener('click', () => {
+				if (!response) return;
+				response.textContent = button.dataset.response ?? '';
+				response.hidden = false;
+			});
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && panel && !panel.hidden) {
+				setOpen(false);
+				launcher?.focus();
+			}
+		});
+	}
+</script>

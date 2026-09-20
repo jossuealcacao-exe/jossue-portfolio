@@ -2,13 +2,18 @@ import { expect, test } from '@playwright/test';
 
 const routes = [
 	'/es/',
+	'/es/productos/',
+	'/es/productos/auditoria-ecommerce/',
 	'/es/trabajo/',
 	'/es/servicios/',
 	'/es/ia-y-sistemas/',
+	'/es/madre/',
 	'/es/acerca/',
 	'/es/contacto/',
 	'/es/recursos/ahp-plus/',
 	'/en/resources/ahp-plus/',
+	'/en/products/',
+	'/en/madre/',
 ];
 const legacyPublicCopy = [
 	'Resultados documentados en el CV',
@@ -89,12 +94,49 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 	await expect(page.locator('main h1')).toContainText('Let context travel');
 });
 
+test('MADRE is bilingual, explicit about evidence, and connected to contact and AHP+', async ({ page }) => {
+	await page.goto('/es/madre/');
+	await expect(page.locator('[data-madre-page]')).toBeVisible();
+	await expect(page.locator('main h1')).toContainText('Un lugar común');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('NO ES EVIDENCIA DE EJECUCIÓN');
+	await expect(page.locator('main a[data-analytics-event="click_madre_contact"]').first()).toHaveAttribute('href', '/es/contacto/');
+	await expect(page.locator('main a[data-analytics-event="click_madre_ahp"]').first()).toHaveAttribute('href', '/es/recursos/ahp-plus/');
+	await expect(page.locator('.nav__links a')).toHaveCount(4);
+	await page.locator('a.language').click();
+	await expect(page).toHaveURL(/\/en\/madre\/$/);
+	await expect(page.locator('main h1')).toContainText('One shared place');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('NOT EXECUTION EVIDENCE');
+});
+
+test('commercial catalog presents MADRE as a product and keeps Apex access bounded', async ({ page }) => {
+	await page.goto('/es/productos/');
+	await expect(page.locator('[data-product-catalog]')).toBeVisible();
+	await expect(page.getByRole('link', { name: /MADRE/ })).toHaveAttribute('href', '/es/madre/');
+	await expect(page.locator('.commerce-product-card')).toHaveCount(5);
+	await page.locator('.jossue-assistant__launcher').click();
+	await expect(page.locator('.jossue-assistant__panel')).toBeVisible();
+	await expect(page.locator('.jossue-assistant__panel')).toContainText('Todavía no consulta auditorías ni datos de Apex');
+	await page.locator('[data-assistant-choice]').first().click();
+	await expect(page.locator('[data-assistant-response]')).toBeVisible();
+});
+
+test('product detail is bilingual and routes to a contact conversation', async ({ page }) => {
+	await page.goto('/es/productos/auditoria-ecommerce/');
+	await expect(page.locator('[data-product-detail="auditoria-ecommerce"]')).toBeVisible();
+	await expect(page.locator('main h1')).toHaveText('Auditoría ecommerce');
+	await expect(page.locator('main a[data-analytics-event="contact_product"]')).toHaveAttribute('href', '/es/contacto/?producto=auditoria-ecommerce');
+	await page.locator('a.language').click();
+	await expect(page).toHaveURL(/\/en\/products\/auditoria-ecommerce\/$/);
+	await expect(page.locator('main h1')).toHaveText('Ecommerce audit');
+});
+
 test('header keeps navigation focused and mobile menu supports Escape', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('.nav__links a')).toHaveCount(4);
 	await expect(page.locator('.nav__links .nav__cta')).toHaveText('Contacto');
-	const headerMaterial = await page.locator('.site-header').evaluate((element) => getComputedStyle(element).backgroundImage);
-	expect(headerMaterial).toContain('linear-gradient');
+	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'storefront');
+	const headerColor = await page.locator('.site-header').evaluate((element) => getComputedStyle(element).backgroundColor);
+	expect(headerColor).not.toBe('rgba(0, 0, 0, 0)');
 
 	const viewport = page.viewportSize();
 	if (viewport && viewport.width < 928) {
@@ -127,47 +169,15 @@ test('contact page prioritizes direct working channels', async ({ page }) => {
 
 test('Home leads with a commercial proposition and selected products', async ({ page }) => {
 	await page.goto('/es/');
-	await expect(page.locator('main h1 .hero-title__type')).toHaveText('Ecommerce que de verdad vende.');
-	await expect(page.locator('.selected-work .case-card')).toHaveCount(5);
-	await expect(page.locator('.selected-work .project-visual')).toHaveCount(5);
-	await expect(page.locator('.selected-work .stack-list')).toHaveCount(5);
-	await expect(page.locator('.selected-work .project-grid')).toHaveCSS('overflow-x', 'auto');
-	const selectedWorkScrolls = await page.locator('.selected-work .project-grid').evaluate((element) => element.scrollWidth > element.clientWidth);
-	expect(selectedWorkScrolls).toBe(true);
-	const selectedWorkCardFit = await page.locator('.selected-work .case-card').first().evaluate((card) => {
-		const link = card.querySelector('.case-card__link');
-		const visual = card.querySelector('.project-visual');
-		if (!link || !visual) return false;
-		const cardRect = card.getBoundingClientRect();
-		const linkRect = link.getBoundingClientRect();
-		const visualRect = visual.getBoundingClientRect();
-		const viewportWidth = document.documentElement.clientWidth;
-		const carouselWidth = card.parentElement?.clientWidth ?? viewportWidth;
-		const isWideEnoughOnMobile = viewportWidth >= 480 || cardRect.width >= carouselWidth * 0.79;
-		return isWideEnoughOnMobile && visualRect.left >= linkRect.left && visualRect.right <= linkRect.right;
-	});
-	expect(selectedWorkCardFit).toBe(true);
-	await expect(page.locator('.selected-work .section-heading > .index')).toBeVisible();
-	const selectedWorkHeading = await page.locator('.selected-work .section-heading').evaluate((element) => {
-		const index = element.querySelector('.index')?.getBoundingClientRect();
-		const heading = element.querySelector('h2')?.getBoundingClientRect();
-		if (!index || !heading) return false;
-		if (window.innerWidth >= 1024) {
-			// Desktop: the section index runs vertically in the left gutter, beside the heading.
-			const isVertical = index.height > index.width;
-			return isVertical && index.right <= heading.left;
-		}
-		// Below 1024px it stacks above the heading, flush left.
-		return index.bottom < heading.top && Math.abs(index.left - heading.left) < 2;
-	});
-	expect(selectedWorkHeading).toBe(true);
-	await expect(page.locator('.selected-work')).toContainText('AHP+');
-	await expect(page.locator('.opportunity-grid > article')).toHaveCount(2);
-	await expect(page.locator('.pain-list li')).toHaveCount(4);
-	await expect(page.locator('.solve-list li')).toHaveCount(3);
-	await expect(page.locator('.outcomes-grid')).toBeVisible();
-	await expect(page.locator('.profile-intro__photo img')).toBeVisible();
-	await expect(page.locator('.brand-strip').first()).toHaveCSS('justify-content', 'center');
+	await expect(page.locator('[data-storefront-home]')).toBeVisible();
+	await expect(page.locator('main h1')).toHaveText('Convierte una auditoría en una mejora que sí llega a producción.');
+	await expect(page.locator('.storefront-hero__visual img')).toHaveCount(3);
+	await expect(page.locator('.storefront-hero__visual figcaption')).toContainText('Sin resultados inventados');
+	await expect(page.locator('.commerce-product-card')).toHaveCount(5);
+	await expect(page.getByRole('link', { name: /MADRE/ })).toHaveAttribute('href', '/es/madre/');
+	await expect(page.locator('.commerce-proof .case-card')).toHaveCount(3);
+	await expect(page.locator('.commerce-method li')).toHaveCount(4);
+	await expect(page.locator('.commerce-profile__photo img')).toBeVisible();
 	for (const phrase of legacyPublicCopy) await expect(page.locator('main')).not.toContainText(phrase);
 	await expect(page.locator('main')).not.toContainText('57+');
 	await expect(page.locator('main')).not.toContainText('45 páginas');
@@ -199,15 +209,15 @@ test('Work page rails the cards on mobile and shows every project on desktop', a
 });
 
 test('section motion starts on intersection and reduced motion remains static', async ({ page }) => {
-	await page.goto('/es/');
-	const profile = page.locator('.profile-section');
-	await profile.scrollIntoViewIfNeeded();
-	await expect(profile).toHaveClass(/is-revealed/);
+	await page.goto('/es/trabajo/');
+	const workGroup = page.locator('.work-group').last();
+	await workGroup.scrollIntoViewIfNeeded();
+	await expect(workGroup).toHaveClass(/is-revealed/);
 
 	await page.emulateMedia({ reducedMotion: 'reduce' });
 	await page.reload();
 	await expect(page.locator('html')).toHaveClass(/motion-reduced/);
-	await expect(page.locator('.selected-work')).toHaveCSS('opacity', '1');
+	await expect(page.locator('.work-group').first()).toHaveCSS('opacity', '1');
 });
 
 test('About presents experience, impact, brands, and CV without internal notes', async ({ page }) => {

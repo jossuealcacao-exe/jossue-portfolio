@@ -1,0 +1,95 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { CommercialProduct } from '../data/products';
+import { commercialProducts, productHref } from '../data/products';
+import { routes, type Locale } from '../data/i18n';
+import CaseCard from './CaseCard.astro';
+import Icon from './Icon.astro';
+import ProjectVisual from './ProjectVisual.astro';
+import '../styles/storefront.css';
+
+interface Props {
+	locale: Locale;
+	product: CommercialProduct;
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, product, cases } = Astro.props;
+const es = locale === 'es';
+const proofCases = product.proofSlugs.flatMap((slug) => {
+	const entry = cases.find((item) => item.data.slug === slug);
+	return entry ? [entry] : [];
+});
+const siblingProducts = commercialProducts.filter((item) => item.slug !== product.slug).slice(0, 3);
+---
+
+<article class="storefront product-detail" data-product-detail={product.slug}>
+	<header class="product-detail__hero commerce-shell">
+		<div class="product-detail__copy">
+			<p class="commerce-meta">{product.category[locale]}</p>
+			<h1>{product.title[locale]}</h1>
+			<p class="product-detail__promise">{product.promise[locale]}</p>
+			<p class="product-detail__summary">{product.summary[locale]}</p>
+			<div class="commerce-actions">
+				<a class="commerce-button commerce-button--light" href={`${routes[locale].contact}?producto=${product.slug}`} data-analytics-event="contact_product">
+					{es ? 'Hablar sobre este producto' : 'Discuss this product'}
+					<Icon name="arrow-right" />
+				</a>
+				<a class="commerce-text-link" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
+			</div>
+			{product.status && <span class="commerce-status">{product.status[locale]}</span>}
+		</div>
+		<div class="product-detail__visual">
+			<ProjectVisual slug={product.visualSlug} title={product.title[locale]} stack={[]} locale={locale} priority />
+		</div>
+	</header>
+
+	<section class="product-detail__fit commerce-shell commerce-section" aria-labelledby="fit-title">
+		<p class="commerce-meta">01 · {es ? 'PARA QUIÉN ES' : 'WHO IT IS FOR'}</p>
+		<div>
+			<h2 id="fit-title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
+			<p>{product.idealFor[locale]}</p>
+		</div>
+	</section>
+
+	<section class="commerce-shell commerce-section product-detail__scope" aria-labelledby="scope-title">
+		<div class="commerce-section__heading">
+			<p class="commerce-meta">02 · {es ? 'QUÉ INCLUYE' : 'WHAT IS INCLUDED'}</p>
+			<h2 id="scope-title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+		</div>
+		<ol>
+			{product.included[locale].map((item, index) => <li><span>0{index + 1}</span><p>{item}</p></li>)}
+		</ol>
+	</section>
+
+	<section class="commerce-method commerce-shell" aria-labelledby="process-title">
+		<p class="commerce-meta">03 · {es ? 'RECORRIDO' : 'PROCESS'}</p>
+		<h2 id="process-title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
+		<ol>{product.process[locale].map((step, index) => <li><span>0{index + 1}</span><strong>{step}</strong></li>)}</ol>
+	</section>
+
+	{proofCases.length > 0 && (
+		<section class="commerce-shell commerce-section" aria-labelledby="proof-title">
+			<div class="commerce-section__heading">
+				<p class="commerce-meta">04 · {es ? 'CASOS RELACIONADOS' : 'RELATED CASES'}</p>
+				<h2 id="proof-title">{es ? 'Trabajo que puedes revisar.' : 'Work you can review.'}</h2>
+			</div>
+			<div class="commerce-case-grid">{proofCases.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
+		</section>
+	)}
+
+	<section class="product-detail__cta commerce-shell">
+		<p class="commerce-meta">{es ? 'SIGUIENTE PASO' : 'NEXT STEP'}</p>
+		<h2>{es ? 'Cuéntame qué estás intentando resolver.' : 'Tell me what you are trying to solve.'}</h2>
+		<p>{es ? 'Con contexto suficiente puedo decirte si este producto encaja, qué falta definir o si conviene empezar por otra ruta.' : 'With enough context, I can tell you whether this product fits, what still needs definition, or whether another route makes more sense.'}</p>
+		<a class="commerce-button commerce-button--light" href={`${routes[locale].contact}?producto=${product.slug}`} data-analytics-event="contact_product_bottom">
+			{es ? 'Iniciar conversación' : 'Start a conversation'}
+			<Icon name="arrow-right" />
+		</a>
+	</section>
+
+	<nav class="commerce-shell commerce-related" aria-label={es ? 'Otros productos' : 'Other products'}>
+		<p class="commerce-meta">{es ? 'OTRAS RUTAS' : 'OTHER ROUTES'}</p>
+		<ul>{siblingProducts.map((item) => <li><a href={productHref(item, locale)}>{item.title[locale]}<Icon name="arrow-right" /></a></li>)}</ul>
+	</nav>
+</article>

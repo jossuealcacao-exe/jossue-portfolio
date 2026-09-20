@@ -13,7 +13,7 @@ const languagePath = equivalentPath(pathname, locale, otherLocale, counterpartSl
 const menuLabel = locale === 'es' ? 'Menú' : 'Menu';
 const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 	const href = routes[locale][key];
-	return pathname === href || (key === 'work' && pathname.startsWith(href));
+	return pathname === href || (key === 'work' && pathname.startsWith(href)) || (key === 'products' && (pathname.startsWith(href) || pathname === routes[locale].madre));
 };
 ---
 

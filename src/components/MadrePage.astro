@@ -1,0 +1,110 @@
+---
+import { madreCopy } from '../data/madre';
+import { routes, type Locale } from '../data/i18n';
+import '../styles/madre.css';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const content = madreCopy(locale);
+---
+
+<article class="madre" data-madre-page data-locale={locale}>
+	<header class="madre__hero shell">
+		<p class="eyebrow">{content.eyebrow}</p>
+		<h1>{content.title}</h1>
+		<p class="madre__lede">{content.lede}</p>
+		<div class="madre__actions">
+			<a class="button" href={routes[locale].contact} data-analytics-event="click_madre_contact">{content.primaryCta}</a>
+			<a class="text-link" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{content.secondaryCta}</a>
+		</div>
+	</header>
+
+	<section class="madre__section shell" aria-labelledby="madre-problem">
+		<p class="index">{content.problem.index}</p>
+		<div class="madre__body">
+			<h2 id="madre-problem">{content.problem.title}</h2>
+			<p class="madre__intro">{content.problem.text}</p>
+			<ul class="madre__issue-grid">
+				{content.problem.points.map((point, index) => <li><span>0{index + 1}</span>{point}</li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="madre__section madre__section--dark" aria-labelledby="madre-definition">
+		<div class="shell madre__section-grid">
+			<p class="index">{content.definition.index}</p>
+			<div class="madre__body">
+				<h2 id="madre-definition">{content.definition.title}</h2>
+				<p class="madre__statement">{content.definition.text}</p>
+			</div>
+		</div>
+	</section>
+
+	<section class="madre__section shell" aria-labelledby="madre-flow">
+		<p class="index">{content.flow.index}</p>
+		<div class="madre__body">
+			<h2 id="madre-flow">{content.flow.title}</h2>
+			<p class="madre__intro">{content.flow.text}</p>
+			<ol class="madre__steps">
+				{content.flow.steps.map((step) => <li><span>{step.number}</span><div><h3>{step.title}</h3><p>{step.text}</p></div></li>)}
+			</ol>
+		</div>
+	</section>
+
+	<section class="madre__section shell" aria-labelledby="madre-crew">
+		<p class="index">{content.crew.index}</p>
+		<div class="madre__body">
+			<h2 id="madre-crew">{content.crew.title}</h2>
+			<p class="madre__intro">{content.crew.text}</p>
+			<div class="madre__roles">
+				{content.crew.roles.map((role) => <article><p class="madre__label">{role.label}</p><h3>{role.title}</h3><p>{role.text}</p></article>)}
+			</div>
+		</div>
+	</section>
+
+	<section class="madre__section madre__section--memory" aria-labelledby="madre-memory">
+		<div class="shell madre__section-grid">
+			<p class="index">{content.memory.index}</p>
+			<div class="madre__body">
+				<h2 id="madre-memory">{content.memory.title}</h2>
+				<p class="madre__intro">{content.memory.text}</p>
+				<aside class="madre__ledger"><span>LEDGER / EVIDENCE</span><p>{content.memory.note}</p></aside>
+			</div>
+		</div>
+	</section>
+
+	<section class="madre__section shell" aria-labelledby="madre-control">
+		<p class="index">{content.control.index}</p>
+		<div class="madre__body">
+			<h2 id="madre-control">{content.control.title}</h2>
+			<p class="madre__intro">{content.control.text}</p>
+			<ul class="madre__boundaries">{content.control.boundaries.map((boundary, index) => <li><span>{String(index + 1).padStart(2, '0')}</span>{boundary}</li>)}</ul>
+		</div>
+	</section>
+
+	<section class="madre__section shell" aria-labelledby="madre-demo" data-madre-explanatory>
+		<p class="index">{content.demo.index}</p>
+		<div class="madre__body">
+			<h2 id="madre-demo">{content.demo.title}</h2>
+			<p class="madre__intro">{content.demo.text}</p>
+			<div class="madre__demo">
+				<p class="madre__demo-label">{content.demo.label}</p>
+				<ol>{content.demo.transcript.map((line) => <li><span>{line.speaker}</span><p>{line.text}</p></li>)}</ol>
+			</div>
+		</div>
+	</section>
+
+	<section class="madre__closing">
+		<div class="shell">
+			<h2>{content.closing.title}</h2>
+			<p>{content.closing.text}</p>
+			<div class="madre__actions">
+				<a class="button" href={routes[locale].contact} data-analytics-event="click_madre_contact">{content.closing.primaryCta}</a>
+				<a class="text-link" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{content.closing.secondaryCta}</a>
+			</div>
+		</div>
+	</section>
+</article>

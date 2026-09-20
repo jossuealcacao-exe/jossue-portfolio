@@ -1,38 +1,42 @@
 export const locales = ['es', 'en'] as const;
 export type Locale = (typeof locales)[number];
-export type PageKey = 'home' | 'work' | 'services' | 'ai' | 'about' | 'contact' | 'ahpAtlas';
+export type PageKey = 'home' | 'products' | 'work' | 'services' | 'ai' | 'about' | 'contact' | 'ahpAtlas' | 'madre';
 
 export const routes: Record<Locale, Record<PageKey, string>> = {
 	es: {
 		home: '/es/',
+		products: '/es/productos/',
 		work: '/es/trabajo/',
 		services: '/es/servicios/',
 		ai: '/es/ia-y-sistemas/',
 		about: '/es/acerca/',
 		contact: '/es/contacto/',
 		ahpAtlas: '/es/recursos/ahp-plus/',
+		madre: '/es/madre/',
 	},
 	en: {
 		home: '/en/',
+		products: '/en/products/',
 		work: '/en/work/',
 		services: '/en/services/',
 		ai: '/en/ai-and-systems/',
 		about: '/en/about/',
 		contact: '/en/contact/',
 		ahpAtlas: '/en/resources/ahp-plus/',
+		madre: '/en/madre/',
 	},
 };
 
 export const navigation = {
 	es: [
-		{ key: 'work', label: 'Proyectos' },
-		{ key: 'services', label: 'Servicios' },
+		{ key: 'products', label: 'Productos' },
+		{ key: 'work', label: 'Casos' },
 		{ key: 'about', label: 'Sobre mí' },
 		{ key: 'contact', label: 'Contacto' },
 	],
 	en: [
-		{ key: 'work', label: 'Projects' },
-		{ key: 'services', label: 'Services' },
+		{ key: 'products', label: 'Products' },
+		{ key: 'work', label: 'Cases' },
 		{ key: 'about', label: 'About' },
 		{ key: 'contact', label: 'Contact' },
 	],
@@ -43,6 +47,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		home: {
 			title: 'Jossue Alcalá — Desarrollo web, Shopify y UX/CRO',
 			description: 'Desarrollo y optimización de experiencias Shopify con UX orientada a CRO, IA aplicada y visión comercial.',
+		},
+		products: {
+			title: 'Productos y soluciones — Jossue Alcalá',
+			description: 'Auditoría ecommerce, CRO, Shopify, desarrollo web e IA aplicada convertidos en productos claros y contactables.',
 		},
 		work: {
 			title: 'Trabajo seleccionado — Jossue Alcalá',
@@ -68,11 +76,19 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			title: 'AHP+ 1.4.1 — Continuidad verificable y Command Atlas',
 			description: 'Entiende, instala y usa AHP+ 1.4.1 con evidencia real, ejemplos humanos y comandos para proyectos que cambian de asistente.',
 		},
+		madre: {
+			title: 'MADRE — Coordinación de trabajo con múltiples agentes de IA',
+			description: 'Una explicación de MADRE: sala compartida, memoria consultable, permisos explícitos y control humano para coordinar agentes de IA.',
+		},
 	},
 	en: {
 		home: {
 			title: 'Jossue Alcalá — Web development, Shopify, and UX/CRO',
 			description: 'Shopify development and optimization with CRO-oriented UX, applied AI, and commercial perspective.',
+		},
+		products: {
+			title: 'Products and solutions — Jossue Alcalá',
+			description: 'Ecommerce audits, CRO, Shopify, web development, and applied AI shaped into clear, contact-ready products.',
 		},
 		work: {
 			title: 'Selected work — Jossue Alcalá',
@@ -98,6 +114,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			title: 'AHP+ 1.4.1 — Verifiable continuity and Command Atlas',
 			description: 'Understand, install, and use AHP+ 1.4.1 with real evidence, human examples, and commands for projects that move between assistants.',
 		},
+		madre: {
+			title: 'MADRE — Coordinating work across multiple AI agents',
+			description: 'An explanation of MADRE: a shared room, searchable memory, explicit permissions, and human control for coordinating AI agents.',
+		},
 	},
 };
 
@@ -117,6 +137,12 @@ export function equivalentPath(pathname: string, from: Locale, to: Locale, count
 	if (pathname.startsWith(casePrefix)) {
 		const slug = counterpartSlug ?? pathname.slice(casePrefix.length).replaceAll('/', '');
 		return `${routes[to].work}${slug}/`;
+	}
+
+	const productPrefix = routes[from].products;
+	if (pathname.startsWith(productPrefix)) {
+		const slug = counterpartSlug ?? pathname.slice(productPrefix.length).replaceAll('/', '');
+		return `${routes[to].products}${slug}/`;
 	}
 
 	return routes[to].home;
