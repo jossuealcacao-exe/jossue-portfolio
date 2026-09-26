@@ -77,8 +77,8 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			description: 'Entiende, instala y usa AHP+ 1.4.1 con evidencia real, ejemplos humanos y comandos para proyectos que cambian de asistente.',
 		},
 		madre: {
-			title: 'MADRE — Coordinación de trabajo con múltiples agentes de IA',
-			description: 'Una explicación de MADRE: sala compartida, memoria consultable, permisos explícitos y control humano para coordinar agentes de IA.',
+			title: 'MADRE 0.4.0 — Una sala local para tus agentes',
+			description: 'Instala MADRE en macOS o Linux y coordina Codex, Claude Code, Gemini CLI y OpenCode con memoria compartida, permisos explícitos y control humano.',
 		},
 	},
 	en: {
@@ -115,8 +115,8 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			description: 'Understand, install, and use AHP+ 1.4.1 with real evidence, human examples, and commands for projects that move between assistants.',
 		},
 		madre: {
-			title: 'MADRE — Coordinating work across multiple AI agents',
-			description: 'An explanation of MADRE: a shared room, searchable memory, explicit permissions, and human control for coordinating AI agents.',
+			title: 'MADRE 0.4.0 — A local room for your agents',
+			description: 'Install MADRE on macOS or Linux and coordinate Codex, Claude Code, Gemini CLI, and OpenCode with shared memory, explicit permissions, and human control.',
 		},
 	},
 };

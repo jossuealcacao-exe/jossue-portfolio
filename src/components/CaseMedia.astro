@@ -1,7 +1,5 @@
 ---
-import { Image, getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
-import Icon from './Icon.astro';
+import MediaSlot from './surface/MediaSlot.astro';
 
 interface MediaItem {
 	key: string;
@@ -20,217 +18,23 @@ interface Props {
 
 const { media, locale } = Astro.props;
 const es = locale === 'es';
-
-// Every asset under assets/cases is addressable by its basename (without extension).
-const modules = import.meta.glob<{ default: ImageMetadata }>('../assets/cases/**/*.{png,jpg,jpeg,webp}', {
-	eager: true,
-});
-const images: Record<string, ImageMetadata> = {};
-for (const [path, mod] of Object.entries(modules)) {
-	const name = path.split('/').pop()?.replace(/\.(png|jpe?g|webp)$/i, '');
-	if (name) images[name] = mod.default;
-}
-
-const visibleMedia = media.flatMap((item) => {
-	const image = images[item.key];
-	if (!image) return [];
-	// Portrait phone captures get the device mockup treatment.
-	const isPhone = image.height / image.width > 1.7;
-	const isMobile = isPhone || /mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`);
-	return [{ ...item, image, isMobile, isPhone }];
-});
-
-// El visor cargaba el archivo original: el JSON referenciaba el .jpeg/.png de
-// origen, lo que ademas obligaba a emitirlos enteros en el build. Se sirve una
-// version optimizada, acotada a lo que un visor a pantalla completa necesita.
-const payload = await Promise.all(
-	visibleMedia.map(async (item) => {
-		const viewerImage = await getImage({
-			src: item.image,
-			width: Math.min(item.image.width, 1600),
-			format: 'webp',
-			quality: 80,
-		});
-		return {
-			src: viewerImage.src,
-			alt: item.alt,
-			caption: item.caption,
-			viewport: item.viewport,
-			capturedAt: item.capturedAt,
-			sourceUrl: item.sourceUrl,
-			isPhone: item.isPhone,
-			annotations: [],
-		};
-	}),
-);
-
-const copy = {
-	open: es ? 'Ver imagen' : 'View image',
-	close: es ? 'Cerrar visor' : 'Close viewer',
-	prev: es ? 'Anterior' : 'Previous',
-	next: es ? 'Siguiente' : 'Next',
-	source: es ? 'Proyecto' : 'Project',
-	findings: es ? 'Detalles del proyecto' : 'Project details',
-	evidence: es ? 'Detalle' : 'Detail',
-	risk: es ? 'Por qué importa' : 'Why it matters',
-	recommendation: es ? 'Dirección' : 'Direction',
-	confidence: es ? 'Contexto' : 'Context',
-	of: es ? 'de' : 'of',
-	gallery: es ? 'Galería del proyecto' : 'Project gallery',
-	closeHotspot: es ? 'Cerrar punto destacado' : 'Close highlighted point',
-	selectSlide: es ? 'Ver imagen' : 'View image',
-	captured: es ? 'Captura' : 'Captured',
-	viewport: es ? 'Viewport' : 'Viewport',
-};
+const ratioFor = (item: MediaItem): '16:9' | '4:3' | '9:16' =>
+	/mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`) ? '9:16' : /4:3/i.test(item.viewport) ? '4:3' : '16:9';
 ---
 
-<div
-	class="evidence-gallery"
-	data-evidence-gallery
-	data-locale={locale}
-	role="region"
-	aria-roledescription="carousel"
-	aria-label={copy.gallery}
->
-	<script is:inline type="application/json" data-evidence-payload set:html={JSON.stringify({ copy, items: payload })} />
-	<div class="evidence-carousel" data-evidence-carousel>
-		<div class="evidence-carousel__shell">
-			{
-				visibleMedia.length > 1 && (
-					<button type="button" class="evidence-carousel__nav evidence-carousel__nav--prev" data-carousel-prev aria-label={copy.prev}>
-						<Icon name="arrow-left" size="md" />
-					</button>
-				)
-			}
-			<div class="evidence-carousel__viewport" data-carousel-viewport>
-				<div class="evidence-carousel__track">
-				{
-					visibleMedia.map((item, index) => (
-						<figure
-							class:list={['evidence-figure', { 'is-active': index === 0, 'evidence-figure--mobile': item.isMobile }]}
-							data-evidence-item
-							data-index={index}
-							role="group"
-							aria-roledescription="slide"
-							aria-label={`${index + 1} / ${visibleMedia.length}`}
-						>
-							<div class:list={['evidence-frame', { 'evidence-frame--device': item.isPhone }]}>
-								<button
-									type="button"
-									class="evidence-trigger"
-									data-evidence-open
-									data-index={index}
-									aria-label={`${item.alt} — ${copy.open}`}
-								>
-									{item.isPhone ? (
-										<span class="iphone">
-											<span class="iphone__buttons" aria-hidden="true" />
-											<span class="iphone__power" aria-hidden="true" />
-											<span class="iphone__screen">
-												<Image
-													src={item.image}
-													alt={item.alt}
-													width={720}
-													format="webp"
-													quality={84}
-													loading={index === 0 ? 'eager' : 'lazy'}
-													decoding="async"
-												/>
-												<span class="iphone__island" aria-hidden="true" />
-											</span>
-										</span>
-									) : (
-										<Image
-											src={item.image}
-											alt={item.alt}
-											width={720}
-											format="webp"
-											quality={84}
-											loading={index === 0 ? 'eager' : 'lazy'}
-											decoding="async"
-										/>
-									)}
-									<span class="evidence-trigger__hint">
-										<span>{copy.open}</span>
-										<Icon name="arrow-up-right" />
-									</span>
-								</button>
-							</div>
-							<figcaption class:list={{ 'evidence-figure__caption--mobile': item.isMobile }}>
-								<span class="evidence-figure__index">
-									{String(index + 1).padStart(2, '0')} / {String(visibleMedia.length).padStart(2, '0')}
-								</span>
-								<span>{item.alt}</span>
-							</figcaption>
-						</figure>
-					))
-				}
-				</div>
-			</div>
-			{
-				visibleMedia.length > 1 && (
-					<button type="button" class="evidence-carousel__nav evidence-carousel__nav--next" data-carousel-next aria-label={copy.next}>
-						<Icon name="arrow-right" size="md" />
-					</button>
-				)
-			}
-		</div>
-		{
-			visibleMedia.length > 1 && (
-				<div class="evidence-carousel__dots" data-carousel-dots role="group" aria-label={copy.gallery}>
-					{visibleMedia.map((_, index) => (
-						<button
-							type="button"
-							class="evidence-carousel__dot"
-							data-carousel-dot
-							data-index={index}
-							aria-pressed={index === 0 ? 'true' : 'false'}
-							aria-label={`${String(index + 1).padStart(2, '0')} / ${String(visibleMedia.length).padStart(2, '0')}`}
-						/>
-					))}
-				</div>
-			)
-		}
+<div class="evidence-gallery evidence-gallery--placeholders" role="region" aria-label={es ? 'Galería del proyecto' : 'Project gallery'}>
+	<div class="evidence-placeholder-grid">
+		{media.map((item, index) => (
+			<article class:list={['evidence-placeholder', ratioFor(item) === '9:16' && 'evidence-placeholder--portrait']}>
+				<MediaSlot
+					id={`gallery-${item.key}`}
+					ratio={ratioFor(item)}
+					variant="bleed"
+					label={`${String(index + 1).padStart(2, '0')} / ${String(media.length).padStart(2, '0')} · ${item.alt}`}
+					note={es ? 'Captura retirada; este encuadre queda reservado para la nueva imagen.' : 'Screenshot removed; this frame is reserved for the new image.'}
+				/>
+				<p>{item.caption}</p>
+			</article>
+		))}
 	</div>
 </div>
-
-<dialog class="evidence-lightbox" data-evidence-lightbox aria-labelledby="evidence-lightbox-title">
-	<div class="evidence-lightbox__chrome">
-		<p class="evidence-lightbox__counter" data-lightbox-counter>01 / 01</p>
-		<button type="button" class="evidence-lightbox__icon-btn" data-lightbox-close aria-label={copy.close}>
-			<Icon name="close" size="md" />
-		</button>
-	</div>
-	<div class="evidence-lightbox__stage">
-		<button type="button" class="evidence-lightbox__nav evidence-lightbox__nav--prev" data-lightbox-prev aria-label={copy.prev}>
-			<Icon name="arrow-left" size="md" />
-		</button>
-		<figure class="evidence-lightbox__figure">
-			<div class="evidence-lightbox__frame" data-lightbox-frame>
-				<div class="evidence-lightbox__canvas" data-lightbox-device>
-					<span class="iphone iphone--lightbox">
-						<span class="iphone__buttons" aria-hidden="true"></span>
-						<span class="iphone__power" aria-hidden="true"></span>
-						<span class="iphone__screen">
-							<img data-lightbox-image alt="" />
-							<span class="iphone__island" aria-hidden="true"></span>
-							<div class="evidence-lightbox__markers" data-lightbox-markers hidden></div>
-							<div class="hotspot-cards" data-lightbox-hotspot-card hidden aria-live="polite"></div>
-						</span>
-					</span>
-				</div>
-			</div>
-			<figcaption>
-				<strong id="evidence-lightbox-title" class="evidence-lightbox__badge" data-lightbox-caption></strong>
-			</figcaption>
-		</figure>
-		<button type="button" class="evidence-lightbox__nav evidence-lightbox__nav--next" data-lightbox-next aria-label={copy.next}>
-			<Icon name="arrow-right" size="md" />
-		</button>
-	</div>
-	<aside class="evidence-lightbox__aside" data-lightbox-aside hidden>
-		<p class="eyebrow">{copy.findings}</p>
-		<div data-lightbox-findings></div>
-	</aside>
-	<div class="evidence-lightbox__dots" data-lightbox-dots role="group" aria-label={copy.gallery}></div>
-</dialog>

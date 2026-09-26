@@ -1,0 +1,1051 @@
+{
+  "schema_version": "1.4.0",
+  "id": "CHK-20260925-FB4C255A",
+  "kind": "checkpoint",
+  "session_id": "codex-codex",
+  "project_id": "jossue-portfolio",
+  "summary": "Homepage closing CTA corrected for narrow screens: bounded headline scale, readable wrapping, and explicit vertical spacing before the contact action. Verified at the exact 657 px review width and across eight configured Playwright viewports. Astro check, ESLint, static build, and diff check pass.",
+  "objective": "Flagship navigation, hierarchy, and CTA consistency",
+  "next_action": "User reviews the corrected closing CTA in the open local browser.",
+  "files": [],
+  "validations": [],
+  "blockers": [],
+  "actor": {
+    "name": "codex",
+    "platform": "codex",
+    "model": "unknown"
+  },
+  "git": {
+    "branch": "feat/editorial-inner-pages",
+    "commit": "74d65b3148ba184827714e3e7cb2d663213718d7",
+    "tree": "0f6f971eace4538d6352de3d4e6578fd678f5d08",
+    "working_tree": "DIRTY",
+    "changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      },
+      {
+        "code": " M",
+        "path": "design-qa.md"
+      },
+      {
+        "code": " M",
+        "path": "scripts/test-routes.mjs"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseAmbience.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseMedia.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CommercialProductCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/Header.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/JossueAssistant.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/MadrePage.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/PageView.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductCatalog.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProjectVisual.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/StorefrontHome.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/surface/ChapterNav.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/products.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/layouts/BaseLayout.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/scripts/motion.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/surface.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/playwright.config.ts"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260924-E3A2E4EE.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-2BD7A124.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-357D11EA.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-B789901F.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/README.md"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/menu-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-slide-02-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-slide-02-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/mesh-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/mesh-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-corrective-audit.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-design-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-home-carousel-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "src/components/FlagshipHeroCarousel.astro"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/editorial.css"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/flagship.css"
+      }
+    ],
+    "working_tree_digest": "effff257caa17c25dc7456e9e9d994da6045ccf90a1690e314d6ef210193b5dd",
+    "project_working_tree": "DIRTY",
+    "project_changed_files": [
+      {
+        "code": " M",
+        "path": "design-qa.md"
+      },
+      {
+        "code": " M",
+        "path": "scripts/test-routes.mjs"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseAmbience.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseMedia.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CommercialProductCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/Header.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/JossueAssistant.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/MadrePage.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/PageView.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductCatalog.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProjectVisual.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/StorefrontHome.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/surface/ChapterNav.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/products.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/layouts/BaseLayout.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/scripts/motion.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/surface.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/playwright.config.ts"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/README.md"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/about-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/contact-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/home-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/madre-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/products-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/services-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/web-product-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddesktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002ddetail-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/after/work\u002dmobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/about-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/contact-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/home-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/madre-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/products-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/services-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/web-product-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddesktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-desktop-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-desktop-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-mobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002ddetail-mobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-cases.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-scrolled.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/corrective-2026-09-25/before/work\u002dmobile-top.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/menu-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/computed.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-slide-02-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/hero-slide-02-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/mesh-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/home-carousel-mesh-2026-09-25/mesh-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-corrective-audit.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-design-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-home-carousel-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "src/components/FlagshipHeroCarousel.astro"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/editorial.css"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/flagship.css"
+      }
+    ],
+    "project_working_tree_digest": "58539b3b7547b96f213f1863a64582ae08a0cb38a488ff9492d2e19eb1518b19",
+    "ahp_state_working_tree": "DIRTY",
+    "ahp_state_changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260924-E3A2E4EE.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-2BD7A124.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-357D11EA.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260925-B789901F.json"
+      }
+    ],
+    "upstream": "origin/feat/editorial-inner-pages",
+    "ahead": 25,
+    "behind": 0
+  },
+  "created_at": "2026-09-25T21:04:24.421Z",
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "ahp-canonical-json-v1",
+    "digest": "c0dcac6d76cc827e46e433fe9eaa155294324d7502fe40f08c0d16ec3aad2835"
+  }
+}

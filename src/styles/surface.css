@@ -1365,24 +1365,16 @@
 	/* ============================================================
 	   UNA SOLA REGLA DE ALINEACION
 
-	   Medido antes: en la PDP los titulares arrancaban en 272, 96, 172 y
-	   282px, alternando centro e izquierda sin criterio. El ojo no llegaba
-	   a asentarse en ningun borde.
-
-	   La regla de Apple es simple y es la que se adopta:
-	     · el ENCABEZADO de seccion (rotulo, titular, entradilla corta) va
-	       centrado, porque es un anuncio;
-	     · el CONTENIDO (listas, rieles, specs, tarjetas) va a la izquierda,
-	       porque es lectura.
-
-	   Asi solo existen dos posiciones en toda la pagina: el eje central y
-	   el borde del contenedor. Nada mas.
+	   El centro se estaba usando como excepcion pagina por pagina y rompia
+	   el recorrido entre heroe, secciones y cierres. Toda la interfaz
+	   comercial comparte ahora el borde izquierdo del contenedor. El
+	   contenido deja de saltar de eje al avanzar por la pagina.
 	   ============================================================ */
 	.stage__inner > .stage__eyebrow,
 	.stage__inner > .stage__title,
 	.stage__inner > .stage__lede {
-		text-align: center;
-		margin-inline: auto;
+		text-align: left;
+		margin-inline: 0;
 	}
 
 	/* 20ch era la medida del heroe aplicada a todo: partia los encabezados
@@ -1391,12 +1383,11 @@
 	.stage__inner > .stage__lede { max-width: 54ch; text-wrap: pretty; }
 	.stage--hero .stage__inner > .stage__title { max-width: 16ch; }
 
-	/* El encabezado partido de la home se apila y se centra como los demas:
-	   era la ultima excepcion que rompia la regla. */
+	/* Los encabezados partidos de la home usan el mismo eje de lectura. */
 	.home-surface__head {
 		grid-template-columns: minmax(0, 1fr);
-		justify-items: center;
-		text-align: center;
+		justify-items: start;
+		text-align: left;
 	}
 
 	@media (min-width: 52rem) {

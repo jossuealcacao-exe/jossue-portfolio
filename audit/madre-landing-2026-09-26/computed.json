@@ -1,0 +1,401 @@
+[
+  {
+    "viewport": {
+      "name": "mobile",
+      "width": 390,
+      "height": 844
+    },
+    "title": "MADRE 0.4.0 — Una sala local para tus agentes",
+    "language": "es",
+    "canonical": "https://portfolio.invalid/es/madre/",
+    "h1Count": 1,
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Instala una sala para tus agentes."
+      },
+      {
+        "level": "H2",
+        "text": "Instalar en tu proyecto"
+      },
+      {
+        "level": "H2",
+        "text": "Del comando a una sala activa."
+      },
+      {
+        "level": "H3",
+        "text": "Inicia MADRE"
+      },
+      {
+        "level": "H3",
+        "text": "Comprueba tus agentes"
+      },
+      {
+        "level": "H3",
+        "text": "Abre la sala"
+      },
+      {
+        "level": "H2",
+        "text": "Mira la sala trabajando."
+      },
+      {
+        "level": "H2",
+        "text": "El hilo no se rompe cuando cambia la voz."
+      },
+      {
+        "level": "H3",
+        "text": "Conecta lo que ya usas"
+      },
+      {
+        "level": "H3",
+        "text": "Comparte el contexto útil"
+      },
+      {
+        "level": "H3",
+        "text": "Decide el alcance"
+      },
+      {
+        "level": "H3",
+        "text": "Revisa lo que ocurrió"
+      },
+      {
+        "level": "H2",
+        "text": "El permiso se declara antes de actuar."
+      },
+      {
+        "level": "H2",
+        "text": "Una sala, no otra capa de promesas."
+      },
+      {
+        "level": "H3",
+        "text": "Varios agentes en el mismo hilo"
+      },
+      {
+        "level": "H3",
+        "text": "Decisiones que se pueden recuperar"
+      },
+      {
+        "level": "H3",
+        "text": "Permisos visibles por turno"
+      },
+      {
+        "level": "H3",
+        "text": "Sin nube propia de MADRE"
+      },
+      {
+        "level": "H2",
+        "text": "Lo necesario, antes de empezar."
+      },
+      {
+        "level": "H2",
+        "text": "Consulta lo que MADRE hace y lo que no."
+      },
+      {
+        "level": "H2",
+        "text": "Instala MADRE en un proyecto que ya conoces."
+      },
+      {
+        "level": "H2",
+        "text": "¿Qué quieres resolver?"
+      },
+      {
+        "level": "H2",
+        "text": "Explorar"
+      },
+      {
+        "level": "H2",
+        "text": "Recursos"
+      },
+      {
+        "level": "H2",
+        "text": "Perfiles"
+      },
+      {
+        "level": "H2",
+        "text": "Contacto"
+      }
+    ],
+    "horizontalOverflow": false,
+    "duplicateIds": [],
+    "imagesMissingAlt": 0,
+    "imagesFailed": [],
+    "softwareStructuredData": true,
+    "linuxTabSelected": "true",
+    "smallTargets": [],
+    "metrics": {
+      "cls": 0,
+      "lcp": 40,
+      "maxEventDuration": 16,
+      "eventTimingSupported": true,
+      "shifts": []
+    },
+    "consoleErrors": [],
+    "failedRequests": []
+  },
+  {
+    "viewport": {
+      "name": "tablet",
+      "width": 768,
+      "height": 1024
+    },
+    "title": "MADRE 0.4.0 — Una sala local para tus agentes",
+    "language": "es",
+    "canonical": "https://portfolio.invalid/es/madre/",
+    "h1Count": 1,
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Instala una sala para tus agentes."
+      },
+      {
+        "level": "H2",
+        "text": "Instalar en tu proyecto"
+      },
+      {
+        "level": "H2",
+        "text": "Del comando a una sala activa."
+      },
+      {
+        "level": "H3",
+        "text": "Inicia MADRE"
+      },
+      {
+        "level": "H3",
+        "text": "Comprueba tus agentes"
+      },
+      {
+        "level": "H3",
+        "text": "Abre la sala"
+      },
+      {
+        "level": "H2",
+        "text": "Mira la sala trabajando."
+      },
+      {
+        "level": "H2",
+        "text": "El hilo no se rompe cuando cambia la voz."
+      },
+      {
+        "level": "H3",
+        "text": "Conecta lo que ya usas"
+      },
+      {
+        "level": "H3",
+        "text": "Comparte el contexto útil"
+      },
+      {
+        "level": "H3",
+        "text": "Decide el alcance"
+      },
+      {
+        "level": "H3",
+        "text": "Revisa lo que ocurrió"
+      },
+      {
+        "level": "H2",
+        "text": "El permiso se declara antes de actuar."
+      },
+      {
+        "level": "H2",
+        "text": "Una sala, no otra capa de promesas."
+      },
+      {
+        "level": "H3",
+        "text": "Varios agentes en el mismo hilo"
+      },
+      {
+        "level": "H3",
+        "text": "Decisiones que se pueden recuperar"
+      },
+      {
+        "level": "H3",
+        "text": "Permisos visibles por turno"
+      },
+      {
+        "level": "H3",
+        "text": "Sin nube propia de MADRE"
+      },
+      {
+        "level": "H2",
+        "text": "Lo necesario, antes de empezar."
+      },
+      {
+        "level": "H2",
+        "text": "Consulta lo que MADRE hace y lo que no."
+      },
+      {
+        "level": "H2",
+        "text": "Instala MADRE en un proyecto que ya conoces."
+      },
+      {
+        "level": "H2",
+        "text": "¿Qué quieres resolver?"
+      },
+      {
+        "level": "H2",
+        "text": "Explorar"
+      },
+      {
+        "level": "H2",
+        "text": "Recursos"
+      },
+      {
+        "level": "H2",
+        "text": "Perfiles"
+      },
+      {
+        "level": "H2",
+        "text": "Contacto"
+      }
+    ],
+    "horizontalOverflow": false,
+    "duplicateIds": [],
+    "imagesMissingAlt": 0,
+    "imagesFailed": [],
+    "softwareStructuredData": true,
+    "linuxTabSelected": "true",
+    "smallTargets": [],
+    "metrics": {
+      "cls": 0,
+      "lcp": 40,
+      "maxEventDuration": 16,
+      "eventTimingSupported": true,
+      "shifts": []
+    },
+    "consoleErrors": [],
+    "failedRequests": []
+  },
+  {
+    "viewport": {
+      "name": "desktop",
+      "width": 1586,
+      "height": 992
+    },
+    "title": "MADRE 0.4.0 — Una sala local para tus agentes",
+    "language": "es",
+    "canonical": "https://portfolio.invalid/es/madre/",
+    "h1Count": 1,
+    "headings": [
+      {
+        "level": "H1",
+        "text": "Instala una sala para tus agentes."
+      },
+      {
+        "level": "H2",
+        "text": "Instalar en tu proyecto"
+      },
+      {
+        "level": "H2",
+        "text": "Del comando a una sala activa."
+      },
+      {
+        "level": "H3",
+        "text": "Inicia MADRE"
+      },
+      {
+        "level": "H3",
+        "text": "Comprueba tus agentes"
+      },
+      {
+        "level": "H3",
+        "text": "Abre la sala"
+      },
+      {
+        "level": "H2",
+        "text": "Mira la sala trabajando."
+      },
+      {
+        "level": "H2",
+        "text": "El hilo no se rompe cuando cambia la voz."
+      },
+      {
+        "level": "H3",
+        "text": "Conecta lo que ya usas"
+      },
+      {
+        "level": "H3",
+        "text": "Comparte el contexto útil"
+      },
+      {
+        "level": "H3",
+        "text": "Decide el alcance"
+      },
+      {
+        "level": "H3",
+        "text": "Revisa lo que ocurrió"
+      },
+      {
+        "level": "H2",
+        "text": "El permiso se declara antes de actuar."
+      },
+      {
+        "level": "H2",
+        "text": "Una sala, no otra capa de promesas."
+      },
+      {
+        "level": "H3",
+        "text": "Varios agentes en el mismo hilo"
+      },
+      {
+        "level": "H3",
+        "text": "Decisiones que se pueden recuperar"
+      },
+      {
+        "level": "H3",
+        "text": "Permisos visibles por turno"
+      },
+      {
+        "level": "H3",
+        "text": "Sin nube propia de MADRE"
+      },
+      {
+        "level": "H2",
+        "text": "Lo necesario, antes de empezar."
+      },
+      {
+        "level": "H2",
+        "text": "Consulta lo que MADRE hace y lo que no."
+      },
+      {
+        "level": "H2",
+        "text": "Instala MADRE en un proyecto que ya conoces."
+      },
+      {
+        "level": "H2",
+        "text": "¿Qué quieres resolver?"
+      },
+      {
+        "level": "H2",
+        "text": "Explorar"
+      },
+      {
+        "level": "H2",
+        "text": "Recursos"
+      },
+      {
+        "level": "H2",
+        "text": "Perfiles"
+      },
+      {
+        "level": "H2",
+        "text": "Contacto"
+      }
+    ],
+    "horizontalOverflow": false,
+    "duplicateIds": [],
+    "imagesMissingAlt": 0,
+    "imagesFailed": [],
+    "softwareStructuredData": true,
+    "linuxTabSelected": "true",
+    "smallTargets": [],
+    "metrics": {
+      "cls": 0,
+      "lcp": 36,
+      "maxEventDuration": 0,
+      "eventTimingSupported": true,
+      "shifts": []
+    },
+    "consoleErrors": [],
+    "failedRequests": []
+  }
+]

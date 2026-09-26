@@ -76,6 +76,16 @@ const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.des
 	pathname={pathname}
 	counterpartSlug={entry?.data.counterpartSlug ?? product?.slug}
 	caseStudy={entry ? { title: entry.data.title, client: entry.data.client, role: entry.data.role, stack: entry.data.stack } : undefined}
+	socialImage={pageKey === 'madre'
+		? {
+				src: '/images/madre/room-0.4.0.webp',
+				alt: locale === 'es'
+					? 'Interfaz real de MADRE 0.4.0 con Codex y Claude compartiendo una conversación.'
+					: 'Real MADRE 0.4.0 interface with Codex and Claude sharing one conversation.',
+				width: 3200,
+				height: 2110,
+			}
+		: undefined}
 >
 	{
 		entry ? (

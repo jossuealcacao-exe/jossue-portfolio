@@ -3,7 +3,6 @@ import type { CollectionEntry } from 'astro:content';
 import { brandForCaseSlug } from '../data/brands';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
-import BrandMark from './BrandMark.astro';
 import Breadcrumbs from './Breadcrumbs.astro';
 import CaseAmbience from './CaseAmbience.astro';
 import CaseDiagrams from './CaseDiagrams.astro';
@@ -55,27 +54,29 @@ const linkKindCopy = {
 		{ label: data.title },
 	]}
 />
-<article class="page shell">
-	<header class="hero case-hero">
-		<div class="case-hero__kicker">
+<article class="case-study">
+	<header class="case-intro">
+		<div class="case-intro__frame">
+		<div class="case-intro__kicker">
 			{
 				brand && (
 					<div class="case-brand">
-						<BrandMark brand={brand} size="md" />
+						<span>{brand.name[locale]}</span>
 					</div>
 				)
 			}
 			<p class="eyebrow">{presentation.category}</p>
 		</div>
-		<div class="case-hero__grid">
-			<div class="case-hero__main flow">
+		<div class="case-intro__grid">
+			<div class="case-intro__main">
 				<h1>{data.title}</h1>
-				<p class="hero__lede">{presentation.summary}</p>
+				<p class="case-intro__lede">{presentation.summary}</p>
 			</div>
-			<dl class="case-hero__facts">
+			<dl class="case-intro__facts">
 				<div><dt>{es ? 'Qué hice yo' : 'What I did'}</dt><dd>{presentation.role}</dd></div>
 				<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
 			</dl>
+		</div>
 		</div>
 	</header>
 	<div class="case-cover" data-reveal>

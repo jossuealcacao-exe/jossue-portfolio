@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const dist = path.join(root, 'dist');
 const caseSlugs = [
+	'ahp-plus',
 	'wu-nutrition',
 	'bloqio-cro-apps',
 	'bloqio-builder',
@@ -13,16 +14,14 @@ const caseSlugs = [
 	'vineria',
 	'tiendaonline',
 ];
+const productSlugs = ['bloqio-builder', 'daniela', 'desarrollo-web', 'ia-aplicada'];
 const routes = [
 	'/',
 	'/es/',
 	'/es/trabajo/',
 	...caseSlugs.map((slug) => `/es/trabajo/${slug}/`),
 	'/es/productos/',
-	'/es/productos/auditoria-ecommerce/',
-	'/es/productos/cro-crecimiento/',
-	'/es/productos/shopify-desarrollo-web/',
-	'/es/productos/ia-aplicada/',
+	...productSlugs.map((slug) => `/es/productos/${slug}/`),
 	'/es/servicios/',
 	'/es/ia-y-sistemas/',
 	'/es/madre/',
@@ -33,10 +32,7 @@ const routes = [
 	'/en/work/',
 	...caseSlugs.map((slug) => `/en/work/${slug}/`),
 	'/en/products/',
-	'/en/products/auditoria-ecommerce/',
-	'/en/products/cro-crecimiento/',
-	'/en/products/shopify-desarrollo-web/',
-	'/en/products/ia-aplicada/',
+	...productSlugs.map((slug) => `/en/products/${slug}/`),
 	'/en/services/',
 	'/en/ai-and-systems/',
 	'/en/madre/',
@@ -126,6 +122,9 @@ if (!atlasEsHtml.includes('/en/resources/ahp-plus/')) failures.push('Spanish AHP
 if (!madreEsHtml.includes('data-madre-page') || !madreEnHtml.includes('data-madre-page')) failures.push('MADRE pages must expose their stable page marker.');
 if (!madreEsHtml.includes('/en/madre/') || !madreEnHtml.includes('/es/madre/')) failures.push('MADRE pages must link to their language equivalent.');
 if (!madreEsHtml.includes('data-madre-explanatory') || !madreEnHtml.includes('data-madre-explanatory')) failures.push('MADRE conceptual demonstrations must be labeled as explanatory.');
+if (!madreEsHtml.includes('npx @jossuealcala/madre start') || !madreEnHtml.includes('npx @jossuealcala/madre doctor')) failures.push('MADRE pages must expose the verified installation and doctor commands.');
+if (!madreEsHtml.includes('MADRE 0.4.0') || !madreEsHtml.includes('https://github.com/jossuealcacao-exe/madre')) failures.push('MADRE page must expose the verified release and source repository.');
+if (!madreEsHtml.includes('SoftwareApplication') || !madreEsHtml.includes('/images/madre/room-0.4.0.webp')) failures.push('MADRE page must expose verified software data and real product evidence.');
 if (!madreEsHtml.includes('/es/contacto/') || !madreEsHtml.includes('/es/recursos/ahp-plus/')) failures.push('Spanish MADRE page must expose contact and AHP+ calls to action.');
 if (!madreEnHtml.includes('/en/contact/') || !madreEnHtml.includes('/en/resources/ahp-plus/')) failures.push('English MADRE page must expose contact and AHP+ calls to action.');
 if (!productsEsHtml.includes('data-product-catalog') || !productsEsHtml.includes('/es/madre/')) failures.push('Spanish product catalog must include MADRE as a product.');

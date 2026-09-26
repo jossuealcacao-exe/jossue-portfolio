@@ -23,6 +23,6 @@ const { title, links, cta, class: extra } = Astro.props;
 				<li><a href={link.href}>{link.label}</a></li>
 			))}
 		</ul>
-		{cta && <a class="pill" href={cta.href}>{cta.label}</a>}
+		{cta && <a class="pill chapter-nav__cta" href={cta.href}>{cta.label}</a>}
 	</div>
 </nav>

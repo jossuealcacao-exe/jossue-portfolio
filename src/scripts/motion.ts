@@ -1,7 +1,7 @@
 const MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
 function headerHeight(): number {
-	const header = document.querySelector<HTMLElement>('.site-header');
+	const header = document.querySelector<HTMLElement>('[data-global-nav]');
 	return header?.offsetHeight ?? 72;
 }
 
@@ -10,21 +10,12 @@ function syncHeaderOffset(): void {
 }
 
 function bindStickyHeader(): void {
-	const header = document.querySelector<HTMLElement>('.site-header');
+	const header = document.querySelector<HTMLElement>('[data-global-nav]');
 	if (!header) return;
-
-	const menu = header.querySelector<HTMLDetailsElement>('details.menu');
-	let lastY = window.scrollY;
 	let ticking = false;
 	const update = () => {
 		const y = window.scrollY;
 		header.classList.toggle('is-scrolled', y > 10);
-		// Scroll down → condense the top bar into the hamburger; scroll up → expand.
-		if (!menu?.open) {
-			if (y > lastY + 4 && y > 200) document.documentElement.classList.add('header-condensed');
-			else if (y < lastY - 4 || y <= 200) document.documentElement.classList.remove('header-condensed');
-		}
-		lastY = y;
 		ticking = false;
 	};
 
@@ -183,7 +174,7 @@ function bindCaseNavigation(): void {
 }
 
 function bindMobileMenu(): void {
-	const menu = document.querySelector<HTMLDetailsElement>('.menu');
+	const menu = document.querySelector<HTMLDetailsElement>('.global-nav__drawer');
 	if (!menu) return;
 	menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => menu.removeAttribute('open')));
 	document.addEventListener('keydown', (event) => {

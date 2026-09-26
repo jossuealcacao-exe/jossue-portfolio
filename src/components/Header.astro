@@ -1,5 +1,6 @@
 ---
 import { equivalentPath, navigation, routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -11,55 +12,68 @@ const { locale, pathname, counterpartSlug } = Astro.props;
 const otherLocale: Locale = locale === 'es' ? 'en' : 'es';
 const languagePath = equivalentPath(pathname, locale, otherLocale, counterpartSlug);
 const menuLabel = locale === 'es' ? 'Menú' : 'Menu';
+const menuLead = locale === 'es' ? 'Producto, trabajo y trayectoria' : 'Product, work, and track record';
 const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 	const href = routes[locale][key];
 	return pathname === href || (key === 'work' && pathname.startsWith(href)) || (key === 'products' && (pathname.startsWith(href) || pathname === routes[locale].madre));
 };
 ---
 
-<header class="site-header">
-	<div class="site-header__inner shell">
-		<a class="brand" href={routes[locale].home} aria-label={`Jossue Alcalá — ${locale === 'es' ? 'inicio' : 'home'}`}>
-			<span>Jossue Alcalá</span>
-			<small>{locale === 'es' ? 'Crear y Construir' : 'Create and Build'}</small>
+<header class="global-nav" data-global-nav>
+	<div class="global-nav__bar">
+		<a class="global-nav__brand" href={routes[locale].home} aria-label={`Jossue Alcalá — ${locale === 'es' ? 'inicio' : 'home'}`}>
+			<span class="global-nav__brand-name">Jossue Alcalá</span>
+			<small>{locale === 'es' ? 'Producto · Web · IA' : 'Product · Web · AI'}</small>
 		</a>
-		<nav class="nav" aria-label={locale === 'es' ? 'Navegación principal' : 'Primary navigation'}>
-			<ul class="nav__links">
+		<nav class="global-nav__primary" aria-label={locale === 'es' ? 'Navegación principal' : 'Primary navigation'}>
+			<ul class="global-nav__links">
 				{
-					navigation[locale].map((item) => (
+					navigation[locale].map((item, index) => (
 						<li>
-							<a class:list={{ 'nav__cta': item.key === 'contact' }} href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
-								{item.label}
+							<a href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
+								<span class="global-nav__number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+								<span>{item.label}</span>
 							</a>
 						</li>
 					))
 				}
 			</ul>
-			<a class="language" href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
+			<a class="global-nav__language" href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
 				{otherLocale}
 			</a>
-			<details class="menu">
-				<summary class="menu__toggle" aria-label={menuLabel}>
-					<span class="menu__glyph" aria-hidden="true"><i></i><i></i><i></i></span>
-					<span class="sr-only">{menuLabel}</span>
+			<details class="global-nav__drawer">
+				<summary class="global-nav__trigger" aria-label={menuLabel}>
+					<span aria-hidden="true">{menuLabel}</span>
+					<span class="global-nav__menu-icon global-nav__menu-icon--open" aria-hidden="true"><Icon name="menu" /></span>
+					<span class="global-nav__menu-icon global-nav__menu-icon--close" aria-hidden="true"><Icon name="close" /></span>
 				</summary>
-				<ul class="menu__panel">
-					<li class="menu__masthead">
-						<a class="menu__brand" href={routes[locale].home}>Jossue Alcalá</a>
-						<a class="menu__lang" href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
-							{otherLocale}
-						</a>
-					</li>
-					{
-						navigation[locale].map((item) => (
-							<li>
-								<a class:list={{ 'menu__cta': item.key === 'contact' }} href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
-									{item.label}
-								</a>
-							</li>
-						))
-					}
-				</ul>
+				<div class="global-nav__sheet">
+					<div class="global-nav__sheet-inner">
+						<div class="global-nav__sheet-head">
+							<p>{menuLead}</p>
+							<span aria-hidden="true">{locale === 'es' ? 'Índice' : 'Index'}</span>
+						</div>
+						<ol class="global-nav__index">
+							{
+								navigation[locale].map((item, index) => (
+									<li>
+										<a href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>
+											<span class="global-nav__index-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+											<span>{item.label}</span>
+											<Icon name="arrow-up-right" />
+										</a>
+									</li>
+								))
+							}
+						</ol>
+						<div class="global-nav__sheet-foot">
+							<a href={routes[locale].home}>{locale === 'es' ? 'Volver al inicio' : 'Back home'}</a>
+							<a href={languagePath} hreflang={otherLocale} lang={otherLocale} data-analytics-event="select_language">
+								{locale === 'es' ? 'View in English' : 'Ver en español'}
+							</a>
+						</div>
+					</div>
+				</div>
 			</details>
 		</nav>
 	</div>

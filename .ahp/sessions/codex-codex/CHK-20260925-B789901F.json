@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.4.0",
+  "id": "CHK-20260925-B789901F",
+  "kind": "checkpoint",
+  "session_id": "codex-codex",
+  "project_id": "jossue-portfolio",
+  "summary": "Redesigned the global navigation as a scoped flagship system; unified commercial heroes and conversion sections on one left reading edge; standardized CTA spacing and touch targets; corrected display word spacing; added reproducible design QA captures and responsive regression coverage. Full npm run validate passed, including 296 Playwright scenarios across 320-1440px.",
+  "objective": "Flagship navigation, hierarchy, and CTA consistency",
+  "next_action": "Review the local preview at http://localhost:4322/es/ with Jossue and iterate on requested visual details.",
+  "files": [],
+  "validations": [],
+  "blockers": [],
+  "actor": {
+    "name": "codex",
+    "platform": "codex",
+    "model": "unknown"
+  },
+  "git": {
+    "branch": "feat/editorial-inner-pages",
+    "commit": "74d65b3148ba184827714e3e7cb2d663213718d7",
+    "tree": "0f6f971eace4538d6352de3d4e6578fd678f5d08",
+    "working_tree": "DIRTY",
+    "changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      },
+      {
+        "code": " M",
+        "path": "design-qa.md"
+      },
+      {
+        "code": " M",
+        "path": "scripts/test-routes.mjs"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseAmbience.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseMedia.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CommercialProductCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/Header.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/JossueAssistant.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/MadrePage.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/PageView.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductCatalog.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProjectVisual.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/StorefrontHome.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/surface/ChapterNav.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/products.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/layouts/BaseLayout.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/surface.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/playwright.config.ts"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260924-E3A2E4EE.json"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/menu-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-design-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/flagship.css"
+      }
+    ],
+    "working_tree_digest": "21e455db4d494e588842901fccdaee118746899250afe17e16c9c433e4c3e17d",
+    "project_working_tree": "DIRTY",
+    "project_changed_files": [
+      {
+        "code": " M",
+        "path": "design-qa.md"
+      },
+      {
+        "code": " M",
+        "path": "scripts/test-routes.mjs"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseAmbience.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CaseMedia.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/CommercialProductCard.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/Header.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/JossueAssistant.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/MadrePage.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/PageView.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductCatalog.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProductDetail.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/ProjectVisual.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/StorefrontHome.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/components/surface/ChapterNav.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/data/products.ts"
+      },
+      {
+        "code": " M",
+        "path": "src/layouts/BaseLayout.astro"
+      },
+      {
+        "code": " M",
+        "path": "src/styles/surface.css"
+      },
+      {
+        "code": " M",
+        "path": "tests/playwright.config.ts"
+      },
+      {
+        "code": " M",
+        "path": "tests/site.spec.ts"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/catalog-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/home-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/menu-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-desktop.png"
+      },
+      {
+        "code": "??",
+        "path": "audit/design-system-2026-09-24/product-mobile.png"
+      },
+      {
+        "code": "??",
+        "path": "scripts/capture-design-qa.mjs"
+      },
+      {
+        "code": "??",
+        "path": "src/styles/flagship.css"
+      }
+    ],
+    "project_working_tree_digest": "8352b4eb551962d3ab4e6bf6ca8594df91d26f107fc6879951b40509f405396a",
+    "ahp_state_working_tree": "DIRTY",
+    "ahp_state_changed_files": [
+      {
+        "code": " M",
+        "path": ".ahp/state/project.json"
+      },
+      {
+        "code": "??",
+        "path": ".ahp/sessions/codex-codex/CHK-20260924-E3A2E4EE.json"
+      }
+    ],
+    "upstream": "origin/feat/editorial-inner-pages",
+    "ahead": 25,
+    "behind": 0
+  },
+  "created_at": "2026-09-25T00:02:31.960Z",
+  "integrity": {
+    "algorithm": "sha256",
+    "canonicalization": "ahp-canonical-json-v1",
+    "digest": "f0c351f523472815ff30da36db46b37c057342ffbccb473ade39bbccab9a3916"
+  }
+}

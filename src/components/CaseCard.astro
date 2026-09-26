@@ -2,9 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
-import Icon from './Icon.astro';
 import ProjectVisual from './ProjectVisual.astro';
-import StackList from './StackList.astro';
 
 interface Props {
 	entry: CollectionEntry<'cases'>;
@@ -22,22 +20,22 @@ const summary = presentation?.summary ?? entry.data.summary;
 const displayName = entry.data.title.split('—')[0].trim();
 ---
 
-<article class="case-card">
-	<a class="case-card__link" href={href} data-analytics-event="view_case_study">
-		<ProjectVisual slug={entry.data.slug} title={entry.data.title} stack={entry.data.stack} locale={locale} priority={index === 0} />
-		<div class="case-card__body">
-			<div class="case-card__meta">
+<article class="portfolio-entry">
+	<a class="portfolio-entry__link" href={href} data-analytics-event="view_case_study">
+		<div class="portfolio-entry__media">
+			<ProjectVisual slug={entry.data.slug} title={entry.data.title} stack={entry.data.stack} locale={locale} priority={index === 0} />
+		</div>
+		<div class="portfolio-entry__copy">
+			<p class="portfolio-entry__meta">
 				<span>{String(index + 1).padStart(2, '0')}</span>
 				<span>{category}</span>
-			</div>
-			<div class="case-card__content flow">
-				<h3>{displayName}</h3>
-				<p>{summary}</p>
-			</div>
-			<StackList stack={entry.data.stack} locale={locale} limit={5} compact />
-			<span class="case-card__cta">
-				{es ? 'Ver proyecto' : 'View project'}
-				<Icon name="arrow-right" />
+			</p>
+			<h3>{displayName}</h3>
+			<p class="portfolio-entry__summary">{summary}</p>
+			<p class="portfolio-entry__stack">{entry.data.stack.slice(0, 4).join(' · ')}</p>
+			<span class="portfolio-entry__action">
+				<span>{es ? 'Abrir caso' : 'Open case'}</span>
+				<span aria-hidden="true">↗</span>
 			</span>
 		</div>
 	</a>

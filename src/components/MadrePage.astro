@@ -1,13 +1,9 @@
 ---
-import { madreCopy } from '../data/madre';
+import { madreCopy, madreFacts } from '../data/madre';
 import { routes, type Locale } from '../data/i18n';
+import '../styles/madre.css';
 import Icon from './Icon.astro';
-import Bento from './surface/Bento.astro';
-import BentoCell from './surface/BentoCell.astro';
-import ChapterNav from './surface/ChapterNav.astro';
 import MediaSlot from './surface/MediaSlot.astro';
-import Showcase from './surface/Showcase.astro';
-import Stage from './surface/Stage.astro';
 
 interface Props {
 	locale: Locale;
@@ -16,143 +12,345 @@ interface Props {
 const { locale } = Astro.props;
 const es = locale === 'es';
 const m = madreCopy(locale);
-
-const chapters = [
-	{ href: '#problema', label: m.problem.title.split(' ').slice(0, 2).join(' ') },
-	{ href: '#flujo', label: es ? 'Flujo' : 'Flow' },
-	{ href: '#equipo', label: es ? 'Equipo' : 'Crew' },
-	{ href: '#control', label: es ? 'Control' : 'Control' },
-	{ href: '#demo', label: es ? 'Demo' : 'Demo' },
-];
+const ids = {
+	install: es ? 'instalar' : 'install',
+	flow: es ? 'como-funciona' : 'how-it-works',
+	permissions: es ? 'permisos' : 'permissions',
+	evidence: es ? 'evidencia' : 'evidence',
+	resources: es ? 'recursos' : 'resources',
+};
+const site = Astro.site ?? new URL('https://portfolio.invalid');
+const pageUrl = new URL(routes[locale].madre, site);
+const softwareJson = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	'@id': `${pageUrl.href}#software`,
+	name: 'MADRE',
+	description: m.lede,
+	applicationCategory: 'DeveloperApplication',
+	operatingSystem: 'macOS, Linux',
+	softwareVersion: madreFacts.version,
+	isAccessibleForFree: true,
+	license: madreFacts.license,
+	codeRepository: madreFacts.github,
+	downloadUrl: madreFacts.npm,
+	softwareRequirements: 'Node.js 22.5 or newer; at least one supported agent CLI',
+	inLanguage: ['es', 'en'],
+	url: pageUrl.href,
+};
 ---
 
-<article class="madre" data-madre-page>
-	<ChapterNav title="MADRE" links={chapters} cta={{ href: routes[locale].contact, label: es ? 'Hablar' : 'Talk' }} />
-
-	<Stage hero tall size="loose">
-		<p class="stage__eyebrow">{m.eyebrow}</p>
-		<h1 class="stage__title">{m.title}</h1>
-		<p class="stage__lede">{m.lede}</p>
-		<div class="stage__actions">
-			<a class="pill" href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.primaryCta}<Icon name="arrow-right" /></a>
-			<a class="pill pill--soft" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.secondaryCta}</a>
+<article
+	class="madre-product"
+	data-madre-page
+	data-copy-label={m.install.copy}
+	data-copied-label={m.install.copied}
+	data-copy-failed-label={m.install.failed}
+>
+	<nav class="madre-product__index" aria-label={es ? 'Contenido de MADRE' : 'MADRE contents'}>
+		<div class="madre-product__index-inner">
+			<a class="madre-product__wordmark" href={`#${ids.install}`}>MADRE</a>
+			<ul>
+				{m.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+			</ul>
+			<a class="madre-product__github" href={madreFacts.github} target="_blank" rel="noreferrer">
+				{es ? 'Ver en GitHub' : 'View on GitHub'} <Icon name="arrow-up-right" />
+			</a>
 		</div>
-		<div class="pdp__hero-media" data-rise="lift">
-			<MediaSlot
-				id="madre-hero"
-				ratio="16:9"
-				label={es ? 'La sala compartida' : 'The shared room'}
-				note={es
-					? 'Interfaz real de MADRE o la escena de trabajo que representa. Sin capturas inventadas: si la interfaz aún no existe, va fotografía de contexto.'
-					: 'Real MADRE interface, or the working scene that stands for it. No invented captures: if the interface does not exist yet, use context photography.'}
-			/>
-		</div>
-	</Stage>
+	</nav>
 
-	<Stage id="problema" size="loose">
-		<p class="stage__eyebrow">{m.problem.index} · {es ? 'El problema' : 'The problem'}</p>
-		<h2 class="stage__title">{m.problem.title}</h2>
-		<p class="stage__lede">{m.problem.text}</p>
-		<Bento class="madre__issues">
-			{m.problem.points.map((point, index) => (
-				<BentoCell span={index === 0 ? 3 : 3}>
-					<p class="bento__kicker">{String(index + 1).padStart(2, '0')}</p>
-					<p>{point}</p>
-				</BentoCell>
-			))}
-		</Bento>
-	</Stage>
+	<section class="madre-product__hero" aria-labelledby="madre-title">
+		<div class="madre-product__frame">
+			<div class="madre-product__hero-grid">
+				<header class="madre-product__hero-copy">
+					<p class="madre-product__eyebrow">{m.eyebrow}</p>
+					<h1 id="madre-title">{m.title}</h1>
+					<p class="madre-product__lede">{m.lede}</p>
+				</header>
+				<aside class="madre-product__aside" aria-label={es ? 'En una frase' : 'In one sentence'}>
+					<p>{m.aside}</p>
+					<span>{es ? 'Local por diseño' : 'Local by design'}</span>
+				</aside>
+			</div>
 
-	<Stage id="definicion" tone="ink" size="loose">
-		<p class="stage__eyebrow">{m.definition.index} · {es ? 'Qué es' : 'What it is'}</p>
-		<h2 class="stage__title">{m.definition.title}</h2>
-		<p class="stage__lede">{m.definition.text}</p>
-	</Stage>
-
-	<Stage id="flujo" size="loose">
-		<p class="stage__eyebrow">{m.flow.index} · {es ? 'Flujo' : 'Flow'}</p>
-		<h2 class="stage__title">{m.flow.title}</h2>
-		<p class="stage__lede">{m.flow.text}</p>
-		<Showcase class="madre__flow">
-			<MediaSlot
-				slot="media"
-				id="madre-flow"
-				ratio="4:3"
-				label={es ? 'El recorrido, en una imagen' : 'The flow, in one image'}
-				note={es ? 'Permanece fija mientras se leen los pasos.' : 'Stays pinned while the steps are read.'}
-			/>
-			{m.flow.steps.map((step) => (
-				<div class="showcase__beat" data-rise>
-					<span class="showcase__index">{step.number}</span>
-					<h3>{step.title}</h3>
-					<p>{step.text}</p>
+			<section class="madre-install" id={ids.install} aria-labelledby="madre-install-title">
+				<div class="madre-install__head">
+					<div>
+						<p class="madre-product__eyebrow">{es ? 'INSTALACIÓN' : 'INSTALLATION'}</p>
+						<h2 id="madre-install-title">{m.install.title}</h2>
+					</div>
+					<p>{m.install.intro}</p>
 				</div>
-			))}
-		</Showcase>
-	</Stage>
 
-	<Stage id="equipo" size="loose">
-		<p class="stage__eyebrow">{m.crew.index} · {es ? 'Equipo' : 'Crew'}</p>
-		<h2 class="stage__title">{m.crew.title}</h2>
-		<p class="stage__lede">{m.crew.text}</p>
-		<Bento class="madre__roles">
-			{m.crew.roles.map((role) => (
-				<BentoCell span={2}>
-					<p class="bento__kicker">{role.label}</p>
-					<h3>{role.title}</h3>
-					<p>{role.text}</p>
-				</BentoCell>
-			))}
-		</Bento>
-	</Stage>
+				<div class="madre-install__console">
+					<div class="madre-install__tabs" role="tablist" aria-label={es ? 'Sistema operativo' : 'Operating system'}>
+						{m.install.platforms.map((platform, index) => (
+							<button
+								id={`madre-tab-${platform.id}-${locale}`}
+								type="button"
+								role="tab"
+								aria-selected={index === 0 ? 'true' : 'false'}
+								aria-controls={`madre-panel-${platform.id}-${locale}`}
+								tabindex={index === 0 ? 0 : -1}
+								data-madre-os-tab={platform.id}
+							>
+								<img src={platform.id === 'macos' ? '/tools/apple.svg' : '/tools/linux.svg'} alt="" width="22" height="22" />
+								<span>{platform.label}</span>
+							</button>
+						))}
+					</div>
+					<div class="madre-install__command">
+						<span aria-hidden="true">$</span>
+						<code>{madreFacts.startCommand}</code>
+						<button type="button" data-copy-value={madreFacts.startCommand}>{m.install.copy}</button>
+					</div>
+				</div>
 
-	<Stage id="memoria" size="loose">
-		<div class="home-surface__profile">
-			<MediaSlot
-				id="madre-memory"
-				ratio="1:1"
-				variant="soft"
-				label={es ? 'Memoria comprobable' : 'Verifiable memory'}
-				note={es ? 'Un artefacto de registro: archivo, recibo o historial.' : 'A record artifact: a file, a receipt, or a history.'}
-			/>
-			<div class="u-stack">
-				<p class="stage__eyebrow">{m.memory.index} · {es ? 'Memoria' : 'Memory'}</p>
-				<h2 class="stage__title">{m.memory.title}</h2>
-				<p class="stage__lede">{m.memory.text}</p>
-				<p class="madre__note">{m.memory.note}</p>
+				<div class="madre-install__support">
+					<div>
+						{m.install.platforms.map((platform, index) => (
+							<p
+								id={`madre-panel-${platform.id}-${locale}`}
+								role="tabpanel"
+								aria-labelledby={`madre-tab-${platform.id}-${locale}`}
+								hidden={index !== 0}
+								data-madre-os-panel={platform.id}
+							>
+								{platform.note}
+							</p>
+						))}
+					</div>
+					<ul>
+						{m.install.requirements.map((item) => <li>{item}</li>)}
+					</ul>
+					<p class="madre-install__status" role="status" aria-live="polite" data-copy-status></p>
+				</div>
+			</section>
+
+			<section class="madre-quickstart" aria-labelledby="madre-quickstart-title">
+				<header>
+					<p class="madre-product__eyebrow">{m.quickstart.eyebrow}</p>
+					<h2 id="madre-quickstart-title">{m.quickstart.title}</h2>
+				</header>
+				<ol>
+					{m.quickstart.steps.map((step, index) => (
+						<li>
+							<div class="madre-quickstart__step">
+								<span>{step.number}</span>
+								<h3>{step.title}</h3>
+								<p>{step.text}</p>
+								{step.command && (
+									<div class="madre-quickstart__code">
+										<code>{step.command}</code>
+										<button type="button" data-copy-value={step.command}>{m.install.copy}</button>
+									</div>
+								)}
+							</div>
+							{index < m.quickstart.steps.length - 1 && <Icon name="arrow-right" class="madre-quickstart__arrow" />}
+						</li>
+					))}
+				</ol>
+			</section>
+		</div>
+	</section>
+
+	<section class="madre-evidence" id={ids.evidence} aria-labelledby="madre-evidence-title">
+		<div class="madre-product__frame">
+			<header class="madre-section-head">
+				<p class="madre-product__eyebrow">{m.evidence.eyebrow}</p>
+				<div>
+					<h2 id="madre-evidence-title">{m.evidence.title}</h2>
+					<p>{m.evidence.text}</p>
+				</div>
+			</header>
+			<div class="madre-gallery__controls">
+				<button type="button" data-gallery-delta="-1"><Icon name="arrow-left" /> {m.gallery.previous}</button>
+				<button type="button" data-gallery-delta="1">{m.gallery.next} <Icon name="arrow-right" /></button>
+			</div>
+			<div class="madre-gallery" data-madre-gallery tabindex="0" aria-label={m.gallery.title}>
+				<figure class="madre-evidence__figure">
+					<img
+						src="/images/madre/room-0.4.0.webp"
+						width="3200"
+						height="2110"
+						alt={m.evidence.alt}
+						loading="eager"
+						decoding="async"
+						fetchpriority="high"
+					/>
+					<figcaption>{m.evidence.caption}</figcaption>
+					<p data-madre-explanatory>{es ? 'ALCANCE DE LA EVIDENCIA' : 'EVIDENCE BOUNDARY'} · {m.evidence.disclosure}</p>
+				</figure>
+				{m.gallery.slots.map((slot) => (
+					<MediaSlot id={slot.id} label={slot.title} note={slot.note} ratio={slot.ratio} variant="bleed" class="madre-gallery__slot" />
+				))}
 			</div>
 		</div>
-	</Stage>
+	</section>
 
-	<Stage id="control" size="loose">
-		<p class="stage__eyebrow">{m.control.index} · {es ? 'Control' : 'Control'}</p>
-		<h2 class="stage__title">{m.control.title}</h2>
-		<p class="stage__lede">{m.control.text}</p>
-		<ul class="madre__boundaries">
-			{m.control.boundaries.map((item) => <li class="surface surface--flat" data-rise>{item}</li>)}
-		</ul>
-	</Stage>
-
-	<Stage id="demo" size="loose">
-		<p class="stage__eyebrow">{m.demo.index} · {es ? 'Demostración' : 'Demo'}</p>
-		<h2 class="stage__title">{m.demo.title}</h2>
-		<p class="stage__lede">{m.demo.text}</p>
-		<div class="madre__demo surface surface--sunken" data-rise data-madre-explanatory>
-			<p class="bento__kicker">{m.demo.label}</p>
-			<ol class="madre__transcript">
-				{m.demo.transcript.map((line) => (
-					<li><strong>{line.speaker}</strong><span>{line.text}</span></li>
+	<section class="madre-flow" id={ids.flow} aria-labelledby="madre-flow-title">
+		<div class="madre-product__frame">
+			<header class="madre-section-head">
+				<p class="madre-product__eyebrow">{m.flow.eyebrow}</p>
+				<div>
+					<h2 id="madre-flow-title">{m.flow.title}</h2>
+					<p>{m.flow.text}</p>
+				</div>
+			</header>
+			<ol class="madre-flow__steps">
+				{m.flow.steps.map((step) => (
+					<li>
+						<span>{step.number}</span>
+						<h3>{step.title}</h3>
+						<p>{step.text}</p>
+					</li>
 				))}
 			</ol>
 		</div>
-	</Stage>
+	</section>
 
-	<Stage tone="ink" align="center" size="loose" class="pdp__close">
-		<h2 class="stage__title">{m.closing.title}</h2>
-		<p class="stage__lede">{m.closing.text}</p>
-		<div class="stage__actions">
-			<a class="pill pill--soft" href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.primaryCta}<Icon name="arrow-right" /></a>
-			<a class="pill pill--ghost" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.secondaryCta}</a>
+	<section class="madre-permissions" id={ids.permissions} aria-labelledby="madre-permissions-title">
+		<div class="madre-product__frame">
+			<header class="madre-section-head madre-section-head--dark">
+				<p class="madre-product__eyebrow">{m.permissions.eyebrow}</p>
+				<div>
+					<h2 id="madre-permissions-title">{m.permissions.title}</h2>
+					<p>{m.permissions.text}</p>
+				</div>
+			</header>
+			<ol class="madre-permissions__rail">
+				{m.permissions.modes.map((mode) => (
+					<li>
+						<span>{mode.code}</span>
+						<strong>{mode.name}</strong>
+						<p>{mode.text}</p>
+					</li>
+				))}
+			</ol>
+			<p class="madre-permissions__warning">{m.permissions.warning}</p>
 		</div>
-	</Stage>
+	</section>
+
+	<section class="madre-capabilities" aria-labelledby="madre-capabilities-title">
+		<div class="madre-product__frame">
+			<header class="madre-section-head">
+				<p class="madre-product__eyebrow">{m.capabilities.eyebrow}</p>
+				<h2 id="madre-capabilities-title">{m.capabilities.title}</h2>
+			</header>
+			<div class="madre-capabilities__list">
+				{m.capabilities.items.map((item, index) => (
+					<article>
+						<span>{String(index + 1).padStart(2, '0')} · {item.label}</span>
+						<h3>{item.title}</h3>
+						<p>{item.text}</p>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="madre-details">
+		<div class="madre-product__frame madre-details__grid">
+			<section aria-labelledby="madre-compatibility-title">
+				<p class="madre-product__eyebrow">{m.compatibility.eyebrow}</p>
+				<h2 id="madre-compatibility-title">{m.compatibility.title}</h2>
+				<p class="madre-details__intro">{m.compatibility.text}</p>
+				<dl>
+					{m.compatibility.items.map((item) => (
+						<div><dt>{item.term}</dt><dd>{item.detail}</dd></div>
+					))}
+				</dl>
+			</section>
+			<section id={ids.resources} aria-labelledby="madre-resources-title">
+				<p class="madre-product__eyebrow">{m.resources.eyebrow}</p>
+				<h2 id="madre-resources-title">{m.resources.title}</h2>
+				<ul>
+					{m.resources.items.map((item) => (
+						<li>
+							<a href={item.href} target="_blank" rel="noreferrer">
+								<span><strong>{item.label}</strong><small>{item.text}</small></span>
+								<Icon name="arrow-up-right" />
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		</div>
+	</section>
+
+	<section class="madre-closing" aria-labelledby="madre-closing-title">
+		<div class="madre-product__frame madre-closing__grid">
+			<header>
+				<p class="madre-product__eyebrow">{m.closing.eyebrow}</p>
+				<h2 id="madre-closing-title">{m.closing.title}</h2>
+				<p>{m.closing.text}</p>
+			</header>
+			<div class="madre-closing__actions">
+				<button type="button" class="madre-closing__primary" data-copy-value={madreFacts.startCommand}>{m.closing.primary}</button>
+				<a href={madreFacts.github} target="_blank" rel="noreferrer">{m.closing.secondary}<Icon name="arrow-up-right" /></a>
+				<a href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.contact}<Icon name="arrow-right" /></a>
+				<a href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.ahp}<Icon name="arrow-right" /></a>
+			</div>
+		</div>
+	</section>
+	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareJson)} />
 </article>
+
+<script>
+	const activateMadre = () => {
+		document.querySelectorAll<HTMLElement>('[data-madre-page]').forEach((root) => {
+			const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-madre-os-tab]')];
+			const panels = [...root.querySelectorAll<HTMLElement>('[data-madre-os-panel]')];
+			const setTab = (tab: HTMLButtonElement) => {
+				const target = tab.dataset.madreOsTab;
+				tabs.forEach((item) => {
+					const active = item === tab;
+					item.setAttribute('aria-selected', String(active));
+					item.tabIndex = active ? 0 : -1;
+				});
+				panels.forEach((panel) => {
+					panel.hidden = panel.dataset.madreOsPanel !== target;
+				});
+			};
+
+			tabs.forEach((tab, index) => {
+				tab.addEventListener('click', () => setTab(tab));
+				tab.addEventListener('keydown', (event) => {
+					if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+					event.preventDefault();
+					const nextIndex = event.key === 'Home'
+						? 0
+						: event.key === 'End'
+							? tabs.length - 1
+							: (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+					setTab(tabs[nextIndex]);
+					tabs[nextIndex].focus();
+				});
+			});
+
+			const copyLabel = root.dataset.copyLabel ?? 'Copy';
+			const copiedLabel = root.dataset.copiedLabel ?? 'Copied';
+			const failedLabel = root.dataset.copyFailedLabel ?? 'Copy the command';
+			const status = root.querySelector<HTMLElement>('[data-copy-status]');
+			root.querySelectorAll<HTMLButtonElement>('[data-copy-value]').forEach((button) => {
+				button.addEventListener('click', async () => {
+					const value = button.dataset.copyValue ?? '';
+					const copied = await navigator.clipboard.writeText(value).then(() => true).catch(() => false);
+					button.textContent = copied ? copiedLabel : failedLabel;
+					if (status) status.textContent = copied ? `${copiedLabel}: ${value}` : failedLabel;
+					window.setTimeout(() => { button.textContent = copyLabel; }, 1800);
+				});
+			});
+
+			const gallery = root.querySelector<HTMLElement>('[data-madre-gallery]');
+			root.querySelectorAll<HTMLButtonElement>('[data-gallery-delta]').forEach((button) => {
+				button.addEventListener('click', () => {
+					if (!gallery) return;
+					gallery.scrollBy({ left: gallery.clientWidth * Number(button.dataset.galleryDelta ?? 1), behavior: 'smooth' });
+				});
+			});
+		});
+	};
+
+	activateMadre();
+</script>

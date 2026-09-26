@@ -2,11 +2,11 @@
   "schema_version": "1.4.0",
   "project_id": "jossue-portfolio",
   "phase": "IN_PROGRESS",
-  "objective": "Ambientaciones editoriales generadas e integradas, separadas verificablemente de capturas reales",
-  "next_action": "Revision visual y de lenguaje con Jossue sobre la capa comercial en f99d53e. Decidir: home sin HeroCarousel, rama home de PageView muerta, y /es/servicios/ huerfana. Push, deploy y conexion del asistente con Apex siguen sin autorizacion.",
+  "objective": "Flagship navigation, hierarchy, and CTA consistency",
+  "next_action": "Audit the live local site, remove inherited theme classes, rebuild full-width heroes and work cases, then re-run responsive visual QA before review.",
   "confidence": "VERIFIED",
   "blockers": [],
-  "base_commit": "f99d53e1d42670362e6729649196bd9d6fd59ac7",
+  "base_commit": "74d65b3148ba184827714e3e7cb2d663213718d7",
   "created_at": "2026-09-12T19:03:35.220Z",
-  "updated_at": "2026-09-20T00:39:32.644Z"
+  "updated_at": "2026-09-25T17:22:21.202Z"
 }

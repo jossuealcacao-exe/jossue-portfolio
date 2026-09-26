@@ -1,9 +1,19 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
+
+async function switchLanguage(page: Page) {
+	const desktopLink = page.locator('.global-nav__language');
+	if (await desktopLink.isVisible()) {
+		await desktopLink.click();
+		return;
+	}
+	await page.locator('.global-nav__trigger').click();
+	await page.locator('.global-nav__sheet a[hreflang]').click();
+}
 
 const routes = [
 	'/es/',
 	'/es/productos/',
-	'/es/productos/auditoria-ecommerce/',
+	'/es/productos/bloqio-builder/',
 	'/es/trabajo/',
 	'/es/servicios/',
 	'/es/ia-y-sistemas/',
@@ -45,7 +55,7 @@ test('root redirects and language preserves the equivalent route', async ({ page
 	await page.goto('/');
 	await expect(page).toHaveURL(/\/es\/$/);
 	await page.goto('/es/servicios/');
-	await page.locator('a.language').click();
+	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/services\/$/);
 });
 
@@ -88,7 +98,7 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 	expect(handoffColumns).toBe((page.viewportSize()?.width ?? 0) > 760 ? 2 : 1);
 	await expect(page.locator('main')).toContainText('Directamente en el chat');
 	await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
-	await page.locator('a.language').click();
+	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/resources\/ahp-plus\/$/);
 	await expect(page.locator('.ahp-atlas__hero .eyebrow')).toContainText('Command Atlas');
 	await expect(page.locator('main h1')).toContainText('Let context travel');
@@ -97,15 +107,22 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 test('MADRE is bilingual, explicit about evidence, and connected to contact and AHP+', async ({ page }) => {
 	await page.goto('/es/madre/');
 	await expect(page.locator('[data-madre-page]')).toBeVisible();
-	await expect(page.locator('main h1')).toContainText('Un lugar común');
-	await expect(page.locator('[data-madre-explanatory]')).toContainText('NO ES EVIDENCIA DE EJECUCIÓN');
+	await expect(page.locator('main h1')).toContainText('Instala una sala');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('ALCANCE DE LA EVIDENCIA');
+	await expect(page.locator('.madre-install__command')).toContainText('npx @jossuealcala/madre start');
+	await expect(page.locator('[data-madre-os-tab]')).toHaveCount(2);
+	await expect(page.locator('[data-madre-os-panel="macos"]')).toBeVisible();
+	await page.locator('[data-madre-os-tab="linux"]').click();
+	await expect(page.locator('[data-madre-os-tab="linux"]')).toHaveAttribute('aria-selected', 'true');
+	await expect(page.locator('[data-madre-os-panel="linux"]')).toBeVisible();
+	await expect(page.locator('.madre-evidence__figure img')).toHaveAttribute('src', '/images/madre/room-0.4.0.webp');
 	await expect(page.locator('main a[data-analytics-event="click_madre_contact"]').first()).toHaveAttribute('href', '/es/contacto/');
 	await expect(page.locator('main a[data-analytics-event="click_madre_ahp"]').first()).toHaveAttribute('href', '/es/recursos/ahp-plus/');
-	await expect(page.locator('.nav__links a')).toHaveCount(4);
-	await page.locator('a.language').click();
+	await expect(page.locator('.global-nav__links a')).toHaveCount(4);
+	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/madre\/$/);
-	await expect(page.locator('main h1')).toContainText('One shared place');
-	await expect(page.locator('[data-madre-explanatory]')).toContainText('NOT EXECUTION EVIDENCE');
+	await expect(page.locator('main h1')).toContainText('Install a room');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('EVIDENCE BOUNDARY');
 });
 
 test('commercial catalog presents MADRE as a product and keeps Apex access bounded', async ({ page }) => {
@@ -123,41 +140,99 @@ test('commercial catalog presents MADRE as a product and keeps Apex access bound
 });
 
 test('product detail is bilingual and routes to a contact conversation', async ({ page }) => {
-	await page.goto('/es/productos/auditoria-ecommerce/');
-	await expect(page.locator('[data-product-detail="auditoria-ecommerce"]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Auditoría ecommerce');
-	await expect(page.locator('main a[data-analytics-event="contact_product"]')).toHaveAttribute('href', '/es/contacto/?producto=auditoria-ecommerce');
-	await page.locator('a.language').click();
-	await expect(page).toHaveURL(/\/en\/products\/auditoria-ecommerce\/$/);
-	await expect(page.locator('main h1')).toHaveText('Ecommerce audit');
+	await page.goto('/es/productos/bloqio-builder/');
+	await expect(page.locator('[data-product-detail="bloqio-builder"]')).toBeVisible();
+	await expect(page.locator('main h1')).toHaveText('Bloqio Builder');
+	await expect(page.locator('main a[data-analytics-event="contact_product"]')).toHaveAttribute('href', '/es/contacto/?producto=bloqio-builder');
+	await switchLanguage(page);
+	await expect(page).toHaveURL(/\/en\/products\/bloqio-builder\/$/);
+	await expect(page.locator('main h1')).toHaveText('Bloqio Builder');
 });
 
 test('header keeps navigation focused and mobile menu supports Escape', async ({ page }) => {
 	await page.goto('/es/');
-	await expect(page.locator('.nav__links a')).toHaveCount(4);
-	await expect(page.locator('.nav__links .nav__cta')).toHaveText('Contacto');
+	await expect(page.locator('.global-nav__links a')).toHaveCount(4);
+	await expect(page.locator('.global-nav__links a[href="/es/contacto/"]')).toContainText('Contacto');
 	// El rediseño movio la home al tono papel; el cierre oscuro vive en su
 	// propia seccion, no en el tema del documento.
 	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'default');
-	await expect(page.locator('main .stage[data-tone="ink"]')).toHaveCount(1);
-	const headerColor = await page.locator('.site-header').evaluate((element) => getComputedStyle(element).backgroundColor);
+	await expect(page.locator('[data-flagship-carousel]')).toBeVisible();
+	await expect(page.locator('main .stage[data-tone="ink"]')).toHaveCount(3);
+	const headerColor = await page.locator('.global-nav').evaluate((element) => getComputedStyle(element).backgroundColor);
 	expect(headerColor).not.toBe('rgba(0, 0, 0, 0)');
+	await page.evaluate(() => window.scrollTo(0, 640));
+	await expect(page.locator('.global-nav')).toHaveCSS('background-color', headerColor);
+	const scrolledHeader = await page.locator('.global-nav').boundingBox();
+	expect(Math.abs(scrolledHeader?.y ?? 999)).toBeLessThan(1);
 
 	const viewport = page.viewportSize();
 	if (viewport && viewport.width < 928) {
-		await page.locator('.menu__toggle').click();
-		await expect(page.locator('.menu')).toHaveAttribute('open', '');
+		await expect(page.locator('.global-nav__trigger')).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+		await page.locator('.global-nav__trigger').click();
+		await expect(page.locator('.global-nav__drawer')).toHaveAttribute('open', '');
+		await expect(page.locator('.global-nav__sheet')).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Productos', exact: true }).last()).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Contacto', exact: true }).last()).toBeVisible();
+		const menuBox = await page.locator('.global-nav__sheet').boundingBox();
+		expect(menuBox?.width ?? 0).toBeGreaterThanOrEqual((viewport.width ?? 0) - 1);
 		await page.keyboard.press('Escape');
-		await expect(page.locator('.menu')).not.toHaveAttribute('open', '');
+		await expect(page.locator('.global-nav__drawer')).not.toHaveAttribute('open', '');
 	}
 
 	await page.goto('/es/servicios/');
 	await expect(page.locator('main a[href="/es/ia-y-sistemas/"]')).toBeVisible();
 });
 
+test('commercial pages share one hierarchy and CTAs keep usable spacing', async ({ page }) => {
+	for (const route of ['/es/productos/', '/es/productos/desarrollo-web/']) {
+		await page.goto(route);
+		const hero = page.locator('main .stage--hero').first();
+		const heroTitle = hero.locator('.stage__title').first();
+		const heroLede = hero.locator('.stage__lede').first();
+		const titleBox = await heroTitle.boundingBox();
+		const ledeBox = await heroLede.boundingBox();
+		expect(titleBox, `${route}: hero title must render`).not.toBeNull();
+		expect(ledeBox, `${route}: hero lede must render`).not.toBeNull();
+		expect(Math.abs((titleBox?.x ?? 0) - (ledeBox?.x ?? 0)), `${route}: hero title and lede share the same reading edge`).toBeLessThan(1);
+		await expect(heroTitle).toHaveCSS('text-align', 'left');
+
+		const firstCta = hero.locator('.stage__actions .pill').first();
+		if (await firstCta.count()) {
+			const spacing = await firstCta.evaluate((element) => {
+				const style = getComputedStyle(element);
+				return {
+					paddingLeft: Number.parseFloat(style.paddingLeft),
+					paddingRight: Number.parseFloat(style.paddingRight),
+					height: element.getBoundingClientRect().height,
+				};
+			});
+			expect(spacing.paddingLeft, `${route}: CTA left padding`).toBeGreaterThanOrEqual(18);
+			expect(spacing.paddingRight, `${route}: CTA right padding`).toBeGreaterThanOrEqual(18);
+			expect(spacing.height, `${route}: CTA touch target`).toBeGreaterThanOrEqual(48);
+		}
+
+		const close = page.locator('.conversion-chapter').first();
+		if (await close.count()) await expect(close.locator('.stage__title')).toHaveCSS('text-align', 'left');
+	}
+
+	await page.goto('/es/productos/desarrollo-web/');
+	const chapterCta = page.locator('.chapter-nav__cta');
+	const chapterSpacing = await chapterCta.evaluate((element) => {
+		const style = getComputedStyle(element);
+		return {
+			paddingLeft: Number.parseFloat(style.paddingLeft),
+			paddingRight: Number.parseFloat(style.paddingRight),
+			height: element.getBoundingClientRect().height,
+		};
+	});
+	expect(chapterSpacing.paddingLeft).toBeGreaterThanOrEqual(13);
+	expect(chapterSpacing.paddingRight).toBeGreaterThanOrEqual(13);
+	expect(chapterSpacing.height).toBeGreaterThanOrEqual(42);
+});
+
 test('Portfolio connects to the independent blog only from the footer', async ({ page }) => {
 	await page.goto('/es/');
-	await expect(page.locator('header .nav__links')).not.toContainText('Blog');
+	await expect(page.locator('header .global-nav__links')).not.toContainText('Blog');
 	await expect(page.locator('footer a[data-analytics-event="click_blog"]')).toHaveAttribute('href', 'https://blog.jossuealcala.com/es/');
 	await expect(page.locator('meta[name="google-adsense-account"]')).toHaveAttribute('content', 'ca-pub-5612202849073748');
 	await expect(page.locator('[data-ad-scope="blog"]')).toHaveCount(0);
@@ -175,54 +250,74 @@ test('contact page prioritizes direct working channels', async ({ page }) => {
 test('Home leads with a commercial proposition and selected products', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('[data-storefront-home]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Convierte una auditoría en una mejora que sí llega a producción.');
-	await expect(page.locator('[data-media-slot="home-hero"]')).toBeVisible();
-	await expect(page.locator('[data-media-slot="home-hero"]')).toContainText('resultados inventados');
-	await expect(page.locator('.home-surface__bento .bento__cell')).toHaveCount(5);
-	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.home-surface__tiles .tile')).toHaveCount(3);
-	await expect(page.locator('.home-surface__showcase .showcase__beat')).toHaveCount(4);
+	await expect(page.locator('main h1')).toHaveText('Ideas ambiciosas. Sistemas que funcionan.');
+	await expect(page.locator('[data-flagship-carousel]')).toBeVisible();
+	await expect(page.locator('[data-flagship-slide]')).toHaveCount(3);
+	await expect(page.locator('[data-flagship-slide] img')).toHaveCount(3);
+	await expect(page.locator('[data-flagship-control]')).toHaveCount(3);
+	await page.locator('[data-flagship-control]').nth(1).click();
+	await expect(page.locator('[data-flagship-slide].is-active')).toContainText('Encuentro dónde se te cae la venta.');
+	await expect(page.locator('[data-flagship-status]')).toHaveText('02 / 03');
+	await expect(page.locator('.madre-feature__wordmark')).toHaveText('MADRE');
+	await expect(page.getByRole('link', { name: /Explorar MADRE/ })).toHaveAttribute('href', '/es/madre/');
+	await expect(page.locator('.product-index__list > li')).toHaveCount(4);
+	await expect(page.locator('.product-index__list [data-media-slot]')).toHaveCount(4);
+	const mesh = await page.locator('.product-index__list').evaluate((element) => ({
+		display: getComputedStyle(element).display,
+		columns: getComputedStyle(element).gridTemplateColumns.split(' ').length,
+	}));
+	expect(mesh.display).toBe('grid');
+	expect(mesh.columns).toBe((page.viewportSize()?.width ?? 0) > 992 ? 12 : (page.viewportSize()?.width ?? 0) > 736 ? 2 : 1);
+	await expect(page.locator('.case-filmstrip__item')).toHaveCount(4);
+	await expect(page.locator('.method-chapter__list > li')).toHaveCount(4);
 	await expect(page.locator('[data-media-slot="home-portrait"]')).toBeVisible();
+	const closingTitle = page.locator('.closing-chapter .stage__title');
+	const closingCta = page.locator('.closing-chapter .pill');
+	await closingTitle.scrollIntoViewIfNeeded();
+	const closingGeometry = await closingTitle.evaluate((element) => {
+		const rect = element.getBoundingClientRect();
+		return {
+			left: rect.left,
+			right: rect.right,
+			bottom: rect.bottom,
+			clientWidth: element.clientWidth,
+			scrollWidth: element.scrollWidth,
+		};
+	});
+	const closingCtaBox = await closingCta.boundingBox();
+	expect(closingGeometry.left).toBeGreaterThanOrEqual(0);
+	expect(closingGeometry.right).toBeLessThanOrEqual(page.viewportSize()?.width ?? 0);
+	expect(closingGeometry.scrollWidth).toBeLessThanOrEqual(closingGeometry.clientWidth + 1);
+	expect((closingCtaBox?.y ?? 0) - closingGeometry.bottom).toBeGreaterThanOrEqual(24);
 	for (const phrase of legacyPublicCopy) await expect(page.locator('main')).not.toContainText(phrase);
 	await expect(page.locator('main')).not.toContainText('57+');
 	await expect(page.locator('main')).not.toContainText('45 páginas');
 	await expect(page.locator('main')).not.toContainText('↑ CR');
 });
 
-test('Work page rails the cards on mobile and shows every project on desktop', async ({ page }) => {
+test('Work page uses full-width editorial rows without legacy cards', async ({ page }) => {
 	await page.goto('/es/trabajo/');
-	await expect(page.locator('.work-group .project-grid')).not.toHaveCount(0);
-	const isDesktop = (page.viewportSize()?.width ?? 0) >= 1024;
-	for (const grid of await page.locator('.work-group .project-grid').all()) {
-		const gridState = await grid.evaluate((element) => ({
-			cardCount: element.querySelectorAll('.case-card').length,
-			scrolls: element.scrollWidth > element.clientWidth,
-			overflowX: getComputedStyle(element).overflowX,
-			columns: getComputedStyle(element).gridTemplateColumns.split(' ').length,
-		}));
-		if (isDesktop) {
-			// A portfolio must not hide work behind a horizontal scroll on a desktop screen.
-			expect(gridState.overflowX).toBe('visible');
-			expect(gridState.scrolls).toBe(false);
-			expect(gridState.columns).toBe(2);
-		} else {
-			// Below 1024px the rail is the only workable pattern.
-			expect(gridState.overflowX).toBe('auto');
-			if (gridState.cardCount > 1) expect(gridState.scrolls).toBe(true);
-		}
-	}
+	await expect(page.locator('.work-gallery')).not.toHaveCount(0);
+	await expect(page.locator('.portfolio-entry')).toHaveCount(9);
+	await expect(page.locator('.case-card')).toHaveCount(0);
+	await expect(page.getByText('Ver proyecto', { exact: true })).toHaveCount(0);
+	const viewport = page.viewportSize();
+	const heroBox = await page.locator('.editorial-hero').boundingBox();
+	expect(heroBox?.x ?? -1).toBe(0);
+	expect(Math.abs((heroBox?.width ?? 0) - (viewport?.width ?? 0))).toBeLessThan(1);
+	await expect(page.locator('.editorial-hero h1')).toHaveCSS('color', 'rgb(247, 247, 243)');
 });
 
 test('section motion starts on intersection and reduced motion remains static', async ({ page }) => {
 	await page.goto('/es/trabajo/');
-	const workGroup = page.locator('.work-group').last();
+	const workGroup = page.locator('.work-chapter').last();
 	await workGroup.scrollIntoViewIfNeeded();
 	await expect(workGroup).toHaveClass(/is-revealed/);
 
 	await page.emulateMedia({ reducedMotion: 'reduce' });
 	await page.reload();
 	await expect(page.locator('html')).toHaveClass(/motion-reduced/);
-	await expect(page.locator('.work-group').first()).toHaveCSS('opacity', '1');
+	await expect(page.locator('.work-chapter').first()).toHaveCSS('opacity', '1');
 });
 
 test('About presents experience, impact, brands, and CV without internal notes', async ({ page }) => {
@@ -234,7 +329,8 @@ test('About presents experience, impact, brands, and CV without internal notes',
 	await expect(page.locator('main')).toContainText('>$1 MDP/mes');
 	await expect(page.locator('main')).toContainText('3.6 s CrUX');
 	await expect(page.locator('main a[href="/cv/Jossue-Alcala-CV.pdf"]')).toHaveCount(1);
-	await expect(page.locator('.brand-strip img')).toHaveCount(6);
+	await expect(page.locator('.brand-strip .brand-label')).toHaveCount(6);
+	await expect(page.locator('.brand-strip img')).toHaveCount(0);
 	await expect(page.locator('main')).not.toContainText('DUMO');
 	await expect(page.locator('main')).not.toContainText('57 usuarios');
 	await expect(page.locator('main')).not.toContainText('45 páginas');
@@ -242,39 +338,17 @@ test('About presents experience, impact, brands, and CV without internal notes',
 	await expect(page.locator('main a[href*="linkedin.com/in/jossue-alcala"]')).toBeVisible();
 });
 
-test('project gallery is visual, accessible, and free of audit annotations', async ({ page }) => {
+test('project gallery preserves every frame as an accessible image placeholder', async ({ page }) => {
 	await page.goto('/es/trabajo/bloqio-cro-apps/');
 	await expect(page.locator('main h1')).toHaveText('Bloqio CRO Apps — Prometeo / Hermes');
 	await expect(page.locator('main')).toContainText('Prometeo');
 	await expect(page.locator('main')).toContainText('Hermes');
-	await expect(page.locator('.evidence-figure img')).toHaveCount(11);
-	await expect(page.locator('.evidence-carousel__dot')).toHaveCount(11);
-	await expect(page.locator('.evidence-carousel__nav')).toHaveCount(2);
-	await expect(page.locator('.evidence-figure:not(.is-active)').first()).toHaveAttribute('inert', '');
-	await expect(page.locator('.evidence-figure:not(.is-active)').first()).toHaveAttribute('aria-hidden', 'true');
+	await expect(page.locator('.evidence-placeholder')).toHaveCount(11);
+	await expect(page.locator('.evidence-placeholder [data-media-slot]')).toHaveCount(11);
+	await expect(page.locator('.evidence-gallery img')).toHaveCount(0);
 	await expect(page.locator('.audit-marker')).toHaveCount(0);
 	await expect(page.locator('.evidence-gallery')).toHaveAttribute('aria-label', 'Galería del proyecto');
-	await expect(page.locator('.evidence-carousel__viewport')).toHaveCSS('overflow-x', 'auto');
-	await expect(page.locator('.iphone').first()).toHaveCSS('box-shadow', 'none');
-
-	const galleryViewport = page.locator('.evidence-carousel__viewport');
-	await galleryViewport.scrollIntoViewIfNeeded();
-	const galleryBox = await galleryViewport.boundingBox();
-	expect(galleryBox).not.toBeNull();
-	if (galleryBox) {
-		await page.mouse.move(galleryBox.x + galleryBox.width * 0.75, galleryBox.y + galleryBox.height * 0.5);
-		await page.mouse.down();
-		await page.mouse.move(galleryBox.x + galleryBox.width * 0.2, galleryBox.y + galleryBox.height * 0.5, { steps: 8 });
-		await page.mouse.up();
-		await expect.poll(() => galleryViewport.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
-	}
-
-	await page.locator('.evidence-figure.is-active [data-evidence-open]').click();
-	await expect(page.locator('[data-evidence-lightbox]')).toBeVisible();
-	await expect(page.locator('[data-lightbox-image]')).toBeVisible();
-	await expect(page.locator('[data-lightbox-markers] .audit-marker')).toHaveCount(0);
-	await page.locator('[data-lightbox-close]').click();
-	await expect(page.locator('[data-evidence-lightbox]')).toBeHidden();
+	await expect(page.locator('[data-evidence-lightbox], .evidence-carousel__nav')).toHaveCount(0);
 });
 
 for (const project of [
@@ -291,20 +365,19 @@ for (const project of [
 	test(`${project.slug} presents a commercial bilingual project narrative`, async ({ page }) => {
 		await page.goto(`/es/trabajo/${project.slug}/`);
 		await expect(page.locator('main h1')).toHaveText(project.title);
-		await expect(page.locator('.case-hero .eyebrow')).toContainText(project.categoryEs);
+		await expect(page.locator('.case-intro .eyebrow')).toContainText(project.categoryEs);
 		if (project.media > 0) {
 			await expect(page.locator('main')).toContainText('Explora el proyecto');
 			await expect(page.locator('main')).not.toContainText('La experiencia en contexto.');
 		}
-		await expect(page.locator('.case-cover .project-visual')).toBeVisible();
+		await expect(page.locator('.case-cover .portfolio-visual')).toBeVisible();
+		await expect(page.locator('.case-cover img')).toHaveCount(0);
 		await expect(page.locator('[data-case-ambience]')).toHaveCount(1);
-		await expect(page.locator('[data-case-ambience] img')).toBeVisible();
-		await expect(page.locator('[data-case-ambience]')).toContainText('Imagen generada · ambientación, no captura.');
-		await expect(page.locator('[data-case-ambience]')).toContainText('GPT Image · Codex');
-		expect(await page.locator('[data-case-ambience] img').getAttribute('src')).toContain('ambience-');
+		await expect(page.locator('[data-case-ambience] img')).toHaveCount(0);
+		await expect(page.locator('[data-case-ambience]')).toContainText('Placeholder editorial');
+		await expect(page.locator('[data-case-ambience] [data-media-slot]')).toBeVisible();
 		if (project.slug === 'ahp-plus') {
-			await expect(page.locator('.case-brand img[src*="ahp-plus.svg"]')).toBeVisible();
-			await expect(page.locator('.case-cover img[src*="ahp-plus.svg"]')).toBeVisible();
+			await expect(page.locator('.case-brand')).toContainText('AHP+');
 			await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
 			await expect(page.locator('main')).toContainText('.ahp/');
 			await expect(page.locator('main')).not.toContainText('AHP+ 1.0');
@@ -315,18 +388,19 @@ for (const project of [
 				getComputedStyle(element).gridTemplateColumns.split(' ').length,
 			);
 			expect(deliveryColumns).toBe(1);
-			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(246, 246, 242)');
-			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(246, 246, 242)');
-			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(17, 17, 15)');
+			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(243, 243, 239)');
+			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(243, 243, 239)');
+			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(9, 10, 9)');
 			// El pie dejo de ser una losa oscura con titular: ahora es un
 			// directorio callado sobre fondo claro. El requisito sobrevive
 			// — su encabezado debe leerse contra su fondo.
-			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(17, 17, 15)');
-			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(17, 17, 15)');
+			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(9, 10, 9)');
+			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(98, 100, 95)');
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
-		await expect(page.locator('.evidence-figure img')).toHaveCount(project.media);
+		await expect(page.locator('.evidence-placeholder')).toHaveCount(project.media);
+		await expect(page.locator('.evidence-gallery img')).toHaveCount(0);
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		await expect(page.locator('.status, [data-verification-status]')).toHaveCount(0);
 		await expect(page.locator('main a[href^="http://127.0.0.1"], main a[href^="http://localhost"]')).toHaveCount(0);
@@ -338,11 +412,11 @@ for (const project of [
 			await expect(page.locator('meta[name="description"]')).not.toHaveAttribute('content', /\b(auditoría|evidencia|verificación)\b/i);
 		}
 
-		await page.locator('a.language').click();
+		await switchLanguage(page);
 		await expect(page).toHaveURL(new RegExp(`/en/work/${project.slug}/$`));
 		await expect(page.locator('main h1')).toHaveText(project.title);
-		await expect(page.locator('.case-hero .eyebrow')).toContainText(project.categoryEn);
-		await expect(page.locator('[data-case-ambience]')).toContainText('Generated image · ambience, not a screenshot.');
+		await expect(page.locator('.case-intro .eyebrow')).toContainText(project.categoryEn);
+		await expect(page.locator('[data-case-ambience]')).toContainText('Editorial placeholder');
 		if (project.media > 0) await expect(page.locator('main')).toContainText('Explore the project');
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		if (!['la-carniceria-virtual', 'miawseo', 'ahp-plus'].includes(project.slug)) {
@@ -354,6 +428,18 @@ for (const project of [
 	});
 }
 
+test('MADRE keeps a disciplined reading edge and never overflows the viewport', async ({ page }) => {
+	await page.goto('/es/madre/');
+	const titleBox = await page.locator('.madre-product__hero h1').boundingBox();
+	const ledeBox = await page.locator('.madre-product__lede').boundingBox();
+	expect(titleBox).not.toBeNull();
+	expect(ledeBox).not.toBeNull();
+	expect(Math.abs((titleBox?.x ?? 0) - (ledeBox?.x ?? 0))).toBeLessThan(1);
+	await expect(page.locator('.madre-product__hero h1')).toHaveCSS('text-align', 'start');
+	const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+	expect(hasHorizontalOverflow).toBe(false);
+});
+
 test('every image slot declares the contract round 2 depends on', async ({ page }) => {
 	// Un slot sin id, sin proporcion o sin etiqueta es un hueco que nadie
 	// sabra rellenar despues. Este guard existe para que la ronda 2 no
@@ -361,7 +447,7 @@ test('every image slot declares the contract round 2 depends on', async ({ page 
 	const RATIOS = ['21:9', '16:9', '3:2', '4:3', '1:1', '4:5', '9:16'];
 	const seen = new Set<string>();
 
-	for (const route of ['/es/', '/es/productos/', '/es/productos/auditoria-ecommerce/', '/es/madre/']) {
+	for (const route of ['/es/', '/es/productos/', '/es/productos/bloqio-builder/', '/es/madre/']) {
 		await page.goto(route);
 		const slots = page.locator('[data-media-slot]');
 		const count = await slots.count();

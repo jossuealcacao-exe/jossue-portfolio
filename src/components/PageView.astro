@@ -1,17 +1,15 @@
 ---
-import { Image } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
-import profilePhoto from '../assets/profile.jpeg';
 import { brandStrip } from '../data/brands';
 import { contact } from '../data/contact';
 import { routes, type Locale, type PageKey } from '../data/i18n';
 import { homeOutcomes } from '../data/outcomes';
 import { profile, profileCopy } from '../data/profile';
-import BrandMark from './BrandMark.astro';
 import CaseCard from './CaseCard.astro';
 import ContactForm from './ContactForm.astro';
 import HeroCarousel from './HeroCarousel.astro';
 import Icon from './Icon.astro';
+import MediaSlot from './surface/MediaSlot.astro';
 import type { IconName } from './Icon.astro';
 import StackCarousel from './StackCarousel.astro';
 
@@ -161,7 +159,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 						))}
 					</ul>
 					<ul class="brand-strip" aria-label={es ? 'Marcas con las que he trabajado' : 'Brands I have worked with'}>
-						{brands.map((brand) => <li><BrandMark brand={brand} locale={locale} size="md" decorative={false} /></li>)}
+						{brands.map((brand) => <li class="brand-label">{brand.name[locale]}</li>)}
 					</ul>
 				</div>
 			</section>
@@ -226,9 +224,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 			<section class="section shell profile-section">
 				<p class="index">05 / {es ? 'Perfil' : 'Profile'}</p>
 				<div class="profile-intro">
-					<figure class="profile-intro__photo">
-						<Image src={profilePhoto} alt={es ? 'Retrato de Jossue Alcalá' : 'Portrait of Jossue Alcalá'} width={640} height={800} loading="lazy" decoding="async" />
-					</figure>
+					<MediaSlot id="profile-home" ratio="4:5" variant="soft" label={es ? 'Retrato editorial · por producir' : 'Editorial portrait · to be produced'} />
 					<div class="flow">
 						<h2>{es ? 'Estrategia de negocio con capacidad de construir.' : 'Business strategy with the ability to build.'}</h2>
 						<p class="profile-headline">{about.headline}</p>
@@ -246,35 +242,37 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 
 {
 	pageKey === 'work' && (
-		<div class="page shell page--work">
-			<section class="hero work-hero">
-				<div class="flow">
-					<p class="eyebrow">{es ? 'Proyectos seleccionados' : 'Selected projects'}</p>
+		<div class="work-index">
+			<section class="editorial-hero editorial-hero--work">
+				<div class="editorial-hero__frame">
+				<div class="editorial-hero__copy">
+					<p class="editorial-hero__eyebrow">{es ? 'Proyectos seleccionados' : 'Selected projects'}</p>
 					<h1>{es ? 'Trabajo que une estrategia, producto y ejecución.' : 'Work that brings strategy, product, and execution together.'}</h1>
-					<p class="hero__lede">{es ? 'Experiencias ecommerce, productos propios y conceptos diseñados para resolver necesidades reales del negocio.' : 'Ecommerce experiences, independent products, and concepts designed to solve real business needs.'}</p>
+					<p class="editorial-hero__lede">{es ? 'Experiencias ecommerce, productos propios y conceptos diseñados para resolver necesidades reales del negocio.' : 'Ecommerce experiences, independent products, and concepts designed to solve real business needs.'}</p>
 				</div>
-				<dl class="work-folio">
+				<dl class="editorial-hero__folio">
 					<div><dt>{String(clientWork.length).padStart(2, '0')}</dt><dd>{es ? 'Marcas' : 'Brands'}</dd></div>
 					<div><dt>{String(ownedProducts.length).padStart(2, '0')}</dt><dd>{es ? 'Productos' : 'Products'}</dd></div>
 					<div><dt>{String(concepts.length).padStart(2, '0')}</dt><dd>{es ? 'Conceptos' : 'Concepts'}</dd></div>
 				</dl>
+				</div>
 			</section>
 			{clientWork.length > 0 && (
-				<section class="section work-group" aria-labelledby="client-work-title">
-					<div class="section-heading"><p class="index">01 / {es ? 'Trabajo para marcas' : 'Work for brands'}</p><h2 id="client-work-title">{es ? 'Ecommerce y growth llevados a la operación.' : 'Ecommerce and growth brought into operation.'}</h2></div>
-					<div class="project-grid">{clientWork.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
+				<section class="work-chapter" aria-labelledby="client-work-title" data-reveal>
+					<div class="work-chapter__head"><p>01 / {es ? 'Trabajo para marcas' : 'Work for brands'}</p><h2 id="client-work-title">{es ? 'Ecommerce y growth llevados a la operación.' : 'Ecommerce and growth brought into operation.'}</h2></div>
+					<div class="work-gallery">{clientWork.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
 				</section>
 			)}
 			{ownedProducts.length > 0 && (
-				<section class="section work-group" aria-labelledby="owned-products-title">
-					<div class="section-heading"><p class="index">02 / {es ? 'Productos independientes' : 'Independent products'}</p><h2 id="owned-products-title">{es ? 'Ideas convertidas en productos utilizables.' : 'Ideas turned into usable products.'}</h2></div>
-					<div class="project-grid">{ownedProducts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
+				<section class="work-chapter" aria-labelledby="owned-products-title" data-reveal>
+					<div class="work-chapter__head"><p>02 / {es ? 'Productos independientes' : 'Independent products'}</p><h2 id="owned-products-title">{es ? 'Ideas convertidas en productos utilizables.' : 'Ideas turned into usable products.'}</h2></div>
+					<div class="work-gallery">{ownedProducts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
 				</section>
 			)}
 			{concepts.length > 0 && (
-				<section class="section work-group" aria-labelledby="concepts-title">
-					<div class="section-heading"><p class="index">03 / {es ? 'Conceptos de producto' : 'Product concepts'}</p><h2 id="concepts-title">{es ? 'Exploraciones técnicas con intención comercial.' : 'Technical explorations with commercial intent.'}</h2></div>
-					<div class="project-grid">{concepts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
+				<section class="work-chapter" aria-labelledby="concepts-title" data-reveal>
+					<div class="work-chapter__head"><p>03 / {es ? 'Conceptos de producto' : 'Product concepts'}</p><h2 id="concepts-title">{es ? 'Exploraciones técnicas con intención comercial.' : 'Technical explorations with commercial intent.'}</h2></div>
+					<div class="work-gallery">{concepts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
 				</section>
 			)}
 		</div>
@@ -283,17 +281,19 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 
 {
 	pageKey === 'services' && (
-		<div class="page shell page--services">
-			<section class="hero compact-hero">
-				<p class="eyebrow">{es ? 'Servicios' : 'Services'}</p>
-				<h1>{es ? 'Te ayudo a vender más por internet. Así de simple.' : 'I help you sell more online. That simple.'}</h1>
-				<p class="hero__lede">{es ? 'Averiguo qué es lo que más te está costando, lo diseño, y me quedo a construirlo contigo. No entrego un documento y me voy.' : 'I figure out what is costing you most, design it, and stay to build it with you. I do not hand over a document and leave.'}</p>
-				<a class="button" href={routes[locale].contact}>{es ? 'Contáctame' : 'Contact me'}</a>
+		<div class="editorial-page editorial-page--services">
+			<section class="editorial-hero">
+				<div class="editorial-hero__frame editorial-hero__frame--single">
+					<div class="editorial-hero__copy"><p class="editorial-hero__eyebrow">{es ? 'Servicios' : 'Services'}</p>
+					<h1>{es ? 'Te ayudo a vender más por internet. Así de simple.' : 'I help you sell more online. That simple.'}</h1>
+					<p class="editorial-hero__lede">{es ? 'Averiguo qué es lo que más te está costando, lo diseño, y me quedo a construirlo contigo. No entrego un documento y me voy.' : 'I figure out what is costing you most, design it, and stay to build it with you. I do not hand over a document and leave.'}</p>
+					<a class="editorial-hero__action" href={routes[locale].contact}>{es ? 'Contáctame' : 'Contact me'}<span aria-hidden="true">↗</span></a></div>
+				</div>
 			</section>
-			<section class="section service-grid">
+			<section class="section service-grid editorial-page__content">
 				{services.map((service, index) => <article class="service-card"><span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>)}
 			</section>
-			<section class="section process-section">
+			<section class="section process-section editorial-page__content">
 				<div class="section-heading"><p class="index">{es ? 'Cómo trabajo' : 'How I work'}</p><h2>{es ? 'Cómo es trabajar conmigo.' : 'What working with me looks like.'}</h2></div>
 				<ol class="process-list">
 					{(es ? ['Objetivo', 'Prioridad', 'Diseño', 'Implementación', 'Medición'] : ['Goal', 'Priority', 'Design', 'Implementation', 'Measurement']).map((item, index) => <li><span>0{index + 1}</span><strong>{item}</strong></li>)}
@@ -306,16 +306,16 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 
 {
 	pageKey === 'ai' && (
-		<div class="page shell">
-			<section class="hero compact-hero">
-				<p class="eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p>
+		<div class="editorial-page editorial-page--ai">
+			<section class="editorial-hero">
+				<div class="editorial-hero__frame editorial-hero__frame--single"><div class="editorial-hero__copy"><p class="editorial-hero__eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p>
 				<h1>{es ? 'IA que sí se usa después de la primera semana.' : 'AI that still gets used after the first week.'}</h1>
-				<p class="hero__lede">{es ? 'Casi toda la IA que se instala en las empresas termina abandonada: no conoce los datos reales, no tiene permisos claros, y nadie sabe qué hizo. Trabajo justo en lo contrario.' : 'Most AI installed at companies ends up abandoned: it does not know the real data, its permissions are unclear, and nobody can tell what it did. I work on exactly the opposite.'}</p>
+				<p class="editorial-hero__lede">{es ? 'Casi toda la IA que se instala en las empresas termina abandonada: no conoce los datos reales, no tiene permisos claros, y nadie sabe qué hizo. Trabajo justo en lo contrario.' : 'Most AI installed at companies ends up abandoned: it does not know the real data, its permissions are unclear, and nobody can tell what it did. I work on exactly the opposite.'}</p></div></div>
 			</section>
-			<section class="section ai-grid">
+			<section class="section ai-grid editorial-page__content">
 				{aiSystems.map(([title, text], index) => <article><span>0{index + 1}</span><h2>{title}</h2><p>{text}</p></article>)}
 			</section>
-			<section class="section ai-principles">
+			<section class="section ai-principles editorial-page__content">
 				<div class="section-heading"><p class="index">{es ? 'La diferencia' : 'The difference'}</p><h2>{es ? 'La buena IA no se nota; simplemente el trabajo sale más rápido.' : 'Good AI is invisible; the work just gets done faster.'}</h2></div>
 				<ul>
 					<li>{es ? 'Empieza por algo que alguien hace a mano todos los días y odia hacer.' : 'It starts from something somebody does by hand every day and hates doing.'}</li>
@@ -335,39 +335,41 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 
 {
 	pageKey === 'about' && (
-		<div class="page shell page--about">
-			<section class="hero about-hero">
-				<div class="flow">
-					<p class="eyebrow">{es ? 'Perfil profesional' : 'Professional profile'}</p>
+		<div class="editorial-page editorial-page--about">
+			<section class="editorial-hero editorial-hero--portrait">
+				<div class="editorial-hero__frame">
+				<div class="editorial-hero__copy">
+					<p class="editorial-hero__eyebrow">{es ? 'Perfil profesional' : 'Professional profile'}</p>
 					<h1>{profile.name}</h1>
 					<p class="profile-headline">{about.headline}</p>
-					<p class="hero__lede">{about.summary}</p>
-					<div class="hero__actions">
+					<p class="editorial-hero__lede">{about.summary}</p>
+					<div class="editorial-hero__actions">
 						{cvHref && <a class="button link-with-icon" href={cvHref} download data-analytics-event="download_cv"><Icon name="download" />{es ? 'Descargar CV' : 'Download CV'}</a>}
 						<a class="button button--ghost" href={routes[locale].contact}>{es ? 'Contacto' : 'Contact'}</a>
 					</div>
 				</div>
-				<figure class="about-hero__portrait"><Image src={profilePhoto} alt={es ? 'Retrato de Jossue Alcalá' : 'Portrait of Jossue Alcalá'} width={640} height={800} loading="eager" decoding="async" /></figure>
+				<div class="editorial-hero__portrait"><MediaSlot id="profile-about" ratio="4:5" variant="soft" label={es ? 'Retrato editorial · por producir' : 'Editorial portrait · to be produced'} /></div>
+				</div>
 			</section>
-			<section class="section"><div class="section-heading"><p class="index">01 / {es ? 'Marcas' : 'Brands'}</p><h2>{es ? 'Con quién he trabajado.' : 'Who I have worked with.'}</h2></div><ul class="brand-strip">{brands.map((brand) => <li><BrandMark brand={brand} locale={locale} size="md" decorative={false} /></li>)}</ul></section>
-			<section class="section"><div class="section-heading"><p class="index">02 / {es ? 'Números' : 'Numbers'}</p><h2>{es ? 'Lo que ha salido de todo esto.' : 'What has come out of all this.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li data-kpi-item><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
-			<section class="section"><div class="section-heading"><p class="index">03 / {es ? 'Experiencia' : 'Experience'}</p><h2>{es ? 'Dónde he estado y qué hice en cada lugar.' : 'Where I have been and what I did in each place.'}</h2></div><ol class="profile-timeline">{about.experience.map((item) => <li><p class="profile-timeline__meta"><span>{item.period}</span><span>{item.org}</span></p><h2>{item.role}</h2><ul class="list">{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul></li>)}</ol></section>
-			<section class="section about-capabilities"><div class="section-heading"><p class="index">04 / {es ? 'Qué sé hacer' : 'What I can do'}</p><h2>{es ? 'Decido el rumbo y también lo programo.' : 'I set the direction and I also write the code.'}</h2></div><div class="capability-grid">{capabilities.map((capability, index) => <article><span>0{index + 1}</span><Icon name={capability.icon} size="md" /><h3>{capability.title}</h3><p>{capability.text}</p></article>)}</div><StackCarousel locale={locale} /></section>
-			<section class="section about-skills"><div class="section-heading"><p class="index">05 / {es ? 'Habilidades' : 'Skills'}</p><h2>{es ? 'Las herramientas con las que trabajo.' : 'The tools I work with.'}</h2></div><div class="about-skills__grid"><div class="flow"><p class="eyebrow">{es ? 'Plataformas y técnica' : 'Platforms and technical'}</p><ul class="list">{about.skills.map((item) => <li>{item}</li>)}</ul></div><div class="flow"><p class="eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p><ul class="list">{about.aiCapabilities.map((item) => <li>{item}</li>)}</ul></div></div></section>
-			<section class="section about-details"><div><p class="index">06 / {es ? 'Formación' : 'Education'}</p><ul class="list">{about.education.map((item) => <li>{item}</li>)}</ul></div><div><p class="index">07 / {es ? 'Idiomas y enlaces' : 'Languages and links'}</p><ul class="list">{about.languages.map((item) => <li>{item}</li>)}{about.links.map((link) => <li><a class="link-with-icon" href={link.href} rel="noreferrer" data-analytics-event={link.event}>{link.label}<Icon name="arrow-up-right" /></a></li>)}</ul></div></section>
+			<section class="section editorial-page__content"><div class="section-heading"><p class="index">01 / {es ? 'Marcas' : 'Brands'}</p><h2>{es ? 'Con quién he trabajado.' : 'Who I have worked with.'}</h2></div><ul class="brand-strip">{brands.map((brand) => <li class="brand-label">{brand.name[locale]}</li>)}</ul></section>
+			<section class="section editorial-page__content"><div class="section-heading"><p class="index">02 / {es ? 'Números' : 'Numbers'}</p><h2>{es ? 'Lo que ha salido de todo esto.' : 'What has come out of all this.'}</h2></div><ul class="kpi-grid">{about.kpis.map((kpi) => <li data-kpi-item><p class="kpi-grid__value">{kpi.value}</p><p class="kpi-grid__label">{kpi.label}</p><p class="kpi-grid__detail">{kpi.detail}</p></li>)}</ul></section>
+			<section class="section editorial-page__content"><div class="section-heading"><p class="index">03 / {es ? 'Experiencia' : 'Experience'}</p><h2>{es ? 'Dónde he estado y qué hice en cada lugar.' : 'Where I have been and what I did in each place.'}</h2></div><ol class="profile-timeline">{about.experience.map((item) => <li><p class="profile-timeline__meta"><span>{item.period}</span><span>{item.org}</span></p><h2>{item.role}</h2><ul class="list">{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul></li>)}</ol></section>
+			<section class="section about-capabilities editorial-page__content"><div class="section-heading"><p class="index">04 / {es ? 'Qué sé hacer' : 'What I can do'}</p><h2>{es ? 'Decido el rumbo y también lo programo.' : 'I set the direction and I also write the code.'}</h2></div><div class="capability-grid">{capabilities.map((capability, index) => <article><span>0{index + 1}</span><Icon name={capability.icon} size="md" /><h3>{capability.title}</h3><p>{capability.text}</p></article>)}</div><StackCarousel locale={locale} /></section>
+			<section class="section about-skills editorial-page__content"><div class="section-heading"><p class="index">05 / {es ? 'Habilidades' : 'Skills'}</p><h2>{es ? 'Las herramientas con las que trabajo.' : 'The tools I work with.'}</h2></div><div class="about-skills__grid"><div class="flow"><p class="eyebrow">{es ? 'Plataformas y técnica' : 'Platforms and technical'}</p><ul class="list">{about.skills.map((item) => <li>{item}</li>)}</ul></div><div class="flow"><p class="eyebrow">{es ? 'IA aplicada' : 'Applied AI'}</p><ul class="list">{about.aiCapabilities.map((item) => <li>{item}</li>)}</ul></div></div></section>
+			<section class="section about-details editorial-page__content"><div><p class="index">06 / {es ? 'Formación' : 'Education'}</p><ul class="list">{about.education.map((item) => <li>{item}</li>)}</ul></div><div><p class="index">07 / {es ? 'Idiomas y enlaces' : 'Languages and links'}</p><ul class="list">{about.languages.map((item) => <li>{item}</li>)}{about.links.map((link) => <li><a class="link-with-icon" href={link.href} rel="noreferrer" data-analytics-event={link.event}>{link.label}<Icon name="arrow-up-right" /></a></li>)}</ul></div></section>
 		</div>
 	)
 }
 
 {
 	pageKey === 'contact' && (
-		<div class="page shell contact-page">
-			<section class="hero compact-hero contact-hero">
-				<p class="eyebrow">{es ? 'Contacto' : 'Contact'}</p>
+		<div class="editorial-page contact-page">
+			<section class="editorial-hero">
+				<div class="editorial-hero__frame editorial-hero__frame--single"><div class="editorial-hero__copy"><p class="editorial-hero__eyebrow">{es ? 'Contacto' : 'Contact'}</p>
 				<h1>{es ? 'Cuéntame qué traes entre manos.' : 'Tell me what you are working on.'}</h1>
-				<p class="hero__lede">{es ? 'No hace falta que lo tengas todo claro. Escríbeme con lo que sea que te esté dando vueltas y te respondo con qué haría yo y por dónde empezaría.' : 'You do not need to have it all figured out. Write me with whatever is on your mind and I will reply with what I would do and where I would start.'}</p>
+				<p class="editorial-hero__lede">{es ? 'No hace falta que lo tengas todo claro. Escríbeme con lo que sea que te esté dando vueltas y te respondo con qué haría yo y por dónde empezaría.' : 'You do not need to have it all figured out. Write me with whatever is on your mind and I will reply with what I would do and where I would start.'}</p></div></div>
 			</section>
-			<section class="section contact-layout">
+			<section class="section contact-layout editorial-page__content">
 				<div class="flow"><p class="index">{es ? 'Canales directos' : 'Direct channels'}</p><h2>{es ? 'Por donde prefieras. Contesto a todos.' : 'Whichever you prefer. I answer all of them.'}</h2></div>
 				<ul class="contact-channels">
 					{contact.email && <li><a href={`mailto:${contact.email}`} data-analytics-event="click_email"><Icon name="envelope" /><span><small>Email</small>{contact.email}</span><Icon name="arrow-up-right" /></a></li>}
@@ -375,7 +377,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin"><Icon name="linkedin" size="md" /><span><small>LinkedIn</small>Jossue Alcalá</span><Icon name="arrow-up-right" /></a></li>}
 				</ul>
 			</section>
-			<section class="section contact-form-section"><div class="section-heading"><p class="index">{es ? 'Cuéntame sobre el proyecto' : 'Tell me about the project'}</p><h2>{es ? 'Con dos líneas me basta para empezar.' : 'Two lines are enough for me to get started.'}</h2></div><ContactForm locale={locale} /></section>
+			<section class="section contact-form-section editorial-page__content"><div class="section-heading"><p class="index">{es ? 'Cuéntame sobre el proyecto' : 'Tell me about the project'}</p><h2>{es ? 'Con dos líneas me basta para empezar.' : 'Two lines are enough for me to get started.'}</h2></div><ContactForm locale={locale} /></section>
 		</div>
 	)
 }

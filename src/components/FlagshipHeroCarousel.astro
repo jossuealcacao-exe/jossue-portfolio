@@ -1,0 +1,221 @@
+---
+import type { ImageMetadata } from 'astro';
+import { routes, type Locale } from '../data/i18n';
+import coverBloqio from '../assets/cases/bloqio-builder/cover-bloqio-builder.jpeg';
+import coverComeVerde from '../assets/cases/come-verde/cover-come-verde.jpeg';
+import coverWu from '../assets/cases/wu-nutrition/cover-wu-nutrition.jpeg';
+import Icon from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+interface Slide {
+	eyebrow: string;
+	title: string;
+	copy: string;
+	cta: string;
+	href: string;
+	image: ImageMetadata;
+	imageAlt: string;
+	credit: string;
+	position: string;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const slides: Slide[] = es
+	? [
+			{
+				eyebrow: 'Producto · Ecommerce · IA',
+				title: 'Ideas ambiciosas. Sistemas que funcionan.',
+				copy: 'Diseño y construyo productos digitales, experiencias ecommerce y sistemas con IA que pueden operar de verdad.',
+				cta: 'Hablemos',
+				href: routes.es.contact,
+				image: coverBloqio,
+				imageAlt: 'Interfaz de Bloqio Builder con el asistente Blob.',
+				credit: 'Bloqio Builder · producto propio',
+				position: 'center',
+			},
+			{
+				eyebrow: 'Ecommerce · Operación',
+				title: 'Encuentro dónde se te cae la venta.',
+				copy: 'Reviso el recorrido completo hasta dar con el punto exacto donde la gente abandona, y rediseño esa parte. Con datos de tu tienda, no con opiniones.',
+				cta: 'Ver casos',
+				href: routes.es.work,
+				image: coverWu,
+				imageAlt: 'Página principal de WU Nutrition con campaña de producto.',
+				credit: 'WU Nutrition · ecommerce e IA',
+				position: 'center',
+			},
+			{
+				eyebrow: 'Desarrollo web',
+				title: 'Lo construyo yo, de principio a fin.',
+				copy: 'Del primer boceto al sitio funcionando: la parte que ve el cliente, la que corre por detrás, las integraciones y las pruebas que evitan que algo se rompa en producción.',
+				cta: 'Ver servicios',
+				href: routes.es.services,
+				image: coverComeVerde,
+				imageAlt: 'Página principal de Come Verde con su producto destacado.',
+				credit: 'Come Verde · producto y growth',
+				position: 'center',
+			},
+		]
+	: [
+			{
+				eyebrow: 'Product · Ecommerce · AI',
+				title: 'Ambitious ideas. Systems that work.',
+				copy: 'I design and build digital products, ecommerce experiences, and AI systems that can operate in the real world.',
+				cta: 'Let’s talk',
+				href: routes.en.contact,
+				image: coverBloqio,
+				imageAlt: 'Bloqio Builder interface with the Blob assistant.',
+				credit: 'Bloqio Builder · independent product',
+				position: 'center',
+			},
+			{
+				eyebrow: 'Ecommerce · Operations',
+				title: 'I find where the sale drops off.',
+				copy: 'I walk the whole journey until I reach the exact point where people give up, then redesign that part. Using your store’s data, not opinions.',
+				cta: 'View cases',
+				href: routes.en.work,
+				image: coverWu,
+				imageAlt: 'WU Nutrition homepage with a product campaign.',
+				credit: 'WU Nutrition · ecommerce and AI',
+				position: 'center',
+			},
+			{
+				eyebrow: 'Web development',
+				title: 'I build it myself, end to end.',
+				copy: 'From the first sketch to the working site: the part your customer sees, the part running behind it, the integrations, and the tests that keep things from breaking in production.',
+				cta: 'View services',
+				href: routes.en.services,
+				image: coverComeVerde,
+				imageAlt: 'Come Verde homepage with its featured product.',
+				credit: 'Come Verde · product and growth',
+				position: 'center',
+			},
+		];
+---
+
+<section
+	class="flagship-carousel"
+	data-flagship-carousel
+	aria-roledescription="carousel"
+	aria-label={es ? 'Presentación de proyectos y servicios' : 'Projects and services overview'}
+	tabindex="0"
+>
+	<div class="flagship-carousel__slides">
+		{slides.map((slide, index) => (
+			<article
+				class:list={['flagship-carousel__slide', index === 0 && 'is-active']}
+				data-flagship-slide
+				aria-hidden={index === 0 ? 'false' : 'true'}
+			>
+				<figure class="flagship-carousel__media">
+					<img
+						src={slide.image.src}
+						width={slide.image.width}
+						height={slide.image.height}
+						alt={slide.imageAlt}
+						loading={index === 0 ? 'eager' : 'lazy'}
+						decoding="async"
+						style={`object-position:${slide.position};`}
+					/>
+					<figcaption>{slide.credit}</figcaption>
+				</figure>
+				<div class="flagship-carousel__frame">
+					<div class="flagship-carousel__copy">
+						<p class="flagship-carousel__eyebrow">{slide.eyebrow}</p>
+						{index === 0 ? <h1>{slide.title}</h1> : <h2>{slide.title}</h2>}
+						<p class="flagship-carousel__lede">{slide.copy}</p>
+						<a
+							class="flagship-carousel__cta"
+							href={slide.href}
+							tabindex={index === 0 ? 0 : -1}
+							data-flagship-slide-link
+							data-analytics-event={index === 0 ? 'home_primary_contact' : undefined}
+						>
+							{slide.cta}<Icon name="arrow-right" />
+						</a>
+					</div>
+				</div>
+			</article>
+		))}
+	</div>
+
+	<div class="flagship-carousel__chrome">
+		<p class="flagship-carousel__status" data-flagship-status aria-live="polite">01 / 0{slides.length}</p>
+		<div class="flagship-carousel__controls" aria-label={es ? 'Elegir diapositiva' : 'Choose slide'}>
+			{slides.map((slide, index) => (
+				<button
+					type="button"
+					data-flagship-control
+					data-slide-index={index}
+					aria-current={index === 0 ? 'true' : 'false'}
+					aria-label={`${es ? 'Mostrar' : 'Show'}: ${slide.eyebrow}`}
+				>
+					<span>{String(index + 1).padStart(2, '0')}</span>
+					<strong>{slide.eyebrow}</strong>
+				</button>
+			))}
+		</div>
+		<div class="flagship-carousel__arrows">
+			<button type="button" data-flagship-prev aria-label={es ? 'Diapositiva anterior' : 'Previous slide'}><Icon name="arrow-left" /></button>
+			<button type="button" data-flagship-next aria-label={es ? 'Siguiente diapositiva' : 'Next slide'}><Icon name="arrow-right" /></button>
+		</div>
+	</div>
+</section>
+
+<script>
+	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	document.querySelectorAll<HTMLElement>('[data-flagship-carousel]').forEach((carousel) => {
+		const slides = [...carousel.querySelectorAll<HTMLElement>('[data-flagship-slide]')];
+		const controls = [...carousel.querySelectorAll<HTMLButtonElement>('[data-flagship-control]')];
+		const status = carousel.querySelector<HTMLElement>('[data-flagship-status]');
+		const previous = carousel.querySelector<HTMLButtonElement>('[data-flagship-prev]');
+		const next = carousel.querySelector<HTMLButtonElement>('[data-flagship-next]');
+		let active = 0;
+		let timer = 0;
+		let startX = 0;
+
+		const schedule = () => {
+			window.clearTimeout(timer);
+			if (!reducedMotion) timer = window.setTimeout(() => activate(active + 1), 7000);
+		};
+
+		const activate = (requested: number) => {
+			active = (requested + slides.length) % slides.length;
+			slides.forEach((slide, index) => {
+				const current = index === active;
+				slide.classList.toggle('is-active', current);
+				slide.setAttribute('aria-hidden', String(!current));
+				slide.querySelectorAll<HTMLElement>('[data-flagship-slide-link]').forEach((link) => {
+					link.tabIndex = current ? 0 : -1;
+				});
+			});
+			controls.forEach((control, index) => control.setAttribute('aria-current', String(index === active)));
+			if (status) status.textContent = `${String(active + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+			schedule();
+		};
+
+		controls.forEach((control) => control.addEventListener('click', () => activate(Number(control.dataset.slideIndex ?? 0))));
+		previous?.addEventListener('click', () => activate(active - 1));
+		next?.addEventListener('click', () => activate(active + 1));
+		carousel.addEventListener('keydown', (event) => {
+			if (event.key === 'ArrowLeft') activate(active - 1);
+			if (event.key === 'ArrowRight') activate(active + 1);
+		});
+		carousel.addEventListener('pointerdown', (event) => { startX = event.clientX; });
+		carousel.addEventListener('pointerup', (event) => {
+			const distance = event.clientX - startX;
+			if (Math.abs(distance) > 50) activate(active + (distance < 0 ? 1 : -1));
+		});
+		carousel.addEventListener('mouseenter', () => window.clearTimeout(timer));
+		carousel.addEventListener('mouseleave', schedule);
+		carousel.addEventListener('focusin', () => window.clearTimeout(timer));
+		carousel.addEventListener('focusout', schedule);
+		document.addEventListener('visibilitychange', () => document.hidden ? window.clearTimeout(timer) : schedule());
+		activate(0);
+	});
+</script>

@@ -1,6 +1,6 @@
 import { routes, type Locale } from './i18n';
 
-export type ProductSlug = 'auditoria-ecommerce' | 'cro-crecimiento' | 'shopify-desarrollo-web' | 'ia-aplicada' | 'madre';
+export type ProductSlug = 'madre' | 'bloqio-builder' | 'daniela' | 'desarrollo-web' | 'ia-aplicada';
 
 type LocalizedText = Record<Locale, string>;
 
@@ -21,73 +21,104 @@ export type CommercialProduct = {
 
 export const commercialProducts: CommercialProduct[] = [
 	{
-		slug: 'auditoria-ecommerce',
-		kind: 'service-product',
-		category: { es: 'Diagnóstico comercial', en: 'Commercial diagnosis' },
-		title: { es: 'Auditoría ecommerce', en: 'Ecommerce audit' },
+		slug: 'madre',
+		kind: 'owned-product',
+		category: { es: 'Producto propio · Coordinación de IA', en: 'Owned product · AI coordination' },
+		title: { es: 'MADRE', en: 'MADRE' },
 		promise: {
-			es: 'Saber qué está frenando la compra y qué conviene resolver primero.',
-			en: 'See what is getting in the way of a purchase and what is worth fixing first.',
+			es: 'Un lugar compartido para coordinar personas y agentes sin perder contexto, autoría ni control.',
+			en: 'A shared place to coordinate people and agents without losing context, authorship, or control.',
 		},
 		summary: {
-			es: 'Reviso el recorrido, la propuesta, la experiencia móvil y los puntos de decisión. La entrega separa hallazgos, prioridades y próximos pasos para que el diagnóstico pueda convertirse en trabajo real.',
-			en: 'I review the journey, proposition, mobile experience, and decision points. The delivery separates findings, priorities, and next steps so the diagnosis can become real work.',
+			es: 'MADRE reúne conversación, memoria consultable, permisos explícitos y entregas revisables. Es un producto dentro del portfolio, no el nombre de la tienda.',
+			en: 'MADRE brings together conversation, searchable memory, explicit permissions, and reviewable deliveries. It is a product inside the portfolio, not the store name.',
 		},
 		idealFor: {
-			es: 'Tiendas con tráfico o inversión activa que no tienen claro dónde se pierde la intención de compra.',
-			en: 'Stores with active traffic or investment that cannot see where purchase intent is being lost.',
+			es: 'Proyectos donde una persona trabaja con varios agentes y necesita mantener claro quién propone, quién ejecuta y qué falta revisar.',
+			en: 'Projects where one person works with several agents and needs clarity on who proposes, who executes, and what still needs review.',
 		},
 		included: {
-			es: ['Lectura del recorrido comercial', 'Revisión de fricciones UX/CRO', 'Prioridades explicadas en lenguaje claro', 'Ruta de trabajo para la siguiente etapa'],
-			en: ['Commercial journey review', 'UX/CRO friction review', 'Priorities explained in plain language', 'A working route for the next stage'],
+			es: ['Sala compartida', 'Memoria consultable', 'Autoridad explícita por turno', 'Entregas visibles para revisión humana'],
+			en: ['Shared room', 'Searchable memory', 'Explicit authority per turn', 'Visible deliveries for human review'],
 		},
 		process: {
-			es: ['Contexto', 'Recorrido', 'Prioridad', 'Recomendación'],
-			en: ['Context', 'Journey', 'Priority', 'Recommendation'],
+			es: ['Objetivo', 'Contexto', 'Crew', 'Revisión'],
+			en: ['Objective', 'Context', 'Crew', 'Review'],
 		},
-		proofSlugs: ['la-carniceria-virtual'],
-		visualSlug: 'la-carniceria-virtual',
+		proofSlugs: ['ahp-plus'],
+		visualSlug: 'ahp-plus',
+		status: { es: 'Producto en desarrollo', en: 'Product in development' },
 	},
 	{
-		slug: 'cro-crecimiento',
-		kind: 'service-product',
-		category: { es: 'Optimización continua', en: 'Continuous optimization' },
-		title: { es: 'CRO y crecimiento', en: 'CRO and growth' },
+		slug: 'bloqio-builder',
+		kind: 'owned-product',
+		category: { es: 'Producto propio · Constructor web con IA', en: 'Owned product · AI website builder' },
+		title: { es: 'Bloqio Builder', en: 'Bloqio Builder' },
 		promise: {
-			es: 'Convertir más con una experiencia comercial que se pueda medir y mejorar.',
-			en: 'Convert more with a commercial experience that can be measured and improved.',
+			es: 'Convertir una intención comercial en una página estructurada, revisable y lista para seguir construyendo.',
+			en: 'Turn a commercial intent into a structured, reviewable page that is ready to keep building.',
 		},
 		summary: {
-			es: 'Trabajo sobre momentos concretos del recorrido: descubrimiento, producto, confianza, carrito y seguimiento. Cada cambio parte de una hipótesis visible y termina con una forma de revisarlo.',
-			en: 'I work on specific moments in the journey: discovery, product, trust, cart, and follow-up. Every change starts with a visible hypothesis and ends with a way to review it.',
+			es: 'Constructor web con IA, esquema JSON, bloques, revisión guiada y preparación para publicar. La IA propone dentro de un sistema visible; no sustituye la decisión del usuario.',
+			en: 'An AI website builder with a JSON schema, blocks, guided review, and a publish-ready flow. AI proposes inside a visible system; it does not replace the user’s decision.',
 		},
 		idealFor: {
-			es: 'Equipos que ya venden online y necesitan ordenar oportunidades, experiencia y ejecución.',
-			en: 'Teams that already sell online and need to organize opportunities, experience, and execution.',
+			es: 'Equipos que necesitan explorar y revisar una página comercial sin perder estructura ni control sobre el resultado.',
+			en: 'Teams that need to explore and review a commercial page without losing structure or control over the result.',
 		},
 		included: {
-			es: ['Lectura de señales comerciales', 'Hipótesis y priorización', 'Diseño de mejoras', 'Implementación o acompañamiento técnico'],
-			en: ['Commercial signal review', 'Hypotheses and prioritization', 'Improvement design', 'Implementation or technical support'],
+			es: ['Definición del objetivo', 'Estructura por bloques', 'Asistencia guiada', 'Revisión antes de publicar'],
+			en: ['Goal definition', 'Block-based structure', 'Guided assistance', 'Review before publishing'],
 		},
 		process: {
-			es: ['Señal', 'Hipótesis', 'Cambio', 'Revisión'],
-			en: ['Signal', 'Hypothesis', 'Change', 'Review'],
+			es: ['Intención', 'Estructura', 'Construcción', 'Revisión'],
+			en: ['Intent', 'Structure', 'Build', 'Review'],
 		},
-		proofSlugs: ['wu-nutrition', 'bloqio-cro-apps', 'come-verde'],
+		proofSlugs: ['bloqio-builder'],
+		visualSlug: 'bloqio-builder',
+		status: { es: 'Producto en desarrollo', en: 'Product in development' },
+	},
+	{
+		slug: 'daniela',
+		kind: 'owned-product',
+		category: { es: 'Producto de IA · Ecommerce', en: 'AI product · Ecommerce' },
+		title: { es: 'Daniela', en: 'Daniela' },
+		promise: {
+			es: 'Acompañar decisiones de compra con información comercial de WU y acciones siempre revisables.',
+			en: 'Support purchase decisions with WU commercial information and actions that remain reviewable.',
+		},
+		summary: {
+			es: 'Asistente de IA para ecommerce conectado con datos comerciales de Shopify. Sus acciones son tipadas, se validan en servidor y contemplan límites, fallback y reversión.',
+			en: 'An ecommerce AI assistant connected to Shopify commercial data. Its actions are typed, validated server-side, and designed with limits, fallback, and revert paths.',
+		},
+		idealFor: {
+			es: 'Experiencias ecommerce donde la asistencia necesita contexto real del catálogo y límites claros antes de actuar.',
+			en: 'Ecommerce experiences where assistance needs real catalog context and clear boundaries before taking action.',
+		},
+		included: {
+			es: ['Caso de uso y fuentes', 'Acciones tipadas', 'Validación y límites', 'Fallback y reversión'],
+			en: ['Use case and sources', 'Typed actions', 'Validation and boundaries', 'Fallback and revert'],
+		},
+		process: {
+			es: ['Necesidad', 'Datos', 'Asistencia', 'Control'],
+			en: ['Need', 'Data', 'Assistance', 'Control'],
+		},
+		proofSlugs: ['wu-nutrition'],
 		visualSlug: 'wu-nutrition',
+		status: { es: 'Sistema aplicado en WU', en: 'System applied at WU' },
 	},
 	{
-		slug: 'shopify-desarrollo-web',
+		slug: 'desarrollo-web',
 		kind: 'service-product',
-		category: { es: 'Construcción digital', en: 'Digital build' },
-		title: { es: 'Shopify y desarrollo web', en: 'Shopify and web development' },
+		category: { es: 'Servicio · Producto digital', en: 'Service · Digital product' },
+		title: { es: 'Desarrollo Web', en: 'Web Development' },
 		promise: {
-			es: 'Construir una tienda o producto web pensado para vender y para poder mantenerse.',
-			en: 'Build a store or web product designed to sell and remain maintainable.',
+			es: 'Construir una tienda o producto web pensado para vender, operar y poder mantenerse.',
+			en: 'Build a store or web product designed to sell, operate, and remain maintainable.',
 		},
 		summary: {
-			es: 'Diseño y desarrollo la experiencia completa o la pieza que falta: storefront, tema, componentes, integración o producto web. El objetivo es que el resultado sirva al negocio y pueda seguir operándose.',
-			en: 'I design and build the full experience or the missing piece: storefront, theme, components, integration, or web product. The goal is a result that serves the business and can keep operating.',
+			es: 'Diseño y desarrollo storefronts, temas, componentes, integraciones y productos web. El alcance parte del problema comercial y termina con QA y una entrega documentada.',
+			en: 'I design and build storefronts, themes, components, integrations, and web products. Scope starts from the commercial problem and ends with QA and a documented delivery.',
 		},
 		idealFor: {
 			es: 'Marcas que necesitan lanzar, reconstruir o extender una experiencia comercial digital.',
@@ -107,8 +138,8 @@ export const commercialProducts: CommercialProduct[] = [
 	{
 		slug: 'ia-aplicada',
 		kind: 'service-product',
-		category: { es: 'Sistemas con control humano', en: 'Human-controlled systems' },
-		title: { es: 'IA aplicada', en: 'Applied AI' },
+		category: { es: 'Servicio · Sistemas con control humano', en: 'Service · Human-controlled systems' },
+		title: { es: 'IA Aplicada', en: 'Applied AI' },
 		promise: {
 			es: 'Convertir una tarea concreta en un sistema entendible, útil y controlable.',
 			en: 'Turn a concrete task into a system that is understandable, useful, and controllable.',
@@ -132,35 +163,6 @@ export const commercialProducts: CommercialProduct[] = [
 		proofSlugs: ['bloqio-builder', 'ahp-plus'],
 		visualSlug: 'bloqio-builder',
 	},
-	{
-		slug: 'madre',
-		kind: 'owned-product',
-		category: { es: 'Producto propio · Coordinación de IA', en: 'Owned product · AI coordination' },
-		title: { es: 'MADRE', en: 'MADRE' },
-		promise: {
-			es: 'Un lugar compartido para coordinar personas y agentes sin perder contexto, autoría ni control.',
-			en: 'A shared place to coordinate people and agents without losing context, authorship, or control.',
-		},
-		summary: {
-			es: 'MADRE es un producto de coordinación: reúne conversación, memoria consultable, permisos explícitos y entregas revisables. No es el nombre de la tienda ni una capa decorativa del sitio.',
-			en: 'MADRE is a coordination product: it brings together conversation, searchable memory, explicit permissions, and reviewable deliveries. It is not the store name or a decorative site layer.',
-		},
-		idealFor: {
-			es: 'Proyectos donde una persona trabaja con varios agentes y necesita mantener claro quién propone, quién ejecuta y qué falta revisar.',
-			en: 'Projects where one person works with several agents and needs clarity on who proposes, who executes, and what still needs review.',
-		},
-		included: {
-			es: ['Sala compartida', 'Memoria consultable', 'Autoridad explícita por turno', 'Entregas visibles para revisión humana'],
-			en: ['Shared room', 'Searchable memory', 'Explicit authority per turn', 'Visible deliveries for human review'],
-		},
-		process: {
-			es: ['Objetivo', 'Contexto', 'Crew', 'Revisión'],
-			en: ['Objective', 'Context', 'Crew', 'Review'],
-		},
-		proofSlugs: ['ahp-plus'],
-		visualSlug: 'ahp-plus',
-		status: { es: 'Producto en desarrollo', en: 'Product in development' },
-	},
 ];
 
 export function commercialProduct(slug: string) {
@@ -170,4 +172,3 @@ export function commercialProduct(slug: string) {
 export function productHref(product: CommercialProduct, locale: Locale) {
 	return product.slug === 'madre' ? routes[locale].madre : `${routes[locale].products}${product.slug}/`;
 }
-

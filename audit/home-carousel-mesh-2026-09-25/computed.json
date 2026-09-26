@@ -1,0 +1,58 @@
+[
+  {
+    "viewport": "mobile",
+    "width": 390,
+    "overflow": false,
+    "activeSlides": 1,
+    "loadedImages": 3,
+    "carouselWidth": 390,
+    "meshColumns": 1,
+    "meshItems": [
+      {
+        "width": 356,
+        "column": "1 / -1"
+      },
+      {
+        "width": 356,
+        "column": "1 / -1"
+      },
+      {
+        "width": 356,
+        "column": "1 / -1"
+      },
+      {
+        "width": 356,
+        "column": "1 / -1"
+      }
+    ],
+    "consoleErrors": []
+  },
+  {
+    "viewport": "desktop",
+    "width": 1440,
+    "overflow": false,
+    "activeSlides": 1,
+    "loadedImages": 3,
+    "carouselWidth": 1440,
+    "meshColumns": 12,
+    "meshItems": [
+      {
+        "width": 771,
+        "column": "1 / 8"
+      },
+      {
+        "width": 551,
+        "column": "8 / -1"
+      },
+      {
+        "width": 551,
+        "column": "8 / -1"
+      },
+      {
+        "width": 1323,
+        "column": "1 / -1"
+      }
+    ],
+    "consoleErrors": []
+  }
+]

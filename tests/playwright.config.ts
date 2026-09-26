@@ -7,7 +7,7 @@ export default defineConfig({
 	retries: 0,
 	reporter: 'line',
 	use: {
-		baseURL: 'http://127.0.0.1:4321',
+		baseURL: 'http://127.0.0.1:4331',
 		trace: 'retain-on-failure',
 	},
 	projects: [
@@ -21,8 +21,8 @@ export default defineConfig({
 		{ name: '1440px', use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } } },
 	],
 	webServer: {
-		command: 'npm run build && npm run preview -- --host 127.0.0.1',
-		url: 'http://127.0.0.1:4321/es/',
+		command: 'npm run build && npm run preview -- --host 127.0.0.1 --port 4331',
+		url: 'http://127.0.0.1:4331/es/',
 		reuseExistingServer: false,
 		timeout: 30_000,
 	},

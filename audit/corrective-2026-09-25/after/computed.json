@@ -1,0 +1,1372 @@
+[
+  {
+    "label": "after",
+    "route": "home",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 1288.72,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 182.45,
+      "width": 290.78,
+      "height": 172.69,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 9274.77,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 7,
+      "pill": 7
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "products",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/productos/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 627.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 266.38,
+      "width": 358,
+      "height": 129.52,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 7418.92,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 4,
+      "pill": 11
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "web-product",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/productos/desarrollo-web/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 137.61,
+      "width": 390,
+      "height": 627.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 341.16,
+      "width": 358,
+      "height": 43.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 8237.61,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 8,
+      "pill": 8
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "work",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/trabajo/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 739.52,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 188.47,
+      "width": 358,
+      "height": 172.69,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": {
+      "selector": "main .portfolio-entry, main .case-card, main .catalog-card, main .commercial-product-card",
+      "x": 16,
+      "y": 1096.81,
+      "width": 358,
+      "height": 626.89,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 8703.7,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 9
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "work-detail",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/trabajo/come-verde/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 134,
+      "width": 390,
+      "height": 815.98,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 369.83,
+      "width": 358,
+      "height": 43.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 10385.36,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "about",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/acerca/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 1185.59,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 188.47,
+      "width": 401.09,
+      "height": 43.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 11093.08,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "services",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/servicios/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 677.72,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 324.17,
+      "width": 358,
+      "height": 172.69,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 4567.22,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "contact",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/contacto/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 65,
+      "width": 390,
+      "height": 677.72,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 414.36,
+      "width": 358,
+      "height": 129.52,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 3656.98,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "madre",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/madre/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 137.61,
+      "width": 390,
+      "height": 963.06,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 274.5,
+      "width": 358,
+      "height": 178.98,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 9445.86,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 9,
+      "pill": 5
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 65,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "home",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 1644.14,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 230.45,
+      "width": 1014.42,
+      "height": 474.56,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 9277.67,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 7,
+      "pill": 7
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "products",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/productos/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 854.19,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 348.7,
+      "width": 1324.81,
+      "height": 224.63,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 6764.25,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 4,
+      "pill": 11
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "web-product",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/productos/desarrollo-web/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 158.39,
+      "width": 1440,
+      "height": 819,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 439.39,
+      "width": 1324.81,
+      "height": 112.31,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 9311.05,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 8,
+      "pill": 8
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "work",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/trabajo/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 777.03,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 232.69,
+      "width": 876.97,
+      "height": 448.69,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": {
+      "selector": "main .portfolio-entry, main .case-card, main .catalog-card, main .commercial-product-card",
+      "x": 57.59,
+      "y": 1321.41,
+      "width": 1324.8,
+      "height": 585.42,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 8820.97,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 9
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "work-detail",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/trabajo/come-verde/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 150,
+      "width": 1440,
+      "height": 747,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 395.06,
+      "width": 816.48,
+      "height": 112.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 13583.44,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "about",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/acerca/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 747,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 248.44,
+      "width": 876.97,
+      "height": 112.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 8798.5,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "services",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/servicios/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 787.05,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 232.69,
+      "width": 1042.16,
+      "height": 336.52,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 3569.28,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "contact",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/contacto/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 747,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 392.67,
+      "width": 1042.16,
+      "height": 224.34,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 3273.61,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 1,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  },
+  {
+    "label": "after",
+    "route": "madre",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/madre/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .editorial-hero, main .case-intro, main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 158.39,
+      "width": 1440,
+      "height": 1772.33,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .editorial-hero h1, main .case-intro h1, main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 408.64,
+      "width": 1324.81,
+      "height": 391.63,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 10735.45,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 0,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 9,
+      "pill": 5
+    },
+    "newClassCounts": {
+      "globalNav": 1,
+      "editorialHero": 0,
+      "portfolioEntry": 0
+    },
+    "scrolledHeader": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "position": "sticky",
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)"
+    }
+  }
+]

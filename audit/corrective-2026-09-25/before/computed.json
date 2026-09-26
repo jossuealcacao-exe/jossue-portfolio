@@ -1,0 +1,1120 @@
+[
+  {
+    "label": "before",
+    "route": "home",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 58,
+      "width": 390,
+      "height": 1288.72,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 175.45,
+      "width": 290.78,
+      "height": 172.69,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 9267.77,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 7,
+      "pill": 7
+    }
+  },
+  {
+    "label": "before",
+    "route": "products",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/productos/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 58,
+      "width": 390,
+      "height": 635.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 263.38,
+      "width": 358,
+      "height": 129.52,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 7419.92,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 4,
+      "pill": 11
+    }
+  },
+  {
+    "label": "before",
+    "route": "web-product",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/productos/desarrollo-web/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 130.61,
+      "width": 390,
+      "height": 635.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 338.16,
+      "width": 358,
+      "height": 43.17,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 8238.61,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 8,
+      "pill": 8
+    }
+  },
+  {
+    "label": "before",
+    "route": "work",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/trabajo/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 16,
+      "y": 58,
+      "width": 358,
+      "height": 679.19,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 32,
+      "y": 171.38,
+      "width": 326,
+      "height": 172.69,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": {
+      "selector": "main .case-card, main .catalog-card, main .commercial-product-card",
+      "x": 16,
+      "y": 938.19,
+      "width": 327.59,
+      "height": 762.67,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "color(srgb 0.955765 0.955765 0.94102)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 4990.09,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 9,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "work-detail",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/trabajo/come-verde/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 16,
+      "y": 127,
+      "width": 358,
+      "height": 754.91,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 32,
+      "y": 335.44,
+      "width": 326,
+      "height": 43.17,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 10467.91,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "about",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/acerca/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 16,
+      "y": 58,
+      "width": 358,
+      "height": 1015.97,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 32,
+      "y": 171.38,
+      "width": 326,
+      "height": 43.17,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 10980.45,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "services",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/servicios/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 16,
+      "y": 58,
+      "width": 358,
+      "height": 635.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 32,
+      "y": 208.3,
+      "width": 326,
+      "height": 172.69,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 4581.58,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "contact",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/contacto/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 16,
+      "y": 58,
+      "width": 358,
+      "height": 635.08,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 32,
+      "y": 266.69,
+      "width": 326,
+      "height": 129.52,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 3671.34,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "madre",
+    "viewport": {
+      "width": 390,
+      "height": 844
+    },
+    "url": "/es/madre/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 58,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 130.61,
+      "width": 390,
+      "height": 963.06,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 16,
+      "y": 267.5,
+      "width": 358,
+      "height": 178.98,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 390,
+      "height": 9438.86,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 9,
+      "pill": 5
+    }
+  },
+  {
+    "label": "before",
+    "route": "home",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 1644.14,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 230.45,
+      "width": 1014.42,
+      "height": 474.56,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 9277.67,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 7,
+      "pill": 7
+    }
+  },
+  {
+    "label": "before",
+    "route": "products",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/productos/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 81,
+      "width": 1440,
+      "height": 854.19,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 348.7,
+      "width": 1324.81,
+      "height": 224.63,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 6764.25,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 4,
+      "pill": 11
+    }
+  },
+  {
+    "label": "before",
+    "route": "web-product",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/productos/desarrollo-web/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 158.39,
+      "width": 1440,
+      "height": 819,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 439.39,
+      "width": 1324.81,
+      "height": 112.31,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 9311.05,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 8,
+      "pill": 8
+    }
+  },
+  {
+    "label": "before",
+    "route": "work",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/trabajo/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 57.59,
+      "y": 81,
+      "width": 1324.81,
+      "height": 869.06,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 115.19,
+      "y": 258.38,
+      "width": 841.63,
+      "height": 437.75,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": {
+      "selector": "main .case-card, main .catalog-card, main .commercial-product-card",
+      "x": 569.13,
+      "y": 1079.06,
+      "width": 390.8,
+      "height": 779.55,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "color(srgb 0.955765 0.955765 0.94102)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 7491.33,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 9,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "work-detail",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/trabajo/come-verde/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 57.59,
+      "y": 150,
+      "width": 1324.81,
+      "height": 814.5,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 115.19,
+      "y": 429.06,
+      "width": 691.61,
+      "height": 218.88,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 13907.59,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "about",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/acerca/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 57.59,
+      "y": 81,
+      "width": 1324.81,
+      "height": 917.03,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 115.19,
+      "y": 258.38,
+      "width": 762.48,
+      "height": 218.88,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 8877.39,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "services",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/servicios/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 57.59,
+      "y": 81,
+      "width": 1324.81,
+      "height": 958.66,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 115.19,
+      "y": 266.38,
+      "width": 955.31,
+      "height": 437.75,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 3820.33,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "contact",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/contacto/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 57.59,
+      "y": 81,
+      "width": 1324.81,
+      "height": 806.94,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 115.19,
+      "y": 266.38,
+      "width": 955.31,
+      "height": 328.31,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 3455.17,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 1,
+      "caseCard": 0,
+      "stage": 0,
+      "pill": 0
+    }
+  },
+  {
+    "label": "before",
+    "route": "madre",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "url": "/es/madre/",
+    "header": {
+      "selector": "header",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 81,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "hero": {
+      "selector": "main .stage--hero, main .hero, main .case-hero",
+      "x": 0,
+      "y": 158.39,
+      "width": 1440,
+      "height": 1772.33,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgb(9, 10, 9)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "heroTitle": {
+      "selector": "main .stage--hero h1, main .hero h1, main .case-hero h1",
+      "x": 57.59,
+      "y": 408.64,
+      "width": 1324.81,
+      "height": 391.63,
+      "color": "rgb(247, 247, 243)",
+      "backgroundColor": "rgba(0, 0, 0, 0)",
+      "borderRadius": "0px",
+      "overflowX": "visible"
+    },
+    "firstCard": null,
+    "body": {
+      "selector": "body",
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 10735.45,
+      "color": "rgb(9, 10, 9)",
+      "backgroundColor": "rgb(243, 243, 239)",
+      "borderRadius": "0px",
+      "overflowX": "clip"
+    },
+    "legacyClassCounts": {
+      "siteHeader": 1,
+      "genericHero": 0,
+      "caseCard": 0,
+      "stage": 9,
+      "pill": 5
+    }
+  }
+]

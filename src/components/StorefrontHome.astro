@@ -2,13 +2,10 @@
 import type { CollectionEntry } from 'astro:content';
 import { routes, type Locale } from '../data/i18n';
 import { commercialProducts, productHref } from '../data/products';
-import { casePresentation } from '../data/casePresentation';
 import { profileCopy } from '../data/profile';
+import FlagshipHeroCarousel from './FlagshipHeroCarousel.astro';
 import Icon from './Icon.astro';
-import Bento from './surface/Bento.astro';
-import BentoCell from './surface/BentoCell.astro';
 import MediaSlot from './surface/MediaSlot.astro';
-import Showcase from './surface/Showcase.astro';
 import Stage from './surface/Stage.astro';
 
 interface Props {
@@ -19,178 +16,153 @@ interface Props {
 const { locale, cases } = Astro.props;
 const es = locale === 'es';
 const about = profileCopy(locale);
-const selectedCases = ['la-carniceria-virtual', 'come-verde', 'bloqio-builder'].flatMap((slug) => {
-	const entry = cases.find((item) => item.data.slug === slug);
-	return entry ? [entry] : [];
-});
+const madre = commercialProducts.find((product) => product.slug === 'madre');
+if (!madre) throw new Error('MADRE product is required');
+const secondaryProducts = commercialProducts.filter((product) => product.slug !== 'madre');
 
-// Reparto del bento: la pieza propia ocupa el ancho completo porque es la
-// unica que no es un servicio, y esa diferencia debe verse antes de leerse.
-const productSpan: Record<string, 2 | 3 | 4 | 6> = {
-	'auditoria-ecommerce': 4,
-	'cro-crecimiento': 2,
-	'shopify-desarrollo-web': 2,
-	'ia-aplicada': 4,
-	madre: 6,
-};
+const caseSlots = [
+	{ key: 'wu-nutrition', label: 'WU', ratio: '16:9' as const, kind: es ? 'Ecommerce · IA' : 'Ecommerce · AI' },
+	{ key: 'come-verde', label: 'COME VERDE', ratio: '4:5' as const, kind: es ? 'Producto · Growth' : 'Product · Growth' },
+	{ key: 'hp', label: 'HP', ratio: '3:2' as const, kind: es ? 'Experiencia · Ecommerce' : 'Experience · Ecommerce' },
+	{ key: 'tdi', label: 'TDI', ratio: '4:5' as const, kind: es ? 'Experiencia · Digital' : 'Experience · Digital' },
+].map((item) => ({ ...item, entry: cases.find((entry) => entry.data.slug === item.key) }));
 
-const beats = es
+const method = es
 	? [
-			{ title: 'Diagnóstico', text: 'Reviso el recorrido completo con datos a la vista, no con opiniones. Lo que sale es una lista de hallazgos con su evidencia.' },
-			{ title: 'Prioridad', text: 'Ordeno los hallazgos por lo que mueve la aguja. Empezar por lo urgente rara vez es empezar por lo importante.' },
-			{ title: 'Entrega', text: 'Construyo el cambio y lo dejo funcionando en producción. No entrego un documento y me voy.' },
-			{ title: 'Evidencia', text: 'Cada cambio queda con su prueba: qué se midió, cuándo y con qué método. Si no se puede comprobar, no se presenta.' },
+			['01', 'Entender', 'El problema, el negocio y la decisión que importa.'],
+			['02', 'Diseñar', 'Una dirección clara antes de multiplicar pantallas.'],
+			['03', 'Construir', 'Producto, web e IA llevados a una entrega operable.'],
+			['04', 'Comprobar', 'QA, evidencia y control humano antes de darlo por hecho.'],
 		]
 	: [
-			{ title: 'Diagnosis', text: 'I review the full journey against data, not opinion. The output is a list of findings, each with its evidence.' },
-			{ title: 'Priority', text: 'I order findings by what actually moves the needle. Starting with the urgent is rarely starting with the important.' },
-			{ title: 'Delivery', text: 'I build the change and leave it running in production. I do not hand over a document and walk away.' },
-			{ title: 'Evidence', text: 'Every change keeps its proof: what was measured, when, and how. If it cannot be checked, it is not presented.' },
+			['01', 'Understand', 'The problem, the business, and the decision that matters.'],
+			['02', 'Design', 'A clear direction before multiplying screens.'],
+			['03', 'Build', 'Product, web, and AI brought into an operable delivery.'],
+			['04', 'Verify', 'QA, evidence, and human control before calling it done.'],
 		];
 ---
 
 <article class="home-surface" data-storefront-home>
-	<Stage hero tall align="center" size="loose">
-		<p class="stage__eyebrow">{es ? 'Ecommerce · IA · Producto · Ejecución' : 'Ecommerce · AI · Product · Delivery'}</p>
-		<h1 class="stage__title">
-			{es ? 'Convierte una auditoría en una mejora que sí llega a producción.' : 'Turn an audit into an improvement that actually reaches production.'}
-		</h1>
-		<p class="stage__lede">{es ? 'Diagnóstico, producto y ejecución para ecommerce, web e IA.' : 'Diagnosis, product, and delivery for ecommerce, web, and AI.'}</p>
-		<div class="stage__actions">
-			<a class="pill" href={routes[locale].contact} data-analytics-event="home_primary_contact">
-				{es ? 'Solicitar diagnóstico' : 'Request a diagnosis'}
-				<Icon name="arrow-right" />
-			</a>
-			<a class="pill pill--soft" href={routes[locale].work}>{es ? 'Ver casos' : 'View cases'}</a>
+	<FlagshipHeroCarousel locale={locale} />
+
+	<Stage id="madre" size="loose" class="madre-feature">
+		<div class="madre-feature__heading">
+			<div>
+				<p class="stage__eyebrow">01 · {es ? 'Producto destacado' : 'Featured product'}</p>
+				<h2 class="madre-feature__wordmark">MADRE</h2>
+			</div>
+			<div class="madre-feature__summary">
+				<h3>{madre.promise[locale]}</h3>
+				<p>{madre.summary[locale]}</p>
+				<a class="pill" href={productHref(madre, locale)}>{es ? 'Explorar MADRE' : 'Explore MADRE'}<Icon name="arrow-right" /></a>
+			</div>
 		</div>
-		<div class="home-surface__hero-media" data-rise="lift">
-			<MediaSlot
-				id="home-hero"
-				ratio="21:9"
-				label={es ? 'Apertura: el trabajo en pantalla' : 'Opening: the work on screen'}
-				note={es
-					? 'Composición amplia de producto real en uso. Sin mockups sintéticos ni resultados inventados; capturas verificables o fotografía de contexto.'
-					: 'Wide composition of real product in use. No synthetic mockups or invented outcomes; verifiable captures or context photography.'}
-			/>
-		</div>
+		<MediaSlot
+			id="home-madre"
+			ratio="21:9"
+			variant="bleed"
+			label={es ? 'Producto / MADRE · landing en desarrollo' : 'Product / MADRE · landing in development'}
+			note={es ? 'Imagen editorial del producto. No es la identidad de la tienda.' : 'Editorial product image. It is not the store identity.'}
+		/>
 	</Stage>
 
-	<Stage id="productos" size="loose">
-		<div class="home-surface__head">
-			<div>
-				<p class="stage__eyebrow">01 · {es ? 'Productos' : 'Products'}</p>
-				<h2 class="stage__title">{es ? 'Soluciones para construir y escalar tu negocio.' : 'Solutions to build and scale your business.'}</h2>
-			</div>
-			<a class="pill pill--ghost" href={routes[locale].products}>
-				{es ? 'Ver todos los productos' : 'View all products'}
-				<Icon name="arrow-right" />
-			</a>
+	<Stage tone="ink" size="loose" class="product-index" id="productos">
+		<div class="product-index__head">
+			<p class="stage__eyebrow">02 · {es ? 'Más productos y servicios' : 'More products and services'}</p>
+			<a class="pill pill--ghost" href={routes[locale].products}>{es ? 'Ver todos' : 'View all'}<Icon name="arrow-right" /></a>
 		</div>
-		<Bento class="home-surface__bento">
-			{commercialProducts.map((product) => (
-				<BentoCell span={productSpan[product.slug] ?? 3}>
-					<p class="bento__kicker">{product.category[locale]}</p>
-					<h3><a href={productHref(product, locale)}>{product.title[locale]}</a></h3>
-					<p>{product.promise[locale]}</p>
-					<a class="pill pill--ghost" href={productHref(product, locale)}>
-						{es ? 'Ver detalle' : 'View detail'}
-						<Icon name="arrow-right" />
+		<ol class="product-index__list" aria-label={es ? 'Malla de productos y servicios' : 'Product and service mesh'}>
+			{secondaryProducts.map((product, index) => (
+				<li class:list={['product-index__item', `product-index__item--${index + 1}`]}>
+					<a href={productHref(product, locale)}>
+						<MediaSlot
+							id={`home-product-${product.slug}`}
+							ratio={index === 0 ? '16:9' : index === 3 ? '21:9' : '1:1'}
+							variant="soft"
+							label={`${product.title[locale]} · ${es ? 'imagen pendiente' : 'image pending'}`}
+						/>
+						<div class="product-index__body">
+							<span>{String(index + 2).padStart(2, '0')}</span>
+							<strong>{product.title[locale]}</strong>
+							<p>{product.promise[locale]}</p>
+							<Icon name="arrow-right" />
+						</div>
 					</a>
-				</BentoCell>
+				</li>
 			))}
-		</Bento>
+		</ol>
 	</Stage>
 
-	<Stage id="casos" size="loose">
-		<div class="home-surface__head">
+	<Stage id="casos" size="loose" class="case-filmstrip">
+		<div class="case-filmstrip__head">
 			<div>
-				<p class="stage__eyebrow">02 · {es ? 'Casos reales' : 'Real cases'}</p>
-				<h2 class="stage__title">{es ? 'Trabajo que habla por sí mismo.' : 'Work that speaks for itself.'}</h2>
+				<p class="stage__eyebrow">03 · {es ? 'Casos y experiencia' : 'Cases and experience'}</p>
+				<h2 class="stage__title">{es ? 'Trabajo con contexto real.' : 'Work grounded in real context.'}</h2>
 			</div>
-			<a class="pill pill--ghost" href={routes[locale].work}>
-				{es ? 'Explorar el catálogo' : 'Explore the catalog'}
-				<Icon name="arrow-right" />
-			</a>
+			<a class="pill pill--ghost" href={routes[locale].work}>{es ? 'Ver casos' : 'View cases'}<Icon name="arrow-right" /></a>
 		</div>
-		<div class="home-surface__tiles">
-			{selectedCases.map((entry) => {
-				const presented = casePresentation(entry.data.slug, locale);
-				return (
-				<a class="tile" href={`${routes[locale].work}${entry.data.slug}/`} data-rise>
-					<MediaSlot
-						id={`home-case-${entry.data.slug}`}
-						ratio="4:3"
-						variant="soft"
-						label={es ? `Portada de ${entry.data.title}` : `${entry.data.title} cover`}
-						note={es ? 'Captura real del proyecto en funcionamiento, encuadre vertical 4:3.' : 'Real capture of the running project, 4:3 crop.'}
-					/>
-					<div class="tile__body">
-						<h3>{entry.data.title}</h3>
-						<p>{presented?.summary ?? ''}</p>
-						<span class="tile__cue">{es ? 'Abrir caso' : 'Open case'}<Icon name="arrow-right" /></span>
-					</div>
-				</a>
+		<div class="case-filmstrip__grid">
+			{caseSlots.map((item, index) => {
+				const content = (
+					<>
+						<MediaSlot
+							id={`home-case-${item.key}`}
+							ratio={item.ratio}
+							variant="soft"
+							label={`${es ? 'Caso' : 'Case'} / ${item.label}`}
+							note={es ? 'Imagen del caso pendiente de dirección de arte.' : 'Case image awaiting art direction.'}
+						/>
+						<span>{String(index + 1).padStart(2, '0')}</span>
+						<strong>{item.label}</strong>
+						<small>{item.kind}</small>
+					</>
+				);
+				return item.entry ? (
+					<a class="case-filmstrip__item" href={`${routes[locale].work}${item.entry.data.slug}/`}>{content}</a>
+				) : (
+					<article class="case-filmstrip__item">{content}</article>
 				);
 			})}
 		</div>
 	</Stage>
 
-	<Stage id="metodo" size="loose">
-		<p class="stage__eyebrow">03 · {es ? 'Forma de trabajar' : 'Way of working'}</p>
-		<h2 class="stage__title">{es ? 'Del diagnóstico a lo que funciona.' : 'From diagnosis to what works.'}</h2>
-		<Showcase class="home-surface__showcase">
-			<MediaSlot
-				slot="media"
-				id="home-method"
-				ratio="4:3"
-				label={es ? 'El método, en una imagen' : 'The method, in one image'}
-				note={es
-					? 'Permanece fija mientras se leen los cuatro pasos. Idealmente una sola escena que cambie poco: un tablero, una pantalla de trabajo, un escritorio.'
-					: 'Stays pinned while the four steps are read. Ideally a single scene that changes little: a board, a working screen, a desk.'}
-			/>
-			{beats.map((beat, index) => (
-				<div class="showcase__beat" data-rise>
-					<span class="showcase__index">{String(index + 1).padStart(2, '0')}</span>
-					<h3>{beat.title}</h3>
-					<p>{beat.text}</p>
-				</div>
+	<Stage tone="ink" size="loose" class="method-chapter" id="metodo">
+		<div class="method-chapter__heading">
+			<p class="stage__eyebrow">04 · {es ? 'Forma de trabajar' : 'Way of working'}</p>
+			<h2 class="stage__title">{es ? 'Menos ceremonia. Más claridad.' : 'Less ceremony. More clarity.'}</h2>
+		</div>
+		<ol class="method-chapter__list">
+			{method.map(([number, title, text]) => (
+				<li><span>{number}</span><strong>{title}</strong><p>{text}</p></li>
 			))}
-		</Showcase>
+		</ol>
 	</Stage>
 
-	<Stage id="trayectoria" size="loose">
-		<div class="home-surface__profile">
-			<MediaSlot
-				id="home-portrait"
-				ratio="4:5"
-				variant="soft"
-				label={es ? 'Retrato' : 'Portrait'}
-				note={es ? 'Retrato profesional, luz natural, fondo sobrio.' : 'Professional portrait, natural light, restrained background.'}
-			/>
-			<div class="u-stack">
-				<p class="stage__eyebrow">04 · {es ? 'Trayectoria verificable' : 'Verifiable track record'}</p>
-				<h2 class="stage__title">{es ? 'Estrategia de negocio con capacidad de construir.' : 'Business strategy with the ability to build.'}</h2>
-				<p class="stage__lede">{about.summary}</p>
-				<div class="stage__actions">
-					<a class="pill pill--soft" href={routes[locale].about}>{es ? 'Ver trayectoria' : 'View track record'}<Icon name="arrow-right" /></a>
-					<a class="pill pill--ghost" href={routes[locale].contact}>{es ? 'Hablar conmigo' : 'Talk to me'}</a>
-				</div>
+	<Stage size="loose" class="trajectory-chapter" id="trayectoria">
+		<MediaSlot
+			id="home-portrait"
+			ratio="4:5"
+			variant="soft"
+			label={es ? 'Retrato editorial · por producir' : 'Editorial portrait · to be produced'}
+			note={es ? 'Retrato sobrio y directo; sin estética corporativa genérica.' : 'Restrained, direct portrait; no generic corporate aesthetic.'}
+		/>
+		<div>
+			<p class="stage__eyebrow">05 · {es ? 'Trayectoria verificable' : 'Verifiable track record'}</p>
+			<h2 class="stage__title">{es ? 'Dirección comercial con capacidad de construir.' : 'Commercial direction with the ability to build.'}</h2>
+			<p class="stage__lede">{about.summary}</p>
+			<div class="stage__actions">
+				<a class="pill" href={routes[locale].about}>{es ? 'Ver trayectoria' : 'View track record'}<Icon name="arrow-right" /></a>
+				<a class="pill pill--ghost" href={routes[locale].contact}>{es ? 'Contacto' : 'Contact'}</a>
 			</div>
 		</div>
 	</Stage>
 
-	<Stage tone="ink" align="center" size="loose" class="home-surface__close">
-		<h2 class="stage__title">{es ? '¿Empezamos por el diagnóstico?' : 'Shall we start with the diagnosis?'}</h2>
-		<p class="stage__lede">
-			{es
-				? 'Una conversación corta basta para saber si tiene sentido trabajar juntos.'
-				: 'A short conversation is enough to know whether working together makes sense.'}
-		</p>
-		<div class="stage__actions">
-			<a class="pill pill--soft" href={routes[locale].contact} data-analytics-event="click_contact">
-				{es ? 'Iniciar conversación' : 'Start a conversation'}
-				<Icon name="arrow-right" />
-			</a>
-		</div>
+	<Stage tone="ink" size="loose" class="closing-chapter">
+		<p class="stage__eyebrow">{es ? 'Siguiente paso' : 'Next step'}</p>
+		<h2 class="stage__title">{es ? 'Construyamos algo que merezca existir.' : 'Let’s build something worth existing.'}</h2>
+		<a class="pill pill--soft" href={routes[locale].contact} data-analytics-event="click_contact">
+			{es ? 'Iniciar conversación' : 'Start a conversation'}
+			<Icon name="arrow-right" />
+		</a>
 	</Stage>
 </article>

@@ -83,7 +83,7 @@ const specGroups = [
 		cta={{ href: contactHref, label: es ? 'Hablar' : 'Talk' }}
 	/>
 
-	<Stage hero tall align="center" size="loose">
+	<Stage tone="ink" hero tall size="loose" class="pdp-hero">
 		<p class="stage__eyebrow">{product.category[locale]}</p>
 		<h1 class="stage__title">{product.title[locale]}</h1>
 		<p class="stage__lede">{product.promise[locale]}</p>
@@ -119,7 +119,7 @@ const specGroups = [
 		</Gallery>
 	</Stage>
 
-	<Stage id="encaje" tone="ink" align="center" size="loose">
+	<Stage id="encaje" tone="ink" size="loose">
 		<p class="stage__eyebrow">02 · {es ? 'Para quién es' : 'Who it is for'}</p>
 		<h2 class="stage__title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
 		<p class="stage__lede">{product.idealFor[locale]}</p>
@@ -193,7 +193,7 @@ const specGroups = [
 		<div class="pdp__specs"><Specs groups={specGroups} /></div>
 	</Stage>
 
-	<Stage tone="ink" align="center" size="loose" class="pdp__close">
+	<Stage tone="ink" size="loose" class="pdp__close conversion-chapter">
 		<p class="stage__eyebrow">{es ? 'Siguiente paso' : 'Next step'}</p>
 		<h2 class="stage__title">{es ? 'Cuéntame qué estás intentando resolver.' : 'Tell me what you are trying to solve.'}</h2>
 		<p class="stage__lede">
