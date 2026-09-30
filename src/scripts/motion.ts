@@ -49,7 +49,19 @@ function bindReveals(): void {
 		return;
 	}
 
-	targets.forEach((element) => element.classList.add('reveal'));
+	// Lo que ya se ve al cargar no se esconde para luego reaparecer (parpadeo): queda revelado.
+	const inView = (element: HTMLElement) => {
+		const rect = element.getBoundingClientRect();
+		return rect.top < window.innerHeight && rect.bottom > 0;
+	};
+	const pending = targets.filter((element) => {
+		if (inView(element)) {
+			reveal(element);
+			return false;
+		}
+		element.classList.add('reveal');
+		return true;
+	});
 	// threshold 0: very tall sections can never reach a ratio threshold
 	// (e.g. an 8% slice of a 10k px section exceeds the viewport), which
 	// left them permanently unrevealed; the rootMargin already delays entry.
@@ -63,7 +75,7 @@ function bindReveals(): void {
 		},
 		{ rootMargin: '0px 0px -10% 0px', threshold: 0 },
 	);
-	targets.forEach((element) => observer.observe(element));
+	pending.forEach((element) => observer.observe(element));
 }
 
 function bindSectionSpy(): void {
@@ -137,7 +149,12 @@ function bindItemReveals(): void {
 		},
 		{ rootMargin: '0px 0px -12% 0px', threshold: 0.2 },
 	);
-	items.forEach((item) => observer.observe(item));
+	items.forEach((item) => {
+		const rect = item.getBoundingClientRect();
+		// Visible al cargar: entra de una vez, sin esconderse primero.
+		if (rect.top < window.innerHeight && rect.bottom > 0) item.classList.add('is-item-in');
+		else observer.observe(item);
+	});
 }
 
 function bindCaseNavigation(): void {

@@ -67,7 +67,8 @@ export function initJxMotion(): void {
 
 	const inView = (element: HTMLElement) => {
 		const rect = element.getBoundingClientRect();
-		return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
+		// Todo lo que asoma en pantalla al cargar se queda visible, aunque sea el borde inferior.
+		return rect.top < window.innerHeight && rect.bottom > 0;
 	};
 	const observer = new IntersectionObserver(
 		(entries) => {
@@ -92,6 +93,9 @@ export function initJxMotion(): void {
 	});
 
 	// Cifras: el número principal cuenta desde cero la primera vez que se ve.
+	// - Las que ya se ven al cargar arrancan en 0 (el CSS las tiene ocultas hasta aquí) y cuentan.
+	// - Las de más abajo conservan su valor real en la página (lectores de pantalla, copiar texto)
+	//   y empiezan a contar un poco ANTES de entrar en pantalla, para que el salto a 0 no se vea.
 	const counters = [...document.querySelectorAll<HTMLElement>('.jx-facts dt, .jx-kpis__value, .jx-bots__prices td strong')];
 	const countObserver = new IntersectionObserver(
 		(entries) =>
@@ -100,9 +104,13 @@ export function initJxMotion(): void {
 				countObserver.unobserve(entry.target);
 				countUp(entry.target as HTMLElement);
 			}),
-		{ threshold: 0.6 },
+		{ rootMargin: '0px 0px 20% 0px', threshold: 0 },
 	);
-	counters.forEach((element) => countObserver.observe(element));
+	counters.forEach((element) => {
+		if (inView(element)) countUp(element);
+		else countObserver.observe(element);
+		element.classList.add('jx-count-ready');
+	});
 }
 
 function countUp(element: HTMLElement): void {
@@ -111,10 +119,13 @@ function countUp(element: HTMLElement): void {
 	if (!match) return;
 	const target = Number(match[0].replace(',', '.'));
 	const decimals = (match[0].split(/[.,]/)[1] ?? '').length;
+	element.textContent = original.replace(match[0], (0).toFixed(decimals));
 	const start = performance.now();
 	const duration = 900;
 	const step = (now: number) => {
-		const progress = Math.min(1, (now - start) / duration);
+		// El primer cuadro puede traer una marca de tiempo anterior a `start`: sin el tope en 0
+		// salía «-0».
+		const progress = Math.min(1, Math.max(0, (now - start) / duration));
 		const eased = 1 - Math.pow(1 - progress, 3);
 		element.textContent = original.replace(match[0], (target * eased).toFixed(decimals));
 		if (progress < 1) requestAnimationFrame(step);

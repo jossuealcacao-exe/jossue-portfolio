@@ -2839,14 +2839,29 @@
 		transform: none;
 	}
 
-	html.jx-motion .jx-rise > span,
-	html.jx-motion .jx-rise.jx-about__name,
-	html.jx-motion .editorial-hero h1.jx-rise {
+	/* Los titulares se animan desde el CSS, sin esperar a que el script les ponga una clase:
+	   así la animación empieza en el primer pintado y no después de que el texto ya se vio. */
+	html.jx-motion :is(.jx-hero__title, .jm-hero__title) > span,
+	html.jx-motion .jx-about__name,
+	html.jx-motion .editorial-hero h1 {
 		animation: jx-rise-line 900ms var(--jx-ease) both;
 	}
 
-	html.jx-motion .jx-rise > span:nth-child(2) {
+	html.jx-motion :is(.jx-hero__title, .jm-hero__title) > span:nth-child(2) {
 		animation-delay: 110ms;
+	}
+
+	/* Cifras que cuentan desde cero: no se muestran con su valor final para luego saltar a 0.
+	   El script las deja en 0 y las muestra; si no llegara a correr, aparecen solas a los 2.5 s. */
+	html.jx-motion :is(.jx-facts dt, .jx-kpis__value, .jx-bots__prices td strong):not(.jx-count-ready) {
+		visibility: hidden;
+		animation: jx-unhide 0s linear 2.5s forwards;
+	}
+
+	@keyframes jx-unhide {
+		to {
+			visibility: visible;
+		}
 	}
 
 	html.jx-motion .jx-hero__lede,

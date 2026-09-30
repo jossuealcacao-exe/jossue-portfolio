@@ -155,6 +155,11 @@ const structuredData = {
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<!-- El movimiento se activa ANTES del primer pintado: si esperara al script del final, el
+		     texto del héroe se vería quieto, se escondería y luego entraría animado (parpadeo). -->
+		<script is:inline>
+			if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) document.documentElement.classList.add('jx-motion');
+		</script>
 		<meta name="generator" content={Astro.generator} />
 		<meta name="description" content={description} />
 		<meta name="author" content={profile.name} />
