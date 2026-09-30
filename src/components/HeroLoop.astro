@@ -1,0 +1,49 @@
+---
+// Fondo en loop del héroe: 10 s, sin audio, oscuro y quieto en el centro para no competir con
+// el titular. Carga solo cuando el héroe se ve y respeta «reducir movimiento» y ahorro de datos.
+interface Props {
+	name: string;
+}
+
+const { name } = Astro.props;
+const base = `/videos/hero/${name}`;
+---
+
+<div class="jx-loop" aria-hidden="true">
+	<video muted loop playsinline preload="none" poster={`${base}.webp`} data-jx-loop data-wide={base} data-tall={`${base}-tall`} disablepictureinpicture></video>
+</div>
+
+<script>
+	const loops = [...document.querySelectorAll<HTMLVideoElement>('[data-jx-loop]')];
+	const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+	const narrow = matchMedia('(max-width: 47.99rem)');
+	const source = (video: HTMLVideoElement) => {
+		const base = narrow.matches ? video.dataset.tall! : video.dataset.wide!;
+		video.poster = `${base}.webp`;
+		if (calm) return;
+		const type = video.canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
+		const src = `${base}.${type}`;
+		if (!video.currentSrc.endsWith(src)) {
+			video.src = src;
+			video.load();
+		}
+	};
+	loops.forEach((video) => {
+		video.poster = `${(narrow.matches ? video.dataset.tall : video.dataset.wide) ?? ''}.webp`;
+	});
+	if (!calm && 'IntersectionObserver' in window) {
+		const observer = new IntersectionObserver(
+			(entries) =>
+				entries.forEach((entry) => {
+					const video = entry.target as HTMLVideoElement;
+					if (entry.isIntersecting) {
+						if (!video.src) source(video);
+						video.play().then(() => video.closest('.jx-loop')?.classList.add('is-playing')).catch(() => {});
+					} else video.pause();
+				}),
+			{ threshold: 0.05 },
+		);
+		loops.forEach((video) => observer.observe(video));
+		narrow.addEventListener('change', () => loops.forEach((video) => video.src && source(video)));
+	}
+</script>

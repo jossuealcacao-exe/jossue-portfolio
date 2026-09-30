@@ -1,0 +1,65 @@
+---
+// Video de demostración de un producto: silenciado, en bucle, con su póster y un botón para
+// pausarlo (WCAG 2.2.2). Solo se descarga y reproduce cuando entra en pantalla; con «reducir
+// movimiento» o ahorro de datos se queda en el póster. En teléfonos usa la versión vertical.
+import type { ProductDemo } from '../data/products';
+
+interface Props {
+	demo: ProductDemo;
+	locale: 'es' | 'en';
+	class?: string;
+	ratio?: 'wide' | 'auto';
+	/** 'wide' mantiene el video horizontal también en el teléfono (tarjetas del mismo tamaño). */
+	orientation?: 'auto' | 'wide';
+}
+
+const { demo, locale, class: className, ratio = 'wide', orientation = 'auto' } = Astro.props;
+const es = locale === 'es';
+---
+
+<figure class:list={['jx-demo', `jx-demo--${ratio}`, className]} data-jx-demo data-wide-only={orientation === 'wide' ? '' : undefined}>
+	<video muted loop playsinline preload="none" poster={`${demo.wide}.webp`} data-wide={demo.wide} data-tall={demo.tall} aria-label={demo.alt}></video>
+	<button class="jx-demo__toggle" type="button" data-jx-demo-toggle aria-pressed="true" hidden>
+		<span data-jx-demo-label>{es ? 'Reproducir' : 'Play'}</span>
+	</button>
+	<figcaption class="jx-demo__label"><span class="jx-mono">{demo.label}</span></figcaption>
+	{demo.credit && <span class="jx-demo__credit-tag">{es ? 'Fotos: Wikimedia Commons (CC)' : 'Photos: Wikimedia Commons (CC)'}</span>}
+</figure>
+{demo.credit && <p class="jx-demo__credit">{demo.credit}</p>}
+
+<script>
+	const es = document.documentElement.lang === 'es';
+	const quiet = matchMedia('(prefers-reduced-motion: reduce)').matches || Boolean((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
+	const tall = matchMedia('(max-width: 47.99rem)').matches;
+	const ext = document.createElement('video').canPlayType('video/mp4; codecs="avc1.640028"') ? 'mp4' : 'webm';
+	const held = new WeakSet<HTMLVideoElement>();
+
+	for (const figure of document.querySelectorAll<HTMLElement>('[data-jx-demo]')) {
+		const video = figure.querySelector('video');
+		const button = figure.querySelector<HTMLButtonElement>('[data-jx-demo-toggle]');
+		const label = figure.querySelector('[data-jx-demo-label]');
+		if (!video || !button || !label) continue;
+		const isTall = tall && !figure.hasAttribute('data-wide-only');
+		const base = isTall ? video.dataset.tall : video.dataset.wide;
+		if (isTall) { video.poster = `${video.dataset.tall}.webp`; figure.classList.add('is-tall'); }
+		const load = () => { if (!video.src && base) { video.src = `${base}.${ext}`; video.load(); } };
+		const sync = () => {
+			button.setAttribute('aria-pressed', String(video.paused));
+			label.textContent = video.paused ? (es ? 'Reproducir' : 'Play') : (es ? 'Pausar' : 'Pause');
+		};
+		button.hidden = false;
+		video.addEventListener('play', sync);
+		video.addEventListener('pause', sync);
+		button.addEventListener('click', () => {
+			load();
+			if (video.paused) { held.delete(video); video.play().catch(() => {}); } else { held.add(video); video.pause(); }
+		});
+		if (quiet) { sync(); continue; }
+		new IntersectionObserver((entries) => {
+			for (const entry of entries) {
+				if (entry.isIntersecting) { load(); if (!held.has(video)) video.play().catch(() => {}); } else if (!video.paused) video.pause();
+			}
+		}, { threshold: 0.35 }).observe(figure);
+		sync();
+	}
+</script>

@@ -1,0 +1,59 @@
+---
+// Experiencia destacada: IA aplicada y AI Dev. Cuatro pruebas concretas, todas en uso, y dos
+// salidas: la página de IA o preguntarle directo a Jossue AI.
+import { routes, type Locale } from '../data/i18n';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+	showPageLink?: boolean;
+}
+
+const { locale, showPageLink = true } = Astro.props;
+const es = locale === 'es';
+const items: Array<{ icon: IconName; title: string; text: string; href: string }> = es
+	? [
+			{ icon: 'terminal', title: 'MADRE · 0.5.2', text: 'Una sala donde cuatro agentes de código trabajan en el mismo proyecto, con memoria compartida y permisos.', href: routes.es.madre },
+			{ icon: 'layers', title: 'AHP+ · 1.4.1', text: 'Protocolo abierto para que el contexto viaje entre asistentes y computadoras.', href: routes.es.ahpAtlas },
+			{ icon: 'chat', title: 'Daniela · en producción', text: 'Asistente de compra con Gemini en wunutrition.com, con el catálogo real y el carrito.', href: `${routes.es.products}daniela/` },
+			{ icon: 'sparkles-ai', title: 'Jossue AI · este sitio', text: 'El asistente que responde por mí aquí: conocimiento acotado, límites y datos protegidos.', href: '#' },
+		]
+	: [
+			{ icon: 'terminal', title: 'MADRE · 0.5.2', text: 'A room where four coding agents work on the same project, with shared memory and permissions.', href: routes.en.madre },
+			{ icon: 'layers', title: 'AHP+ · 1.4.1', text: 'An open protocol so context travels between assistants and computers.', href: routes.en.ahpAtlas },
+			{ icon: 'chat', title: 'Daniela · in production', text: 'A Gemini shopping assistant on wunutrition.com, with the real catalog and cart.', href: `${routes.en.products}daniela/` },
+			{ icon: 'sparkles-ai', title: 'Jossue AI · this site', text: 'The assistant that answers for me here: bounded knowledge, limits and protected data.', href: '#' },
+		];
+---
+
+<section class="jx-spot" data-home="ai-dev" aria-labelledby={`ai-dev-${showPageLink ? 'home' : 'page'}`}>
+	<div class="jx-wrap jx-spot__inner">
+		<div class="jx-spot__copy">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Experiencia destacada' : 'Featured experience'}</p>
+			<h2 id={`ai-dev-${showPageLink ? 'home' : 'page'}`} class="jx-h2">
+				<span>{es ? 'IA aplicada y AI\u00a0Dev.' : 'Applied AI and AI\u00a0Dev.'}</span>{' '}
+				<span class="jx-soft">{es ? 'Productos con IA que ya están en uso.' : 'AI products already in use.'}</span>
+			</h2>
+			<p class="jx-spot__lede">
+				{es
+					? 'Además de dirigir ecommerce, diseño y programo productos con IA de principio a fin: el modelo, sus límites, la interfaz y las pruebas. Y trabajo con agentes de código todos los días.'
+					: 'Besides leading ecommerce, I design and build AI products end to end: the model, its limits, the interface and the tests. And I work with coding agents every day.'}
+			</p>
+			<div class="jx-actions">
+				{showPageLink && <a class="jx-btn jx-btn--primary" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'See applied AI'}<Icon name="arrow-right" /></a>}
+				<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Qué ha construido Jossué con IA?' : 'What has Jossué built with AI?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
+			</div>
+		</div>
+		<ul class="jx-spot__list">
+			{items.map((item) => (
+				<li>
+					<a href={item.href} data-ai-open={item.href === '#' ? '' : undefined}>
+						<Icon name={item.icon} size="md" />
+						<span><strong>{item.title}</strong><span>{item.text}</span></span>
+						<Icon name="arrow-right" class="jx-spot__go" />
+					</a>
+				</li>
+			))}
+		</ul>
+	</div>
+</section>

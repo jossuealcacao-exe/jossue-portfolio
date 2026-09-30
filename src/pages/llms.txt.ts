@@ -1,68 +1,80 @@
+// llms.txt: el resumen del sitio para modelos de lenguaje y buscadores con IA (GEO). Dice en
+// pocas líneas quién es Jossué, qué construyó, con qué resultados y dónde está cada cosa.
+// La versión completa, con toda la experiencia y los casos, vive en /llms-full.txt.
 import { getCollection } from 'astro:content';
 import type { APIRoute } from 'astro';
+import { publishedBlogPosts } from '../data/blog';
 import { casePresentation } from '../data/casePresentation';
 import { contact } from '../data/contact';
-import { publishedBlogPosts } from '../data/blog';
+import { routes } from '../data/i18n';
+import { commercialProducts, productHref } from '../data/products';
+import { profile, profileCopy } from '../data/profile';
 
 export const GET: APIRoute = async ({ site }) => {
 	const origin = site ?? new URL('https://portfolio.invalid');
-	const projects = (await getCollection('cases', ({ data }) => data.lang === 'es' && data.publication.publish)).sort((a, b) =>
-		a.data.title.localeCompare(b.data.title),
-	);
-	const projectLines = projects.map((entry) => {
-		const summary = casePresentation(entry.data.slug, 'es')?.summary ?? entry.data.summary;
-		const url = new URL(`/es/trabajo/${entry.data.slug}/`, origin).href;
-		return `- [${entry.data.title}](${url}): ${summary}`;
-	});
+	const url = (path: string) => new URL(path, origin).href;
+	const about = profileCopy('es');
+	const projects = (await getCollection('cases', ({ data }) => data.lang === 'es' && data.publication.publish)).sort((a, b) => a.data.title.localeCompare(b.data.title));
 	const blogPosts = publishedBlogPosts(await getCollection('blog'), 'es');
 	const blogOrigin = new URL('https://blog.jossuealcala.com');
-	const blogLines = blogPosts.map((entry) => `- [${entry.data.title}](${new URL(`/${entry.data.lang}/${entry.data.slug}/`, blogOrigin).href}): ${entry.data.description}`);
 
 	const content = [
-		'# Jossue Alcala',
+		`# ${profile.name}`,
 		'',
-		'> Ecommerce Product Builder especializado en Shopify, UX/CRO, desarrollo web, analitica e inteligencia artificial aplicada.',
+		`> ${profile.headline.es}. Ecommerce, Shopify, CRO, SEO, paid media, IA aplicada y AI Dev (desarrollo con agentes). Guadalajara, México.`,
 		'',
-		'Este sitio es el portafolio profesional bilingue de Jossue Alcala. Presenta experiencia, servicios, autoria y casos de estudio con alcances y limitaciones explicitos.',
+		about.summary,
 		'',
-		'## Paginas principales',
+		'## Datos clave',
 		'',
-		`- [Inicio en espanol](${new URL('/es/', origin).href})`,
-		`- [Trabajo seleccionado](${new URL('/es/trabajo/', origin).href})`,
-		`- [Servicios](${new URL('/es/servicios/', origin).href})`,
-		`- [Productos y soluciones](${new URL('/es/productos/', origin).href}): Auditoría ecommerce, CRO, Shopify y desarrollo web, IA aplicada y MADRE como producto propio.`,
-		`- [IA y sistemas](${new URL('/es/ia-y-sistemas/', origin).href})`,
-		`- [MADRE](${new URL('/es/madre/', origin).href}): Sala compartida para coordinar agentes de IA con memoria consultable, permisos explicitos y control humano.`,
-		`- [AHP+ 1.4.1 y Command Atlas](${new URL('/es/recursos/ahp-plus/', origin).href}): Explicacion, evidencia local, instalacion, CLI, adaptadores, handoffs, mensajeria causal y salas de proyecto.`,
-		`- [Perfil y experiencia](${new URL('/es/acerca/', origin).href})`,
-		`- [Blog](${new URL('/es/', blogOrigin).href})`,
-		`- [English version](${new URL('/en/', origin).href})`,
+		`- Puesto actual: ${profile.headline.es}.`,
+		'- Más de 8 años entre growth, paid media, SEO y CRO.',
+		...about.kpis.map((kpi) => `- ${kpi.value}: ${kpi.label} (${kpi.source}).`),
+		'- Productos propios en uso: MADRE, AHP+, Daniela, Bloqio Builder y Miawseo.',
+		'- Idiomas: español nativo, inglés B1.',
 		'',
-		'## Areas de especialidad',
+		'## Productos propios',
 		'',
-		'- Direccion y operacion ecommerce.',
-		'- Shopify storefronts, themes y aplicaciones.',
-		'- UX, CRO, growth y analitica.',
-		'- Desarrollo web y arquitectura de producto.',
-		'- IA aplicada, automatizacion y sistemas operativos empresariales.',
+		...commercialProducts
+			.filter((product) => product.kind === 'owned-product')
+			.map((product) => `- [${product.title.es}](${url(productHref(product, 'es'))}): ${product.promise.es}${product.status ? ` Estado: ${product.status.es}.` : ''}`),
 		'',
-		'## Proyectos publicados',
+		'## Servicios',
 		'',
-		...projectLines,
+		...commercialProducts.filter((product) => product.kind === 'service-product').map((product) => `- [${product.title.es}](${url(productHref(product, 'es'))}): ${product.promise.es}`),
+		`- [Todos los servicios](${url(routes.es.services)}): tiendas Shopify, diagnóstico de conversión, velocidad, medición, IA aplicada y apps a la medida.`,
 		'',
-		'## Articulos del blog',
+		'## Casos publicados',
 		'',
-		...blogLines,
+		...projects.map((entry) => `- [${entry.data.title}](${url(`/es/trabajo/${entry.data.slug}/`)}): ${casePresentation(entry.data.slug, 'es')?.summary ?? entry.data.summary}`),
 		'',
-		'## Autoria y contacto',
+		'## Páginas principales',
 		'',
-		'Jossue Alcala es el autor del portafolio y de las contribuciones descritas en cada ficha. Las afirmaciones cuantitativas se publican solo cuando cuentan con contexto o evidencia identificable.',
-		`Contacto: ${contact.email}`,
-		`LinkedIn: ${contact.linkedin}`,
+		`- [Inicio](${url(routes.es.home)})`,
+		`- [Sobre mí y experiencia](${url(routes.es.about)})`,
+		`- [IA aplicada y AI Dev](${url(routes.es.ai)})`,
+		`- [MADRE](${url(routes.es.madre)}) y [madre.run](https://madre.run/)`,
+		`- [AHP+ Command Atlas](${url(routes.es.ahpAtlas)})`,
+		`- [Contacto](${url(routes.es.contact)})`,
+		`- [English version](${url(routes.en.home)})`,
+		`- [CV en PDF (español)](${url(contact.cvEs)})${contact.cvEn ? ` · [CV in English](${url(contact.cvEn)})` : ''}`,
+		`- [Versión completa para modelos de lenguaje](${url('/llms-full.txt')})`,
+		'',
+		'## Blog',
+		'',
+		...blogPosts.map((entry) => `- [${entry.data.title}](${new URL(`/${entry.data.lang}/${entry.data.slug}/`, blogOrigin).href}): ${entry.data.description}`),
+		'',
+		'## Contacto',
+		'',
+		`- Correo: ${contact.email}`,
+		`- WhatsApp: ${contact.phone}`,
+		`- LinkedIn: ${contact.linkedin}`,
+		`- GitHub: ${contact.github}`,
+		'- En el sitio también está Jossue AI, un asistente con IA que responde sobre su trabajo y toma mensajes para él.',
+		'',
+		'Las cifras publicadas vienen de su CV y de los casos, con su fecha y su fuente; no se extrapolan a otras empresas.',
 		'',
 	].join('\n');
 
-	return new Response(content, {
-		headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-	});
+	return new Response(content, { headers: { 'Content-Type': 'text/plain; charset=utf-8' } });
 };

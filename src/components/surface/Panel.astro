@@ -19,6 +19,8 @@ interface Props {
 	/** La frase se imprime sobre el medio en vez de ir encima de el. */
 	overlay?: boolean;
 	class?: string;
+	src?: string | null;
+	alt?: string;
 }
 
 const {
@@ -33,6 +35,8 @@ const {
 	lede,
 	overlay = false,
 	class: extra,
+	src,
+	alt,
 } = Astro.props;
 ---
 
@@ -49,6 +53,6 @@ const {
 		</div>
 	)}
 	<div class="panel__media" data-rise>
-		<MediaSlot id={slotId} ratio={ratio} label={label} note={note} variant="bleed" />
+		<MediaSlot id={slotId} ratio={ratio} label={label} note={note} variant="bleed" src={src} alt={alt} />
 	</div>
 </section>

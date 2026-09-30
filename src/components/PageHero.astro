@@ -1,0 +1,27 @@
+---
+// Héroe único del sitio: etiqueta, titular en dos tonos, entradilla y acciones, centrados
+// sobre el mismo eje. Detrás corre un video abstracto en loop que tiene que ver con el
+// titular; con «reducir movimiento» o ahorro de datos se queda en su póster.
+import HeroLoop from './HeroLoop.astro';
+
+interface Props {
+	loop?: string;
+	label: string;
+	title: [string, string?];
+	lede?: string;
+	id?: string;
+	class?: string;
+}
+
+const { loop, label, title, lede, id = 'page-hero-title', class: className } = Astro.props;
+---
+
+<section class:list={['jx-page-hero', className]} data-hero={loop} aria-labelledby={id}>
+	{loop && <HeroLoop name={loop} />}
+	<div class="jx-hero">
+		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{label}</p>
+		<h1 id={id} class="jx-hero__title"><span>{title[0]}</span>{title[1] && <span class="jx-soft">{title[1]}</span>}</h1>
+		{lede && <p class="jx-hero__lede">{lede}</p>}
+		<slot />
+	</div>
+</section>

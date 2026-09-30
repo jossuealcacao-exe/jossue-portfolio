@@ -9,7 +9,7 @@
     "dev": "astro dev",
     "api": "node --env-file=.env.api api/server.mjs",
     "test:api": "node --test api/server.test.mjs",
-    "test:worker": "node --test worker/index.test.mjs",
+    "test:worker": "node --test worker/index.test.mjs worker/ai.test.mjs",
     "social:campaign": "node scripts/social/generate-campaign.mjs",
     "test:social": "node --test scripts/social/generate-campaign.test.mjs",
     "blog:validate": "node scripts/blog/validate-content.mjs",
@@ -25,7 +25,8 @@
     "test:routes": "node scripts/test-routes.mjs",
     "test:e2e": "playwright test --config tests/playwright.config.ts",
     "validate": "npm run blog:check && npm run check && npm run lint && npm run build && npm run test:api && npm run test:worker && npm run test:social && npm run test:routes && npm run test:links && npm run test:e2e",
-    "astro": "astro"
+    "astro": "astro",
+    "eval:ai": "node scripts/eval-jossue-ai.mjs"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

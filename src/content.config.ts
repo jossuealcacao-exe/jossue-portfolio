@@ -1626,7 +1626,7 @@ const cases = [
 			{
 				key: 'lcv-home-hero',
 				alt: 'Portada móvil de la tienda en julio de 2026, con el hero Cortes excepcionales y sus cuatro pilares de confianza.',
-				caption: 'Así abría la tienda en julio de 2026, cuando hice el análisis: la promesa en cuatro pilares — calidad, maduración, envío refrigerado y gente que sabe de carne. El sitio cambió de portada desde entonces.',
+				caption: 'Así abría la tienda en julio de 2026, cuando hice el análisis: la promesa en cuatro pilares: calidad, maduración, envío refrigerado y gente que sabe de carne. El sitio cambió de portada desde entonces.',
 				sourceUrl: 'https://lacarniceriavirtual.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
@@ -2224,7 +2224,7 @@ const cases = [
 			{
 				key: 'miawseo-home-lines',
 				alt: 'Portada de julio de 2026 con las dos líneas del museo, Michiteca y Michi Plaza, y el bloque de donaciones Arenero.',
-				caption: 'El museo como red de metro. En julio de 2026 la portada abría con las dos líneas —exposición de razas y muro de la comunidad— más un bloque de donaciones que después se retiró.',
+				caption: 'El museo como red de metro. En julio de 2026 la portada abría con las dos líneas (exposición de razas y muro de la comunidad) y un bloque de donaciones que después se retiró.',
 				sourceUrl: 'https://michimuseum.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',
@@ -2232,7 +2232,7 @@ const cases = [
 			{
 				key: 'miawseo-michi-plaza',
 				alt: 'Michi Plaza: muro comunitario con filtros por raza y corazones.',
-				caption: 'Comunidad moderada: fotos reales, filtros y likes sin fricción.',
+				caption: 'Comunidad moderada: fotos reales, filtros y likes con un toque.',
 				sourceUrl: 'https://michimuseum.com/',
 				capturedAt: '2026-07-31',
 				viewport: 'iPhone 17 Pro · 1206 × 2622 px',

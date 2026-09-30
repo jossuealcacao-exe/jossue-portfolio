@@ -1,4 +1,5 @@
 ---
+import { caseCover, workImage } from '../data/workImages';
 import MediaSlot from './surface/MediaSlot.astro';
 
 interface AmbienceItem {
@@ -12,10 +13,13 @@ interface AmbienceItem {
 interface Props {
 	ambience: AmbienceItem;
 	locale: 'es' | 'en';
+	slug: string;
+	title: string;
 }
 
-const { ambience, locale } = Astro.props;
+const { ambience, locale, slug, title } = Astro.props;
 const es = locale === 'es';
+const src = workImage(ambience.key) ?? caseCover(slug);
 ---
 
 <figure class="case-ambience" data-case-ambience>
@@ -23,11 +27,13 @@ const es = locale === 'es';
 		id={`ambience-${ambience.key}`}
 		ratio="16:9"
 		variant="bleed"
+		src={src}
+		alt={es ? `Portada de ${title}` : `${title} home page`}
 		label={es ? 'Escena de contexto · por diseñar' : 'Context scene · to be designed'}
 		note={ambience.caption}
 	/>
 	<figcaption class="case-ambience__caption">
-		<p class="eyebrow">{es ? 'Placeholder editorial' : 'Editorial placeholder'}</p>
-		<p>{es ? 'La ambientación anterior se retiró. Este espacio conserva la proporción para la imagen definitiva.' : 'The previous ambience image was removed. This space keeps the final image ratio.'}</p>
+		<p class="eyebrow">{title}</p>
+		<p>{src ? (es ? 'La portada del proyecto, capturada del sitio en septiembre de 2026.' : 'The project home page, captured from the site in September 2026.') : ambience.caption}</p>
 	</figcaption>
 </figure>

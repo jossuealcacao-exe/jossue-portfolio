@@ -1,4 +1,7 @@
 ---
+// Jossue AI: chat real con Gemini a través del Worker (/api/ai). Toma la estructura de Daniela:
+// botón fijo, panel nativo (no iframe), historial en la sesión, invitaciones medidas y ajuste al
+// teclado del teléfono. Si la IA no está disponible, ofrece WhatsApp y el formulario.
 import { contact } from '../data/contact';
 import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
@@ -9,72 +12,374 @@ interface Props {
 
 const { locale } = Astro.props;
 const es = locale === 'es';
-const choices = es
-	? [
-			['Quiero mejorar mi ecommerce', 'Puedo ayudarte a elegir entre una auditoría, CRO o una intervención de Shopify. Cuéntame qué vendes y qué te preocupa hoy.'],
-			['Necesito construir algo', 'La ruta de desarrollo sirve para una tienda, integración o producto web. El primer paso es delimitar el problema y quién lo va a operar.'],
-			['Quiero aplicar IA', 'Primero definimos una tarea concreta, sus datos y quién conserva la decisión. No necesito que llegues con una herramienta elegida.'],
-		]
-	: [
-			['I want to improve my ecommerce', 'I can help you choose between an audit, CRO, or a Shopify intervention. Tell me what you sell and what concerns you today.'],
-			['I need to build something', 'The development route can cover a store, integration, or web product. The first step is defining the problem and who will operate it.'],
-			['I want to apply AI', 'We start by defining a concrete task, its data, and who keeps decision authority. You do not need to arrive with a tool already chosen.'],
-		];
+const cvHref = es ? contact.cvEs : contact.cvEn ?? contact.cvEs;
+const starters = es
+	? ['¿Qué ha construido Jossué?', '¿Qué resultados ha tenido?', 'Necesito ayuda con mi tienda']
+	: ['What has Jossué built?', 'What results has he had?', 'I need help with my store'];
+const copy = es
+	? {
+			greeting: 'Hola, soy Jossue AI, la versión con IA de Jossué. Pregúntame qué construye y cómo piensa, o cuéntame tu problema y vemos si te puede ayudar. Si algo no lo sé, te lo digo.',
+			placeholder: 'Escribe tu pregunta…',
+			send: 'Enviar',
+			typing: 'Jossue AI está escribiendo',
+			disclosure: 'Soy una IA y respondo con lo que Jossué publica. Guardo el chat 30 días, sin correos ni teléfonos, para mejorar. No compartas datos sensibles.',
+			error: 'Ahorita no puedo contestar. Escríbele a Jossué por WhatsApp o con el formulario y te responde en menos de un día hábil.',
+			limit: 'Llegaste al límite de mensajes por ahora. Si quieres seguir, escríbele directo a Jossué.',
+			lead: 'Listo, le pasé tus datos a Jossué.',
+			actions: { contact: 'Escribirle a Jossué', whatsapp: 'WhatsApp', cv: 'Descargar su CV', page: 'Ver la página' },
+			reset: 'Nueva conversación',
+			leave: 'Dejarle un mensaje a Jossué',
+			leaveAsk: 'Quiero dejarle un mensaje a Jossué',
+			role: 'IA · responde al momento',
+		}
+	: {
+			greeting: 'Hi, I am Jossue AI, the AI version of Jossué. Ask me what he builds and how he thinks, or tell me your problem and we will see if he can help. If I do not know something, I will say so.',
+			placeholder: 'Type your question…',
+			send: 'Send',
+			typing: 'Jossue AI is typing',
+			disclosure: 'I am an AI and I answer with what Jossué publishes. I keep the chat for 30 days, without emails or phone numbers, to improve. Do not share sensitive data.',
+			error: 'I cannot answer right now. Message Jossué on WhatsApp or through the form and he will reply within one business day.',
+			limit: 'You reached the message limit for now. If you want to keep going, write to Jossué directly.',
+			lead: 'Done, I passed your details to Jossué.',
+			actions: { contact: 'Write to Jossué', whatsapp: 'WhatsApp', cv: 'Download his CV', page: 'See the page' },
+			reset: 'New conversation',
+			leave: 'Leave Jossué a message',
+			leaveAsk: 'I want to leave Jossué a message',
+			role: 'AI · answers right away',
+		};
+const invites = es
+	? {
+			home: '¿Quieres saber si Jossué te puede ayudar? Pregúntame.',
+			products: '¿No sabes qué producto te toca? Te ayudo a elegir.',
+			about: '¿Eres reclutador? Pregúntame por su experiencia.',
+			work: '¿Quieres el resumen de un caso? Pregúntame.',
+			madre: '¿Dudas sobre MADRE? Te explico cómo funciona.',
+			default: '¿Tienes una pregunta sobre el trabajo de Jossué?',
+		}
+	: {
+			home: 'Want to know if Jossué can help you? Ask me.',
+			products: 'Not sure which product fits? I can help you pick.',
+			about: 'Recruiting? Ask me about his experience.',
+			work: 'Want the short version of a case? Ask me.',
+			madre: 'Questions about MADRE? I can explain how it works.',
+			default: 'Got a question about Jossué’s work?',
+		};
+const config = {
+	locale,
+	copy,
+	links: { contact: routes[locale].contact, whatsapp: contact.whatsapp, cv: cvHref },
+	invites,
+	routes: routes[locale],
+};
 ---
 
-<aside class="jossue-assistant" data-jossue-assistant>
-	<button class="jossue-assistant__launcher" type="button" aria-expanded="false" aria-controls="jossue-assistant-panel">
-		<span class="jossue-assistant__pulse" aria-hidden="true"></span>
-		<span><strong>Jossue IA</strong><small>{es ? 'ORIENTA · COTIZA' : 'GUIDES · SCOPES'}</small></span>
-		<Icon name="chat" />
+<aside class="jai" data-jai>
+	<p class="jai__invite" data-jai-invite hidden>
+		<button class="jai__invite-text" type="button" data-jai-invite-open></button>
+		<button class="jai__invite-close" type="button" data-jai-invite-close aria-label={es ? 'Cerrar invitación' : 'Dismiss invitation'}><Icon name="close" /></button>
+	</p>
+	<button class="jai__launcher" type="button" aria-expanded="false" aria-controls="jai-panel" data-analytics-event="assistant_open">
+		<span class="jai__avatar" aria-hidden="true"><img src="/images/jossue-alcala-480.webp" alt="" width="40" height="40" loading="lazy" decoding="async" /><i></i></span>
+		<span class="jai__launcher-text"><strong>Jossue AI</strong><small>{es ? 'Pregúntame' : 'Ask me'}</small></span>
 	</button>
-	<section class="jossue-assistant__panel" id="jossue-assistant-panel" hidden aria-label={es ? 'Orientación comercial guiada' : 'Guided commercial orientation'}>
-		<header>
-			<div><p class="commerce-meta">JOSSUE IA · {es ? 'ORIENTACIÓN' : 'ORIENTATION'}</p><h2>{es ? '¿Qué quieres resolver?' : 'What do you want to solve?'}</h2></div>
-			<button type="button" data-assistant-close aria-label={es ? 'Cerrar asistente' : 'Close assistant'}><Icon name="close" /></button>
+	<section class="jai__panel" id="jai-panel" hidden aria-label="Jossue AI" role="dialog">
+		<header class="jai__head">
+			<span class="jai__avatar jai__avatar--lg" aria-hidden="true"><img src="/images/jossue-alcala-480.webp" alt="" width="44" height="44" loading="lazy" decoding="async" /><i></i></span>
+			<div class="jai__title">
+				<h2>Jossue AI</h2>
+				<p>{copy.role}</p>
+			</div>
+			<button class="jai__icon-btn" type="button" data-jai-reset aria-label={copy.reset} title={copy.reset}>
+				<svg viewBox="0 0 32 32" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16a10 10 0 1 0 3-7.1M6 5v5h5" /></g></svg>
+			</button>
+			<button class="jai__icon-btn" type="button" data-jai-close aria-label={es ? 'Cerrar Jossue AI' : 'Close Jossue AI'}><Icon name="close" /></button>
 		</header>
-		<p class="jossue-assistant__disclosure">{es ? 'Esta versión guía la conversación. Todavía no consulta auditorías ni datos de Apex.' : 'This version guides the conversation. It does not yet access audits or Apex data.'}</p>
-		<div class="jossue-assistant__choices">
-			{choices.map(([label, response]) => <button type="button" data-assistant-choice data-response={response}>{label}<Icon name="arrow-right" /></button>)}
+		<div class="jai__log" data-jai-log aria-live="polite" aria-relevant="additions">
+			<div class="jai__msg jai__msg--ai"><p>{copy.greeting}</p></div>
 		</div>
-		<div class="jossue-assistant__response" data-assistant-response hidden aria-live="polite"></div>
-		<footer>
-			{contact.whatsapp && <a href={contact.whatsapp} rel="noreferrer" data-analytics-event="assistant_whatsapp">WhatsApp<Icon name="arrow-up-right" /></a>}
-			<a href={routes[locale].contact} data-analytics-event="assistant_contact">{es ? 'Formulario' : 'Contact form'}<Icon name="arrow-right" /></a>
-		</footer>
+		<div class="jai__chips" data-jai-chips>
+			{starters.map((text) => <button type="button" data-jai-chip>{text}</button>)}
+		</div>
+		<button class="jai__leave" type="button" data-jai-leave data-analytics-event="assistant_leave_message"><Icon name="envelope" />{copy.leave}</button>
+		<form class="jai__form" data-jai-form>
+			<label class="sr-only" for="jai-input">{copy.placeholder}</label>
+			<textarea id="jai-input" rows="1" maxlength="800" placeholder={copy.placeholder} data-jai-input enterkeyhint="send"></textarea>
+			<button class="jai__send" type="submit" aria-label={copy.send} data-jai-send><Icon name="arrow-right" /></button>
+		</form>
+		<p class="jai__disclosure">{copy.disclosure}</p>
 	</section>
+	<script type="application/json" data-jai-config set:html={JSON.stringify(config)} />
 </aside>
 
 <script>
-	const assistant = document.querySelector<HTMLElement>('[data-jossue-assistant]');
-	if (assistant) {
-		const launcher = assistant.querySelector<HTMLButtonElement>('.jossue-assistant__launcher');
-		const panel = assistant.querySelector<HTMLElement>('.jossue-assistant__panel');
-		const close = assistant.querySelector<HTMLButtonElement>('[data-assistant-close]');
-		const response = assistant.querySelector<HTMLElement>('[data-assistant-response]');
-		const setOpen = (open: boolean) => {
-			if (!launcher || !panel) return;
+	type Message = { role: 'user' | 'assistant'; content: string; action?: string; page?: string | null };
+	type Config = {
+		locale: 'es' | 'en';
+		copy: Record<string, string> & { actions: Record<string, string> };
+		links: { contact: string; whatsapp: string | null; cv: string | null };
+		invites: Record<string, string>;
+		routes: Record<string, string>;
+	};
+
+	const root = document.querySelector<HTMLElement>('[data-jai]');
+	const configNode = root?.querySelector<HTMLScriptElement>('[data-jai-config]');
+	if (root && configNode) {
+		const config = JSON.parse(configNode.textContent || '{}') as Config;
+		const host: HTMLElement = root;
+		const $ = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+		const launcher = $<HTMLButtonElement>('.jai__launcher');
+		const panel = $<HTMLElement>('.jai__panel');
+		const log = $<HTMLElement>('[data-jai-log]');
+		const chips = $<HTMLElement>('[data-jai-chips]');
+		const form = $<HTMLFormElement>('[data-jai-form]');
+		const input = $<HTMLTextAreaElement>('[data-jai-input]');
+		const send = $<HTMLButtonElement>('[data-jai-send]');
+		const invite = $<HTMLElement>('[data-jai-invite]');
+		const inviteText = $<HTMLButtonElement>('[data-jai-invite-open]');
+		const leave = $<HTMLButtonElement>('[data-jai-leave]');
+
+		const store = {
+			get<T>(key: string, fallback: T): T {
+				try {
+					const raw = sessionStorage.getItem(`jai:${key}`);
+					return raw ? (JSON.parse(raw) as T) : fallback;
+				} catch {
+					return fallback;
+				}
+			},
+			set(key: string, value: unknown) {
+				try {
+					sessionStorage.setItem(`jai:${key}`, JSON.stringify(value));
+				} catch {
+					/* modo privado: el chat funciona igual, solo no se recuerda */
+				}
+			},
+		};
+		const newSid = () => (crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(16).slice(2)}`).replace(/[^\w-]/g, '');
+		let sid = store.get('sid', '') || newSid();
+		store.set('sid', sid);
+		let messages = store.get<Message[]>('messages', []);
+		let busy = false;
+
+		const scrollDown = () => (log.scrollTop = log.scrollHeight);
+
+		function actionHref(message: Message) {
+			if (message.action === 'contact') return config.links.contact;
+			if (message.action === 'whatsapp') return config.links.whatsapp;
+			if (message.action === 'cv') return config.links.cv;
+			if (message.action === 'page') return message.page ?? null;
+			return null;
+		}
+
+		function renderMessage(message: Message) {
+			const bubble = document.createElement('div');
+			bubble.className = `jai__msg jai__msg--${message.role === 'user' ? 'me' : 'ai'}`;
+			const text = document.createElement('p');
+			text.textContent = message.content;
+			bubble.append(text);
+			const href = message.role === 'assistant' ? actionHref(message) : null;
+			if (href && message.action) {
+				const link = document.createElement('a');
+				link.className = 'jai__action';
+				link.href = href;
+				link.textContent = config.copy.actions[message.action] ?? config.copy.actions.page;
+				link.dataset.analyticsEvent = `assistant_${message.action}`;
+				if (message.action === 'whatsapp') link.rel = 'noreferrer';
+				if (message.action === 'cv') link.setAttribute('download', '');
+				bubble.append(link);
+			}
+			log.append(bubble);
+		}
+
+		function renderChips(list: string[]) {
+			chips.replaceChildren(
+				...list.map((label) => {
+					const chip = document.createElement('button');
+					chip.type = 'button';
+					chip.dataset.jaiChip = '';
+					chip.textContent = label;
+					return chip;
+				}),
+			);
+			chips.hidden = list.length === 0;
+		}
+
+		function renderAll() {
+			log.querySelectorAll('.jai__msg:not(:first-child)').forEach((node) => node.remove());
+			messages.forEach(renderMessage);
+			if (messages.length) renderChips(store.get<string[]>('chips', []));
+			scrollDown();
+		}
+
+		function typing(on: boolean) {
+			log.querySelector('.jai__typing')?.remove();
+			if (!on) return;
+			const dots = document.createElement('div');
+			dots.className = 'jai__msg jai__msg--ai jai__typing';
+			dots.setAttribute('aria-label', config.copy.typing);
+			dots.innerHTML = '<span></span><span></span><span></span>';
+			log.append(dots);
+			scrollDown();
+		}
+
+		function note(text: string, action?: string) {
+			const message: Message = { role: 'assistant', content: text, action };
+			renderMessage(message);
+			scrollDown();
+		}
+
+		async function ask(question: string) {
+			const content = question.trim().slice(0, 800);
+			if (!content || busy) return;
+			busy = true;
+			send.disabled = true;
+			const userMessage: Message = { role: 'user', content };
+			messages.push(userMessage);
+			store.set('messages', messages);
+			renderMessage(userMessage);
+			renderChips([]);
+			input.value = '';
+			autosize();
+			typing(true);
+			try {
+				const response = await fetch('/api/ai', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						sid,
+						locale: config.locale,
+						page: location.pathname,
+						messages: messages.slice(-12).map(({ role, content }) => ({ role, content })),
+					}),
+				});
+				const data = await response.json().catch(() => ({}));
+				typing(false);
+				if (!response.ok || !data.ok) {
+					note(response.status === 429 ? config.copy.limit : config.copy.error, 'whatsapp');
+					return;
+				}
+				const reply: Message = { role: 'assistant', content: data.reply, action: data.action, page: data.page };
+				messages.push(reply);
+				store.set('messages', messages);
+				renderMessage(reply);
+				store.set('chips', data.suggestions ?? []);
+				renderChips(data.suggestions ?? []);
+				if (data.leadSaved) {
+					store.set('leadSaved', true);
+					leave.hidden = true;
+					window.dispatchEvent(new CustomEvent('jai:lead'));
+				}
+				scrollDown();
+			} catch {
+				typing(false);
+				note(config.copy.error, 'whatsapp');
+			} finally {
+				busy = false;
+				send.disabled = false;
+			}
+		}
+
+		function autosize() {
+			input.style.height = 'auto';
+			input.style.height = `${Math.min(input.scrollHeight, 132)}px`;
+		}
+
+		// Teclado del teléfono: el panel se ajusta al alto visible, como en Daniela.
+		const fitViewport = () => {
+			const viewport = window.visualViewport;
+			if (!viewport) return;
+			host.style.setProperty('--jai-vh', `${viewport.height}px`);
+			host.style.setProperty('--jai-top', `${viewport.offsetTop}px`);
+		};
+
+		function setOpen(open: boolean, focusInput = true) {
 			launcher.setAttribute('aria-expanded', String(open));
 			panel.hidden = !open;
-			if (open) close?.focus();
-		};
-		launcher?.addEventListener('click', () => setOpen(launcher.getAttribute('aria-expanded') !== 'true'));
-		close?.addEventListener('click', () => {
+			host.classList.toggle('is-open', open);
+			document.documentElement.classList.toggle('jai-open', open);
+			if (open) {
+				hideInvite(true);
+				fitViewport();
+				renderAll();
+				if (focusInput && matchMedia('(pointer: fine)').matches) input.focus();
+				store.set('opened', true);
+			}
+		}
+
+		function hideInvite(forever = false) {
+			invite.hidden = true;
+			if (forever) store.set('inviteDone', true);
+		}
+
+		launcher.addEventListener('click', () => setOpen(!host.classList.contains('is-open')));
+		$<HTMLButtonElement>('[data-jai-close]').addEventListener('click', () => {
 			setOpen(false);
-			launcher?.focus();
+			launcher.focus();
 		});
-		assistant.querySelectorAll<HTMLButtonElement>('[data-assistant-choice]').forEach((button) => {
-			button.addEventListener('click', () => {
-				if (!response) return;
-				response.textContent = button.dataset.response ?? '';
-				response.hidden = false;
-			});
+		$<HTMLButtonElement>('[data-jai-reset]').addEventListener('click', () => {
+			messages = [];
+			sid = newSid();
+			store.set('sid', sid);
+			store.set('messages', []);
+			store.set('chips', []);
+			renderAll();
+			renderChips(JSON.parse(chips.dataset.starters || '[]'));
+			input.focus();
 		});
-		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Escape' && panel && !panel.hidden) {
-				setOpen(false);
-				launcher?.focus();
+		chips.dataset.starters = JSON.stringify([...chips.querySelectorAll('button')].map((button) => button.textContent));
+		chips.addEventListener('click', (event) => {
+			const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-jai-chip]');
+			if (chip) ask(chip.textContent ?? '');
+		});
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+			ask(input.value);
+		});
+		input.addEventListener('keydown', (event) => {
+			if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
+				event.preventDefault();
+				ask(input.value);
 			}
 		});
+		input.addEventListener('input', autosize);
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape' && !panel.hidden) {
+				setOpen(false);
+				launcher.focus();
+			}
+		});
+		window.visualViewport?.addEventListener('resize', fitViewport);
+		window.visualViewport?.addEventListener('scroll', fitViewport);
+
+		// Cualquier botón del sitio con data-ai-open abre el chat; con data-ai-ask además pregunta.
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-ai-open]');
+			if (!trigger) return;
+			event.preventDefault();
+			setOpen(true, !trigger.dataset.aiAsk);
+			if (trigger.dataset.aiAsk) ask(trigger.dataset.aiAsk);
+		});
+
+		// Invitación medida: una por página, máximo dos por sesión, nunca en contacto ni si ya abrió el chat.
+		const path = location.pathname;
+		const pageKey = Object.entries(config.routes).find(([key, route]) => key !== 'home' && path.startsWith(route))?.[0] ?? (path === config.routes.home ? 'home' : 'default');
+		const shown = store.get('invites', 0);
+		const allowed = pageKey !== 'contact' && !store.get('opened', false) && !store.get('inviteDone', false) && shown < 2;
+		if (allowed) {
+			window.setTimeout(() => {
+				if (!panel.hidden || document.hidden) return;
+				inviteText.textContent = config.invites[pageKey] ?? config.invites.default;
+				invite.hidden = false;
+				store.set('invites', shown + 1);
+				window.setTimeout(() => hideInvite(), 9000);
+			}, 12000);
+		}
+		inviteText.addEventListener('click', () => setOpen(true));
+		$<HTMLButtonElement>('[data-jai-invite-close]').addEventListener('click', () => hideInvite(true));
+
+		leave.hidden = store.get('leadSaved', false);
+		leave.addEventListener('click', () => ask(config.copy.leaveAsk));
+
+		if (messages.length) renderAll();
 	}
 </script>

@@ -4,6 +4,7 @@ import { brandForCaseSlug } from '../data/brands';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
 import Breadcrumbs from './Breadcrumbs.astro';
+import { caseCover } from '../data/workImages';
 import CaseAmbience from './CaseAmbience.astro';
 import CaseDiagrams from './CaseDiagrams.astro';
 import CaseMedia from './CaseMedia.astro';
@@ -29,7 +30,7 @@ const presentation = casePresentation(data.slug, locale);
 if (!presentation) throw new Error(`Missing public presentation for ${locale}/${data.slug}`);
 const chapters = [
 	{ id: 'challenge', heading: es ? 'El problema' : 'The problem' },
-	...(publishableAmbience ? [{ id: 'context-scene', heading: es ? 'Contexto visual' : 'Visual context' }] : []),
+	...(publishableAmbience && !caseCover(data.slug) ? [{ id: 'context-scene', heading: es ? 'Contexto visual' : 'Visual context' }] : []),
 	{ id: 'approach', heading: es ? 'El enfoque' : 'The approach' },
 	{ id: 'delivery', heading: es ? 'Qué construí' : 'What I built' },
 	...(publishableDiagrams ? [{ id: 'signals', heading: es ? 'Gráficos' : 'Signals' }] : []),
@@ -45,6 +46,7 @@ const linkKindCopy = {
 	live: es ? 'Proyecto vivo' : 'Live project',
 	reference: es ? 'Consulta' : 'Reference',
 } as const;
+const cover = caseCover(data.slug);
 ---
 
 <Breadcrumbs
@@ -80,7 +82,14 @@ const linkKindCopy = {
 		</div>
 	</header>
 	<div class="case-cover" data-reveal>
-		<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
+		{cover ? (
+			<figure class="portfolio-shot case-cover__shot" data-case-cover={data.slug}>
+				<span class="portfolio-shot__bar" aria-hidden="true"><i></i><i></i><i></i></span>
+				<img src={cover} alt={es ? `Portada de ${data.title}` : `${data.title} home page`} width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async" />
+			</figure>
+		) : (
+			<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
+		)}
 	</div>
 	<section id="challenge" class="section case-grid" data-case-section>
 		<p class="index">{sectionNumber('challenge')} / {es ? 'El reto' : 'The challenge'}</p>
@@ -90,12 +99,12 @@ const linkKindCopy = {
 			<p>{presentation.challenge}</p>
 		</div>
 	</section>
-	{publishableAmbience && (
+	{publishableAmbience && !cover && (
 		<section id="context-scene" class="section case-grid case-context-scene" data-case-section>
 			<p class="index">{sectionNumber('context-scene')} / {es ? 'Contexto visual' : 'Visual context'}</p>
 			<div class="flow">
-				<h2>{es ? 'El trabajo, en su contexto.' : 'The work, in context.'}</h2>
-				<CaseAmbience ambience={publishableAmbience} locale={locale} />
+				<h2>{es ? 'Dónde pasa este proyecto.' : 'Where this project happens.'}</h2>
+				<CaseAmbience ambience={publishableAmbience} locale={locale} slug={data.slug} title={data.title} />
 			</div>
 		</section>
 	)}
@@ -121,7 +130,7 @@ const linkKindCopy = {
 		<section id="signals" class="section case-grid case-signals" data-case-section>
 			<p class="index">{sectionNumber('signals')} / {es ? 'Gráficos' : 'Signals'}</p>
 			<div class="flow">
-				<h2>{es ? 'Lo mismo, en imagen.' : 'The same thing, as a picture.'}</h2>
+				<h2>{es ? 'Los números en gráficos.' : 'The numbers as charts.'}</h2>
 				<CaseDiagrams diagrams={publishableDiagrams} locale={locale} />
 			</div>
 		</section>

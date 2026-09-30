@@ -1,0 +1,36 @@
+---
+// Invitación a hablar con Jossue AI: una tarjeta con preguntas de ejemplo que abren el chat y
+// la mandan de una vez. Las preguntas cambian según quién suele llegar a cada página.
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+	context?: 'home' | 'about' | 'contact';
+}
+
+const { locale, context = 'home' } = Astro.props;
+const es = locale === 'es';
+const questions = {
+	home: es ? ['¿Qué ha construido Jossué?', '¿Me puede ayudar con mi tienda Shopify?', '¿Cómo usa la IA en su trabajo?'] : ['What has Jossué built?', 'Can he help with my Shopify store?', 'How does he use AI in his work?'],
+	about: es ? ['Resúmeme su experiencia', '¿Qué resultados ha tenido?', '¿Con qué herramientas trabaja?'] : ['Summarize his experience', 'What results has he had?', 'What tools does he work with?'],
+	contact: es ? ['¿Cómo trabaja un proyecto?', '¿Cuánto tarda una tienda?', 'Quiero dejarle mis datos'] : ['How does he run a project?', 'How long does a store take?', 'I want to leave my details'],
+}[context];
+---
+
+<section class="jx-ai-invite" data-ai-invite={context} aria-labelledby={`ai-invite-${context}`}>
+	<div class="jx-ai-invite__card">
+		<div class="jx-ai-invite__copy">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>Jossue AI</p>
+			<h2 id={`ai-invite-${context}`} class="jx-h2">
+				<span>{es ? '¿Prefieres preguntar?' : 'Rather just ask?'}</span>{' '}
+				<span class="jx-soft">{es ? 'Mi asistente te contesta al momento.' : 'My assistant answers right away.'}</span>
+			</h2>
+			<p class="jx-ai-invite__lede">{es ? 'Conoce mis productos, mis casos y cómo trabajo. Si quieres, le dejas tus datos y yo te escribo.' : 'It knows my products, my cases and how I work. If you want, leave your details with it and I will write to you.'}</p>
+		</div>
+		<ul class="jx-ai-invite__questions">
+			{questions.map((question) => (
+				<li><button type="button" data-ai-open data-ai-ask={question} data-analytics-event="assistant_invite">{question}<span aria-hidden="true">↗</span></button></li>
+			))}
+		</ul>
+	</div>
+</section>

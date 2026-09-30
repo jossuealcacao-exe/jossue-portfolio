@@ -1,9 +1,10 @@
 ---
+// Página de MADRE con el sistema de madre.run (MADRE UX): negro, grafito, superficies sin bordes,
+// rótulos mono y el verde fósforo como acento. Los colores de los modos solo viven en «Permisos».
 import { madreCopy, madreFacts } from '../data/madre';
 import { routes, type Locale } from '../data/i18n';
-import '../styles/madre.css';
+import DemoVideo from './DemoVideo.astro';
 import Icon from './Icon.astro';
-import MediaSlot from './surface/MediaSlot.astro';
 
 interface Props {
 	locale: Locale;
@@ -19,6 +20,18 @@ const ids = {
 	evidence: es ? 'evidencia' : 'evidence',
 	resources: es ? 'recursos' : 'resources',
 };
+const V = '/videos/madre';
+const clips = es
+	? [
+			{ key: 'anuncio', label: 'Anuncio · 30 s', title: 'Lo más destacado, en medio minuto.' },
+			{ key: 'vertical', label: 'Vertical · 45 s', title: 'Contexto propio, seguridad y memoria.' },
+			{ key: 'showcase', label: 'Demo · 1 min', title: 'Cuatro agentes construyen una app y un módulo.' },
+		]
+	: [
+			{ key: 'anuncio', label: 'Ad · 30 s', title: 'The highlights, in half a minute.' },
+			{ key: 'vertical', label: 'Vertical · 45 s', title: 'Own context, security and memory.' },
+			{ key: 'showcase', label: 'Demo · 1 min', title: 'Four agents build an app and a module.' },
+		];
 const site = Astro.site ?? new URL('https://portfolio.invalid');
 const pageUrl = new URL(routes[locale].madre, site);
 const softwareJson = {
@@ -34,237 +47,193 @@ const softwareJson = {
 	license: madreFacts.license,
 	codeRepository: madreFacts.github,
 	downloadUrl: madreFacts.npm,
+	url: madreFacts.site,
 	softwareRequirements: 'Node.js 22.5 or newer; at least one supported agent CLI',
 	inLanguage: ['es', 'en'],
-	url: pageUrl.href,
+	sameAs: [madreFacts.site, madreFacts.github, madreFacts.npm],
 };
+const [titleA, titleB] = m.title.includes(',') ? [m.title.slice(0, m.title.indexOf(',') + 1), m.title.slice(m.title.indexOf(',') + 1).trim()] : [m.title, ''];
 ---
 
 <article
-	class="madre-product"
+	class="jm"
 	data-madre-page
 	data-copy-label={m.install.copy}
 	data-copied-label={m.install.copied}
 	data-copy-failed-label={m.install.failed}
 >
-	<nav class="madre-product__index" aria-label={es ? 'Contenido de MADRE' : 'MADRE contents'}>
-		<div class="madre-product__index-inner">
-			<a class="madre-product__wordmark" href={`#${ids.install}`}>MADRE</a>
-			<ul>
-				{m.nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-			</ul>
-			<a class="madre-product__github" href={madreFacts.github} target="_blank" rel="noreferrer">
-				{es ? 'Ver en GitHub' : 'View on GitHub'} <Icon name="arrow-up-right" />
-			</a>
+	<section class="jm-hero" aria-labelledby="madre-title">
+		<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{m.eyebrow}</p>
+		<p class="jx-wordmark jm-hero__mark" aria-hidden="true">
+			<svg class="jx-pulse" viewBox="0 0 48 16" focusable="false"><path d="M1 8h10l3-6 5 12 4-9 2 3h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" /><circle cx="43.5" cy="8" r="2.6" fill="currentColor" /></svg>
+			<span>MADRE</span>
+		</p>
+		<h1 id="madre-title" class="jm-hero__title"><span>{titleA}</span>{titleB && <span class="jx-soft">{titleB}</span>}</h1>
+		<p class="jm-hero__lede">{m.lede}</p>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--madre" href={madreFacts.site} rel="noopener" data-analytics-event="click_madre_site">{es ? 'Ir a madre.run' : 'Go to madre.run'}<Icon name="arrow-up-right" /></a>
+			<a class="jx-btn jx-btn--ghost" href={`#${ids.evidence}`}>{es ? 'Ver el showcase' : 'Watch the showcase'}</a>
 		</div>
-	</nav>
+		<p class="jm-hero__aside">{m.aside}</p>
+	</section>
 
-	<section class="madre-product__hero" aria-labelledby="madre-title">
-		<div class="madre-product__frame">
-			<div class="madre-product__hero-grid">
-				<header class="madre-product__hero-copy">
-					<p class="madre-product__eyebrow">{m.eyebrow}</p>
-					<h1 id="madre-title">{m.title}</h1>
-					<p class="madre-product__lede">{m.lede}</p>
-				</header>
-				<aside class="madre-product__aside" aria-label={es ? 'En una frase' : 'In one sentence'}>
-					<p>{m.aside}</p>
-					<span>{es ? 'Local por diseño' : 'Local by design'}</span>
-				</aside>
+	<section class="jm-install" id={ids.install} aria-labelledby="madre-install-title">
+		<div class="jx-wrap jm-install__card">
+			<div>
+				<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Instalar' : 'Install'}</p>
+				<h2 id="madre-install-title" class="jx-h2">{m.install.title}</h2>
+				<p class="jm-muted">{m.install.intro}</p>
 			</div>
-
-			<section class="madre-install" id={ids.install} aria-labelledby="madre-install-title">
-				<div class="madre-install__head">
-					<div>
-						<p class="madre-product__eyebrow">{es ? 'INSTALACIÓN' : 'INSTALLATION'}</p>
-						<h2 id="madre-install-title">{m.install.title}</h2>
-					</div>
-					<p>{m.install.intro}</p>
-				</div>
-
-				<div class="madre-install__console">
-					<div class="madre-install__tabs" role="tablist" aria-label={es ? 'Sistema operativo' : 'Operating system'}>
-						{m.install.platforms.map((platform, index) => (
-							<button
-								id={`madre-tab-${platform.id}-${locale}`}
-								type="button"
-								role="tab"
-								aria-selected={index === 0 ? 'true' : 'false'}
-								aria-controls={`madre-panel-${platform.id}-${locale}`}
-								tabindex={index === 0 ? 0 : -1}
-								data-madre-os-tab={platform.id}
-							>
-								<img src={platform.id === 'macos' ? '/tools/apple.svg' : '/tools/linux.svg'} alt="" width="22" height="22" />
-								<span>{platform.label}</span>
-							</button>
-						))}
-					</div>
-					<div class="madre-install__command">
-						<span aria-hidden="true">$</span>
-						<code>{madreFacts.startCommand}</code>
-						<button type="button" data-copy-value={madreFacts.startCommand}>{m.install.copy}</button>
-					</div>
-				</div>
-
-				<div class="madre-install__support">
-					<div>
-						{m.install.platforms.map((platform, index) => (
-							<p
-								id={`madre-panel-${platform.id}-${locale}`}
-								role="tabpanel"
-								aria-labelledby={`madre-tab-${platform.id}-${locale}`}
-								hidden={index !== 0}
-								data-madre-os-panel={platform.id}
-							>
-								{platform.note}
-							</p>
-						))}
-					</div>
-					<ul>
-						{m.install.requirements.map((item) => <li>{item}</li>)}
-					</ul>
-					<p class="madre-install__status" role="status" aria-live="polite" data-copy-status></p>
-				</div>
-			</section>
-
-			<section class="madre-quickstart" aria-labelledby="madre-quickstart-title">
-				<header>
-					<p class="madre-product__eyebrow">{m.quickstart.eyebrow}</p>
-					<h2 id="madre-quickstart-title">{m.quickstart.title}</h2>
-				</header>
-				<ol>
-					{m.quickstart.steps.map((step, index) => (
-						<li>
-							<div class="madre-quickstart__step">
-								<span>{step.number}</span>
-								<h3>{step.title}</h3>
-								<p>{step.text}</p>
-								{step.command && (
-									<div class="madre-quickstart__code">
-										<code>{step.command}</code>
-										<button type="button" data-copy-value={step.command}>{m.install.copy}</button>
-									</div>
-								)}
-							</div>
-							{index < m.quickstart.steps.length - 1 && <Icon name="arrow-right" class="madre-quickstart__arrow" />}
-						</li>
+			<div>
+				<div class="jm-tabs" role="tablist" aria-label={es ? 'Sistema operativo' : 'Operating system'}>
+					{m.install.platforms.map((platform, index) => (
+						<button
+							id={`madre-tab-${platform.id}-${locale}`}
+							type="button"
+							role="tab"
+							aria-selected={index === 0 ? 'true' : 'false'}
+							aria-controls={`madre-panel-${platform.id}-${locale}`}
+							tabindex={index === 0 ? 0 : -1}
+							data-madre-os-tab={platform.id}
+						>
+							<img src={platform.id === 'macos' ? '/tools/apple.svg' : '/tools/linux.svg'} alt="" width="18" height="18" />
+							<span>{platform.label}</span>
+						</button>
 					))}
-				</ol>
-			</section>
-		</div>
-	</section>
-
-	<section class="madre-evidence" id={ids.evidence} aria-labelledby="madre-evidence-title">
-		<div class="madre-product__frame">
-			<header class="madre-section-head">
-				<p class="madre-product__eyebrow">{m.evidence.eyebrow}</p>
-				<div>
-					<h2 id="madre-evidence-title">{m.evidence.title}</h2>
-					<p>{m.evidence.text}</p>
 				</div>
-			</header>
-			<div class="madre-gallery__controls">
-				<button type="button" data-gallery-delta="-1"><Icon name="arrow-left" /> {m.gallery.previous}</button>
-				<button type="button" data-gallery-delta="1">{m.gallery.next} <Icon name="arrow-right" /></button>
-			</div>
-			<div class="madre-gallery" data-madre-gallery tabindex="0" aria-label={m.gallery.title}>
-				<figure class="madre-evidence__figure">
-					<img
-						src="/images/madre/room-0.4.0.webp"
-						width="3200"
-						height="2110"
-						alt={m.evidence.alt}
-						loading="eager"
-						decoding="async"
-						fetchpriority="high"
-					/>
-					<figcaption>{m.evidence.caption}</figcaption>
-					<p data-madre-explanatory>{es ? 'ALCANCE DE LA EVIDENCIA' : 'EVIDENCE BOUNDARY'} · {m.evidence.disclosure}</p>
-				</figure>
-				{m.gallery.slots.map((slot) => (
-					<MediaSlot id={slot.id} label={slot.title} note={slot.note} ratio={slot.ratio} variant="bleed" class="madre-gallery__slot" />
+				<div class="madre-install__command jm-command">
+					<span aria-hidden="true">$</span>
+					<code>{madreFacts.startCommand}</code>
+					<button type="button" data-copy-value={madreFacts.startCommand}>{m.install.copy}</button>
+				</div>
+				{m.install.platforms.map((platform, index) => (
+					<p id={`madre-panel-${platform.id}-${locale}`} class="jm-muted jm-note" role="tabpanel" aria-labelledby={`madre-tab-${platform.id}-${locale}`} hidden={index !== 0} data-madre-os-panel={platform.id}>
+						{platform.note}
+					</p>
 				))}
+				<ul class="jm-reqs">
+					{m.install.requirements.map((item) => <li>{item}</li>)}
+				</ul>
+				<p class="jm-status" role="status" aria-live="polite" data-copy-status></p>
 			</div>
 		</div>
-	</section>
-
-	<section class="madre-flow" id={ids.flow} aria-labelledby="madre-flow-title">
-		<div class="madre-product__frame">
-			<header class="madre-section-head">
-				<p class="madre-product__eyebrow">{m.flow.eyebrow}</p>
-				<div>
-					<h2 id="madre-flow-title">{m.flow.title}</h2>
-					<p>{m.flow.text}</p>
-				</div>
-			</header>
-			<ol class="madre-flow__steps">
-				{m.flow.steps.map((step) => (
+		<div class="jx-wrap">
+			<p class="jx-label jm-sub"><span class="jx-dot" aria-hidden="true"></span>{m.quickstart.eyebrow}</p>
+			<h3 id="madre-quickstart-title" class="jm-h3">{m.quickstart.title}</h3>
+			<ol class="jm-quick" aria-labelledby="madre-quickstart-title">
+				{m.quickstart.steps.map((step) => (
 					<li>
-						<span>{step.number}</span>
-						<h3>{step.title}</h3>
+						<span class="jx-mono">{step.number}</span>
+						<strong>{step.title}</strong>
 						<p>{step.text}</p>
+						{step.command && (
+							<div class="jm-code"><code>{step.command}</code><button type="button" data-copy-value={step.command}>{m.install.copy}</button></div>
+						)}
 					</li>
 				))}
 			</ol>
 		</div>
 	</section>
 
-	<section class="madre-permissions" id={ids.permissions} aria-labelledby="madre-permissions-title">
-		<div class="madre-product__frame">
-			<header class="madre-section-head madre-section-head--dark">
-				<p class="madre-product__eyebrow">{m.permissions.eyebrow}</p>
-				<div>
-					<h2 id="madre-permissions-title">{m.permissions.title}</h2>
-					<p>{m.permissions.text}</p>
-				</div>
-			</header>
-			<ol class="madre-permissions__rail">
-				{m.permissions.modes.map((mode) => (
-					<li>
-						<span>{mode.code}</span>
+	<section class="jm-showcase" id={ids.evidence} aria-labelledby="madre-evidence-title">
+		<div class="jx-wrap">
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{m.evidence.eyebrow}</p>
+			<h2 id="madre-evidence-title" class="jx-h2">{m.evidence.title}</h2>
+			<p class="jm-muted jm-lede">{m.evidence.text}</p>
+			<figure class="madre-evidence__figure jm-figure">
+				<img src="/images/madre/room-0.5.2.webp" width="1920" height="1080" loading="lazy" decoding="async" alt={m.evidence.alt} />
+				<figcaption><span class="jx-mono">{m.evidence.caption}</span></figcaption>
+			</figure>
+			<div class="jx-showcase__grid">
+				{clips.map((clip) => (
+					<article class:list={['jx-clip', `jx-clip--${clip.key}`]}>
+						<DemoVideo
+							demo={{ wide: `${V}/madre-${clip.key}`, tall: `${V}/madre-${clip.key}`, label: clip.label, alt: `${clip.label}. ${clip.title}` }}
+							locale={locale}
+							orientation="wide"
+							class="jx-clip__video"
+						/>
+						<div class="jx-clip__caption">
+							<p class="jx-mono">{clip.label}</p>
+							<h3>{clip.title}</h3>
+						</div>
+					</article>
+				))}
+			</div>
+			<figure class="jm-bento">
+				<img src={`${V}/madre-bento.webp`} width="1080" height="1920" loading="lazy" decoding="async" alt={es ? 'Resumen de MADRE en formato vertical: una sala para cuatro agentes, 496,894 tokens ahorrados en esta sala, cada agente sabe lo que dijo el anterior, nada cambia sin tu permiso y tu memoria se queda en tu computadora.' : 'MADRE summary in vertical format: one room for four agents, 496,894 tokens saved in this room, each agent knows what the previous one said, nothing changes without your say, and your memory stays on your machine.'} />
+				<figcaption>
+					<span class="jx-mono">{es ? 'Para redes · 9:16' : 'For social · 9:16'}</span>
+					<strong>{es ? 'Lo más destacado, en una imagen.' : 'The highlights, in one image.'}</strong>
+					<p class="jm-muted" data-madre-explanatory>{m.evidence.disclosure}</p>
+				</figcaption>
+			</figure>
+		</div>
+	</section>
+
+	<section class="jx-band" id={ids.flow} aria-labelledby="madre-flow-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{m.flow.eyebrow}</p>
+			<h2 id="madre-flow-title" class="jx-h2">{m.flow.title}</h2>
+			<p class="jm-muted jm-lede">{m.flow.text}</p>
+			<ol class="jx-steps">
+				{m.flow.steps.map((step) => (
+					<li><span class="jx-mono">{step.number}</span><strong>{step.title}</strong><p>{step.text}</p></li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<section class="jm-perms" id={ids.permissions} aria-labelledby="madre-permissions-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{m.permissions.eyebrow}</p>
+			<h2 id="madre-permissions-title" class="jx-h2">{m.permissions.title}</h2>
+			<p class="jm-muted jm-lede">{m.permissions.text}</p>
+			<ol class="jm-modes">
+				{m.permissions.modes.map((mode, index) => (
+					<li class={`jm-mode jm-mode--${index}`}>
+						<span class="jm-mode__code">{mode.code}</span>
 						<strong>{mode.name}</strong>
 						<p>{mode.text}</p>
 					</li>
 				))}
 			</ol>
-			<p class="madre-permissions__warning">{m.permissions.warning}</p>
+			<p class="jm-warning">{m.permissions.warning}</p>
 		</div>
 	</section>
 
-	<section class="madre-capabilities" aria-labelledby="madre-capabilities-title">
-		<div class="madre-product__frame">
-			<header class="madre-section-head">
-				<p class="madre-product__eyebrow">{m.capabilities.eyebrow}</p>
-				<h2 id="madre-capabilities-title">{m.capabilities.title}</h2>
-			</header>
-			<div class="madre-capabilities__list">
+	<section class="jx-band" aria-labelledby="madre-capabilities-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{m.capabilities.eyebrow}</p>
+			<h2 id="madre-capabilities-title" class="jx-h2">{m.capabilities.title}</h2>
+			<ul class="jx-points jm-caps">
 				{m.capabilities.items.map((item, index) => (
-					<article>
-						<span>{String(index + 1).padStart(2, '0')} · {item.label}</span>
-						<h3>{item.title}</h3>
-						<p>{item.text}</p>
-					</article>
+					<li>
+						<Icon name={(['chats', 'layers', 'bolt', 'shield'] as const)[index] ?? 'cube'} size="md" />
+						<strong>{item.title}</strong>
+						<span>{item.text}</span>
+					</li>
 				))}
-			</div>
+			</ul>
 		</div>
 	</section>
 
-	<section class="madre-details">
-		<div class="madre-product__frame madre-details__grid">
+	<section class="jm-details">
+		<div class="jx-wrap jm-details__grid">
 			<section aria-labelledby="madre-compatibility-title">
-				<p class="madre-product__eyebrow">{m.compatibility.eyebrow}</p>
-				<h2 id="madre-compatibility-title">{m.compatibility.title}</h2>
-				<p class="madre-details__intro">{m.compatibility.text}</p>
-				<dl>
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{m.compatibility.eyebrow}</p>
+				<h2 id="madre-compatibility-title" class="jm-h3">{m.compatibility.title}</h2>
+				<p class="jm-muted">{m.compatibility.text}</p>
+				<dl class="jm-dl">
 					{m.compatibility.items.map((item) => (
 						<div><dt>{item.term}</dt><dd>{item.detail}</dd></div>
 					))}
 				</dl>
 			</section>
 			<section id={ids.resources} aria-labelledby="madre-resources-title">
-				<p class="madre-product__eyebrow">{m.resources.eyebrow}</p>
-				<h2 id="madre-resources-title">{m.resources.title}</h2>
-				<ul>
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{m.resources.eyebrow}</p>
+				<h2 id="madre-resources-title" class="jm-h3">{m.resources.title}</h2>
+				<ul class="jm-links">
 					{m.resources.items.map((item) => (
 						<li>
 							<a href={item.href} target="_blank" rel="noreferrer">
@@ -278,19 +247,20 @@ const softwareJson = {
 		</div>
 	</section>
 
-	<section class="madre-closing" aria-labelledby="madre-closing-title">
-		<div class="madre-product__frame madre-closing__grid">
-			<header>
-				<p class="madre-product__eyebrow">{m.closing.eyebrow}</p>
-				<h2 id="madre-closing-title">{m.closing.title}</h2>
-				<p>{m.closing.text}</p>
-			</header>
-			<div class="madre-closing__actions">
-				<button type="button" class="madre-closing__primary" data-copy-value={madreFacts.startCommand}>{m.closing.primary}</button>
-				<a href={madreFacts.github} target="_blank" rel="noreferrer">{m.closing.secondary}<Icon name="arrow-up-right" /></a>
-				<a href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.contact}<Icon name="arrow-right" /></a>
-				<a href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.ahp}<Icon name="arrow-right" /></a>
+	<section class="jx-close" aria-labelledby="madre-closing-title">
+		<div class="jx-close__card">
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{m.closing.eyebrow}</p>
+			<h2 id="madre-closing-title" class="jx-close__title jm-close__title">{m.closing.title}</h2>
+			<p>{m.closing.text}</p>
+			<p class="jx-command"><code><span>$</span> {madreFacts.startCommand}</code></p>
+			<div class="jx-actions jx-actions--center">
+				<button type="button" class="jx-btn jx-btn--madre" data-copy-value={madreFacts.startCommand}>{m.closing.primary}</button>
+				<a class="jx-btn jx-btn--ghost" href={madreFacts.github} target="_blank" rel="noreferrer">{m.closing.secondary}<Icon name="arrow-up-right" /></a>
 			</div>
+			<p class="jm-close__more">
+				<a class="jx-link" href={routes[locale].contact} data-analytics-event="click_madre_contact">{m.closing.contact}<Icon name="arrow-right" /></a>
+				<a class="jx-link" href={routes[locale].ahpAtlas} data-analytics-event="click_madre_ahp">{m.closing.ahp}<Icon name="arrow-right" /></a>
+			</p>
 		</div>
 	</section>
 	<script type="application/ld+json" is:inline set:html={JSON.stringify(softwareJson)} />

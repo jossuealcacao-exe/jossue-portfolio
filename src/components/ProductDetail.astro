@@ -1,13 +1,15 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { CommercialProduct } from '../data/products';
-import { commercialProducts, productHref } from '../data/products';
+import { commercialProducts, productDemo, productHref } from '../data/products';
+import DemoVideo from './DemoVideo.astro';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
 import ChapterNav from './surface/ChapterNav.astro';
 import Gallery from './surface/Gallery.astro';
 import Panel from './surface/Panel.astro';
+import { caseCover, workImage } from '../data/workImages';
 import MediaSlot from './surface/MediaSlot.astro';
 import Showcase from './surface/Showcase.astro';
 import Specs from './surface/Specs.astro';
@@ -25,8 +27,13 @@ const proofCases = product.proofSlugs.flatMap((slug) => {
 	const entry = cases.find((item) => item.data.slug === slug);
 	return entry ? [entry] : [];
 });
+// «Cómo avanzamos» muestra una pantalla de trabajo del proyecto, distinta de la portada.
+const scopeKeys = proofCases.flatMap((entry) => (entry.data.media ?? []).map((item) => item.key)).filter((key) => workImage(key));
+const scopeKey = scopeKeys[1] ?? scopeKeys[0];
+const scopeImage = (scopeKey && workImage(scopeKey)) ?? caseCover(product.proofSlugs[0] ?? product.visualSlug);
 const siblingProducts = commercialProducts.filter((item) => item.slug !== product.slug).slice(0, 3);
 const contactHref = `${routes[locale].contact}?producto=${product.slug}`;
+const demo = productDemo(product, locale);
 
 const chapters = [
 	{ href: '#encaje', label: es ? 'Encaje' : 'Fit' },
@@ -68,8 +75,8 @@ const specGroups = [
 			{
 				term: es ? 'Precio' : 'Price',
 				detail: es
-					? 'No publicado: el alcance se define en conversación antes de cotizar.'
-					: 'Not published: scope is defined in conversation before quoting.',
+					? 'Te lo doy después de una llamada corta, cuando sepa qué necesitas.'
+					: 'I share it after a short call, once I know what you need.',
 			},
 		],
 	},
@@ -92,23 +99,27 @@ const specGroups = [
 				{es ? 'Hablar sobre este producto' : 'Discuss this product'}
 				<Icon name="arrow-right" />
 			</a>
-			<a class="pill pill--soft" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
+			<a class="pill pill--ghost" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
 		</div>
 		{product.status && <p class="pdp__status">{product.status[locale]}</p>}
 	</Stage>
 
-	<Panel
+	{demo ? (
+		<div class="jx-wrap pdp__demo"><DemoVideo demo={demo} locale={locale} /></div>
+	) : <Panel
+		src={caseCover(product.visualSlug)}
+		alt={es ? `Proyecto relacionado con ${product.title[locale]}` : `Project related to ${product.title[locale]}`}
 		slotId={`product-${product.slug}-hero`}
 		ratio="21:9"
 		label={es ? `Apertura de ${product.title[locale]}` : `${product.title[locale]} opening`}
 		note={es
 			? 'A sangre, de borde a borde. La imagen que sostiene la promesa: el entregable real, la pantalla de trabajo o la escena donde este producto ocurre.'
 			: 'Full bleed, edge to edge. The image that carries the promise: the real deliverable, the working screen, or the scene where this product happens.'}
-	/>
+	/>}
 
 	<Stage id="alcance" size="loose">
-		<p class="stage__eyebrow">01 · {es ? 'Qué incluye' : 'What is included'}</p>
-		<h2 class="stage__title">{es ? 'Lo necesario para avanzar sin burocracia.' : 'What is needed to move forward without bureaucracy.'}</h2>
+		<p class="stage__eyebrow">01 · {product.title[locale]}</p>
+		<h2 class="stage__title">{es ? 'Qué incluye.' : 'What is included.'}</h2>
 		<Gallery label={es ? 'Lo que incluye este producto' : 'What this product includes'} class="pdp__gallery">
 			{product.included[locale].map((item, index) => (
 				<article class="gallery-card">
@@ -120,19 +131,22 @@ const specGroups = [
 	</Stage>
 
 	<Stage id="encaje" tone="ink" size="loose">
-		<p class="stage__eyebrow">02 · {es ? 'Para quién es' : 'Who it is for'}</p>
-		<h2 class="stage__title">{es ? 'Una solución con un punto de partida claro.' : 'A solution with a clear starting point.'}</h2>
+		<p class="stage__eyebrow">02 · {product.title[locale]}</p>
+		<h2 class="stage__title">{es ? 'Para quién es.' : 'Who it is for.'}</h2>
 		<p class="stage__lede">{product.idealFor[locale]}</p>
 	</Stage>
 
 	<Stage id="recorrido" size="loose">
-		<p class="stage__eyebrow">03 · {es ? 'Recorrido' : 'Process'}</p>
-		<h2 class="stage__title">{es ? 'Un proceso corto, visible y revisable.' : 'A short, visible, reviewable process.'}</h2>
+		<p class="stage__eyebrow">03 · {product.title[locale]}</p>
+		<h2 class="stage__title">{es ? 'Cómo avanzamos.' : 'How we move forward.'}</h2>
 		<Showcase class="pdp__showcase showcase--compact">
 			<MediaSlot
 				slot="media"
 				id={`product-${product.slug}-scope`}
 				ratio="4:3"
+				src={scopeImage}
+				focus="50% 0%"
+				alt={es ? `Entregable de ${product.title[locale]}` : `${product.title[locale]} deliverable`}
 				label={es ? 'El entregable' : 'The deliverable'}
 				note={es
 					? 'Queda fija mientras se lee el recorrido. Una sola pieza: el documento, el tablero o la interfaz que se entrega.'
@@ -147,22 +161,11 @@ const specGroups = [
 		</Showcase>
 	</Stage>
 
-	<Panel
-		tone="ink"
-		overlay
-		slotId={`product-${product.slug}-statement`}
-		ratio="21:9"
-		label={es ? 'Panel inmersivo' : 'Immersive panel'}
-		note={es
-			? 'A sangre y oscura, con la frase impresa encima. Debe tolerar texto claro sobre ella: sin zonas muy luminosas al centro.'
-			: 'Full bleed and dark, with the line printed over it. It must tolerate light text: no bright areas in the centre.'}
-		title={es ? 'Sin evidencia, no es una mejora: es una opinión.' : 'Without evidence it is not an improvement, it is an opinion.'}
-	/>
 
 	{proofCases.length > 0 && (
 		<Stage id="pruebas" size="loose">
-			<p class="stage__eyebrow">04 · {es ? 'Casos relacionados' : 'Related cases'}</p>
-			<h2 class="stage__title">{es ? 'Trabajo que puedes revisar.' : 'Work you can review.'}</h2>
+			<p class="stage__eyebrow">04 · {product.title[locale]}</p>
+			<h2 class="stage__title">{es ? 'Proyectos relacionados.' : 'Related projects.'}</h2>
 			<div class="pdp__proof">
 				{proofCases.map((entry) => {
 					const presented = casePresentation(entry.data.slug, locale);
@@ -171,6 +174,8 @@ const specGroups = [
 						<MediaSlot
 							id={`product-${product.slug}-proof-${entry.data.slug}`}
 							ratio="4:3"
+							src={caseCover(entry.data.slug)}
+							alt={es ? `Portada de ${entry.data.title}` : `${entry.data.title} cover`}
 							variant="soft"
 							label={es ? `Portada de ${entry.data.title}` : `${entry.data.title} cover`}
 							note={es ? 'Captura real del proyecto.' : 'Real capture of the project.'}
@@ -188,8 +193,8 @@ const specGroups = [
 	)}
 
 	<Stage id="detalle" size="loose">
-		<p class="stage__eyebrow">05 · {es ? 'Detalle' : 'Specs'}</p>
-		<h2 class="stage__title">{es ? 'Todo el detalle, cuando lo quieras ver.' : 'Every detail, when you want to see it.'}</h2>
+		<p class="stage__eyebrow">05 · {product.title[locale]}</p>
+		<h2 class="stage__title">{es ? 'La ficha completa.' : 'The full spec sheet.'}</h2>
 		<div class="pdp__specs"><Specs groups={specGroups} /></div>
 	</Stage>
 
@@ -198,8 +203,8 @@ const specGroups = [
 		<h2 class="stage__title">{es ? 'Cuéntame qué estás intentando resolver.' : 'Tell me what you are trying to solve.'}</h2>
 		<p class="stage__lede">
 			{es
-				? 'Con contexto suficiente puedo decirte si este producto encaja, qué falta definir o si conviene empezar por otra ruta.'
-				: 'With enough context, I can tell you whether this product fits, what still needs definition, or whether another route makes more sense.'}
+				? 'Cuéntame tu caso y te digo si esto te sirve, qué falta definir o si conviene empezar por otro lado.'
+				: 'Tell me about your case and I will tell you whether this fits, what still needs defining, or whether to start somewhere else.'}
 		</p>
 		<div class="stage__actions">
 			<a class="pill pill--soft" href={contactHref} data-analytics-event="contact_product_bottom">
@@ -212,7 +217,7 @@ const specGroups = [
 	<div class="action-bar">
 		<span class="action-bar__label">
 			<strong>{product.title[locale]}</strong>
-			<span>{es ? 'El alcance se define en conversación' : 'Scope is defined in conversation'}</span>
+			<span>{es ? 'Lo definimos en una llamada corta' : 'We define it in a short call'}</span>
 		</span>
 		<a class="pill" href={contactHref} data-analytics-event="contact_product_bar">
 			{es ? 'Hablar' : 'Talk'}

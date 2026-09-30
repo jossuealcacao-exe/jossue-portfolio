@@ -61,10 +61,13 @@ const product = pageKey === 'product' ? commercialProduct(props.productSlug) : u
 if (pageKey === 'product' && !product) throw new Error(`Unknown product: ${props.productSlug}`);
 const meta = pageKey === 'case' || pageKey === 'product' ? undefined : metadata[locale][pageKey];
 const publicCase = entry ? casePresentation(entry.data.slug, locale) : undefined;
+// Títulos con lo que es cada cosa, no solo su nombre (mejor para buscadores y respuestas de IA).
+const kindOf = (category: string) => category.split(' · ').filter((part) => !/^(Producto propio|Own product|Producto estrella|Flagship product|Servicio|Service)$/i.test(part))[0] ?? category;
+const productKind = product ? kindOf(product.category[locale]) : '';
 const title = entry
-	? `${entry.data.title} — ${locale === 'es' ? 'Proyecto' : 'Project'} — Jossue Alcalá`
+	? `${entry.data.title.split(' — ')[0]} — ${kindOf(publicCase?.category ?? entry.data.client)} · Jossue Alcalá`
 	: product
-		? `${product.title[locale]} — Jossue Alcalá`
+		? `${product.title[locale]} — ${productKind} · Jossue Alcalá`
 		: meta!.title;
 const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.description;
 ---
@@ -78,14 +81,18 @@ const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.des
 	caseStudy={entry ? { title: entry.data.title, client: entry.data.client, role: entry.data.role, stack: entry.data.stack } : undefined}
 	socialImage={pageKey === 'madre'
 		? {
-				src: '/images/madre/room-0.4.0.webp',
+				src: '/images/og/product-madre.jpg',
 				alt: locale === 'es'
-					? 'Interfaz real de MADRE 0.4.0 con Codex y Claude compartiendo una conversación.'
-					: 'Real MADRE 0.4.0 interface with Codex and Claude sharing one conversation.',
-				width: 3200,
-				height: 2110,
+					? 'La sala de MADRE 0.5.2: OpenCode responde después de un relevo desde Gemini, con ASH encendido.'
+					: 'MADRE 0.5.2’s room: OpenCode replies after a handoff from Gemini, with ASH on.',
+				width: 1200,
+				height: 630,
 			}
-		: undefined}
+		: entry
+			? { src: `/images/og/case-${entry.data.slug}.jpg`, alt: locale === 'es' ? `Portada de ${entry.data.title}` : `${entry.data.title} home page`, width: 1200, height: 630 }
+			: product
+				? { src: `/images/og/product-${product.slug}.jpg`, alt: product.promise[locale], width: 1200, height: 630 }
+				: undefined}
 >
 	{
 		entry ? (

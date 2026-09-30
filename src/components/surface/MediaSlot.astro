@@ -27,10 +27,21 @@ interface Props {
 	note?: string;
 	variant?: 'sunken' | 'soft' | 'bleed';
 	class?: string;
+	/** Imagen definitiva. Con ella el campo se vuelve la imagen, con la misma proporción. */
+	src?: string | null;
+	alt?: string;
+	/** Posición del recorte dentro del campo (object-position). */
+	focus?: string;
 }
 
-const { id, label, ratio = '16:9', note, variant = 'sunken', class: extra } = Astro.props;
+const { id, label, ratio = '16:9', note, variant = 'sunken', class: extra, src, alt, focus = '50% 0%' } = Astro.props;
 ---
+
+{src ? (
+<figure class:list={['slot', 'slot--image', variant !== 'sunken' && `slot--${variant}`, extra]} style={`--slot-ratio:${RATIOS[ratio]};`} data-media-image={id} data-slot-ratio={ratio}>
+	<img src={src} alt={alt ?? label} loading="lazy" decoding="async" style={`object-position:${focus}`} />
+</figure>
+) : (
 
 <figure
 	class:list={['slot', variant !== 'sunken' && `slot--${variant}`, extra]}
@@ -45,3 +56,4 @@ const { id, label, ratio = '16:9', note, variant = 'sunken', class: extra } = As
 	</figcaption>
 	<span class="slot__ratio" aria-hidden="true">{ratio}</span>
 </figure>
+)}

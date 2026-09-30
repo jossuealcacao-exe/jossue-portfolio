@@ -1,0 +1,30 @@
+---
+// Logos de las marcas con las que he trabajado, en una sola tinta clara para el fondo oscuro.
+// «marquee» corre despacio en la portada (se detiene al pasar el cursor y con movimiento
+// reducido); «grid» es la versión quieta de «Sobre mí».
+import { brandStrip } from '../data/brands';
+import type { Locale } from '../data/i18n';
+
+interface Props {
+	locale: Locale;
+	variant?: 'marquee' | 'grid';
+	label?: string;
+}
+
+const { locale, variant = 'grid', label } = Astro.props;
+const es = locale === 'es';
+const brands = brandStrip();
+const title = label ?? (es ? 'Marcas con las que he trabajado' : 'Brands I have worked with');
+const logo = (brand: (typeof brands)[number], hidden = false) => ({ brand, hidden });
+const rows = variant === 'marquee' ? [...brands.map((b) => logo(b)), ...brands.map((b) => logo(b, true))] : brands.map((b) => logo(b));
+---
+
+<div class={`jx-logos jx-logos--${variant}`} data-brand-logos={variant}>
+	<ul class="jx-logos__track brand-strip" aria-label={title}>
+		{rows.map(({ brand, hidden }) => (
+			<li class="brand-logo" aria-hidden={hidden ? 'true' : undefined} style={`--logo-h:${brand.stripHeight}rem`}>
+				<img src={brand.mono ?? brand.src} alt={hidden ? '' : brand.name[locale]} width={brand.width} height={brand.height} loading="lazy" decoding="async" />
+			</li>
+		))}
+	</ul>
+</div>

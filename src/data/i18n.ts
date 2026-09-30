@@ -45,78 +45,78 @@ export const navigation = {
 export const metadata: Record<Locale, Record<PageKey, { title: string; description: string }>> = {
 	es: {
 		home: {
-			title: 'Jossue Alcalá — Desarrollo web, Shopify y UX/CRO',
-			description: 'Desarrollo y optimización de experiencias Shopify con UX orientada a CRO, IA aplicada y visión comercial.',
+			title: 'Jossue Alcalá — Ecommerce, Shopify e IA aplicada',
+			description: 'Dirijo el ecommerce de WU Nutrition y programo tiendas Shopify, sitios y productos con IA como MADRE, AHP+ y Daniela. Guadalajara, México.',
 		},
 		products: {
-			title: 'Productos y soluciones — Jossue Alcalá',
-			description: 'Auditoría ecommerce, CRO, Shopify, desarrollo web e IA aplicada convertidos en productos claros y contactables.',
+			title: 'Productos y servicios — Jossue Alcalá',
+			description: 'MADRE, AHP+, Bloqio Builder, Daniela y Miawseo con su demo en video, más desarrollo web e IA aplicada para tu negocio.',
 		},
 		work: {
-			title: 'Trabajo seleccionado — Jossue Alcalá',
-			description: 'Proyectos de Shopify, ecommerce, producto digital e IA aplicada para marcas y productos independientes.',
+			title: 'Casos: Shopify, ecommerce e IA — Jossue Alcalá',
+			description: 'Nueve proyectos con capturas reales: tiendas que dirijo, productos que construí y conceptos, con qué pasaba, qué hice y qué cambió.',
 		},
 		services: {
-			title: 'Servicios — Jossue Alcalá',
-			description: 'Desarrollo Shopify, estrategia UX/CRO, optimización ecommerce, analítica, automatización e IA aplicada.',
+			title: 'Servicios de Shopify, CRO e IA — Jossue Alcalá',
+			description: 'Tiendas Shopify, diagnóstico de conversión, velocidad, medición, IA aplicada y apps a la medida. Diseño y me quedo a construirlo contigo.',
 		},
 		ai: {
-			title: 'IA y sistemas — Jossue Alcalá',
-			description: 'Productos, automatizaciones y sistemas de IA diseñados para integrarse con operaciones ecommerce reales.',
+			title: 'IA aplicada y AI Dev — Jossue Alcalá',
+			description: 'Asistentes con datos reales y permisos, agentes de código y productos con IA en uso: MADRE, AHP+, Daniela y Jossue AI.',
 		},
 		about: {
-			title: 'Acerca — Jossue Alcalá',
-			description: 'Trayectoria de Jossue Alcalá en ecommerce, Shopify, growth, producto digital, paid media e IA aplicada.',
+			title: 'Sobre mí: Head of E-commerce y AI Dev — Jossue Alcalá',
+			description: 'Más de 8 años en growth, paid media, SEO y CRO. Dirijo el ecommerce de WU Nutrition y Come Verde y construyo productos con IA. CV en PDF.',
 		},
 		contact: {
-			title: 'Contacto — Jossue Alcalá',
-			description: 'Correo, LinkedIn y WhatsApp para hablar sobre Shopify, UX/CRO, desarrollo web o producto.',
+			title: 'Contacto — Jossue Alcalá · Shopify, CRO e IA',
+			description: 'Escríbeme por correo, WhatsApp o el formulario, o pregúntale a Jossue AI. Contesto en menos de un día hábil.',
 		},
 		ahpAtlas: {
 			title: 'AHP+ 1.4.1 — Continuidad verificable y Command Atlas',
-			description: 'Entiende, instala y usa AHP+ 1.4.1 con evidencia real, ejemplos humanos y comandos para proyectos que cambian de asistente.',
+			description: 'Entiende, instala y usa AHP+ 1.4.1: la memoria del proyecto en tu repositorio para cambiar de asistente sin empezar de cero.',
 		},
 		madre: {
-			title: 'MADRE 0.4.0 — Una sala local para tus agentes',
-			description: 'Instala MADRE en macOS o Linux y coordina Codex, Claude Code, Gemini CLI y OpenCode con memoria compartida, permisos explícitos y control humano.',
+			title: 'MADRE 0.5.2 — Tus agentes de código en una sala',
+			description: 'MADRE coordina Codex, Claude Code, Gemini CLI y OpenCode con memoria compartida, permisos explícitos y control humano. Gratis y abierto.',
 		},
 	},
 	en: {
 		home: {
-			title: 'Jossue Alcalá — Web development, Shopify, and UX/CRO',
-			description: 'Shopify development and optimization with CRO-oriented UX, applied AI, and commercial perspective.',
+			title: 'Jossue Alcalá — Ecommerce, Shopify and applied AI',
+			description: 'I lead ecommerce at WU Nutrition and build Shopify stores, websites and AI products like MADRE, AHP+ and Daniela. Guadalajara, Mexico.',
 		},
 		products: {
-			title: 'Products and solutions — Jossue Alcalá',
-			description: 'Ecommerce audits, CRO, Shopify, web development, and applied AI shaped into clear, contact-ready products.',
+			title: 'Products and services — Jossue Alcalá',
+			description: 'MADRE, AHP+, Bloqio Builder, Daniela and Miawseo with video demos, plus web development and applied AI for your business.',
 		},
 		work: {
-			title: 'Selected work — Jossue Alcalá',
-			description: 'Shopify, ecommerce, digital product, and applied AI work for brands and independent products.',
+			title: 'Cases: Shopify, ecommerce and AI — Jossue Alcalá',
+			description: 'Nine projects with real screenshots: stores I lead, products I built and concepts, with what was going on, what I did and what changed.',
 		},
 		services: {
-			title: 'Services — Jossue Alcalá',
-			description: 'Shopify development, UX/CRO strategy, ecommerce optimization, analytics, automation, and applied AI.',
+			title: 'Shopify, CRO and AI services — Jossue Alcalá',
+			description: 'Shopify stores, conversion diagnosis, speed, measurement, applied AI and custom apps. I design it and stay to build it with you.',
 		},
 		ai: {
-			title: 'AI and systems — Jossue Alcalá',
-			description: 'AI products, automations, and systems designed for real ecommerce operations.',
+			title: 'Applied AI and AI Dev — Jossue Alcalá',
+			description: 'Assistants with real data and permissions, coding agents and AI products in use: MADRE, AHP+, Daniela and Jossue AI.',
 		},
 		about: {
-			title: 'About — Jossue Alcalá',
-			description: 'Jossue Alcalá’s experience across ecommerce, Shopify, growth, digital product, paid media, and applied AI.',
+			title: 'About: Head of E-commerce and AI Dev — Jossue Alcalá',
+			description: '8+ years across growth, paid media, SEO and CRO. I lead ecommerce at WU Nutrition and Come Verde and build AI products. PDF CV.',
 		},
 		contact: {
-			title: 'Contact — Jossue Alcalá',
-			description: 'Email, LinkedIn, and WhatsApp for Shopify, UX/CRO, web development, or product conversations.',
+			title: 'Contact — Jossue Alcalá · Shopify, CRO and AI',
+			description: 'Write by email, WhatsApp or the form, or ask Jossue AI. I reply within one business day.',
 		},
 		ahpAtlas: {
 			title: 'AHP+ 1.4.1 — Verifiable continuity and Command Atlas',
-			description: 'Understand, install, and use AHP+ 1.4.1 with real evidence, human examples, and commands for projects that move between assistants.',
+			description: 'Understand, install and use AHP+ 1.4.1: project memory in your repository so you can switch assistants without starting over.',
 		},
 		madre: {
-			title: 'MADRE 0.4.0 — A local room for your agents',
-			description: 'Install MADRE on macOS or Linux and coordinate Codex, Claude Code, Gemini CLI, and OpenCode with shared memory, explicit permissions, and human control.',
+			title: 'MADRE 0.5.2 — Your coding agents in one room',
+			description: 'MADRE coordinates Codex, Claude Code, Gemini CLI and OpenCode with shared memory, explicit permissions and human control. Free and open.',
 		},
 	},
 };

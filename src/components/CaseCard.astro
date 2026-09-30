@@ -2,6 +2,8 @@
 import type { CollectionEntry } from 'astro:content';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
+import { brandForCaseSlug } from '../data/brands';
+import { caseCover } from '../data/workImages';
 import ProjectVisual from './ProjectVisual.astro';
 
 interface Props {
@@ -18,12 +20,22 @@ const category = presentation?.category ?? (es ? 'Proyecto digital' : 'Digital p
 const summary = presentation?.summary ?? entry.data.summary;
 // Fantasy name only (e.g. "AHP+", "MIAWSEO") — drop the descriptive tail after the em dash.
 const displayName = entry.data.title.split('—')[0].trim();
+const cover = caseCover(entry.data.slug);
+const brand = brandForCaseSlug(entry.data.slug);
 ---
 
 <article class="portfolio-entry">
 	<a class="portfolio-entry__link" href={href} data-analytics-event="view_case_study">
 		<div class="portfolio-entry__media">
-			<ProjectVisual slug={entry.data.slug} title={entry.data.title} stack={entry.data.stack} locale={locale} priority={index === 0} />
+			{cover ? (
+				<figure class="portfolio-shot" data-case-cover={entry.data.slug}>
+					<span class="portfolio-shot__bar" aria-hidden="true"><i></i><i></i><i></i></span>
+					<img src={cover} alt={es ? `Portada de ${displayName}` : `${displayName} home page`} width="1600" height="1000" loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+					{brand && <span class="portfolio-shot__logo" aria-hidden="true" style={`--logo-h:${brand.stripHeight}rem`}><img src={brand.mono ?? brand.src} alt="" width={brand.width} height={brand.height} loading="lazy" decoding="async" /></span>}
+				</figure>
+			) : (
+				<ProjectVisual slug={entry.data.slug} title={entry.data.title} stack={entry.data.stack} locale={locale} priority={index === 0} />
+			)}
 		</div>
 		<div class="portfolio-entry__copy">
 			<p class="portfolio-entry__meta">

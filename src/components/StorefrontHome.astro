@@ -1,12 +1,19 @@
 ---
+// Portada con el sistema de madre.run (MADRE UX): negro #050605, grafito en las bandas,
+// superficies de radio grande sin bordes, rótulos mono. El acento del sitio es marfil;
+// el verde fósforo queda solo para MADRE, el producto estrella.
 import type { CollectionEntry } from 'astro:content';
+import { brandForCaseSlug } from '../data/brands';
+import { caseCover } from '../data/workImages';
+import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
-import { commercialProducts, productHref } from '../data/products';
-import { profileCopy } from '../data/profile';
-import FlagshipHeroCarousel from './FlagshipHeroCarousel.astro';
-import Icon from './Icon.astro';
-import MediaSlot from './surface/MediaSlot.astro';
-import Stage from './surface/Stage.astro';
+import { commercialProducts, featuredProducts, otherProducts, productDemo, productHref } from '../data/products';
+import AiDevSpotlight from './AiDevSpotlight.astro';
+import AiInvite from './AiInvite.astro';
+import BrandLogos from './BrandLogos.astro';
+import DemoVideo from './DemoVideo.astro';
+import HeroLoop from './HeroLoop.astro';
+import Icon, { type IconName } from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -15,154 +22,276 @@ interface Props {
 
 const { locale, cases } = Astro.props;
 const es = locale === 'es';
-const about = profileCopy(locale);
 const madre = commercialProducts.find((product) => product.slug === 'madre');
 if (!madre) throw new Error('MADRE product is required');
-const secondaryProducts = commercialProducts.filter((product) => product.slug !== 'madre');
+const others = otherProducts;
+const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
+const madreDemo = productDemo(madre, locale);
+const productIcons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
+const outside: Record<string, { href: string; label: string }> = {
+	'ahp-plus': { href: 'https://github.com/jossuealcacao-exe/ahp_plus', label: 'GitHub' },
+	daniela: { href: 'https://wunutrition.com/', label: es ? 'Verla en wunutrition.com' : 'See it on wunutrition.com' },
+	'bloqio-builder': { href: 'https://bloqio.app/', label: 'bloqio.app' },
+	miawseo: { href: 'https://github.com/jossuealcacao-exe/miawseo', label: 'GitHub' },
+};
 
-const caseSlots = [
-	{ key: 'wu-nutrition', label: 'WU', ratio: '16:9' as const, kind: es ? 'Ecommerce · IA' : 'Ecommerce · AI' },
-	{ key: 'come-verde', label: 'COME VERDE', ratio: '4:5' as const, kind: es ? 'Producto · Growth' : 'Product · Growth' },
-	{ key: 'hp', label: 'HP', ratio: '3:2' as const, kind: es ? 'Experiencia · Ecommerce' : 'Experience · Ecommerce' },
-	{ key: 'tdi', label: 'TDI', ratio: '4:5' as const, kind: es ? 'Experiencia · Digital' : 'Experience · Digital' },
-].map((item) => ({ ...item, entry: cases.find((entry) => entry.data.slug === item.key) }));
+const selected = ['wu-nutrition', 'come-verde', 'la-carniceria-virtual', 'bloqio-cro-apps']
+	.map((slug) => cases.find((entry) => entry.data.slug === slug))
+	.filter((entry): entry is CollectionEntry<'cases'> => Boolean(entry));
+
+const MADRE_RUN = 'https://madre.run/';
+const V = '/videos/madre';
+
+const facts = es
+	? [['+8 años', 'en ecommerce, growth y producto digital'], ['5', 'productos míos, entre ellos MADRE y AHP+'], ['9', 'proyectos documentados, con lo que salió bien y lo que no']]
+	: [['8+ years', 'in ecommerce, growth and digital product'], ['5', 'products of my own, MADRE and AHP+ among them'], ['9', 'documented projects, with what worked and what did not']];
+
+const madrePoints: [IconName, string, string][] = es
+	? [
+			['chats', 'Una sala, cuatro agentes.', 'Codex, Claude Code, Gemini CLI y OpenCode leen la misma conversación.'],
+			['layers', 'No se pierde el hilo.', 'Cada agente recibe lo que se dijo antes y la sala recuerda lo que se decidió.'],
+			['shield', 'Nada cambia sin tu permiso.', 'Para editar, escribes el nombre del proyecto. Cada cambio se puede deshacer.'],
+			['bolt', 'Gasta menos tokens.', 'En una sala de prueba ahorró 496,894 tokens en siete turnos.'],
+		]
+	: [
+			['chats', 'One room, four agents.', 'Codex, Claude Code, Gemini CLI and OpenCode read the same conversation.'],
+			['layers', 'Nothing gets lost.', 'Each agent receives what was said before, and the room remembers what was decided.'],
+			['shield', 'Nothing changes without your say.', 'To edit, you type the project name. Every change can be undone.'],
+			['bolt', 'Fewer tokens spent.', 'In a test room it saved 496,894 tokens over seven turns.'],
+		];
+
+const showcase = es
+	? [
+			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Anuncio · 30 s', title: 'Lo más destacado, en medio minuto.' },
+			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'Contexto propio, seguridad y memoria.' },
+			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Cuatro agentes construyen una app y un módulo.' },
+		]
+	: [
+			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Ad · 30 s', title: 'The highlights, in half a minute.' },
+			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'Own context, security and memory.' },
+			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Four agents build an app and a module.' },
+		];
 
 const method = es
 	? [
-			['01', 'Entender', 'El problema, el negocio y la decisión que importa.'],
-			['02', 'Diseñar', 'Una dirección clara antes de multiplicar pantallas.'],
-			['03', 'Construir', 'Producto, web e IA llevados a una entrega operable.'],
-			['04', 'Comprobar', 'QA, evidencia y control humano antes de darlo por hecho.'],
+			['01', 'Entender', 'Qué quieres lograr y qué te está frenando.'],
+			['02', 'Diseñar', 'Una dirección clara antes de hacer pantallas.'],
+			['03', 'Construir', 'La tienda, el sitio o la herramienta, funcionando.'],
+			['04', 'Comprobar', 'Pruebas y evidencia antes de darlo por terminado.'],
 		]
 	: [
-			['01', 'Understand', 'The problem, the business, and the decision that matters.'],
-			['02', 'Design', 'A clear direction before multiplying screens.'],
-			['03', 'Build', 'Product, web, and AI brought into an operable delivery.'],
-			['04', 'Verify', 'QA, evidence, and human control before calling it done.'],
+			['01', 'Understand', 'What you want to achieve and what is holding you back.'],
+			['02', 'Design', 'A clear direction before making screens.'],
+			['03', 'Build', 'The store, the site or the tool, working.'],
+			['04', 'Verify', 'Tests and evidence before calling it done.'],
 		];
 ---
 
-<article class="home-surface" data-storefront-home>
-	<FlagshipHeroCarousel locale={locale} />
+<article class="jx-home" data-storefront-home>
+	<div class="jx-page-hero" data-hero="home">
+		<HeroLoop name="home" />
+		<section class="jx-hero" aria-labelledby="jx-hero-title">
+		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>Jossue Alcalá · {es ? 'Guadalajara, México' : 'Guadalajara, Mexico'}</p>
+		<h1 id="jx-hero-title" class="jx-hero__title">
+			<span>{es ? 'Construyo productos digitales' : 'I build digital products'}</span>
+			<span class="jx-soft">{es ? 'que venden y se pueden mantener.' : 'that sell and stay maintainable.'}</span>
+		</h1>
+		<p class="jx-hero__lede">
+			{es
+				? 'Dirijo el ecommerce de WU Nutrition y programo tiendas en Shopify, sitios y herramientas con IA. Lo que te entrego lo puede operar tu equipo sin depender de mí.'
+				: 'I lead ecommerce at WU Nutrition and build Shopify stores, websites and AI tools. What I deliver, your team can run without depending on me.'}
+		</p>
+		<div class="jx-actions">
+			<a class="jx-btn jx-btn--primary" href={routes[locale].work}>{es ? 'Ver mi trabajo' : 'See my work'}<Icon name="arrow-right" /></a>
+			<a class="jx-btn jx-btn--ghost" href="#madre">{es ? 'Conoce MADRE' : 'Meet MADRE'}</a>
+		</div>
+		<dl class="jx-facts">
+			{facts.map(([value, text]) => (
+				<div><dt>{value}</dt><dd>{text}</dd></div>
+			))}
+		</dl>
+		<div class="jx-hero__brands" data-home="brands">
+			<p class="jx-mono">{es ? 'Marcas con las que he trabajado' : 'Brands I have worked with'}</p>
+			<BrandLogos locale={locale} variant="marquee" />
+		</div>
+	</section>
+	</div>
 
-	<Stage id="madre" size="loose" class="madre-feature">
-		<div class="madre-feature__heading">
-			<div>
-				<p class="stage__eyebrow">01 · {es ? 'Producto destacado' : 'Featured product'}</p>
-				<h2 class="madre-feature__wordmark">MADRE</h2>
+	<AiDevSpotlight locale={locale} />
+
+	<section id="madre" class="jx-star" data-home="madre" aria-labelledby="jx-madre-title">
+		<div class="jx-wrap">
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Producto estrella · Gratis' : 'Flagship product · Free'}</p>
+			<h2 class="jx-wordmark" data-home="madre-wordmark" aria-label="MADRE">
+				<svg class="jx-pulse" viewBox="0 0 48 16" aria-hidden="true" focusable="false"><path d="M1 8h10l3-6 5 12 4-9 2 3h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" /><circle cx="43.5" cy="8" r="2.6" fill="currentColor" /></svg>
+				<span aria-hidden="true">MADRE</span>
+			</h2>
+			<p id="jx-madre-title" class="jx-star__title">
+				<span>{es ? 'Tus agentes de código,' : 'Your coding agents,'}</span>
+				<span class="jx-soft">{es ? 'en la misma sala.' : 'in the same room.'}</span>
+			</p>
+			<p class="jx-star__lede">{madre.summary[locale]}</p>
+
+			{madreDemo && <DemoVideo demo={madreDemo} locale={locale} class="jx-player" />}
+
+			<ul class="jx-points">
+				{madrePoints.map(([icon, title, text]) => (
+					<li><Icon name={icon} size="md" /><strong>{title}</strong><span>{text}</span></li>
+				))}
+			</ul>
+
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--madre" href={MADRE_RUN} rel="noopener" data-analytics-event="click_madre_install">{es ? 'Instalar MADRE' : 'Install MADRE'}<Icon name="arrow-up-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={productHref(madre, locale)}>{es ? 'Cómo funciona' : 'How it works'}</a>
 			</div>
-			<div class="madre-feature__summary">
-				<h3>{madre.promise[locale]}</h3>
-				<p>{madre.summary[locale]}</p>
-				<a class="pill" href={productHref(madre, locale)}>{es ? 'Explorar MADRE' : 'Explore MADRE'}<Icon name="arrow-right" /></a>
+			<div class="jx-command">
+				<code><span aria-hidden="true">$</span> npx @jossuealcala/madre start</code>
+				<button type="button" class="jx-command__copy" data-copy="npx @jossuealcala/madre start" data-copied={es ? 'Copiado' : 'Copied'}>{es ? 'Copiar' : 'Copy'}</button>
 			</div>
 		</div>
-		<MediaSlot
-			id="home-madre"
-			ratio="21:9"
-			variant="bleed"
-			label={es ? 'Producto / MADRE · landing en desarrollo' : 'Product / MADRE · landing in development'}
-			note={es ? 'Imagen editorial del producto. No es la identidad de la tienda.' : 'Editorial product image. It is not the store identity.'}
-		/>
-	</Stage>
+	</section>
 
-	<Stage tone="ink" size="loose" class="product-index" id="productos">
-		<div class="product-index__head">
-			<p class="stage__eyebrow">02 · {es ? 'Más productos y servicios' : 'More products and services'}</p>
-			<a class="pill pill--ghost" href={routes[locale].products}>{es ? 'Ver todos' : 'View all'}<Icon name="arrow-right" /></a>
+	<section id="destacados" class="jx-featured" data-home="featured" aria-labelledby="jx-featured-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Productos destacados' : 'Featured products'}</p>
+			<h2 id="jx-featured-title" class="jx-h2"><span>{es ? 'También construí' : 'I also built'}</span> <span class="jx-soft">{es ? 'AHP+, Bloqio Builder, Daniela y Miawseo.' : 'AHP+, Bloqio Builder, Daniela and Miawseo.'}</span></h2>
+			<div class="jx-featured__grid">
+				{alsoFeatured.map((product) => {
+					const demo = productDemo(product, locale);
+					const link = outside[product.slug];
+					return (
+						<article class="jx-feature" data-home-featured={product.slug}>
+							{demo && <DemoVideo demo={demo} locale={locale} orientation="wide" />}
+							<div class="jx-feature__body">
+								<p class="jx-mono">{product.status?.[locale] ?? product.category[locale]}</p>
+								<h3 class="jx-feature__title">{product.title[locale]}</h3>
+								<p class="jx-feature__promise">{product.promise[locale]}</p>
+								<div class="jx-actions">
+									<a class="jx-btn jx-btn--primary" href={productHref(product, locale)}>{es ? `Conocer ${product.title[locale]}` : `Meet ${product.title[locale]}`}<Icon name="arrow-right" /></a>
+									{link && <a class="jx-btn jx-btn--ghost" href={link.href} rel="noopener">{link.label}<Icon name="arrow-up-right" /></a>}
+								</div>
+							</div>
+						</article>
+					);
+				})}
+			</div>
 		</div>
-		<ol class="product-index__list" aria-label={es ? 'Malla de productos y servicios' : 'Product and service mesh'}>
-			{secondaryProducts.map((product, index) => (
-				<li class:list={['product-index__item', `product-index__item--${index + 1}`]}>
-					<a href={productHref(product, locale)}>
-						<MediaSlot
-							id={`home-product-${product.slug}`}
-							ratio={index === 0 ? '16:9' : index === 3 ? '21:9' : '1:1'}
-							variant="soft"
-							label={`${product.title[locale]} · ${es ? 'imagen pendiente' : 'image pending'}`}
+	</section>
+
+	<section id="showcase" class="jx-showcase" data-home="showcase" aria-labelledby="jx-showcase-title">
+		<div class="jx-wrap">
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>Showcase</p>
+			<h2 id="jx-showcase-title" class="jx-h2"><span>{es ? 'Mira a MADRE trabajando.' : 'Watch MADRE at work.'}</span> <span class="jx-soft">{es ? 'Grabado en una instalación real.' : 'Recorded on a real install.'}</span></h2>
+			<div class="jx-showcase__grid">
+				{showcase.map((item) => (
+					<article class:list={['jx-clip', `jx-clip--${item.key}`]}>
+						<DemoVideo
+							demo={{ wide: item.src.replace(/\.mp4$/, ''), tall: item.src.replace(/\.mp4$/, ''), label: item.label, alt: `${item.label}. ${item.title}` }}
+							locale={locale}
+							orientation="wide"
+							class="jx-clip__video"
 						/>
-						<div class="product-index__body">
-							<span>{String(index + 2).padStart(2, '0')}</span>
-							<strong>{product.title[locale]}</strong>
-							<p>{product.promise[locale]}</p>
-							<Icon name="arrow-right" />
+						<div class="jx-clip__caption">
+							<p class="jx-mono">{item.label}</p>
+							<h3>{item.title}</h3>
 						</div>
-					</a>
-				</li>
-			))}
-		</ol>
-	</Stage>
-
-	<Stage id="casos" size="loose" class="case-filmstrip">
-		<div class="case-filmstrip__head">
-			<div>
-				<p class="stage__eyebrow">03 · {es ? 'Casos y experiencia' : 'Cases and experience'}</p>
-				<h2 class="stage__title">{es ? 'Trabajo con contexto real.' : 'Work grounded in real context.'}</h2>
-			</div>
-			<a class="pill pill--ghost" href={routes[locale].work}>{es ? 'Ver casos' : 'View cases'}<Icon name="arrow-right" /></a>
-		</div>
-		<div class="case-filmstrip__grid">
-			{caseSlots.map((item, index) => {
-				const content = (
-					<>
-						<MediaSlot
-							id={`home-case-${item.key}`}
-							ratio={item.ratio}
-							variant="soft"
-							label={`${es ? 'Caso' : 'Case'} / ${item.label}`}
-							note={es ? 'Imagen del caso pendiente de dirección de arte.' : 'Case image awaiting art direction.'}
-						/>
-						<span>{String(index + 1).padStart(2, '0')}</span>
-						<strong>{item.label}</strong>
-						<small>{item.kind}</small>
-					</>
-				);
-				return item.entry ? (
-					<a class="case-filmstrip__item" href={`${routes[locale].work}${item.entry.data.slug}/`}>{content}</a>
-				) : (
-					<article class="case-filmstrip__item">{content}</article>
-				);
-			})}
-		</div>
-	</Stage>
-
-	<Stage tone="ink" size="loose" class="method-chapter" id="metodo">
-		<div class="method-chapter__heading">
-			<p class="stage__eyebrow">04 · {es ? 'Forma de trabajar' : 'Way of working'}</p>
-			<h2 class="stage__title">{es ? 'Menos ceremonia. Más claridad.' : 'Less ceremony. More clarity.'}</h2>
-		</div>
-		<ol class="method-chapter__list">
-			{method.map(([number, title, text]) => (
-				<li><span>{number}</span><strong>{title}</strong><p>{text}</p></li>
-			))}
-		</ol>
-	</Stage>
-
-	<Stage size="loose" class="trajectory-chapter" id="trayectoria">
-		<MediaSlot
-			id="home-portrait"
-			ratio="4:5"
-			variant="soft"
-			label={es ? 'Retrato editorial · por producir' : 'Editorial portrait · to be produced'}
-			note={es ? 'Retrato sobrio y directo; sin estética corporativa genérica.' : 'Restrained, direct portrait; no generic corporate aesthetic.'}
-		/>
-		<div>
-			<p class="stage__eyebrow">05 · {es ? 'Trayectoria verificable' : 'Verifiable track record'}</p>
-			<h2 class="stage__title">{es ? 'Dirección comercial con capacidad de construir.' : 'Commercial direction with the ability to build.'}</h2>
-			<p class="stage__lede">{about.summary}</p>
-			<div class="stage__actions">
-				<a class="pill" href={routes[locale].about}>{es ? 'Ver trayectoria' : 'View track record'}<Icon name="arrow-right" /></a>
-				<a class="pill pill--ghost" href={routes[locale].contact}>{es ? 'Contacto' : 'Contact'}</a>
+					</article>
+				))}
 			</div>
 		</div>
-	</Stage>
+	</section>
 
-	<Stage tone="ink" size="loose" class="closing-chapter">
-		<p class="stage__eyebrow">{es ? 'Siguiente paso' : 'Next step'}</p>
-		<h2 class="stage__title">{es ? 'Construyamos algo que merezca existir.' : 'Let’s build something worth existing.'}</h2>
-		<a class="pill pill--soft" href={routes[locale].contact} data-analytics-event="click_contact">
-			{es ? 'Iniciar conversación' : 'Start a conversation'}
-			<Icon name="arrow-right" />
-		</a>
-	</Stage>
+	<section id="productos" class="jx-band" aria-labelledby="jx-products-title">
+		<div class="jx-wrap">
+			<div class="jx-head">
+				<div>
+					<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Servicios y otros productos' : 'Services and other products'}</p>
+					<h2 id="jx-products-title" class="jx-h2"><span>{es ? 'También hago tiendas, sitios' : 'I also make stores, websites'}</span> <span class="jx-soft">{es ? 'y herramientas a la medida.' : 'and tools built to fit.'}</span></h2>
+				</div>
+				<a class="jx-link" href={routes[locale].products}>{es ? 'Ver todos' : 'See all'}<Icon name="arrow-right" /></a>
+			</div>
+			<ol class="jx-rows" data-home="products">
+				{others.map((product) => (
+					<li>
+						<a href={productHref(product, locale)}>
+							<Icon name={productIcons[product.slug] ?? 'cube'} size="md" />
+							<strong>{product.title[locale]}</strong>
+							<span>{product.promise[locale]}</span>
+							<Icon name="arrow-right" class="jx-rows__go" />
+						</a>
+					</li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<section id="casos" class="jx-work" aria-labelledby="jx-work-title">
+		<div class="jx-wrap">
+			<div class="jx-head">
+				<div>
+					<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Trabajo' : 'Work'}</p>
+					<h2 id="jx-work-title" class="jx-h2"><span>{es ? 'Proyectos en los que' : 'Projects I have'}</span> <span class="jx-soft">{es ? 'he trabajado.' : 'worked on.'}</span></h2>
+				</div>
+				<a class="jx-link" href={routes[locale].work}>{es ? 'Ver los 9 proyectos' : 'See all 9 projects'}<Icon name="arrow-right" /></a>
+			</div>
+			<div class="jx-cases">
+				{selected.map((entry, index) => {
+					const p = casePresentation(entry.data.slug, locale);
+					const brand = brandForCaseSlug(entry.data.slug);
+					const cover = caseCover(entry.data.slug);
+					return (
+						<a class="jx-case" data-home-case href={`${routes[locale].work}${entry.data.slug}/`}>
+							{cover && <span class="jx-case__shot"><img src={cover} alt="" width="1600" height="1000" loading="lazy" decoding="async" /></span>}
+							{brand && <img class="jx-case__logo" src={brand.mono ?? brand.src} alt={brand.name[locale]} width={brand.width} height={brand.height} loading="lazy" decoding="async" style={`--logo-h:${brand.stripHeight}rem`} />}
+							<span class="jx-mono">{String(index + 1).padStart(2, '0')} · {p?.category ?? entry.data.client}</span>
+							<strong>{entry.data.title}</strong>
+							<p>{p?.summary ?? entry.data.summary}</p>
+							<span class="jx-link">{es ? 'Ver el caso' : 'Read the case'}<Icon name="arrow-right" /></span>
+						</a>
+					);
+				})}
+			</div>
+		</div>
+	</section>
+
+	<section id="metodo" class="jx-band" aria-labelledby="jx-method-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo trabajo' : 'How I work'}</p>
+			<h2 id="jx-method-title" class="jx-h2"><span>{es ? 'Cómo llevo' : 'How I run'}</span> <span class="jx-soft">{es ? 'un proyecto contigo.' : 'a project with you.'}</span></h2>
+			<ol class="jx-steps" data-home="method">
+				{method.map(([number, title, text]) => (
+					<li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>
+				))}
+			</ol>
+		</div>
+	</section>
+
+	<AiInvite locale={locale} context="home" />
+
+	<section class="jx-close" data-home="close" aria-labelledby="jx-close-title">
+		<div class="jx-close__card">
+			<h2 id="jx-close-title" class="jx-close__title"><span>{es ? '¿Tienes algo en mente?' : 'Have something in mind?'}</span> <span class="jx-soft">{es ? 'Platiquemos.' : 'Let’s talk.'}</span></h2>
+			<p>{es ? 'Cuéntame qué quieres construir y te digo cómo lo haría, cuánto tardaría y qué necesito de ti.' : 'Tell me what you want to build and I will tell you how I would do it, how long it would take and what I need from you.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={routes[locale].about}>{es ? 'Mi trayectoria' : 'My track record'}</a>
+			</div>
+		</div>
+	</section>
 </article>
+
+
+<script>
+	document.querySelectorAll<HTMLButtonElement>('.jx-command__copy').forEach((button) => {
+		const label = button.textContent;
+		button.addEventListener('click', async () => {
+			try {
+				await navigator.clipboard.writeText(button.dataset.copy ?? '');
+				button.textContent = button.dataset.copied ?? label;
+				window.setTimeout(() => (button.textContent = label), 1800);
+			} catch {
+				/* sin portapapeles: el comando sigue a la vista para copiarlo a mano */
+			}
+		});
+	});
+</script>

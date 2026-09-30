@@ -15,6 +15,10 @@ export interface BrandMark {
 	width: number;
 	height: number;
 	tone: 'ink' | 'color';
+	/** Versión de una sola tinta para fondo oscuro, cuando el logo original trae placa. */
+	mono?: string;
+	/** Alto visual en la tira de logos (rem), para que todos pesen parecido. */
+	stripHeight: number;
 	caseSlugs?: string[];
 	showInStrip: boolean;
 }
@@ -31,8 +35,9 @@ export const brands: BrandMark[] = [
 		width: 90,
 		height: 90,
 		tone: 'ink',
+		stripHeight: 2.3,
 		caseSlugs: ['ahp-plus'],
-		showInStrip: false,
+		showInStrip: true,
 	},
 	{
 		id: 'bloqio',
@@ -41,6 +46,7 @@ export const brands: BrandMark[] = [
 		width: 150,
 		height: 75,
 		tone: 'ink',
+		stripHeight: 1.7,
 		caseSlugs: ['bloqio-builder', 'bloqio-cro-apps'],
 		showInStrip: true,
 	},
@@ -51,6 +57,7 @@ export const brands: BrandMark[] = [
 		width: 149,
 		height: 92,
 		tone: 'color',
+		stripHeight: 2.1,
 		caseSlugs: ['wu-nutrition'],
 		showInStrip: true,
 	},
@@ -61,6 +68,7 @@ export const brands: BrandMark[] = [
 		width: 140,
 		height: 80,
 		tone: 'color',
+		stripHeight: 2.1,
 		caseSlugs: ['come-verde'],
 		showInStrip: true,
 	},
@@ -71,6 +79,8 @@ export const brands: BrandMark[] = [
 		width: 160,
 		height: 120,
 		tone: 'color',
+		stripHeight: 2.5,
+		mono: '/cv/brands/la-carniceria-virtual-mono.png',
 		caseSlugs: ['la-carniceria-virtual'],
 		showInStrip: true,
 	},
@@ -81,6 +91,7 @@ export const brands: BrandMark[] = [
 		width: 72,
 		height: 72,
 		tone: 'color',
+		stripHeight: 2.3,
 		showInStrip: true,
 	},
 	{
@@ -90,6 +101,7 @@ export const brands: BrandMark[] = [
 		width: 148,
 		height: 31,
 		tone: 'color',
+		stripHeight: 1.35,
 		showInStrip: true,
 	},
 ];

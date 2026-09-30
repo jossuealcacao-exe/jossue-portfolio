@@ -35,7 +35,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			approach: [
 				'Tratar todo como un solo camino: el anuncio, la página a la que llega, el catálogo, el producto y el carrito. No como cinco piezas separadas.',
 				'Dejar los bloques de la tienda configurables, para que el equipo lance campañas y cambie contenido sin pedirle nada a un programador.',
-				'Usar IA donde ayuda de verdad, siempre con precios y datos reales por detrás y con una persona decidiendo al final.',
+				'Usar IA donde ayuda, siempre con precios y datos reales por detrás y con una persona decidiendo al final.',
 			],
 			deliverables: [
 				'Un set de bloques con los que se arman páginas de campaña, portada, catálogo y ficha de producto sin partir de cero.',
@@ -162,8 +162,8 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			category: 'Diagnóstico de una tienda',
 			summary: 'Revisé una carnicería online de arriba a abajo para encontrar por qué la gente entraba y no compraba. El resultado es una lista de arreglos ordenada por lo que más mueve la aguja.',
 			context: 'La Carnicería Virtual tenía catálogo grande y una buena oferta. Lo que fallaba era otra cosa: el sitio cargaba lento, costaba encontrar el corte que buscabas, y faltaban señales que dieran confianza para pagar carne por internet.',
-			challenge: 'Decir qué arreglar primero sin proponer un rediseño que nadie pidió, y sin confundir un número técnico que se ve feo con algo que de verdad esté costando ventas.',
-			role: 'Hice el análisis completo —experiencia, velocidad, búsqueda en Google, medición y cómo está armada la tienda— y lo convertí en una lista de trabajo en orden.',
+			challenge: 'Decir qué arreglar primero sin proponer un rediseño que nadie pidió, y sin confundir un número técnico que se ve feo con algo que sí esté costando ventas.',
+			role: 'Revisé la experiencia, la velocidad, la búsqueda en Google, la medición y cómo está armada la tienda, y lo convertí en una lista de trabajo en orden.',
 			approach: [
 				'Recorrer la tienda como lo haría un cliente: portada, categoría, producto y carrito, sin saltarme pasos.',
 				'Contrastar lo que se ve con lo que miden las herramientas y con cómo está construido el sitio por dentro.',
@@ -201,7 +201,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			approach: [
 				'Separar tres cosas que suelen mezclarse: construir marca, empujar una promoción concreta y vender en marketplaces.',
 				'Anunciar donde el producto realmente está en anaquel, y en la época del año en que se consume.',
-				'Usar IA para acelerar lo repetitivo —briefs, variantes de anuncio, resúmenes— dentro de una estrategia que define el equipo.',
+				'Usar IA para acelerar lo repetitivo, como briefs, variantes de anuncio y resúmenes, dentro de una estrategia que define el equipo.',
 			],
 			deliverables: ['El manual de cómo se trabaja la publicidad digital, para que no dependa de quién esté ese mes.', 'Guías por tipo de campaña, qué canal sirve para qué, y quién es el cliente.', 'Un tablero donde se ve qué está funcionando, qué se está probando y qué aprendimos.'],
 			outcomes: ['Una forma de trabajar hecha para producto de anaquel, no copiada de una tienda online.', 'Quedó claro quién decide qué entre marca, medios y comercial.'],
@@ -258,7 +258,7 @@ const presentations: Record<CaseSlug, Record<Locale, CasePresentation>> = {
 			context: 'Vinería es un proyecto propio. Nace de algo que le pasa a mucha gente: quieres entender de vino, abres cualquier guía y te topas con un vocabulario que asume que ya sabes.',
 			challenge: 'Convertir mucha investigación en algo que un principiante disfrute, sin volverlo tan simple que deje de ser útil cuando ya sabes un poco más.',
 			role: 'Escribí el contenido, decidí cómo se estructura, diseñé la interfaz y programé el sitio.',
-			approach: ['Organizar por lo que la gente realmente pregunta —qué tomar con esto, cuál me va a gustar— y no por cómo lo clasifica un sommelier.', 'Arrancar con pocas opciones: un buscador y cuatro filtros, no treinta.', 'Que la información profunda esté ahí, pero solo aparezca si decides seguir leyendo.'],
+			approach: ['Organizar por lo que la gente pregunta («qué tomo con esto», «cuál me va a gustar») y no por cómo lo clasifica un sommelier.', 'Arrancar con pocas opciones: un buscador y cuatro filtros, no treinta.', 'Que la información profunda esté ahí, pero solo aparezca si decides seguir leyendo.'],
 			deliverables: ['Veinticuatro variedades documentadas, todas con la misma estructura.', 'El explorador: buscas, filtras y abres la ficha sin salir de la página.', 'Mapa de dónde viene cada uno, con qué comida va, glosario y la bitácora de mi investigación.'],
 			outcomes: ['Alguien que no sabe nada de vino puede elegir uno en dos minutos y entender por qué.', 'La estructura aguanta crecer: agregar variedades no obliga a rehacer nada.'],
 			principles: ['Si un principiante no lo entiende, está mal escrito.', 'Lo complejo se muestra cuando lo pides, no antes.', 'Cómo navegas y qué lees son la misma decisión.'],

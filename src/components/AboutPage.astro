@@ -1,0 +1,156 @@
+---
+// «Sobre mí» con el sistema de madre.run: retrato real, cifras con su fuente, los demos de lo
+// que construí, la experiencia en primera persona y el CV para descargar.
+import { contact } from '../data/contact';
+import { routes, type Locale } from '../data/i18n';
+import { featuredProducts, productDemo, productHref } from '../data/products';
+import { profile, profileCopy } from '../data/profile';
+import AiInvite from './AiInvite.astro';
+import BrandLogos from './BrandLogos.astro';
+import DemoVideo from './DemoVideo.astro';
+import HeroLoop from './HeroLoop.astro';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const about = profileCopy(locale);
+const cvHref = es ? contact.cvEs : contact.cvEn ?? contact.cvEs;
+const built = featuredProducts.map((product) => ({ product, demo: productDemo(product, locale) }));
+
+const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
+	? [
+			{ title: 'Shopify y ecommerce', text: 'Levanto tiendas que venden y que tu equipo puede mover solo: storefront, temas y apps a la medida del negocio.', icon: 'basket' },
+			{ title: 'UX y conversión', text: 'Encuentro dónde se te va la venta y rediseño la experiencia para que más visitas terminen en compra. Mido antes y después.', icon: 'trend-up' },
+			{ title: 'IA en la operación', text: 'Asistentes y agentes con tus datos y tus permisos, con una persona que revisa. Daniela y MADRE salieron de aquí.', icon: 'sparkles-ai' },
+			{ title: 'Producto completo', text: 'De la idea a producción: front, back, integraciones, pruebas y documentación que otro puede retomar.', icon: 'code' },
+		]
+	: [
+			{ title: 'Shopify and ecommerce', text: 'I build stores that sell and that your team can run on its own: storefront, themes and apps shaped around the business.', icon: 'basket' },
+			{ title: 'UX and conversion', text: 'I find where sales leak and redesign the experience so more visits end in a purchase. I measure before and after.', icon: 'trend-up' },
+			{ title: 'AI in operations', text: 'Assistants and agents with your data and permissions, with a person who reviews. Daniela and MADRE came from here.', icon: 'sparkles-ai' },
+			{ title: 'The whole product', text: 'From idea to production: front end, back end, integrations, tests and docs someone else can pick up.', icon: 'code' },
+		];
+---
+
+<article class="jx-home jx-about" data-about-page>
+	<div class="jx-about__hero-wrap" data-hero="about">
+		<HeroLoop name="about" />
+		<section class="jx-about__hero" aria-labelledby="about-title">
+		<div class="jx-about__copy">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Sobre mí · Guadalajara, México' : 'About me · Guadalajara, Mexico'}</p>
+			<h1 id="about-title" class="jx-about__name">{profile.name}</h1>
+			<p class="jx-about__role profile-headline">{about.headline}</p>
+			<p class="jx-about__spec"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Experiencia destacada · IA aplicada y AI Dev' : 'Featured experience · Applied AI and AI Dev'}</p>
+			<p class="jx-about__lede">{about.summary}</p>
+			<div class="jx-actions">
+				{cvHref && <a class="jx-btn jx-btn--primary" href={cvHref} download data-analytics-event="download_cv"><Icon name="download" />{es ? 'Descargar mi CV' : 'Download my CV'}</a>}
+				<a class="jx-btn jx-btn--ghost" href={routes[locale].contact}>{es ? 'Escríbeme' : 'Write to me'}</a>
+				{contact.linkedin && <a class="jx-btn jx-btn--ghost" href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin">LinkedIn<Icon name="arrow-up-right" /></a>}
+			</div>
+		</div>
+		<figure class="jx-about__portrait">
+			<img src="/images/jossue-alcala.webp" srcset="/images/jossue-alcala-480.webp 480w, /images/jossue-alcala.webp 960w" sizes="(min-width: 60rem) 30rem, 90vw" width="960" height="1440" alt={es ? 'Retrato de Jossue Alcalá, de traje azul marino y camisa blanca.' : 'Portrait of Jossue Alcalá in a navy suit and white shirt.'} fetchpriority="high" />
+		</figure>
+	</section>
+	</div>
+
+	<section class="jx-band" aria-labelledby="about-numbers">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cifras' : 'Figures'}</p>
+			<h2 id="about-numbers" class="jx-h2"><span>{es ? 'Lo que he movido,' : 'What I have moved,'}</span> <span class="jx-soft">{es ? 'con su fecha y su fuente.' : 'with its date and source.'}</span></h2>
+			<ul class="jx-kpis">
+				{about.kpis.map((kpi) => (
+					<li>
+						<p class="jx-kpis__value">{kpi.value}</p>
+						<p class="jx-kpis__label">{kpi.label}</p>
+						<p class="jx-kpis__detail">{kpi.detail}</p>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-built" aria-labelledby="about-built">
+		<div class="jx-wrap">
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Lo que construí' : 'What I built'}</p>
+			<h2 id="about-built" class="jx-h2"><span>{es ? 'Cinco productos míos,' : 'Five products of mine,'}</span> <span class="jx-soft">{es ? 'funcionando.' : 'running.'}</span></h2>
+			<div class="jx-built__grid">
+				{built.map(({ product, demo }) => (
+					<article class="jx-feature" data-about-product={product.slug}>
+						{demo && <DemoVideo demo={demo} locale={locale} />}
+						<div class="jx-feature__body">
+							<p class="jx-mono">{product.status?.[locale] ?? product.category[locale]}</p>
+							<h3 class="jx-feature__title">{product.title[locale]}</h3>
+							<p class="jx-feature__promise">{product.promise[locale]}</p>
+							<a class="jx-link" href={productHref(product, locale)}>{es ? `Ver ${product.title[locale]}` : `See ${product.title[locale]}`}<Icon name="arrow-right" /></a>
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-band" aria-labelledby="about-experience">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Experiencia' : 'Experience'}</p>
+			<h2 id="about-experience" class="jx-h2"><span>{es ? 'Dónde he trabajado' : 'Where I have worked'}</span> <span class="jx-soft">{es ? 'y qué hice ahí.' : 'and what I did there.'}</span></h2>
+			<ol class="jx-timeline">
+				{about.experience.map((item) => (
+					<li>
+						<div class="jx-timeline__meta"><span class="jx-mono">{item.period}</span><span>{item.org}</span></div>
+						<div>
+							<h3>{item.role}</h3>
+							<ul>{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+						</div>
+					</li>
+				))}
+			</ol>
+			<BrandLogos locale={locale} variant="grid" />
+		</div>
+	</section>
+
+	<section class="jx-caps" aria-labelledby="about-caps">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué sé hacer' : 'What I do'}</p>
+			<h2 id="about-caps" class="jx-h2"><span>{es ? 'Decido el rumbo' : 'I set the direction'}</span> <span class="jx-soft">{es ? 'y también lo programo.' : 'and I also write the code.'}</span></h2>
+			<ul class="jx-points jx-caps__grid">
+				{capabilities.map((item) => (
+					<li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>
+				))}
+			</ul>
+			<div class="jx-caps__lists">
+				<div>
+					<p class="jx-mono">{es ? 'Plataformas y técnica' : 'Platforms and technical'}</p>
+					<ul>{about.skills.map((item) => <li>{item}</li>)}</ul>
+				</div>
+				<div>
+					<p class="jx-mono">{es ? 'IA aplicada' : 'Applied AI'}</p>
+					<ul>{about.aiCapabilities.map((item) => <li>{item}</li>)}</ul>
+				</div>
+				<div>
+					<p class="jx-mono">{es ? 'Formación' : 'Education'}</p>
+					<ul>{about.education.map((item) => <li>{item}</li>)}</ul>
+					<p class="jx-mono jx-caps__sub">{es ? 'Idiomas' : 'Languages'}</p>
+					<ul>{about.languages.map((item) => <li>{item}</li>)}</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<AiInvite locale={locale} context="about" />
+
+	<section class="jx-close" aria-labelledby="about-close">
+		<div class="jx-close__card">
+			<h2 id="about-close" class="jx-close__title"><span>{es ? '¿Buscas a alguien que decida' : 'Looking for someone who decides'}</span> <span class="jx-soft">{es ? 'y también construya?' : 'and also builds?'}</span></h2>
+			<p>{es ? 'Para un puesto, un proyecto o una segunda opinión sobre tu tienda. Te contesto en menos de un día hábil.' : 'For a role, a project or a second opinion on your store. I reply within one business day.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={routes[locale].products}>{es ? 'Ver mis productos' : 'See my products'}</a>
+			</div>
+		</div>
+	</section>
+</article>

@@ -1,14 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
-  <title id="title">Jossue Alcala</title>
-  <circle cx="64" cy="64" r="60" fill="#11110f" />
-  <path
-    fill="#fff"
-    d="M42 31h14v50c0 17-8 25-23 25-5 0-10-1-14-4l6-11c2 2 5 3 8 3 6 0 9-4 9-12V31Z"
-  />
-  <path
-    fill="#fff"
-    fill-rule="evenodd"
-    d="M78 31h14l22 74H99l-4-15H73l-4 15H55l23-74Zm-2 47h16l-8-29-8 29Z"
-    clip-rule="evenodd"
-  />
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Jossue Alcalá</title>
+  <rect width="64" height="64" rx="15" fill="#0c0e0c"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="14.25" fill="none" stroke="#ece6d8" stroke-opacity="0.16" stroke-width="1.5"/>
+  <g fill="none" stroke="#ece6d8" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 17v19.5c0 6.6-3.6 10.5-9 10.5-2.6 0-4.8-.9-6.3-2.4"/>
+    <path d="M31.5 47 41 17l9.5 30M34.6 37.4h12.8"/>
+  </g>
+  <circle cx="53.5" cy="14.5" r="3.2" fill="#ece6d8"/>
 </svg>

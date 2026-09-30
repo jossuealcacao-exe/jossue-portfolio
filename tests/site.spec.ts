@@ -107,36 +107,73 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 test('MADRE is bilingual, explicit about evidence, and connected to contact and AHP+', async ({ page }) => {
 	await page.goto('/es/madre/');
 	await expect(page.locator('[data-madre-page]')).toBeVisible();
-	await expect(page.locator('main h1')).toContainText('Instala una sala');
-	await expect(page.locator('[data-madre-explanatory]')).toContainText('ALCANCE DE LA EVIDENCIA');
+	await expect(page.locator('main h1')).toContainText('Tus agentes de código');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('la propia sala');
 	await expect(page.locator('.madre-install__command')).toContainText('npx @jossuealcala/madre start');
 	await expect(page.locator('[data-madre-os-tab]')).toHaveCount(2);
 	await expect(page.locator('[data-madre-os-panel="macos"]')).toBeVisible();
 	await page.locator('[data-madre-os-tab="linux"]').click();
 	await expect(page.locator('[data-madre-os-tab="linux"]')).toHaveAttribute('aria-selected', 'true');
 	await expect(page.locator('[data-madre-os-panel="linux"]')).toBeVisible();
-	await expect(page.locator('.madre-evidence__figure img')).toHaveAttribute('src', '/images/madre/room-0.4.0.webp');
+	await expect(page.locator('.madre-evidence__figure img')).toHaveAttribute('src', '/images/madre/room-0.5.2.webp');
+	// El showcase: tres videos reales, cada uno con su póster, y un enlace a madre.run.
+	await expect(page.locator('#evidencia .jx-clip video')).toHaveCount(3);
+	for (const poster of await page.locator('#evidencia .jx-clip video').evaluateAll((videos) => videos.map((video) => video.getAttribute('poster')))) expect(poster).toMatch(/^\/videos\/madre\/.+\.webp$/);
+	await expect(page.locator('main a[href="https://madre.run/"]').first()).toBeVisible();
 	await expect(page.locator('main a[data-analytics-event="click_madre_contact"]').first()).toHaveAttribute('href', '/es/contacto/');
 	await expect(page.locator('main a[data-analytics-event="click_madre_ahp"]').first()).toHaveAttribute('href', '/es/recursos/ahp-plus/');
 	await expect(page.locator('.global-nav__links a')).toHaveCount(4);
 	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/madre\/$/);
-	await expect(page.locator('main h1')).toContainText('Install a room');
-	await expect(page.locator('[data-madre-explanatory]')).toContainText('EVIDENCE BOUNDARY');
+	await expect(page.locator('main h1')).toContainText('Your coding agents');
+	await expect(page.locator('[data-madre-explanatory]')).toContainText('the room itself');
 });
 
 test('commercial catalog presents MADRE as a product and keeps Apex access bounded', async ({ page }) => {
 	await page.goto('/es/productos/');
 	await expect(page.locator('[data-product-catalog]')).toBeVisible();
 	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.catalog__item')).toHaveCount(5);
-	// Cada producto reserva su campo de imagen para la ronda 2.
-	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(5);
-	await page.locator('.jossue-assistant__launcher').click();
-	await expect(page.locator('.jossue-assistant__panel')).toBeVisible();
-	await expect(page.locator('.jossue-assistant__panel')).toContainText('Todavía no consulta auditorías ni datos de Apex');
-	await page.locator('[data-assistant-choice]').first().click();
-	await expect(page.locator('[data-assistant-response]')).toBeVisible();
+	await expect(page.locator('.catalog__item')).toHaveCount(7);
+	// MADRE va primero con una imagen real; el resto lleva su ícono, no un hueco pendiente.
+	await expect(page.locator('.catalog__item').first()).toContainText('MADRE');
+	// MADRE, AHP+ y Daniela llevan su video de demostración, con póster; el resto, su ícono.
+	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(5);
+	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(2);
+	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(0);
+});
+
+test('Jossue AI answers through the Worker, offers a next step and falls back when unavailable', async ({ page }) => {
+	const requests: Array<Record<string, unknown>> = [];
+	await page.route('**/api/ai', async (route) => {
+		requests.push(route.request().postDataJSON());
+		await route.fulfill({ json: { ok: true, reply: 'Jossué dirige el ecommerce de WU Nutrition y construyó MADRE.', suggestions: ['¿Qué es MADRE?'], action: 'contact', page: null, leadSaved: false } });
+	});
+	await page.goto('/es/productos/');
+	await page.locator('.jai__launcher').click();
+	const panel = page.locator('.jai__panel');
+	await expect(panel).toBeVisible();
+	await expect(panel).toContainText('Soy una IA');
+	await expect(panel.locator('[data-jai-chip]')).toHaveCount(3);
+	await page.locator('[data-jai-input]').fill('¿Qué hace Jossué?');
+	await page.locator('[data-jai-input]').press('Enter');
+	await expect(panel.locator('.jai__msg--me')).toHaveText('¿Qué hace Jossué?');
+	await expect(panel.locator('.jai__msg--ai').last()).toContainText('construyó MADRE');
+	await expect(panel.locator('.jai__action')).toHaveAttribute('href', '/es/contacto/');
+	await expect(panel.locator('[data-jai-chip]')).toHaveText(['¿Qué es MADRE?']);
+	expect(requests[0]).toMatchObject({ locale: 'es', page: '/es/productos/', messages: [{ role: 'user', content: '¿Qué hace Jossué?' }] });
+	// La conversación sigue al cambiar de página.
+	await page.goto('/es/acerca/');
+	await page.locator('.jai__launcher').click();
+	await expect(page.locator('.jai__msg--me')).toHaveCount(1);
+	await page.keyboard.press('Escape');
+	await expect(page.locator('.jai__panel')).toBeHidden();
+
+	await page.unroute('**/api/ai');
+	await page.route('**/api/ai', (route) => route.fulfill({ status: 503, json: { ok: false, error: 'ai_unavailable' } }));
+	await page.locator('.jai__launcher').click();
+	await page.locator('[data-jai-chip]').first().click();
+	await expect(page.locator('.jai__msg--ai').last()).toContainText('WhatsApp');
+	await expect(page.locator('.jai__msg--ai').last().locator('.jai__action')).toHaveAttribute('href', /wa\.me/);
 });
 
 test('product detail is bilingual and routes to a contact conversation', async ({ page }) => {
@@ -153,11 +190,10 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 	await page.goto('/es/');
 	await expect(page.locator('.global-nav__links a')).toHaveCount(4);
 	await expect(page.locator('.global-nav__links a[href="/es/contacto/"]')).toContainText('Contacto');
-	// El rediseño movio la home al tono papel; el cierre oscuro vive en su
-	// propia seccion, no en el tema del documento.
+	// El sitio usa el sistema de madre.run: fondo #050605 y MADRE como producto estrella.
 	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'default');
-	await expect(page.locator('[data-flagship-carousel]')).toBeVisible();
-	await expect(page.locator('main .stage[data-tone="ink"]')).toHaveCount(3);
+	await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(5, 6, 5)');
+	await expect(page.locator('[data-home="madre"]')).toBeVisible();
 	const headerColor = await page.locator('.global-nav').evaluate((element) => getComputedStyle(element).backgroundColor);
 	expect(headerColor).not.toBe('rgba(0, 0, 0, 0)');
 	await page.evaluate(() => window.scrollTo(0, 640));
@@ -184,7 +220,17 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 });
 
 test('commercial pages share one hierarchy and CTAs keep usable spacing', async ({ page }) => {
-	for (const route of ['/es/productos/', '/es/productos/desarrollo-web/']) {
+	await page.goto('/es/productos/');
+	const catalogTitle = page.locator('.jx-hero__title');
+	await expect(catalogTitle).toHaveCSS('text-align', 'center');
+	const catalogCenters = await page.evaluate(() => [...document.querySelectorAll('.jx-hero__title, .jx-hero__lede')].map((element) => { const rect = element.getBoundingClientRect(); return rect.left + rect.width / 2; }));
+	expect(Math.abs(catalogCenters[0] - catalogCenters[1]), 'título y entradilla comparten el eje').toBeLessThan(2);
+	for (const button of await page.locator('.jx-catalog .jx-btn').all()) {
+		const box = await button.boundingBox();
+		if (box && box.width > 0) expect(box.height, 'botón con área táctil').toBeGreaterThanOrEqual(44);
+	}
+
+	for (const route of ['/es/productos/desarrollo-web/']) {
 		await page.goto(route);
 		const hero = page.locator('main .stage--hero').first();
 		const heroTitle = hero.locator('.stage__title').first();
@@ -250,29 +296,27 @@ test('contact page prioritizes direct working channels', async ({ page }) => {
 test('Home leads with a commercial proposition and selected products', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('[data-storefront-home]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Ideas ambiciosas. Sistemas que funcionan.');
-	await expect(page.locator('[data-flagship-carousel]')).toBeVisible();
-	await expect(page.locator('[data-flagship-slide]')).toHaveCount(3);
-	await expect(page.locator('[data-flagship-slide] img')).toHaveCount(3);
-	await expect(page.locator('[data-flagship-control]')).toHaveCount(3);
-	await page.locator('[data-flagship-control]').nth(1).click();
-	await expect(page.locator('[data-flagship-slide].is-active')).toContainText('Encuentro dónde se te cae la venta.');
-	await expect(page.locator('[data-flagship-status]')).toHaveText('02 / 03');
-	await expect(page.locator('.madre-feature__wordmark')).toHaveText('MADRE');
-	await expect(page.getByRole('link', { name: /Explorar MADRE/ })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.product-index__list > li')).toHaveCount(4);
-	await expect(page.locator('.product-index__list [data-media-slot]')).toHaveCount(4);
-	const mesh = await page.locator('.product-index__list').evaluate((element) => ({
-		display: getComputedStyle(element).display,
-		columns: getComputedStyle(element).gridTemplateColumns.split(' ').length,
-	}));
-	expect(mesh.display).toBe('grid');
-	expect(mesh.columns).toBe((page.viewportSize()?.width ?? 0) > 992 ? 12 : (page.viewportSize()?.width ?? 0) > 736 ? 2 : 1);
-	await expect(page.locator('.case-filmstrip__item')).toHaveCount(4);
-	await expect(page.locator('.method-chapter__list > li')).toHaveCount(4);
-	await expect(page.locator('[data-media-slot="home-portrait"]')).toBeVisible();
-	const closingTitle = page.locator('.closing-chapter .stage__title');
-	const closingCta = page.locator('.closing-chapter .pill');
+	await expect(page.locator('main h1')).toHaveText('Construyo productos digitalesque venden y se pueden mantener.');
+	// MADRE, producto estrella: marca, video que se puede pausar, instalación y showcase.
+	await expect(page.locator('[data-home="madre-wordmark"]')).toHaveAccessibleName('MADRE');
+	await expect(page.locator('[data-home="madre"] [data-jx-demo] video')).toHaveJSProperty('muted', true);
+	await expect(page.locator('[data-home="madre"] [data-jx-demo-toggle]')).toBeVisible();
+	// AHP+ y Daniela, destacados, cada uno con su demo y su enlace a la ficha.
+	await expect(page.locator('[data-home-featured]')).toHaveCount(4);
+	await expect(page.locator('[data-home-featured] [data-jx-demo] video')).toHaveCount(4);
+	await expect(page.locator('[data-home-featured="bloqio-builder"] a[href="/es/productos/bloqio-builder/"]')).toBeVisible();
+	await expect(page.locator('[data-home-featured="ahp-plus"] a[href="/es/productos/ahp-plus/"]')).toBeVisible();
+	await expect(page.locator('[data-home-featured="daniela"] a[href="/es/productos/daniela/"]')).toBeVisible();
+	await expect(page.locator('#madre a[href="https://madre.run/"]')).toBeVisible();
+	await expect(page.locator('#madre a[href="/es/madre/"]')).toBeVisible();
+	await expect(page.locator('[data-home="showcase"] video')).toHaveCount(3);
+	await expect(page.locator('[data-home="products"] > li')).toHaveCount(2);
+	await expect(page.locator('[data-home="products"] [data-media-slot]')).toHaveCount(0);
+	await expect(page.locator('[data-home-case]')).toHaveCount(4);
+	await expect(page.locator('[data-home="method"] > li')).toHaveCount(4);
+	await expect(page.locator('main [data-media-slot]')).toHaveCount(0);
+	const closingTitle = page.locator('[data-home="close"] h2');
+	const closingCta = page.locator('[data-home="close"] .jx-btn').first();
 	await closingTitle.scrollIntoViewIfNeeded();
 	const closingGeometry = await closingTitle.evaluate((element) => {
 		const rect = element.getBoundingClientRect();
@@ -302,10 +346,14 @@ test('Work page uses full-width editorial rows without legacy cards', async ({ p
 	await expect(page.locator('.case-card')).toHaveCount(0);
 	await expect(page.getByText('Ver proyecto', { exact: true })).toHaveCount(0);
 	const viewport = page.viewportSize();
-	const heroBox = await page.locator('.editorial-hero').boundingBox();
+	const heroBox = await page.locator('.jx-page-hero').boundingBox();
 	expect(heroBox?.x ?? -1).toBe(0);
 	expect(Math.abs((heroBox?.width ?? 0) - (viewport?.width ?? 0))).toBeLessThan(1);
-	await expect(page.locator('.editorial-hero h1')).toHaveCSS('color', 'rgb(247, 247, 243)');
+	await expect(page.locator('.jx-page-hero h1')).toHaveCSS('color', 'rgb(238, 241, 234)');
+	await expect(page.locator('.jx-page-hero h1')).toHaveCSS('text-align', 'center');
+	// Loop abstracto detrás del titular, decorativo y con póster propio.
+	await expect(page.locator('[data-hero="work"] .jx-loop')).toHaveAttribute('aria-hidden', 'true');
+	await expect(page.locator('[data-hero="work"] .jx-loop video')).toHaveAttribute('poster', /\/videos\/hero\/work(-tall)?\.webp$/);
 });
 
 test('section motion starts on intersection and reduced motion remains static', async ({ page }) => {
@@ -329,8 +377,14 @@ test('About presents experience, impact, brands, and CV without internal notes',
 	await expect(page.locator('main')).toContainText('>$1 MDP/mes');
 	await expect(page.locator('main')).toContainText('3.6 s CrUX');
 	await expect(page.locator('main a[href="/cv/Jossue-Alcala-CV.pdf"]')).toHaveCount(1);
-	await expect(page.locator('.brand-strip .brand-label')).toHaveCount(6);
-	await expect(page.locator('.brand-strip img')).toHaveCount(0);
+	// Logos reales en una sola tinta, cada uno con el nombre de la marca como texto alternativo.
+	await expect(page.locator('.brand-strip .brand-logo img')).toHaveCount(7);
+	for (const name of ['HP Inc.', 'WU Nutrition', 'Come Verde', 'Farmalisto', 'La Carnicería Virtual', 'Bloqio', 'AHP+']) await expect(page.locator(`.brand-strip img[alt="${name}"]`)).toBeVisible();
+	await expect(page.locator('[data-ai-invite="about"] [data-ai-ask]')).toHaveCount(3);
+	// Retrato real y los cuatro demos de lo que construí.
+	await expect(page.locator('.jx-about__portrait img')).toBeVisible();
+	await expect(page.locator('[data-about-product] [data-jx-demo] video')).toHaveCount(5);
+	await expect(page.locator('main [data-media-slot]')).toHaveCount(0);
 	await expect(page.locator('main')).not.toContainText('DUMO');
 	await expect(page.locator('main')).not.toContainText('57 usuarios');
 	await expect(page.locator('main')).not.toContainText('45 páginas');
@@ -338,14 +392,15 @@ test('About presents experience, impact, brands, and CV without internal notes',
 	await expect(page.locator('main a[href*="linkedin.com/in/jossue-alcala"]')).toBeVisible();
 });
 
-test('project gallery preserves every frame as an accessible image placeholder', async ({ page }) => {
+test('project gallery shows every frame as a real, described screenshot', async ({ page }) => {
 	await page.goto('/es/trabajo/bloqio-cro-apps/');
 	await expect(page.locator('main h1')).toHaveText('Bloqio CRO Apps — Prometeo / Hermes');
 	await expect(page.locator('main')).toContainText('Prometeo');
 	await expect(page.locator('main')).toContainText('Hermes');
-	await expect(page.locator('.evidence-placeholder')).toHaveCount(11);
-	await expect(page.locator('.evidence-placeholder [data-media-slot]')).toHaveCount(11);
-	await expect(page.locator('.evidence-gallery img')).toHaveCount(0);
+	await expect(page.locator('.evidence-shot')).toHaveCount(11);
+	await expect(page.locator('.evidence-shot img')).toHaveCount(11);
+	await expect(page.locator('main [data-media-slot]')).toHaveCount(0);
+	for (const alt of await page.locator('.evidence-shot img').evaluateAll((images) => images.map((image) => image.getAttribute('alt') ?? ''))) expect(alt.length).toBeGreaterThan(10);
 	await expect(page.locator('.audit-marker')).toHaveCount(0);
 	await expect(page.locator('.evidence-gallery')).toHaveAttribute('aria-label', 'Galería del proyecto');
 	await expect(page.locator('[data-evidence-lightbox], .evidence-carousel__nav')).toHaveCount(0);
@@ -370,12 +425,11 @@ for (const project of [
 			await expect(page.locator('main')).toContainText('Explora el proyecto');
 			await expect(page.locator('main')).not.toContainText('La experiencia en contexto.');
 		}
-		await expect(page.locator('.case-cover .portfolio-visual')).toBeVisible();
-		await expect(page.locator('.case-cover img')).toHaveCount(0);
-		await expect(page.locator('[data-case-ambience]')).toHaveCount(1);
-		await expect(page.locator('[data-case-ambience] img')).toHaveCount(0);
-		await expect(page.locator('[data-case-ambience]')).toContainText('Placeholder editorial');
-		await expect(page.locator('[data-case-ambience] [data-media-slot]')).toBeVisible();
+		// La portada del caso es la captura real del proyecto, no un recuadro generado.
+		await expect(page.locator('.case-cover [data-case-cover] img')).toBeVisible();
+		await expect(page.locator('.case-cover .portfolio-visual')).toHaveCount(0);
+		await expect(page.locator('main')).not.toContainText('Placeholder');
+		await expect(page.locator('main [data-media-slot]')).toHaveCount(0);
 		if (project.slug === 'ahp-plus') {
 			await expect(page.locator('.case-brand')).toContainText('AHP+');
 			await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
@@ -388,19 +442,18 @@ for (const project of [
 				getComputedStyle(element).gridTemplateColumns.split(' ').length,
 			);
 			expect(deliveryColumns).toBe(1);
-			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(243, 243, 239)');
-			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(243, 243, 239)');
-			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(9, 10, 9)');
-			// El pie dejo de ser una losa oscura con titular: ahora es un
-			// directorio callado sobre fondo claro. El requisito sobrevive
-			// — su encabezado debe leerse contra su fondo.
-			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(9, 10, 9)');
-			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(98, 100, 95)');
+			// Sistema de madre.run: botones marfil con tinta oscura, cierre sobre grafito, pie en la banda.
+			await expect(page.locator('#command-atlas .button')).toHaveCSS('background-color', 'rgb(236, 230, 216)');
+			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(18, 17, 14)');
+			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(238, 241, 234)');
+			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(18, 17, 14)');
+			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(238, 241, 234)');
+			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(124, 132, 121)');
 		}
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
-		await expect(page.locator('.evidence-placeholder')).toHaveCount(project.media);
-		await expect(page.locator('.evidence-gallery img')).toHaveCount(0);
+		await expect(page.locator('.evidence-shot')).toHaveCount(project.media);
+		await expect(page.locator('.evidence-gallery img')).toHaveCount(project.media);
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		await expect(page.locator('.status, [data-verification-status]')).toHaveCount(0);
 		await expect(page.locator('main a[href^="http://127.0.0.1"], main a[href^="http://localhost"]')).toHaveCount(0);
@@ -416,7 +469,7 @@ for (const project of [
 		await expect(page).toHaveURL(new RegExp(`/en/work/${project.slug}/$`));
 		await expect(page.locator('main h1')).toHaveText(project.title);
 		await expect(page.locator('.case-intro .eyebrow')).toContainText(project.categoryEn);
-		await expect(page.locator('[data-case-ambience]')).toContainText('Editorial placeholder');
+		await expect(page.locator('.case-cover [data-case-cover] img')).toBeVisible();
 		if (project.media > 0) await expect(page.locator('main')).toContainText('Explore the project');
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
 		if (!['la-carniceria-virtual', 'miawseo', 'ahp-plus'].includes(project.slug)) {
@@ -430,45 +483,32 @@ for (const project of [
 
 test('MADRE keeps a disciplined reading edge and never overflows the viewport', async ({ page }) => {
 	await page.goto('/es/madre/');
-	const titleBox = await page.locator('.madre-product__hero h1').boundingBox();
-	const ledeBox = await page.locator('.madre-product__lede').boundingBox();
+	const titleBox = await page.locator('.jm-hero__title').boundingBox();
+	const ledeBox = await page.locator('.jm-hero__lede').boundingBox();
 	expect(titleBox).not.toBeNull();
 	expect(ledeBox).not.toBeNull();
-	expect(Math.abs((titleBox?.x ?? 0) - (ledeBox?.x ?? 0))).toBeLessThan(1);
-	await expect(page.locator('.madre-product__hero h1')).toHaveCSS('text-align', 'start');
+	const center = (box: typeof titleBox) => (box?.x ?? 0) + (box?.width ?? 0) / 2;
+	expect(Math.abs(center(titleBox) - center(ledeBox))).toBeLessThan(2);
+	await expect(page.locator('.jm-hero__title')).toHaveCSS('text-align', 'center');
 	const hasHorizontalOverflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
 	expect(hasHorizontalOverflow).toBe(false);
 });
 
-test('every image slot declares the contract round 2 depends on', async ({ page }) => {
+test('every former image slot now shows a real, described image', async ({ page }) => {
 	// Un slot sin id, sin proporcion o sin etiqueta es un hueco que nadie
 	// sabra rellenar despues. Este guard existe para que la ronda 2 no
 	// tenga que adivinar nada.
-	const RATIOS = ['21:9', '16:9', '3:2', '4:3', '1:1', '4:5', '9:16'];
-	const seen = new Set<string>();
-
-	for (const route of ['/es/', '/es/productos/', '/es/productos/bloqio-builder/', '/es/madre/']) {
+	// Ya no quedan campos vacíos: cada lugar reservado muestra su imagen real, con texto
+	// alternativo y un archivo que sí carga.
+	for (const route of ['/es/', '/es/productos/', '/es/productos/bloqio-builder/', '/es/productos/desarrollo-web/', '/es/madre/', '/es/trabajo/wu-nutrition/']) {
 		await page.goto(route);
-		const slots = page.locator('[data-media-slot]');
-		const count = await slots.count();
-		expect(count, `${route} debe reservar al menos un campo de imagen`).toBeGreaterThan(0);
-
-		const ids: string[] = [];
-		for (let index = 0; index < count; index += 1) {
-			const slot = slots.nth(index);
-			const id = await slot.getAttribute('data-media-slot');
-			const ratio = await slot.getAttribute('data-slot-ratio');
-			expect(id, `${route}: un slot quedo sin id`).toBeTruthy();
-			expect(RATIOS, `${route}#${id}: proporcion fuera del catalogo`).toContain(ratio);
-			await expect(slot.locator('.slot__label'), `${route}#${id}: sin etiqueta legible`).not.toBeEmpty();
-			ids.push(id as string);
+		await expect(page.locator('main [data-media-slot]'), `${route} no debe tener placeholders`).toHaveCount(0);
+		const images = page.locator('main [data-media-image] img');
+		for (let index = 0; index < (await images.count()); index += 1) {
+			const image = images.nth(index);
+			await image.scrollIntoViewIfNeeded();
+			await expect(image).toHaveAttribute('alt', /\S{3,}/);
+			await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
 		}
-
-		// Dentro de una misma pagina los ids no pueden repetirse: en la
-		// ronda 2 cada uno recibe un archivo distinto.
-		expect(new Set(ids).size, `${route}: ids de slot duplicados`).toBe(ids.length);
-		ids.forEach((id) => seen.add(id));
 	}
-
-	expect(seen.size).toBeGreaterThan(10);
 });

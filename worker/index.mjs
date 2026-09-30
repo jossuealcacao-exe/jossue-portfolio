@@ -1,3 +1,5 @@
+import { handleAi, handleAiChats } from './ai.mjs';
+
 const MAX_BODY_BYTES = 64 * 1024;
 const RATE_LIMIT_MS = 60_000;
 const CONTACT_FROM = 'hola@jossuealcala.com';
@@ -264,12 +266,22 @@ export async function handleRequest(request, env) {
 				service: 'portfolio-worker',
 				queryEnabled: Boolean(env.ADMIN_TOKEN),
 				notificationEnabled: Boolean(env.CONTACT_EMAIL && env.CONTACT_EMAIL_TO),
+				aiEnabled: Boolean(env.GEMINI_API_KEY),
 			},
 			origin,
 		);
 	}
 	if (url.pathname === '/api/contact' && request.method === 'POST') return handleContact(request, env, origin);
 	if (url.pathname === '/api/submissions' && request.method === 'GET') return handleSubmissions(request, env, origin);
+	if (url.pathname === '/api/ai' && request.method === 'POST') {
+		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
+		return handleAi(request, env, { json, origin, ipHash });
+	}
+	if (url.pathname === '/api/ai/chats' && request.method === 'GET') {
+		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);
+		return handleAiChats(request, env, { json, origin });
+	}
 	if (url.pathname.startsWith('/api/')) return json(404, { ok: false, error: 'Not found' }, origin);
 	return env.ASSETS.fetch(request);
 }

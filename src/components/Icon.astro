@@ -1,83 +1,62 @@
 ---
-import arrowLeft from '../assets/icons/zappicon/arrow-left-small.svg?raw';
-import arrowRight from '../assets/icons/zappicon/arrow-right-small.svg?raw';
-import arrowUpRight from '../assets/icons/zappicon/arrow-up-right-small.svg?raw';
-import badgePercent from '../assets/icons/zappicon/badge-percent.svg?raw';
-import basketShopping from '../assets/icons/zappicon/basket-shopping.svg?raw';
-import chatDots from '../assets/icons/zappicon/chat-dots.svg?raw';
-import checkList from '../assets/icons/zappicon/check-list-square.svg?raw';
-import code from '../assets/icons/zappicon/code.svg?raw';
-import display from '../assets/icons/zappicon/display.svg?raw';
-import download from '../assets/icons/zappicon/download-bracket.svg?raw';
-import dollarArrowDown from '../assets/icons/zappicon/dollar-arrow-down.svg?raw';
-import envelope from '../assets/icons/zappicon/envelope.svg?raw';
-import exclamationTriangle from '../assets/icons/zappicon/exclamation-triangle.svg?raw';
-import filter from '../assets/icons/zappicon/filter.svg?raw';
-import menuBars from '../assets/icons/zappicon/menu-bars.svg?raw';
-import mobile from '../assets/icons/zappicon/mobile.svg?raw';
-import sparklesAi from '../assets/icons/zappicon/sparkles-ai.svg?raw';
-import trendUp from '../assets/icons/zappicon/chart-trend-up-alt.svg?raw';
-import user from '../assets/icons/zappicon/user.svg?raw';
-import xmark from '../assets/icons/zappicon/xmark.svg?raw';
+// Íconos del sitio con el mismo sistema de madre.run: trazos propios en una rejilla de
+// 32 × 32, grosor 1.7 y puntas redondas. Ninguno es de un tercero, salvo el logotipo de
+// LinkedIn, que es una marca y va relleno. Van con aria-hidden: el texto de al lado dice
+// lo que el ícono dice.
 
-const linkedin = `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V8.998h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.288zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V8.998h3.564v11.454zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.454C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" /></svg>`;
+const P = {
+	'arrow-left': '<path d="M26 16H6M13 8.5 5.5 16l7.5 7.5"/>',
+	'arrow-right': '<path d="M6 16h20M19 8.5l7.5 7.5-7.5 7.5"/>',
+	'arrow-up-right': '<path d="M9 23 23 9M12 9h11v11"/>',
+	'badge-percent': '<path d="M16 3.5 19 6.2l4-.4.9 3.9 3.4 2.2-1.6 3.7 1.6 3.7-3.4 2.2-.9 3.9-4-.4-3 2.7-3-2.7-4 .4-.9-3.9-3.4-2.2 1.6-3.7-1.6-3.7 3.4-2.2.9-3.9 4 .4Z"/><path d="m12 20 8-8"/><circle cx="12.5" cy="12.5" r="1.3"/><circle cx="19.5" cy="19.5" r="1.3"/>',
+	basket: '<path d="M4 12h24l-2.4 13a2.5 2.5 0 0 1-2.5 2H8.9a2.5 2.5 0 0 1-2.5-2Z"/><path d="m11 12 4-7.5M21 12l-4-7.5M12 17v5M16 17v5M20 17v5"/>',
+	chat: '<path d="M6 6.5h20a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H15l-6 4.5v-4.5H6A2.5 2.5 0 0 1 3.5 20V9A2.5 2.5 0 0 1 6 6.5Z"/><path d="M11 14.5h.01M16 14.5h.01M21 14.5h.01"/>',
+	'check-list': '<path d="M14 9h13M14 16h13M14 23h13"/><path d="m4.5 9 1.8 1.8 3.2-3.3M4.5 16l1.8 1.8 3.2-3.3M4.5 23l1.8 1.8 3.2-3.3"/>',
+	code: '<path d="m11 10-6 6 6 6M21 10l6 6-6 6M18.5 7.5l-5 17"/>',
+	display: '<rect x="3.5" y="5.5" width="25" height="16.5" rx="2.5"/><path d="M12 27.5h8M16 22v5.5"/>',
+	download: '<path d="M16 4.5v15M9.5 13l6.5 6.5 6.5-6.5M5 22.5v2a3 3 0 0 0 3 3h16a3 3 0 0 0 3-3v-2"/>',
+	'dollar-down': '<path d="M20.5 9.5c-.6-1.9-2.4-3-4.5-3-2.6 0-4.5 1.5-4.5 3.6 0 5 9.5 2.6 9.5 7.8 0 2.2-2 3.6-4.8 3.6-2.3 0-4.3-1.2-4.9-3.2M16 4v2.5M16 21.5V24"/><path d="m22.5 24.5 3 3 3-3M25.5 17v10.5"/>',
+	envelope: '<rect x="3.5" y="6.5" width="25" height="19" rx="2.5"/><path d="m4.5 8 11.5 9 11.5-9"/>',
+	exclamation: '<path d="M14.3 5.2a2 2 0 0 1 3.4 0l10.6 18.6a2 2 0 0 1-1.7 3H5.4a2 2 0 0 1-1.7-3Z"/><path d="M16 12.5v6M16 22.8h.01"/>',
+	filter: '<path d="M4.5 6.5h23l-9 11v8l-5 2.5v-10.5Z"/>',
+	mobile: '<rect x="8.5" y="3.5" width="15" height="25" rx="3"/><path d="M14 24.5h4"/>',
+	'sparkles-ai': '<path d="M13 4.5c.9 5.4 3.1 7.6 8.5 8.5-5.4.9-7.6 3.1-8.5 8.5-.9-5.4-3.1-7.6-8.5-8.5 5.4-.9 7.6-3.1 8.5-8.5Z"/><path d="M23.5 19.5c.5 2.5 1.5 3.5 4 4-2.5.5-3.5 1.5-4 4-.5-2.5-1.5-3.5-4-4 2.5-.5 3.5-1.5 4-4Z"/>',
+	'trend-up': '<path d="M4 23.5 12 15.5l5 5L28 9.5"/><path d="M20.5 9.5H28V17"/>',
+	user: '<circle cx="16" cy="11" r="5.5"/><path d="M5.5 27.5a10.5 10.5 0 0 1 21 0"/>',
+	menu: '<path d="M5 10h22M5 16h22M5 22h22"/>',
+	close: '<path d="m8 8 16 16M24 8 8 24"/>',
+	// los de madre.run
+	terminal: '<rect x="3.5" y="6" width="25" height="20" rx="3.5"/><path d="m9.5 13 4 3-4 3M16.5 20h6"/>',
+	pulse: '<path d="M3 16h5l3-7 4.5 14 4-10 3 6 2-3h4.5"/>',
+	nodes: '<circle cx="16" cy="16" r="3"/><circle cx="6.5" cy="7.5" r="2.2"/><circle cx="25.5" cy="7.5" r="2.2"/><circle cx="7.5" cy="25" r="2.2"/><circle cx="25" cy="24.5" r="2.2"/><path d="m8.3 9 5.3 4.6M23.7 9l-5.3 4.6M9.2 23.4l4.5-5.2M23.3 23l-4.7-5"/>',
+	chats: '<path d="M5 6.5h14a2 2 0 0 1 2 2v7.5a2 2 0 0 1-2 2h-8.5L6 21.5V18H5a2 2 0 0 1-2-2V8.5a2 2 0 0 1 2-2Z"/><path d="M24 11.5h3a2 2 0 0 1 2 2V21a2 2 0 0 1-2 2h-1v3.5L21.5 23H15a2 2 0 0 1-2-2v-.5"/>',
+	shield: '<path d="M16 3.5 26 7.5v8c0 6.4-4.3 11-10 13-5.7-2-10-6.6-10-13v-8L16 3.5Z"/><path d="m11.5 16 3.2 3.2 6-6.4"/>',
+	layers: '<path d="m16 4 12 6.5L16 17 4 10.5 16 4Z"/><path d="m4 16 12 6.5L28 16M4 21.5 16 28l12-6.5"/>',
+	lock: '<rect x="6" y="14" width="20" height="14" rx="3"/><path d="M10.5 14v-4a5.5 5.5 0 0 1 11 0v4M16 19.5v3"/>',
+	bolt: '<path d="M18 3.5 6.5 18H16l-2 10.5L25.5 14H16Z"/>',
+	play: '<circle cx="16" cy="16" r="12.5"/><path d="M13 10.8v10.4l8.5-5.2Z"/>',
+	cube: '<path d="m16 3.5 11.5 6.25v12.5L16 28.5 4.5 22.25V9.75L16 3.5Z"/><path d="m4.5 9.75 11.5 6.25 11.5-6.25M16 16v12.5"/>',
+	globe: '<circle cx="16" cy="16" r="12.5"/><path d="M3.5 16h25M16 3.5c3.4 3.4 5.2 7.7 5.2 12.5S19.4 25.1 16 28.5c-3.4-3.4-5.2-7.7-5.2-12.5S12.6 6.9 16 3.5Z"/>',
+	flask: '<path d="M12 4h8M13.5 4v8L6 25.5A2 2 0 0 0 7.8 28h16.4a2 2 0 0 0 1.8-2.5L18.5 12V4"/><path d="M9.5 20h13"/>',
+	compass: '<circle cx="16" cy="16" r="12.5"/><path d="m20.5 11.5-2.4 6.6-6.6 2.4 2.4-6.6Z"/>',
+	pen: '<path d="M20.5 5.5 26.5 11.5 11 27H5v-6Z"/><path d="m17 9 6 6"/>',
+} as const;
 
-export type IconName =
-	| 'arrow-left'
-	| 'arrow-right'
-	| 'arrow-up-right'
-	| 'badge-percent'
-	| 'basket'
-	| 'chat'
-	| 'check-list'
-	| 'code'
-	| 'display'
-	| 'download'
-	| 'dollar-down'
-	| 'envelope'
-	| 'exclamation'
-	| 'filter'
-	| 'mobile'
-	| 'sparkles-ai'
-	| 'trend-up'
-	| 'user'
-	| 'menu'
-	| 'close'
-	| 'linkedin';
+const linkedin = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V8.998h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.288zM5.337 7.433a2.062 2.062 0 1 1 0-4.124 2.062 2.062 0 0 1 0 4.124zM7.119 20.452H3.555V8.998h3.564v11.454zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.454C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg>';
+
+export type IconName = keyof typeof P | 'linkedin';
 
 interface Props {
 	name: IconName;
-	/** Visual size in rem units (default 1). */
 	size?: 'sm' | 'md';
 	class?: string;
 }
 
-const icons: Record<IconName, string> = {
-	'arrow-left': arrowLeft,
-	'arrow-right': arrowRight,
-	'arrow-up-right': arrowUpRight,
-	'badge-percent': badgePercent,
-	basket: basketShopping,
-	chat: chatDots,
-	'check-list': checkList,
-	code,
-	display,
-	download,
-	'dollar-down': dollarArrowDown,
-	envelope,
-	exclamation: exclamationTriangle,
-	filter,
-	mobile,
-	'sparkles-ai': sparklesAi,
-	'trend-up': trendUp,
-	user,
-	menu: menuBars,
-	close: xmark,
-	linkedin,
-};
-
 const { name, size = 'sm', class: className } = Astro.props;
 const classes = ['icon', `icon--${size}`, className].filter(Boolean).join(' ');
+const svg = name === 'linkedin'
+	? linkedin
+	: `<svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${P[name]}</g></svg>`;
 ---
 
-<span class={classes} set:html={icons[name]} />
+<span class={classes} set:html={svg} />

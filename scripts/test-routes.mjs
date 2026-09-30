@@ -14,7 +14,7 @@ const caseSlugs = [
 	'vineria',
 	'tiendaonline',
 ];
-const productSlugs = ['bloqio-builder', 'daniela', 'desarrollo-web', 'ia-aplicada'];
+const productSlugs = ['ahp-plus', 'bloqio-builder', 'daniela', 'miawseo', 'desarrollo-web', 'ia-aplicada'];
 const routes = [
 	'/',
 	'/es/',
@@ -81,7 +81,30 @@ for (const route of routes) {
 	}
 }
 
-for (const asset of ['robots.txt', 'sitemap-index.xml', 'llms.txt']) {
+// SEO y GEO por página: imagen para redes, descripción que cabe en el resultado y un solo h1.
+for (const route of routes.filter((route) => route !== '/')) {
+	const file = path.join(dist, route, 'index.html');
+	const html = await readFile(file, 'utf8').catch(() => '');
+	if (!html) continue;
+	const description = html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? '';
+	if (!/<meta property="og:image" content="[^"]+\.(jpg|png)"/.test(html)) failures.push(`${route} needs a JPG/PNG og:image.`);
+	if (!description || description.length > 160) failures.push(`${route} description must be 1-160 characters (has ${description.length}).`);
+	if ((html.match(/<h1[\s>]/g) ?? []).length !== 1) failures.push(`${route} must have exactly one h1.`);
+}
+
+// Jossue AI: el conocimiento se genera del sitio y solo lleva información pública.
+try {
+	const knowledge = JSON.parse(await readFile(path.join(dist, 'ai', 'knowledge.json'), 'utf8'));
+	for (const locale of ['es', 'en']) {
+		const text = String(knowledge[locale] ?? '');
+		if (!text.includes('MADRE') || !text.includes('Head of E-commerce') || !text.includes('/contacto/'.replace('contacto', locale === 'es' ? 'contacto' : 'contact'))) failures.push(`AI knowledge (${locale}) must cover products, profile and contact.`);
+		for (const internal of ['DUMO', '57 usuarios', 'Fuentes:', 'ADMIN_TOKEN', 'GEMINI_API_KEY']) if (text.includes(internal)) failures.push(`AI knowledge (${locale}) leaks internal text: ${internal}`);
+	}
+} catch {
+	failures.push('Missing or invalid /ai/knowledge.json');
+}
+
+for (const asset of ['robots.txt', 'sitemap-index.xml', 'llms.txt', 'llms-full.txt', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'site.webmanifest']) {
 	try {
 		await access(path.join(dist, asset));
 	} catch {
@@ -123,12 +146,12 @@ if (!madreEsHtml.includes('data-madre-page') || !madreEnHtml.includes('data-madr
 if (!madreEsHtml.includes('/en/madre/') || !madreEnHtml.includes('/es/madre/')) failures.push('MADRE pages must link to their language equivalent.');
 if (!madreEsHtml.includes('data-madre-explanatory') || !madreEnHtml.includes('data-madre-explanatory')) failures.push('MADRE conceptual demonstrations must be labeled as explanatory.');
 if (!madreEsHtml.includes('npx @jossuealcala/madre start') || !madreEnHtml.includes('npx @jossuealcala/madre doctor')) failures.push('MADRE pages must expose the verified installation and doctor commands.');
-if (!madreEsHtml.includes('MADRE 0.4.0') || !madreEsHtml.includes('https://github.com/jossuealcacao-exe/madre')) failures.push('MADRE page must expose the verified release and source repository.');
-if (!madreEsHtml.includes('SoftwareApplication') || !madreEsHtml.includes('/images/madre/room-0.4.0.webp')) failures.push('MADRE page must expose verified software data and real product evidence.');
+if (!madreEsHtml.includes('MADRE 0.5.2') || !madreEsHtml.includes('https://github.com/jossuealcacao-exe/madre')) failures.push('MADRE page must expose the verified release and source repository.');
+if (!madreEsHtml.includes('SoftwareApplication') || !madreEsHtml.includes('/images/madre/room-0.5.2.webp')) failures.push('MADRE page must expose verified software data and real product evidence.');
 if (!madreEsHtml.includes('/es/contacto/') || !madreEsHtml.includes('/es/recursos/ahp-plus/')) failures.push('Spanish MADRE page must expose contact and AHP+ calls to action.');
 if (!madreEnHtml.includes('/en/contact/') || !madreEnHtml.includes('/en/resources/ahp-plus/')) failures.push('English MADRE page must expose contact and AHP+ calls to action.');
 if (!productsEsHtml.includes('data-product-catalog') || !productsEsHtml.includes('/es/madre/')) failures.push('Spanish product catalog must include MADRE as a product.');
-if (!aiProductEsHtml.includes('data-product-detail="ia-aplicada"') || !aiProductEsHtml.includes('Todavía no consulta auditorías ni datos de Apex')) failures.push('Applied AI product must render with the bounded assistant disclosure.');
+if (!aiProductEsHtml.includes('data-product-detail="ia-aplicada"') || !aiProductEsHtml.includes('Soy una IA y respondo con lo que Jossué publica')) failures.push('Applied AI product must render with the Jossue AI disclosure.');
 if (!homeHtml.includes('<meta name="google-adsense-account" content="ca-pub-5612202849073748">')) {
 	failures.push('Home must expose the AdSense ownership verification meta tag.');
 }

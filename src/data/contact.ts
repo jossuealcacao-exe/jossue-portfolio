@@ -6,7 +6,7 @@ export const contact = {
 	linkedin: 'https://www.linkedin.com/in/jossue-alcala',
 	github: 'https://github.com/jossuealcacao-exe',
 	cvEs: '/cv/Jossue-Alcala-CV.pdf',
-	cvEn: null,
+	cvEn: '/cv/Jossue-Alcala-CV-EN.pdf',
 	availability: 'pending',
 } as const;
 

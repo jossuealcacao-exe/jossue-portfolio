@@ -1,4 +1,5 @@
 ---
+import { workImage } from '../data/workImages';
 import MediaSlot from './surface/MediaSlot.astro';
 
 interface MediaItem {
@@ -22,19 +23,24 @@ const ratioFor = (item: MediaItem): '16:9' | '4:3' | '9:16' =>
 	/mobile|390|iphone|9:16/i.test(`${item.key} ${item.viewport}`) ? '9:16' : /4:3/i.test(item.viewport) ? '4:3' : '16:9';
 ---
 
-<div class="evidence-gallery evidence-gallery--placeholders" role="region" aria-label={es ? 'Galería del proyecto' : 'Project gallery'}>
+<div class="evidence-gallery evidence-gallery--shots" role="region" aria-label={es ? 'Galería del proyecto' : 'Project gallery'}>
 	<div class="evidence-placeholder-grid">
-		{media.map((item, index) => (
-			<article class:list={['evidence-placeholder', ratioFor(item) === '9:16' && 'evidence-placeholder--portrait']}>
-				<MediaSlot
-					id={`gallery-${item.key}`}
-					ratio={ratioFor(item)}
-					variant="bleed"
-					label={`${String(index + 1).padStart(2, '0')} / ${String(media.length).padStart(2, '0')} · ${item.alt}`}
-					note={es ? 'Captura retirada; este encuadre queda reservado para la nueva imagen.' : 'Screenshot removed; this frame is reserved for the new image.'}
-				/>
-				<p>{item.caption}</p>
-			</article>
-		))}
+		{media.map((item, index) => {
+			const src = workImage(item.key);
+			return (
+				<article class:list={['evidence-shot', ratioFor(item) === '9:16' && 'evidence-shot--portrait']}>
+					<MediaSlot
+						id={`gallery-${item.key}`}
+						ratio={ratioFor(item) === '9:16' ? '9:16' : '16:9'}
+						variant="bleed"
+						src={src}
+						alt={item.alt}
+						label={`${String(index + 1).padStart(2, '0')} / ${String(media.length).padStart(2, '0')} · ${item.alt}`}
+						note={es ? 'Captura pendiente.' : 'Screenshot pending.'}
+					/>
+					<p><span class="jx-mono">{String(index + 1).padStart(2, '0')}</span> {item.caption}</p>
+				</article>
+			);
+		})}
 	</div>
 </div>

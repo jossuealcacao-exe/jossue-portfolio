@@ -1,12 +1,12 @@
 ---
+// Catálogo con el sistema de madre.run. MADRE va primero y con su verde; el resto, con el
+// acento marfil del sitio y un ícono en vez de una imagen pendiente.
 import type { Locale } from '../data/i18n';
 import { routes } from '../data/i18n';
-import { commercialProducts, productHref } from '../data/products';
-import Icon from './Icon.astro';
-import Bento from './surface/Bento.astro';
-import BentoCell from './surface/BentoCell.astro';
-import MediaSlot from './surface/MediaSlot.astro';
-import Stage from './surface/Stage.astro';
+import { commercialProducts, featuredProducts, otherProducts, productDemo, productHref } from '../data/products';
+import DemoVideo from './DemoVideo.astro';
+import HeroLoop from './HeroLoop.astro';
+import Icon, { type IconName } from './Icon.astro';
 
 interface Props {
 	locale: Locale;
@@ -14,83 +14,103 @@ interface Props {
 
 const { locale } = Astro.props;
 const es = locale === 'es';
+const madre = commercialProducts.find((product) => product.slug === 'madre');
+if (!madre) throw new Error('MADRE product is required');
+const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
+const others = otherProducts;
+const madreDemo = productDemo(madre, locale);
+const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 
 const method = es
-	? ['Contexto', 'Prioridad', 'Construcción', 'Evidencia']
-	: ['Context', 'Priority', 'Build', 'Evidence'];
+	? [['01', 'Contexto', 'Qué quieres lograr y con qué cuentas hoy.'], ['02', 'Prioridad', 'Lo que más mueve el negocio va primero.'], ['03', 'Construcción', 'Lo hago funcionar, por partes que puedes revisar.'], ['04', 'Evidencia', 'Pruebas y resultados antes de darlo por hecho.']]
+	: [['01', 'Context', 'What you want to achieve and what you have today.'], ['02', 'Priority', 'What moves the business most goes first.'], ['03', 'Build', 'I make it work, in parts you can review.'], ['04', 'Evidence', 'Tests and results before calling it done.']];
 ---
 
-<article class="catalog" data-product-catalog>
-	<Stage tone="ink" hero size="loose" class="catalog-hero">
-		<p class="stage__eyebrow">
-			{es ? 'Productos · Sin precios ocultos ni paquetes genéricos' : 'Products · No hidden pricing or generic packages'}
-		</p>
-		<h1 class="stage__title">{es ? 'Elige por lo que necesitas resolver.' : 'Choose by what you need to solve.'}</h1>
-		<p class="stage__lede">
+<article class="jx-home jx-catalog" data-product-catalog>
+	<div class="jx-page-hero" data-hero="products">
+		<HeroLoop name="products" />
+		<section class="jx-hero" aria-labelledby="catalog-title">
+		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Productos y servicios' : 'Products and services'}</p>
+		<h1 id="catalog-title" class="jx-hero__title">
+			<span>{es ? 'Elige por lo que' : 'Choose by what'}</span>
+			<span class="jx-soft">{es ? 'necesitas resolver.' : 'you need to solve.'}</span>
+		</h1>
+		<p class="jx-hero__lede">
 			{es
-				? 'Cada producto parte de un problema concreto, explica qué incluye y termina en una conversación para definir alcance. No publico precios porque el trabajo cambia con el contexto, no porque quiera ocultar el proceso.'
-				: 'Each product starts from a concrete problem, explains what it includes, and ends in a conversation to define scope. I do not publish prices because the work changes with context, not because I want to hide the process.'}
+				? 'Arriba están mis productos, con su demo. Abajo, lo que construyo para ti. No publico precios porque cada proyecto cambia; te los doy después de una llamada corta.'
+				: 'My own products come first, each with its demo. Below is what I build for you. I do not publish prices because every project changes; I share them after a short call.'}
 		</p>
-	</Stage>
+	</section>
+	</div>
 
-	<Stage id="catalogo" size="loose">
-		<p class="stage__eyebrow">01 · {es ? 'Catálogo' : 'Catalog'}</p>
-		<h2 class="stage__title">{es ? 'Servicios diseñados como productos claros.' : 'Services designed as clear products.'}</h2>
-		<div class="catalog__list">
-			{commercialProducts.map((product, index) => (
-				<article class="catalog__item surface surface--bare" data-rise>
-					<MediaSlot
-						id={`catalog-${product.slug}`}
-						ratio="4:3"
-						variant="soft"
-						label={es ? `Imagen de ${product.title[locale]}` : `${product.title[locale]} image`}
-						note={es
-							? 'Una escena o entregable que represente este producto sin prometer un resultado.'
-							: 'A scene or deliverable that represents this product without promising an outcome.'}
-					/>
-					<div class="catalog__body">
-						<p class="bento__kicker">{String(index + 1).padStart(2, '0')} · {product.category[locale]}</p>
-						<h3><a href={productHref(product, locale)}>{product.title[locale]}</a></h3>
-						<p class="catalog__promise">{product.promise[locale]}</p>
-						<p class="catalog__summary">{product.summary[locale]}</p>
-						{product.status && <p class="pdp__status">{product.status[locale]}</p>}
-						<div class="stage__actions">
-							<a class="pill pill--soft" href={productHref(product, locale)}>
-								{es ? 'Ver detalle' : 'View detail'}
-								<Icon name="arrow-right" />
-							</a>
-							<a class="pill pill--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>
-								{es ? 'Hablar de esto' : 'Talk about this'}
-							</a>
+	<section id="catalogo" class="jx-wrap jx-catalog__list" aria-label={es ? 'Catálogo' : 'Catalog'}>
+		<article class="catalog__item jx-catalog__star">
+			{madreDemo && <DemoVideo demo={madreDemo} locale={locale} class="jx-catalog__media" />}
+			<div class="jx-catalog__body">
+				<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{madre.category[locale]}{madre.status && ` · ${madre.status[locale]}`}</p>
+				<h2 class="jx-catalog__title"><a href={productHref(madre, locale)}>{madre.title[locale]}</a></h2>
+				<p class="jx-catalog__promise">{madre.promise[locale]}</p>
+				<p class="jm-muted">{madre.summary[locale]}</p>
+				<div class="jx-actions">
+					<a class="jx-btn jx-btn--madre" href={productHref(madre, locale)}>{es ? 'Conocer MADRE' : 'Meet MADRE'}<Icon name="arrow-right" /></a>
+					<a class="jx-btn jx-btn--ghost" href="https://madre.run/" rel="noopener">madre.run<Icon name="arrow-up-right" /></a>
+				</div>
+			</div>
+		</article>
+
+		<div class="jx-catalog__grid">
+			{alsoFeatured.map((product) => {
+				const demo = productDemo(product, locale);
+				return (
+					<article class="catalog__item jx-catalog__card jx-catalog__card--demo">
+						{demo && <DemoVideo demo={demo} locale={locale} />}
+						<p class="jx-mono">{product.category[locale]}{product.status && ` · ${product.status[locale]}`}</p>
+						<h2 class="jx-catalog__title jx-catalog__title--sm"><a href={productHref(product, locale)}>{product.title[locale]}</a></h2>
+						<p class="jx-catalog__promise">{product.promise[locale]}</p>
+						<p class="jm-muted">{product.summary[locale]}</p>
+						<div class="jx-actions">
+							<a class="jx-btn jx-btn--primary" href={productHref(product, locale)}>{es ? 'Ver detalle' : 'View detail'}<Icon name="arrow-right" /></a>
+							<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Hablar de esto' : 'Talk about this'}</a>
 						</div>
+					</article>
+				);
+			})}
+			{others.map((product) => (
+				<article class="catalog__item jx-catalog__card">
+					<Icon name={icons[product.slug] ?? 'cube'} size="md" />
+					<p class="jx-mono">{product.category[locale]}</p>
+					<h2 class="jx-catalog__title jx-catalog__title--sm"><a href={productHref(product, locale)}>{product.title[locale]}</a></h2>
+					<p class="jx-catalog__promise">{product.promise[locale]}</p>
+					<p class="jm-muted">{product.summary[locale]}</p>
+					{product.status && <p class="jx-mono jx-catalog__status">{product.status[locale]}</p>}
+					<div class="jx-actions">
+						<a class="jx-btn jx-btn--primary" href={productHref(product, locale)}>{es ? 'Ver detalle' : 'View detail'}<Icon name="arrow-right" /></a>
+						<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Hablar de esto' : 'Talk about this'}</a>
 					</div>
 				</article>
 			))}
 		</div>
-	</Stage>
+	</section>
 
-	<Stage id="metodo" size="loose">
-		<p class="stage__eyebrow">02 · {es ? 'Método' : 'Method'}</p>
-		<h2 class="stage__title">{es ? 'Del problema a una entrega revisable.' : 'From the problem to a reviewable delivery.'}</h2>
-		<Bento class="catalog__method">
-			{method.map((step, index) => (
-				<BentoCell span={index === 0 ? 3 : index === 3 ? 3 : 3}>
-					<p class="bento__kicker">{String(index + 1).padStart(2, '0')}</p>
-					<h3>{step}</h3>
-				</BentoCell>
-			))}
-		</Bento>
-	</Stage>
-
-	<Stage tone="ink" size="loose" class="pdp__close conversion-chapter">
-		<h2 class="stage__title">{es ? '¿No sabes cuál te toca?' : 'Not sure which one fits?'}</h2>
-		<p class="stage__lede">
-			{es
-				? 'Cuéntame el problema y te digo por dónde empezaría yo, aunque sea por ninguno de estos.'
-				: 'Tell me the problem and I will say where I would start, even if it is none of these.'}
-		</p>
-		<div class="stage__actions">
-			<a class="pill pill--soft" href={routes[locale].contact}>{es ? 'Escribirme' : 'Write to me'}<Icon name="arrow-right" /></a>
+	<section id="metodo" class="jx-band" aria-labelledby="catalog-method-title">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Método' : 'Method'}</p>
+			<h2 id="catalog-method-title" class="jx-h2"><span>{es ? 'Cómo llevo' : 'How I run'}</span> <span class="jx-soft">{es ? 'cada proyecto.' : 'every project.'}</span></h2>
+			<ol class="jx-steps">
+				{method.map(([number, title, text]) => (
+					<li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>
+				))}
+			</ol>
 		</div>
-	</Stage>
+	</section>
+
+	<section class="jx-close" aria-labelledby="catalog-close-title">
+		<div class="jx-close__card">
+			<h2 id="catalog-close-title" class="jx-close__title"><span>{es ? '¿No sabes cuál te toca?' : 'Not sure which one fits?'}</span></h2>
+			<p>{es ? 'Cuéntame el problema y te digo por dónde empezaría yo, aunque no sea ninguno de estos.' : 'Tell me the problem and I will say where I would start, even if it is none of these.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={routes[locale].contact}>{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
+			</div>
+		</div>
+	</section>
 </article>
