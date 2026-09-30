@@ -242,7 +242,11 @@ const config = {
 			autosize();
 			typing(true);
 			try {
+				// Si el modelo tarda de más, se corta a los 30 s y se ofrece WhatsApp.
+				const controller = new AbortController();
+				const timer = window.setTimeout(() => controller.abort(), 30000);
 				const response = await fetch('/api/ai', {
+					signal: controller.signal,
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({
@@ -252,6 +256,7 @@ const config = {
 						messages: messages.slice(-12).map(({ role, content }) => ({ role, content })),
 					}),
 				});
+				window.clearTimeout(timer);
 				const data = await response.json().catch(() => ({}));
 				typing(false);
 				if (!response.ok || !data.ok) {

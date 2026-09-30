@@ -22,7 +22,7 @@
 		"not_found_handling": "404-page"
 	},
 	"vars": {
-		"ALLOWED_ORIGINS": "https://jossuealcala.com,https://www.jossuealcala.com,https://jossue-portfolio.jossue-alcala-o.workers.dev",
+		"ALLOWED_ORIGINS": "https://jossuealcala.com,https://www.jossuealcala.com,https://jossue-portfolio.jossue-alcala-o.workers.dev,https://madre.run",
 		"CONTACT_EMAIL_TO": "jossue.alcala.o@gmail.com"
 	},
 	"send_email": [

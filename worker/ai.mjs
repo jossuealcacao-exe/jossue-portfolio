@@ -131,10 +131,15 @@ async function callGemini(env, system, history) {
 		throw Object.assign(new Error(`gemini ${response.status}: ${detail.slice(0, 200)}`), { status: 502 });
 	}
 	const data = await response.json();
+	const usage = data?.usageMetadata ?? {};
+	lastUsage = { prompt: usage.promptTokenCount ?? 0, output: usage.candidatesTokenCount ?? 0, thoughts: usage.thoughtsTokenCount ?? 0, cached: usage.cachedContentTokenCount ?? 0, model };
+	console.log('ai usage', JSON.stringify(lastUsage));
 	const candidate = data?.candidates?.[0];
 	if (!candidate || ['SAFETY', 'PROHIBITED_CONTENT', 'BLOCKLIST'].includes(candidate.finishReason)) return null;
 	return parseModelJSON((candidate.content?.parts ?? []).map((part) => part.text ?? '').join(''));
 }
+
+let lastUsage = null;
 
 function sanitizeHistory(messages) {
 	if (!Array.isArray(messages)) return null;
@@ -264,9 +269,12 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	if (await tooManyFromIp(env, ipHash)) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
 	let output;
+	let modelMs = 0;
 	try {
 		const knowledge = await loadKnowledge(env, request.url);
+		const started = Date.now();
 		const data = await callGemini(env, systemPrompt(knowledge[locale] ?? knowledge.es, locale), history);
+		modelMs = Date.now() - started;
 		output = data ? { ...sanitizeOutput(data, locale), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
 	} catch (error) {
 		console.error('ai request failed', error?.message);
@@ -280,7 +288,9 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 		await saveLead(env, { sid, locale, page, lead: output.lead, transcript: [...history, { role: 'assistant', content: output.reply }] });
 		leadSaved = true;
 	}
-	return json(200, { ok: true, reply: output.reply, suggestions: output.suggestions, action: output.action, page: output.page, leadSaved }, origin);
+	// Solo en conversaciones de prueba (QA-): cuánto tardó el modelo y cuántos tokens usó.
+	const debug = sid.startsWith(TEST_PREFIX) ? { modelMs, usage: lastUsage } : undefined;
+	return json(200, { ok: true, reply: output.reply, suggestions: output.suggestions, action: output.action, page: output.page, leadSaved, ...(debug ? { debug } : {}) }, origin);
 }
 
 /** GET /api/ai/chats  (Bearer ADMIN_TOKEN) — para leer conversaciones y afinar el prompt. */
