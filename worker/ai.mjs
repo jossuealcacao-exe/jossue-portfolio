@@ -9,6 +9,9 @@
 import { EXAMPLES, PERSONA } from './persona.mjs';
 
 const DEFAULT_MODEL = 'gemini-3.5-flash';
+// Si Gemini falla por algo pasajero (429, 5xx, red), se intenta una vez más con este modelo.
+const FALLBACK_MODEL = 'gemini-2.5-flash';
+const RETRYABLE = new Set([429, 500, 502, 503, 504]);
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
 const MAX_HISTORY = 12; // mensajes que se mandan al modelo
 const MAX_TURNS = 30; // mensajes de la persona por conversación
@@ -105,30 +108,52 @@ export function resetKnowledgeCache() {
 	knowledgeCache = null;
 }
 
-async function callGemini(env, system, history) {
-	const model = String(env.JOSSUE_AI_MODEL || DEFAULT_MODEL).replace(/[^\w.-]/g, '');
-	const response = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
-		body: JSON.stringify({
-			systemInstruction: { parts: [{ text: system }] },
-			contents: history.map((message) => ({ role: message.role === 'assistant' ? 'model' : 'user', parts: [{ text: message.content }] })),
-			generationConfig: {
-				temperature: 0.75,
-				maxOutputTokens: 900,
-				responseMimeType: 'application/json',
-				responseSchema: SCHEMA,
-				thinkingConfig: { thinkingBudget: 0 },
-			},
-			safetySettings: ['HARASSMENT', 'HATE_SPEECH', 'SEXUALLY_EXPLICIT', 'DANGEROUS_CONTENT'].map((category) => ({
-				category: `HARM_CATEGORY_${category}`,
-				threshold: 'BLOCK_MEDIUM_AND_ABOVE',
-			})),
-		}),
-	});
+/** Una llamada a Gemini; devuelve la respuesta o lanza con el código y el detalle. */
+async function requestGemini(env, model, system, history) {
+	let response;
+	try {
+		response = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+			body: JSON.stringify({
+				systemInstruction: { parts: [{ text: system }] },
+				contents: history.map((message) => ({ role: message.role === 'assistant' ? 'model' : 'user', parts: [{ text: message.content }] })),
+				generationConfig: {
+					temperature: 0.75,
+					maxOutputTokens: 900,
+					responseMimeType: 'application/json',
+					responseSchema: SCHEMA,
+					thinkingConfig: { thinkingBudget: 0 },
+				},
+				safetySettings: ['HARASSMENT', 'HATE_SPEECH', 'SEXUALLY_EXPLICIT', 'DANGEROUS_CONTENT'].map((category) => ({
+					category: `HARM_CATEGORY_${category}`,
+					threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+				})),
+			}),
+		});
+	} catch (error) {
+		throw Object.assign(new Error(`gemini red (${model}): ${String(error?.message ?? error).slice(0, 200)}`), { status: 502, retryable: true });
+	}
 	if (!response.ok) {
 		const detail = await response.text().catch(() => '');
-		throw Object.assign(new Error(`gemini ${response.status}: ${detail.slice(0, 200)}`), { status: 502 });
+		throw Object.assign(new Error(`gemini ${response.status} (${model}): ${detail.slice(0, 300)}`), { status: 502, retryable: RETRYABLE.has(response.status) });
+	}
+	return response;
+}
+
+async function callGemini(env, system, history) {
+	const primary = String(env.JOSSUE_AI_MODEL || DEFAULT_MODEL).replace(/[^\w.-]/g, '');
+	const fallback = String(env.JOSSUE_AI_FALLBACK_MODEL || FALLBACK_MODEL).replace(/[^\w.-]/g, '');
+	let response;
+	let model = primary;
+	try {
+		response = await requestGemini(env, model, system, history);
+	} catch (error) {
+		if (!error.retryable) throw error;
+		console.warn('ai gemini retry', error.message);
+		await new Promise((resolve) => setTimeout(resolve, env.JOSSUE_AI_RETRY_MS ?? 600));
+		model = fallback;
+		response = await requestGemini(env, model, system, history);
 	}
 	const data = await response.json();
 	const usage = data?.usageMetadata ?? {};

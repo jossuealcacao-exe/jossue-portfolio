@@ -204,3 +204,38 @@ test('redacts emails and Mexican phone formats', () => {
 	assert.equal(redactPII('escríbeme a ana.r+1@correo.mx o al 33 1632 6710'), 'escríbeme a [correo] o al [tel]');
 	assert.equal(redactPII('pedido 45821'), 'pedido 45821');
 });
+
+test('a passing Gemini failure is retried once with the fallback model', async () => {
+	const env = environment({ JOSSUE_AI_RETRY_MS: 0 });
+	const calls = [];
+	const original = globalThis.fetch;
+	globalThis.fetch = async (url) => {
+		calls.push(String(url));
+		if (calls.length === 1) return new Response('{"error":{"code":503,"message":"The model is overloaded."}}', { status: 503 });
+		return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ reply: 'Aquí sigo.', suggestions: [], action: 'none' }) }] } }] });
+	};
+	try {
+		const response = await ask(env, [{ role: 'user', content: '¿Qué es MADRE?' }]);
+		assert.equal(response.status, 200);
+		assert.equal((await response.json()).reply, 'Aquí sigo.');
+		assert.equal(calls.length, 2);
+		assert.match(calls[0], /gemini-3\.5-flash:generateContent$/);
+		assert.match(calls[1], /gemini-2\.5-flash:generateContent$/);
+	} finally {
+		globalThis.fetch = original;
+	}
+});
+
+test('a request Gemini rejects is not retried', async () => {
+	const env = environment({ JOSSUE_AI_RETRY_MS: 0 });
+	let calls = 0;
+	const original = globalThis.fetch;
+	globalThis.fetch = async () => { calls += 1; return new Response('{"error":{"code":400}}', { status: 400 }); };
+	try {
+		const response = await ask(env, [{ role: 'user', content: '¿Qué es MADRE?' }]);
+		assert.equal(response.status, 502);
+		assert.equal(calls, 1);
+	} finally {
+		globalThis.fetch = original;
+	}
+});
