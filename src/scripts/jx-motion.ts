@@ -15,6 +15,7 @@ const GROUPS = [
 	'.jx-timeline > li',
 	'.jx-ai-invite__questions > li',
 	'.jx-spot__list > li',
+	'.jx-consult__formats > li',
 	'[data-home-case]',
 	'.jx-clip',
 ];

@@ -14,7 +14,7 @@ const caseSlugs = [
 	'vineria',
 	'tiendaonline',
 ];
-const productSlugs = ['ahp-plus', 'bloqio-builder', 'daniela', 'miawseo', 'desarrollo-web', 'ia-aplicada'];
+const productSlugs = ['ahp-plus', 'bloqio-builder', 'daniela', 'miawseo', 'consultoria', 'desarrollo-web', 'ia-aplicada'];
 const routes = [
 	'/',
 	'/es/',

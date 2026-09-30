@@ -11,6 +11,7 @@ import HeroCarousel from './HeroCarousel.astro';
 import AboutPage from './AboutPage.astro';
 import { workImage } from '../data/workImages';
 import AiDevSpotlight from './AiDevSpotlight.astro';
+import ConsultingSection from './ConsultingSection.astro';
 import AiInvite from './AiInvite.astro';
 import PageHero from './PageHero.astro';
 import Icon from './Icon.astro';
@@ -309,6 +310,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 			<section class="section service-grid editorial-page__content">
 				{services.map((service, index) => { const shot = serviceShots[index]; const src = shot && workImage(shot.image); return <article class="service-card">{src && <a class="service-card__shot" href={`${routes[locale].work}${shot.slug}/`} aria-label={es ? `Ver el caso ${shot.name}` : `See the ${shot.name} case`}><img src={src} alt="" loading="lazy" decoding="async" /><span>{shot.name}</span></a>}<span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>; })}
 			</section>
+			<ConsultingSection locale={locale} id="consultoria-servicios" />
 			<section class="section process-section editorial-page__content">
 				<div class="section-heading"><p class="index">{es ? 'Cómo trabajo' : 'How I work'}</p><h2>{es ? 'Cómo es trabajar conmigo.' : 'What working with me looks like.'}</h2></div>
 				<ol class="process-list">

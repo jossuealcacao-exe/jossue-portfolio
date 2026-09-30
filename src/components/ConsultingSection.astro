@@ -1,0 +1,74 @@
+---
+// Consultoría: tres formas de trabajar juntos antes (o en vez) de construir, los temas que
+// cubre y un caso real de diagnóstico. Sin precios: se definen después de una llamada corta.
+import { routes, type Locale } from '../data/i18n';
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+	id?: string;
+}
+
+const { locale, id = 'consultoria' } = Astro.props;
+const es = locale === 'es';
+const productUrl = `${routes[locale].products}consultoria/`;
+const contactUrl = `${routes[locale].contact}?producto=consultoria`;
+const formats: Array<{ icon: IconName; title: string; text: string; tag: string }> = es
+	? [
+			{ icon: 'chats', tag: '01 · Sesión', title: 'Diagnóstico', text: 'Una llamada para revisar tu caso con tus números en la mano. Sales con lo que más te conviene cambiar primero y lo que puede esperar.' },
+			{ icon: 'check-list', tag: '02 · Entregable', title: 'Auditoría con plan', text: 'Reviso tienda, pauta, medición y velocidad. Te entrego un plan ordenado por impacto: qué primero, qué después y qué no hace falta hacer.' },
+			{ icon: 'compass', tag: '03 · Continuo', title: 'Acompañamiento', text: 'Me siento con tu equipo de forma periódica para decidir, revisar resultados y destrabar lo que se atore, sin que tengas que contratar a alguien de planta.' },
+		]
+	: [
+			{ icon: 'chats', tag: '01 · Session', title: 'Diagnosis', text: 'A call to review your case with your numbers at hand. You leave knowing what to change first and what can wait.' },
+			{ icon: 'check-list', tag: '02 · Deliverable', title: 'Audit with a plan', text: 'I review store, ads, measurement and speed, and hand you a plan ordered by impact: what first, what later and what you do not need.' },
+			{ icon: 'compass', tag: '03 · Ongoing', title: 'Guidance', text: 'I sit with your team on a regular basis to decide, review results and unblock what gets stuck, without you hiring someone full time.' },
+		];
+const topics = es
+	? ['Shopify y operación ecommerce', 'Conversión (CRO) y UX', 'Pauta y atribución', 'SEO', 'Marketplaces: Amazon y Mercado Libre', 'IA aplicada en tu equipo']
+	: ['Shopify and ecommerce operations', 'Conversion (CRO) and UX', 'Ads and attribution', 'SEO', 'Marketplaces: Amazon and Mercado Libre', 'Applied AI in your team'];
+---
+
+<section id={id} class="jx-consult" data-home="consulting" aria-labelledby={`${id}-title`}>
+	<div class="jx-wrap">
+		<div class="jx-consult__head">
+			<div>
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Consultoría' : 'Consulting'}</p>
+				<h2 id={`${id}-title`} class="jx-h2">
+					<span>{es ? 'Te ayudo a decidir' : 'I help you decide'}</span>{' '}
+					<span class="jx-soft">{es ? 'antes de gastar en construir.' : 'before you spend on building.'}</span>
+				</h2>
+			</div>
+			<p class="jx-consult__lede">
+				{es
+					? 'A veces no hace falta una tienda nueva ni más pauta, sino saber qué está fallando. Reviso tu ecommerce con ojos de negocio, de marketing y de código, y te digo por dónde empezaría yo.'
+					: 'Sometimes you do not need a new store or more ads, just to know what is failing. I review your ecommerce through business, marketing and code, and tell you where I would start.'}
+			</p>
+		</div>
+
+		<ul class="jx-consult__formats">
+			{formats.map((format) => (
+				<li>
+					<Icon name={format.icon} size="md" />
+					<p class="jx-mono">{format.tag}</p>
+					<h3>{format.title}</h3>
+					<p>{format.text}</p>
+				</li>
+			))}
+		</ul>
+
+		<div class="jx-consult__foot">
+			<ul class="jx-consult__topics" aria-label={es ? 'Temas de consultoría' : 'Consulting topics'}>
+				{topics.map((topic) => <li>{topic}</li>)}
+			</ul>
+			<div class="jx-actions">
+				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_consulting">{es ? 'Agendar un diagnóstico' : 'Book a diagnosis'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={productUrl}>{es ? 'Cómo funciona' : 'How it works'}</a>
+			</div>
+			<p class="jx-consult__proof">
+				{es ? 'Un ejemplo: ' : 'An example: '}
+				<a class="jx-link" href={`${routes[locale].work}la-carniceria-virtual/`}>{es ? 'el diagnóstico de La Carnicería Virtual' : 'the La Carnicería Virtual diagnosis'}<Icon name="arrow-right" /></a>
+			</p>
+		</div>
+	</div>
+</section>

@@ -19,7 +19,7 @@ if (!madre) throw new Error('MADRE product is required');
 const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
 const others = otherProducts;
 const madreDemo = productDemo(madre, locale);
-const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
+const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 
 const method = es
 	? [['01', 'Contexto', 'Qué quieres lograr y con qué cuentas hoy.'], ['02', 'Prioridad', 'Lo que más mueve el negocio va primero.'], ['03', 'Construcción', 'Lo hago funcionar, por partes que puedes revisar.'], ['04', 'Evidencia', 'Pruebas y resultados antes de darlo por hecho.']]

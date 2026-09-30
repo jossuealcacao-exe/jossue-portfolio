@@ -3877,3 +3877,122 @@
 		height: 1rem;
 	}
 }
+
+/* Consultoría: encabezado a dos columnas, tres formatos del mismo alto y temas como etiquetas. */
+@layer components {
+	.jx-consult {
+		padding: var(--jx-sec) 0;
+		border-top: 1px solid var(--hair);
+	}
+
+	.jx-consult__head {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		align-items: end;
+		gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+	}
+
+	.jx-consult__lede {
+		max-width: 34em;
+		margin: 0;
+		font-size: var(--jx-lede);
+		line-height: 1.45;
+		color: var(--text-2);
+	}
+
+	.jx-consult__formats {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+		margin: clamp(2.5rem, 2rem + 2vw, 4rem) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.jx-consult__formats li {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		max-width: none;
+		padding: clamp(1.5rem, 1.2rem + 1vw, 2.25rem);
+		border: 1px solid var(--hair);
+		border-radius: var(--radius-xl);
+		background: var(--card);
+	}
+
+	.jx-consult__formats .icon--md {
+		width: 1.9rem;
+		height: 1.9rem;
+		margin-bottom: 0.5rem;
+		color: var(--ivory);
+	}
+
+	.jx-consult__formats .jx-mono {
+		margin: 0;
+	}
+
+	.jx-consult__formats h3 {
+		margin: 0;
+		font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.75rem);
+		font-weight: 600;
+		letter-spacing: -0.02em;
+	}
+
+	.jx-consult__formats li > p:last-child {
+		margin: 0;
+		line-height: 1.5;
+		color: var(--text-2);
+	}
+
+	.jx-consult__foot {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: center;
+		gap: 1.25rem 2rem;
+		margin-top: 2rem;
+	}
+
+	.jx-consult__topics {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.jx-consult__topics li {
+		max-width: none;
+		padding: 0.45rem 0.85rem;
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-pill);
+		font-size: 0.875rem;
+		color: var(--text-2);
+	}
+
+	.jx-consult__foot .jx-actions {
+		margin-top: 0;
+		justify-content: flex-end;
+	}
+
+	.jx-consult__proof {
+		grid-column: 1 / -1;
+		margin: 0;
+		color: var(--text-2);
+	}
+
+	@media (max-width: 60rem) {
+		.jx-consult__head,
+		.jx-consult__foot {
+			grid-template-columns: 1fr;
+		}
+
+		.jx-consult__formats {
+			grid-template-columns: 1fr;
+		}
+
+		.jx-consult__foot .jx-actions {
+			justify-content: flex-start;
+		}
+	}
+}

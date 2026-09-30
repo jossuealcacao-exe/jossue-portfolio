@@ -133,12 +133,12 @@ test('commercial catalog presents MADRE as a product and keeps Apex access bound
 	await page.goto('/es/productos/');
 	await expect(page.locator('[data-product-catalog]')).toBeVisible();
 	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.catalog__item')).toHaveCount(7);
+	await expect(page.locator('.catalog__item')).toHaveCount(8);
 	// MADRE va primero con una imagen real; el resto lleva su ícono, no un hueco pendiente.
 	await expect(page.locator('.catalog__item').first()).toContainText('MADRE');
 	// MADRE, AHP+ y Daniela llevan su video de demostración, con póster; el resto, su ícono.
 	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(5);
-	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(2);
+	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(3);
 	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(0);
 });
 
@@ -310,7 +310,13 @@ test('Home leads with a commercial proposition and selected products', async ({ 
 	await expect(page.locator('#madre a[href="https://madre.run/"]')).toBeVisible();
 	await expect(page.locator('#madre a[href="/es/madre/"]')).toBeVisible();
 	await expect(page.locator('[data-home="showcase"] video')).toHaveCount(3);
-	await expect(page.locator('[data-home="products"] > li')).toHaveCount(2);
+	await expect(page.locator('[data-home="products"] > li')).toHaveCount(3);
+	// Consultoría: tres formatos y la llamada a agendar un diagnóstico.
+	await expect(page.locator('[data-home="consulting"] .jx-consult__formats > li')).toHaveCount(3);
+	await expect(page.locator('[data-home="consulting"] a[href="/es/contacto/?producto=consultoria"]')).toBeVisible();
+	await page.goto('/es/contacto/?producto=consultoria');
+	await expect(page.locator('#cf-project')).toHaveValue('Consultoría o diagnóstico');
+	await page.goto('/es/');
 	await expect(page.locator('[data-home="products"] [data-media-slot]')).toHaveCount(0);
 	await expect(page.locator('[data-home-case]')).toHaveCount(4);
 	await expect(page.locator('[data-home="method"] > li')).toHaveCount(4);

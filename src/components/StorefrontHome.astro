@@ -11,6 +11,7 @@ import { commercialProducts, featuredProducts, otherProducts, productDemo, produ
 import AiDevSpotlight from './AiDevSpotlight.astro';
 import AiInvite from './AiInvite.astro';
 import BrandLogos from './BrandLogos.astro';
+import ConsultingSection from './ConsultingSection.astro';
 import DemoVideo from './DemoVideo.astro';
 import HeroLoop from './HeroLoop.astro';
 import Icon, { type IconName } from './Icon.astro';
@@ -27,7 +28,7 @@ if (!madre) throw new Error('MADRE product is required');
 const others = otherProducts;
 const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
 const madreDemo = productDemo(madre, locale);
-const productIcons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
+const productIcons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 const outside: Record<string, { href: string; label: string }> = {
 	'ahp-plus': { href: 'https://github.com/jossuealcacao-exe/ahp_plus', label: 'GitHub' },
 	daniela: { href: 'https://wunutrition.com/', label: es ? 'Verla en wunutrition.com' : 'See it on wunutrition.com' },
@@ -224,6 +225,8 @@ const method = es
 			</ol>
 		</div>
 	</section>
+
+	<ConsultingSection locale={locale} />
 
 	<section id="casos" class="jx-work" aria-labelledby="jx-work-title">
 		<div class="jx-wrap">

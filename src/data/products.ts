@@ -1,6 +1,6 @@
 import { routes, type Locale } from './i18n';
 
-export type ProductSlug = 'madre' | 'ahp-plus' | 'bloqio-builder' | 'daniela' | 'miawseo' | 'desarrollo-web' | 'ia-aplicada';
+export type ProductSlug = 'madre' | 'ahp-plus' | 'bloqio-builder' | 'daniela' | 'miawseo' | 'consultoria' | 'desarrollo-web' | 'ia-aplicada';
 
 /** Video de demostración: horizontal para pantallas anchas y vertical para teléfonos, sin audio. */
 export type ProductDemo = { wide: string; tall: string; label: string; alt: string; credit?: string };
@@ -195,6 +195,34 @@ export const commercialProducts: CommercialProduct[] = [
 			es: { wide: '/videos/miawseo/miawseo-demo', tall: '/videos/miawseo/miawseo-demo-mobile', label: 'Demo · 22 s', credit: 'Fotos de gatos: Wikimedia Commons, con licencias libres (CC BY, CC BY-SA y dominio público). Autoría y licencia de cada foto en el repositorio de Miawseo.', alt: 'Demo de Miawseo: la portada, el buscador de la Michiteca con «sphynx», la sala del Sphynx pasando dos láminas y la Michi Plaza con las razas.' },
 			en: { wide: '/videos/miawseo/miawseo-demo', tall: '/videos/miawseo/miawseo-demo-mobile', label: 'Demo · 22 s (in Spanish)', credit: 'Cat photos: Wikimedia Commons, under free licenses (CC BY, CC BY-SA and public domain). Author and license of each photo in the Miawseo repository.', alt: 'Miawseo demo: the home page, the Michiteca search with “sphynx”, the Sphynx room moving through two panels, and Michi Plaza with the breeds.' },
 		},
+	},
+	{
+		slug: 'consultoria',
+		kind: 'service-product',
+		category: { es: 'Servicio · Consultoría', en: 'Service · Consulting' },
+		title: { es: 'Consultoría', en: 'Consulting' },
+		promise: {
+			es: 'Te ayudo a decidir qué hacer con tu ecommerce antes de gastar en construir.',
+			en: 'I help you decide what to do with your ecommerce before you spend on building.',
+		},
+		summary: {
+			es: 'Reviso tu tienda, tu publicidad y tus números, y te digo qué te está costando ventas, qué arreglar primero y qué puede esperar. Puede ser una sesión, una auditoría con plan priorizado o acompañamiento mensual con tu equipo.',
+			en: 'I review your store, your advertising and your numbers, and tell you what is costing you sales, what to fix first and what can wait. It can be a session, an audit with a prioritized plan, or monthly guidance with your team.',
+		},
+		idealFor: {
+			es: 'Marcas y equipos que ya venden en línea (o están por lanzar) y necesitan una segunda opinión clara antes de invertir en una tienda nueva, más pauta o IA.',
+			en: 'Brands and teams already selling online (or about to launch) who need a clear second opinion before investing in a new store, more ads or AI.',
+		},
+		included: {
+			es: ['Diagnóstico de tienda, pauta y medición', 'Lo que más te está costando ventas', 'Plan priorizado: qué primero y qué después', 'Acompañamiento para ejecutarlo con tu equipo'],
+			en: ['Store, ads and measurement diagnosis', 'What is costing you the most sales', 'Prioritized plan: what first and what later', 'Guidance to carry it out with your team'],
+		},
+		process: {
+			es: ['Llamada', 'Diagnóstico', 'Plan', 'Acompañamiento'],
+			en: ['Call', 'Diagnosis', 'Plan', 'Guidance'],
+		},
+		proofSlugs: ['la-carniceria-virtual', 'come-verde', 'wu-nutrition'],
+		visualSlug: 'la-carniceria-virtual',
 	},
 	{
 		slug: 'desarrollo-web',
