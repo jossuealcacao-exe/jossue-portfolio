@@ -269,7 +269,7 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	if (await tooManyFromIp(env, ipHash)) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
 	let output;
-	let modelMs = 0;
+	let modelMs;
 	try {
 		const knowledge = await loadKnowledge(env, request.url);
 		const started = Date.now();
