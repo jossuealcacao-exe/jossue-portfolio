@@ -5216,3 +5216,163 @@
 		}
 	}
 }
+
+/* ===== IA aplicada (servicio): tareas hoy vs con IA, qué incluye y para quién es ===== */
+@layer utilities {
+	.jx-iap__tasks {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 1rem;
+		margin: clamp(2.5rem, 2rem + 2vw, 4rem) 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.jx-iap__tasks li {
+		display: grid;
+		align-content: start;
+		gap: 0.6rem;
+		padding: 1.6rem 1.5rem 1.7rem;
+		border-radius: var(--radius-xl);
+		background: var(--card);
+	}
+
+	.jx-iap__tasks .icon {
+		width: 1.75rem;
+		height: 1.75rem;
+		margin-bottom: 0.4rem;
+		color: var(--ivory);
+	}
+
+	.jx-iap__tasks strong {
+		font-size: 1.125rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--text);
+	}
+
+	.jx-iap__tasks dl {
+		display: grid;
+		gap: 0.85rem;
+		margin: 0.35rem 0 0;
+	}
+
+	.jx-iap__tasks dl > div {
+		display: grid;
+		gap: 0.25rem;
+	}
+
+	.jx-iap__tasks dl > div + div {
+		padding-top: 0.85rem;
+		border-top: 1px solid var(--hair);
+	}
+
+	.jx-iap__tasks dt {
+		font: 600 0.6875rem/1 var(--mono);
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--text-3);
+	}
+
+	.jx-iap__tasks dl > div + div dt {
+		color: var(--ivory);
+	}
+
+	.jx-iap__tasks dd {
+		margin: 0;
+		font-size: 0.9688rem;
+		line-height: 1.45;
+		color: var(--text-2);
+	}
+
+	.jx-iap__tasks dl > div + div dd {
+		color: var(--text);
+	}
+
+	.jx-iap__included {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		max-width: none;
+		margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+	}
+
+	.jx-iap__fit {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		gap: 1rem;
+		margin-top: clamp(2.5rem, 2rem + 2vw, 4rem);
+	}
+
+	.jx-iap__fit > div {
+		padding: 1.75rem 1.75rem 1.9rem;
+		border: 1px solid var(--hair);
+		border-radius: var(--radius-xl);
+		background: var(--card);
+	}
+
+	.jx-iap__fit > .is-no {
+		background: transparent;
+	}
+
+	.jx-iap__fit .jx-mono {
+		margin: 0 0 1.1rem;
+		color: var(--text-3);
+	}
+
+	.jx-iap__fit .is-yes .jx-mono {
+		color: var(--ivory);
+	}
+
+	.jx-iap__fit ul {
+		display: grid;
+		gap: 0.9rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.jx-iap__fit li {
+		display: grid;
+		grid-template-columns: 1.5rem 1fr;
+		gap: 0.6rem;
+		font-size: 1.0625rem;
+		line-height: 1.45;
+		color: var(--text);
+	}
+
+	.jx-iap__fit .is-no li {
+		color: var(--text-2);
+	}
+
+	.jx-iap__mark {
+		display: inline-grid;
+		place-items: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 50%;
+		font-size: 0.8125rem;
+		font-weight: 700;
+		background: rgba(236, 230, 216, 0.12);
+		color: var(--ivory);
+	}
+
+	.jx-iap__fit .is-no .jx-iap__mark {
+		background: transparent;
+		border: 1px solid var(--hair-2);
+		color: var(--text-3);
+	}
+
+	@media (max-width: 68rem) {
+		.jx-iap__tasks,
+		.jx-iap__included {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 40rem) {
+		.jx-iap__tasks,
+		.jx-iap__included,
+		.jx-iap__fit {
+			grid-template-columns: 1fr;
+		}
+	}
+}

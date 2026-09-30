@@ -1,0 +1,166 @@
+---
+// IA aplicada (servicio): una tarea que se repite, resuelta con IA conectada a tus datos y con
+// límites claros. Ejemplos de tareas (hoy vs con IA), qué incluye, cómo avanzamos, para quién es,
+// lo que ya está en uso y cierre. Mismo sistema visual que la página de chatbots.
+import { routes, type Locale } from '../data/i18n';
+import AiDevSpotlight from './AiDevSpotlight.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Icon, { type IconName } from './Icon.astro';
+import PageHero from './PageHero.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const contactUrl = `${routes[locale].contact}?producto=ia-aplicada`;
+
+type Task = { icon: IconName; title: string; today: string; ai: string };
+const tasks: Task[] = es
+	? [
+			{ icon: 'chat', title: '¿Dónde está mi pedido?', today: 'Alguien lo busca en la tienda y en la paquetería, caso por caso.', ai: 'El asistente lo consulta y contesta. Si hay un problema, se lo pasa a tu equipo.' },
+			{ icon: 'pen', title: 'Fichas de producto', today: 'Se escriben una por una y cada quien con su estilo.', ai: 'Salen borradores con tus datos y tu tono. Una persona aprueba antes de publicar.' },
+			{ icon: 'trend-up', title: 'El reporte de la semana', today: 'Se copian números de cuatro herramientas a una hoja.', ai: 'Llega el lunes, con la fuente de cada cifra y lo que conviene mirar primero.' },
+			{ icon: 'envelope', title: 'Correos y tickets', today: 'Alguien los lee todos y los reparte.', ai: 'Llegan etiquetados a la persona correcta. Lo dudoso se queda para revisión.' },
+			{ icon: 'compass', title: 'Información interna', today: 'Media hora entre pestañas, archivos y mensajes.', ai: 'Preguntas normal y te responde citando de dónde lo sacó.' },
+			{ icon: 'basket', title: 'Captura de pedidos', today: 'Se teclean desde PDF, correo o WhatsApp.', ai: 'Se leen y se cargan al sistema. Lo que no cuadra queda marcado.' },
+		]
+	: [
+			{ icon: 'chat', title: 'Where is my order?', today: 'Someone looks it up in the store and the carrier, one case at a time.', ai: 'The assistant checks and answers. If something is wrong, it hands it to your team.' },
+			{ icon: 'pen', title: 'Product pages', today: 'Written one by one, each in a different style.', ai: 'Drafts come out with your data and your tone. A person approves before publishing.' },
+			{ icon: 'trend-up', title: 'The weekly report', today: 'Numbers get copied from four tools into a sheet.', ai: 'It arrives on Monday, with the source of each figure and what to look at first.' },
+			{ icon: 'envelope', title: 'Emails and tickets', today: 'Someone reads them all and routes them.', ai: 'They arrive tagged to the right person. Anything unclear waits for review.' },
+			{ icon: 'compass', title: 'Internal information', today: 'Half an hour across tabs, files and messages.', ai: 'You ask in plain words and it answers citing where it found it.' },
+			{ icon: 'basket', title: 'Order entry', today: 'Typed in from PDFs, email or WhatsApp.', ai: 'They are read and loaded into the system. Whatever does not match is flagged.' },
+		];
+
+const included: Array<{ icon: IconName; title: string; text: string }> = es
+	? [
+			{ icon: 'filter', title: 'Definición del caso de uso', text: 'Elegimos una sola tarea, medimos cuánto cuesta hoy y acordamos qué es un buen resultado.' },
+			{ icon: 'shield', title: 'Límites y autoridad', text: 'Qué datos puede ver, qué puede hacer sola y qué necesita aprobación. Queda por escrito.' },
+			{ icon: 'bolt', title: 'Prototipo operativo', text: 'Funciona con tus datos reales, no con datos inventados, y tu equipo lo usa desde el principio.' },
+			{ icon: 'check-list', title: 'Pruebas, documentación y siguiente paso', text: 'Casos de prueba, registro de lo que hizo y un manual corto. Tú decides si crece, se ajusta o se apaga.' },
+		]
+	: [
+			{ icon: 'filter', title: 'Use-case definition', text: 'We pick a single task, measure what it costs today and agree on what a good result looks like.' },
+			{ icon: 'shield', title: 'Boundaries and authority', text: 'What data it can see, what it can do on its own and what needs approval. In writing.' },
+			{ icon: 'bolt', title: 'Working prototype', text: 'It runs on your real data, not made-up data, and your team uses it from the start.' },
+			{ icon: 'check-list', title: 'Tests, documentation and next step', text: 'Test cases, a log of what it did and a short manual. You decide whether it grows, changes or is switched off.' },
+		];
+
+const steps = es
+	? [
+			['01', 'Tarea', 'Me cuentas qué se repite y cuánto tiempo se lleva. Elegimos una.'],
+			['02', 'Datos', 'Conecto la IA a donde vive la información: tu tienda, tu ERP, tu CRM, hojas o correo.'],
+			['03', 'Control', 'Pongo permisos, registro de cada acción y los puntos donde decide una persona.'],
+			['04', 'Prueba', 'Tu equipo la usa con casos reales y la comparamos contra cómo se hacía antes.'],
+		]
+	: [
+			['01', 'Task', 'You tell me what repeats and how long it takes. We pick one.'],
+			['02', 'Data', 'I connect the AI to where the information lives: your store, ERP, CRM, sheets or email.'],
+			['03', 'Control', 'I set permissions, a log of every action and the points where a person decides.'],
+			['04', 'Test', 'Your team uses it on real cases and we compare it with how it was done before.'],
+		];
+
+const fit = es
+	? {
+			yes: ['Tienes una tarea que se repite cada semana.', 'La información ya vive en algún sistema, aunque sea una hoja.', 'Hay alguien que puede revisar y decidir.'],
+			no: ['Quieres «meter IA» sin una tarea concreta.', 'Los datos no existen o nadie los mantiene.', 'Esperas que decida sola sobre dinero o clientes sin revisión.'],
+		}
+	: {
+			yes: ['You have a task that repeats every week.', 'The information already lives in some system, even a sheet.', 'Someone can review and decide.'],
+			no: ['You want to "add AI" without a concrete task.', 'The data does not exist or nobody maintains it.', 'You expect it to decide on money or customers with no review.'],
+		};
+---
+
+<Breadcrumbs
+	locale={locale}
+	items={[
+		{ label: es ? 'Productos' : 'Products', href: routes[locale].products },
+		{ label: es ? 'IA aplicada' : 'Applied AI' },
+	]}
+/>
+<article class="jx-home jx-bots jx-iap" data-product-detail="ia-aplicada">
+	<PageHero
+		loop="ai"
+		id="iap-title"
+		label={es ? 'Servicio · IA aplicada' : 'Service · Applied AI'}
+		title={es ? ['Una tarea que hoy haces a mano,', 'resuelta con IA y bajo tu control.'] : ['A task you do by hand today,', 'handled by AI and under your control.']}
+		lede={es
+			? 'Elijo contigo una tarea que se repite, la conecto a tus datos reales y le pongo límites claros: qué puede hacer sola y qué tiene que aprobar una persona. Primero definimos el trabajo; la tecnología va después.'
+			: 'Together we pick a task that repeats, I connect it to your real data and give it clear limits: what it can do on its own and what a person has to approve. We define the work first; technology comes second.'}
+	>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_iap_contact">{es ? 'Quiero esto para mi negocio' : 'I want this for my business'}<Icon name="arrow-right" /></a>
+			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Qué tarea de mi negocio se puede resolver con IA?' : 'Which task in my business could AI handle?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
+		</div>
+	</PageHero>
+
+	<section class="jx-bots__section" aria-labelledby="iap-tasks">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Ejemplos de tareas' : 'Example tasks'}</p>
+			<h2 id="iap-tasks" class="jx-h2"><span>{es ? 'Lo que hoy le quita horas a tu equipo,' : 'What takes your team hours today,'}</span>{' '}<span class="jx-soft">{es ? 'hecho en segundos y revisado.' : 'done in seconds and reviewed.'}</span></h2>
+			<ul class="jx-iap__tasks">
+				{tasks.map((task) => (
+					<li>
+						<Icon name={task.icon} size="md" />
+						<strong>{task.title}</strong>
+						<dl>
+							<div><dt>{es ? 'Hoy' : 'Today'}</dt><dd>{task.today}</dd></div>
+							<div><dt>{es ? 'Con IA' : 'With AI'}</dt><dd>{task.ai}</dd></div>
+						</dl>
+					</li>
+				))}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="iap-included">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué incluye' : 'What is included'}</p>
+			<h2 id="iap-included" class="jx-h2"><span>{es ? 'No te entrego una demo.' : 'I do not hand you a demo.'}</span>{' '}<span class="jx-soft">{es ? 'Te entrego algo que ya se usa.' : 'I hand you something already in use.'}</span></h2>
+			<ul class="jx-points jx-iap__included">
+				{included.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="iap-steps">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
+			<h2 id="iap-steps" class="jx-h2"><span>{es ? 'Cuatro pasos,' : 'Four steps,'}</span>{' '}<span class="jx-soft">{es ? 'y en cada uno decides tú.' : 'and you decide at each one.'}</span></h2>
+			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="iap-fit">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Para quién es' : 'Who it is for'}</p>
+			<h2 id="iap-fit" class="jx-h2"><span>{es ? 'Te sirve si ya sabes qué te duele.' : 'It works if you know what hurts.'}</span>{' '}<span class="jx-soft">{es ? 'Y te digo cuándo no.' : 'And I tell you when it does not.'}</span></h2>
+			<div class="jx-iap__fit">
+				<div class="is-yes">
+					<p class="jx-mono">{es ? 'Te sirve si' : 'It works if'}</p>
+					<ul>{fit.yes.map((line) => <li><span class="jx-iap__mark" aria-hidden="true">✓</span>{line}</li>)}</ul>
+				</div>
+				<div class="is-no">
+					<p class="jx-mono">{es ? 'Todavía no, si' : 'Not yet, if'}</p>
+					<ul>{fit.no.map((line) => <li><span class="jx-iap__mark" aria-hidden="true">–</span>{line}</li>)}</ul>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<AiDevSpotlight locale={locale} showPageLink={false} />
+
+	<section class="jx-close" aria-labelledby="iap-close">
+		<div class="jx-close__card">
+			<h2 id="iap-close" class="jx-close__title"><span>{es ? '¿Qué tarea te gustaría' : 'Which task would you like'}</span>{' '}<span class="jx-soft">{es ? 'quitarte de encima?' : 'off your plate?'}</span></h2>
+			<p>{es ? 'Cuéntame cuál es y en qué sistemas vive la información. Te respondo en menos de un día hábil con si se puede y por dónde empezaría.' : 'Tell me which one and where the information lives. I reply within one business day with whether it can be done and where I would start.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_iap_contact_bottom">{es ? 'Cuéntame tu caso' : 'Tell me your case'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={routes[locale].ai}>{es ? 'Cómo uso la IA' : 'How I use AI'}</a>
+			</div>
+		</div>
+	</section>
+</article>

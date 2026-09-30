@@ -21,6 +21,8 @@ const GROUPS = [
 	'.jx-bots__stack > li',
 	'.jx-bots__example li',
 	'.jx-bots__abuse dl > div',
+	'.jx-iap__tasks > li',
+	'.jx-iap__fit > div',
 	'[data-home-case]',
 	'.jx-clip',
 ];
