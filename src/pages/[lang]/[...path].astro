@@ -63,7 +63,13 @@ const meta = pageKey === 'case' || pageKey === 'product' ? undefined : metadata[
 const publicCase = entry ? casePresentation(entry.data.slug, locale) : undefined;
 // Títulos con lo que es cada cosa, no solo su nombre (mejor para buscadores y respuestas de IA).
 const kindOf = (category: string) => category.split(' · ').filter((part) => !/^(Producto propio|Own product|Producto estrella|Flagship product|Servicio|Service)$/i.test(part))[0] ?? category;
-const productKind = product ? kindOf(product.category[locale]) : '';
+const productKind = product
+	? (() => {
+			// Nunca «Consultoría — Consultoría»: si la categoría repite el nombre, se usa la siguiente parte.
+			const parts = product.category[locale].split(' · ').filter((part) => part.toLowerCase() !== product.title[locale].toLowerCase());
+			return kindOf(parts.join(' · ') || product.category[locale]);
+		})()
+	: '';
 const title = entry
 	? `${entry.data.title.split(' — ')[0]} — ${kindOf(publicCase?.category ?? entry.data.client)} · Jossue Alcalá`
 	: product

@@ -199,7 +199,7 @@ export const commercialProducts: CommercialProduct[] = [
 	{
 		slug: 'consultoria',
 		kind: 'service-product',
-		category: { es: 'Servicio · Consultoría', en: 'Service · Consulting' },
+		category: { es: 'Consultoría · Ecommerce y growth', en: 'Consulting · Ecommerce and growth' },
 		title: { es: 'Consultoría', en: 'Consulting' },
 		promise: {
 			es: 'Te ayudo a decidir qué hacer con tu ecommerce antes de gastar en construir.',
