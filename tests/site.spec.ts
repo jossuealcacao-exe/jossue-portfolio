@@ -245,7 +245,7 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 		if (box && box.width > 0) expect(box.height, 'botón con área táctil').toBeGreaterThanOrEqual(44);
 	}
 
-	for (const route of ['/es/productos/desarrollo-web/']) {
+	for (const route of ['/es/productos/bloqio-builder/']) {
 		await page.goto(route);
 		const hero = page.locator('main .stage--hero').first();
 		const heroTitle = hero.locator('.stage__title').first();
@@ -293,7 +293,7 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 	await page.goto('/es/trabajo/wu-nutrition/');
 	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Casos', 'WU Nutrition']);
 
-	await page.goto('/es/productos/desarrollo-web/');
+	await page.goto('/es/productos/bloqio-builder/');
 	const chapterCta = page.locator('.chapter-nav__cta');
 	const chapterSpacing = await chapterCta.evaluate((element) => {
 		const style = getComputedStyle(element);

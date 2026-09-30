@@ -1,0 +1,191 @@
+---
+// Consultoría (servicio): señales de que te sirve, tres formas de trabajar, qué reviso, un
+// diagnóstico real (La Carnicería Virtual, con los hallazgos ya publicados en su caso), cómo
+// avanzamos y cierre. Sin precios: se definen después de una llamada corta.
+import type { CollectionEntry } from 'astro:content';
+import { routes, type Locale } from '../data/i18n';
+import { workImage } from '../data/workImages';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Icon, { type IconName } from './Icon.astro';
+import JxProofCards from './JxProofCards.astro';
+import PageHero from './PageHero.astro';
+
+interface Props {
+	locale: Locale;
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, cases } = Astro.props;
+const es = locale === 'es';
+const contactUrl = `${routes[locale].contact}?producto=consultoria`;
+const caseUrl = `${routes[locale].work}la-carniceria-virtual/`;
+const desk = workImage('cover-la-carniceria-virtual');
+const phone = workImage('lcv-home-hero');
+
+type Card = { icon: IconName; title: string; text: string };
+const signals: Card[] = es
+	? [
+			{ icon: 'trend-up', title: 'Llega tráfico pero no vende', text: 'Pagas por visitas que entran, miran y se van, sobre todo en celular.' },
+			{ icon: 'dollar-down', title: 'Gastas en pauta a ciegas', text: 'No sabes qué campaña trae ventas y cuál solo trae clics.' },
+			{ icon: 'bolt', title: 'La tienda está lenta', text: 'Tarda en cargar en el teléfono y no sabes qué la frena.' },
+			{ icon: 'filter', title: 'Vas a rediseñar', text: 'Y no tienes claro qué cambiar, qué conservar y qué no tocar.' },
+			{ icon: 'check-list', title: 'Los números no cuadran', text: 'Shopify, GA4 y Meta dicen cosas distintas sobre las mismas ventas.' },
+			{ icon: 'sparkles-ai', title: 'Quieres meter IA', text: 'Y no sabes dónde te ahorraría tiempo de verdad y dónde sería gasto.' },
+		]
+	: [
+			{ icon: 'trend-up', title: 'Traffic arrives but does not buy', text: 'You pay for visits that come in, look and leave, mostly on mobile.' },
+			{ icon: 'dollar-down', title: 'You spend on ads blind', text: 'You do not know which campaign brings sales and which only brings clicks.' },
+			{ icon: 'bolt', title: 'The store is slow', text: 'It takes long to load on a phone and you do not know what holds it back.' },
+			{ icon: 'filter', title: 'You are about to redesign', text: 'And it is not clear what to change, what to keep and what not to touch.' },
+			{ icon: 'check-list', title: 'The numbers do not match', text: 'Shopify, GA4 and Meta say different things about the same sales.' },
+			{ icon: 'sparkles-ai', title: 'You want to add AI', text: 'And you do not know where it would really save time and where it would be spend.' },
+		];
+
+const formats: Array<Card & { tag: string }> = es
+	? [
+			{ icon: 'chats', tag: '01 · Sesión', title: 'Diagnóstico', text: 'Una llamada para revisar tu caso con tus números en la mano. Sales con lo que más te conviene cambiar primero y lo que puede esperar.' },
+			{ icon: 'check-list', tag: '02 · Entregable', title: 'Auditoría con plan', text: 'Reviso tienda, pauta, medición y velocidad. Te entrego un plan ordenado por impacto: qué primero, qué después y qué no hace falta hacer.' },
+			{ icon: 'compass', tag: '03 · Continuo', title: 'Acompañamiento', text: 'Me siento con tu equipo de forma periódica para decidir, revisar resultados y destrabar lo que se atore, sin que contrates a alguien de planta.' },
+		]
+	: [
+			{ icon: 'chats', tag: '01 · Session', title: 'Diagnosis', text: 'A call to review your case with your numbers at hand. You leave knowing what to change first and what can wait.' },
+			{ icon: 'check-list', tag: '02 · Deliverable', title: 'Audit with a plan', text: 'I review store, ads, measurement and speed, and hand you a plan ordered by impact: what first, what later and what you do not need.' },
+			{ icon: 'compass', tag: '03 · Ongoing', title: 'Guidance', text: 'I sit with your team on a regular basis to decide, review results and unblock what gets stuck, without you hiring someone full time.' },
+		];
+
+const areas = es
+	? [
+			['Tienda', 'Home, colecciones, ficha de producto y carrito: dónde se frena la compra.'],
+			['Velocidad', 'Datos reales de campo y de laboratorio, no una sola prueba de Lighthouse.'],
+			['Medición', 'GA4, GTM y píxeles: qué se mide mal y qué ni siquiera se mide.'],
+			['Pauta', 'Meta y Google Ads: qué campañas sostienen las ventas y cuáles no.'],
+			['SEO', 'Lo técnico que Google ve primero: estructura, datos y contenido.'],
+			['Canales e IA', 'Amazon, Mercado Libre y dónde la IA le quita trabajo a tu equipo.'],
+		]
+	: [
+			['Store', 'Home, collections, product page and cart: where the purchase stalls.'],
+			['Speed', 'Real field and lab data, not a single Lighthouse run.'],
+			['Measurement', 'GA4, GTM and pixels: what is measured wrong and what is not measured at all.'],
+			['Ads', 'Meta and Google Ads: which campaigns hold up sales and which do not.'],
+			['SEO', 'The technical side Google sees first: structure, data and content.'],
+			['Channels and AI', 'Amazon, Mercado Libre and where AI takes work off your team.'],
+		];
+
+const findings = es
+	? ['La home cargaba 272 imágenes y 74 scripts; en celular tardaba 3.6 s en mostrar el contenido principal (LCP).', 'Una colección mostraba 82 productos sin filtros y con un banner que retrasaba el catálogo.', 'El resultado: un plan a 30, 60 y 90 días que separa lo confirmado de lo que hay que validar.']
+	: ['The home loaded 272 images and 74 scripts; on mobile it took 3.6 s to show the main content (LCP).', 'A collection showed 82 products with no filters and a banner that delayed the catalog.', 'The result: a 30, 60 and 90 day plan that separates what is confirmed from what still needs validation.'];
+
+const steps = es
+	? [
+			['01', 'Llamada', 'Me cuentas qué te preocupa, qué vendes y qué números tienes a la mano.'],
+			['02', 'Diagnóstico', 'Reviso tu tienda, tu pauta y tu medición con evidencia, no con opiniones.'],
+			['03', 'Plan', 'Te entrego qué hacer primero, qué después y qué no hace falta, con su porqué.'],
+			['04', 'Acompañamiento', 'Si quieres, lo ejecutamos con tu equipo y revisamos juntos los resultados.'],
+		]
+	: [
+			['01', 'Call', 'You tell me what worries you, what you sell and which numbers you have at hand.'],
+			['02', 'Diagnosis', 'I review your store, ads and measurement with evidence, not opinions.'],
+			['03', 'Plan', 'I hand you what to do first, what later and what you do not need, with the reason why.'],
+			['04', 'Guidance', 'If you want, we carry it out with your team and review the results together.'],
+		];
+---
+
+<Breadcrumbs
+	locale={locale}
+	items={[
+		{ label: es ? 'Productos' : 'Products', href: routes[locale].products },
+		{ label: es ? 'Consultoría' : 'Consulting' },
+	]}
+/>
+<article class="jx-home jx-bots jx-svc" data-product-detail="consultoria">
+	<PageHero
+		loop="services"
+		id="consult-title"
+		label={es ? 'Consultoría · Ecommerce y growth' : 'Consulting · Ecommerce and growth'}
+		title={es ? ['Te digo qué te está costando ventas', 'antes de que gastes en construir.'] : ['I tell you what is costing you sales', 'before you spend on building.']}
+		lede={es
+			? 'Reviso tu tienda, tu publicidad y tus números con ojos de negocio, de marketing y de código. Te digo qué arreglar primero, qué puede esperar y qué no hace falta hacer.'
+			: 'I review your store, your ads and your numbers through business, marketing and code. I tell you what to fix first, what can wait and what you do not need to do.'}
+	>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_consulting">{es ? 'Agendar un diagnóstico' : 'Book a diagnosis'}<Icon name="arrow-right" /></a>
+			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Cómo es una consultoría con Jossué?' : 'What is a consulting engagement with Jossué like?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
+		</div>
+		{desk && (
+			<figure class="jx-svc__stage">
+				<img class="jx-svc__desk" src={desk} alt={es ? 'La tienda de La Carnicería Virtual en escritorio, revisada en la auditoría' : 'La Carnicería Virtual store on desktop, reviewed in the audit'} width="1600" height="1000" decoding="async" fetchpriority="high" />
+				{phone && <img class="jx-svc__phone" src={phone} alt={es ? 'La misma tienda en celular' : 'The same store on mobile'} width="780" height="1688" loading="lazy" decoding="async" />}
+				<figcaption class="jx-mono">{es ? 'Ejemplo real · Auditoría de La Carnicería Virtual' : 'Real example · La Carnicería Virtual audit'}</figcaption>
+			</figure>
+		)}
+	</PageHero>
+
+	<section class="jx-bots__section" aria-labelledby="consult-signals">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cuándo te sirve' : 'When it helps'}</p>
+			<h2 id="consult-signals" class="jx-h2"><span>{es ? 'Si alguna de estas te suena,' : 'If any of these sounds familiar,'}</span>{' '}<span class="jx-soft">{es ? 'vale la pena una revisión.' : 'a review is worth it.'}</span></h2>
+			<ul class="jx-points jx-svc__grid3">
+				{signals.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="consult-formats">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Formas de trabajar' : 'Ways to work'}</p>
+			<h2 id="consult-formats" class="jx-h2"><span>{es ? 'Una sesión, un plan' : 'A session, a plan'}</span>{' '}<span class="jx-soft">{es ? 'o alguien a tu lado cada mes.' : 'or someone at your side every month.'}</span></h2>
+			<ul class="jx-points jx-svc__grid3 jx-svc__formats">
+				{formats.map((item) => <li><Icon name={item.icon} size="md" /><span class="jx-mono">{item.tag}</span><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="consult-areas">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué reviso' : 'What I review'}</p>
+			<h2 id="consult-areas" class="jx-h2"><span>{es ? 'Todo lo que toca la venta,' : 'Everything that touches the sale,'}</span>{' '}<span class="jx-soft">{es ? 'no solo el diseño.' : 'not only the design.'}</span></h2>
+			<dl class="jx-svc__areas">
+				{areas.map(([title, text]) => <div><dt>{title}</dt><dd>{text}</dd></div>)}
+			</dl>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="consult-case">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Un diagnóstico real' : 'A real diagnosis'}</p>
+			<h2 id="consult-case" class="jx-h2"><span>{es ? 'La Carnicería Virtual:' : 'La Carnicería Virtual:'}</span>{' '}<span class="jx-soft">{es ? 'qué encontré y qué propuse.' : 'what I found and what I proposed.'}</span></h2>
+			<div class="jx-svc__case">
+				<ol>{findings.map((line, index) => <li><span class="jx-mono">{String(index + 1).padStart(2, '0')}</span><p>{line}</p></li>)}</ol>
+				<p class="jx-bots__note">{es ? 'Sin rediseñar la tienda: primero velocidad en celular, descubrimiento y confianza. Sin cifras de ventas del cliente.' : 'Without redesigning the store: mobile speed, discovery and trust first. No client sales figures.'}</p>
+				<a class="jx-btn jx-btn--ghost" href={caseUrl}>{es ? 'Leer el caso completo' : 'Read the full case'}<Icon name="arrow-right" /></a>
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="consult-steps">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
+			<h2 id="consult-steps" class="jx-h2"><span>{es ? 'De una llamada' : 'From one call'}</span>{' '}<span class="jx-soft">{es ? 'a saber qué hacer el lunes.' : 'to knowing what to do on Monday.'}</span></h2>
+			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="consult-proof">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Proyectos' : 'Projects'}</p>
+			<h2 id="consult-proof" class="jx-h2"><span>{es ? 'Donde lo he aplicado.' : 'Where I have applied it.'}</span></h2>
+			<JxProofCards locale={locale} slugs={['la-carniceria-virtual', 'come-verde', 'wu-nutrition']} cases={cases} />
+		</div>
+	</section>
+
+	<section class="jx-close" aria-labelledby="consult-close">
+		<div class="jx-close__card">
+			<h2 id="consult-close" class="jx-close__title"><span>{es ? '¿Qué te está costando' : 'What is costing you'}</span>{' '}<span class="jx-soft">{es ? 'más ventas hoy?' : 'the most sales today?'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes, en qué canales y qué te preocupa. Te respondo en menos de un día hábil con por dónde empezaría.' : 'Tell me what you sell, on which channels and what worries you. I reply within one business day with where I would start.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_consulting_bottom">{es ? 'Agendar un diagnóstico' : 'Book a diagnosis'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}desarrollo-web/`}>{es ? 'Si ya sabes qué construir' : 'If you already know what to build'}</a>
+			</div>
+		</div>
+	</section>
+</article>

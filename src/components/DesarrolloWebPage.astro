@@ -1,0 +1,152 @@
+---
+// Desarrollo web (servicio): qué construyo, qué cambia cuando está bien hecho, proyectos reales,
+// cómo avanzamos, con qué trabajo y cierre. Mismo sistema visual que chatbots e IA aplicada.
+import type { CollectionEntry } from 'astro:content';
+import { routes, type Locale } from '../data/i18n';
+import { workImage } from '../data/workImages';
+import Breadcrumbs from './Breadcrumbs.astro';
+import Icon, { type IconName } from './Icon.astro';
+import JxProofCards from './JxProofCards.astro';
+import PageHero from './PageHero.astro';
+
+interface Props {
+	locale: Locale;
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, cases } = Astro.props;
+const es = locale === 'es';
+const contactUrl = `${routes[locale].contact}?producto=desarrollo-web`;
+const desk = workImage('cv-home-desktop');
+const phone = workImage('wu-home-campaign');
+
+type Card = { icon: IconName; title: string; text: string };
+const builds: Card[] = es
+	? [
+			{ icon: 'basket', title: 'Tiendas en Shopify', text: 'Temas completos sobre Online Store 2.0: tu equipo arma páginas con secciones, sin tocar código.' },
+			{ icon: 'display', title: 'Rediseños', text: 'Cambio lo que frena la venta sin perder lo que ya funciona: posiciones en Google, medición y contenido.' },
+			{ icon: 'layers', title: 'Secciones a la medida', text: 'Carruseles, comparadores, kits, reseñas: piezas que tu tema no trae y que tu equipo puede reutilizar.' },
+			{ icon: 'cube', title: 'Apps y funciones', text: 'Cuando ninguna app hace lo que necesitas, la programo. Así nacieron Prometeo y Hermes.' },
+			{ icon: 'nodes', title: 'Integraciones', text: 'Tu tienda conectada con tu ERP, tu CRM, tu correo y tus marketplaces, sin copiar datos a mano.' },
+			{ icon: 'code', title: 'Sitios y productos web', text: 'Sitios rápidos y herramientas propias fuera de Shopify, como este sitio o MADRE.' },
+		]
+	: [
+			{ icon: 'basket', title: 'Shopify stores', text: 'Full themes on Online Store 2.0: your team builds pages with sections, without touching code.' },
+			{ icon: 'display', title: 'Redesigns', text: 'I change what holds back the sale without losing what already works: Google rankings, measurement and content.' },
+			{ icon: 'layers', title: 'Custom sections', text: 'Carousels, comparisons, bundles, reviews: pieces your theme lacks that your team can reuse.' },
+			{ icon: 'cube', title: 'Apps and features', text: 'When no app does what you need, I build it. That is how Prometeo and Hermes happened.' },
+			{ icon: 'nodes', title: 'Integrations', text: 'Your store connected to your ERP, CRM, email and marketplaces, with no copying data by hand.' },
+			{ icon: 'code', title: 'Websites and web products', text: 'Fast websites and your own tools outside Shopify, like this site or MADRE.' },
+		];
+
+const qualities: Card[] = es
+	? [
+			{ icon: 'mobile', title: 'Rápida en celular', text: 'Mido la velocidad con datos reales antes y después de entregar.' },
+			{ icon: 'pen', title: 'Tu equipo la edita', text: 'Cambiar un banner o una colección no requiere llamar a un programador.' },
+			{ icon: 'pulse', title: 'Medida desde el día uno', text: 'GA4, píxeles y eventos de compra listos y revisados antes de lanzar.' },
+			{ icon: 'check-list', title: 'Documentada', text: 'Pruebas, notas de cada decisión y un manual corto para quien siga.' },
+		]
+	: [
+			{ icon: 'mobile', title: 'Fast on mobile', text: 'I measure speed with real data before and after delivery.' },
+			{ icon: 'pen', title: 'Your team edits it', text: 'Changing a banner or a collection does not require calling a developer.' },
+			{ icon: 'pulse', title: 'Measured from day one', text: 'GA4, pixels and purchase events ready and checked before launch.' },
+			{ icon: 'check-list', title: 'Documented', text: 'Tests, notes on each decision and a short manual for whoever comes next.' },
+		];
+
+const steps = es
+	? [
+			['01', 'Alcance', 'Empezamos por el problema de negocio y acordamos qué se entrega y qué no.'],
+			['02', 'Diseño', 'Diseño las pantallas clave en celular y escritorio antes de programar.'],
+			['03', 'Construcción', 'Programo por partes que puedes ver funcionando, no todo al final.'],
+			['04', 'Entrega', 'Pruebas, medición revisada, documentación y acompañamiento en el lanzamiento.'],
+		]
+	: [
+			['01', 'Scope', 'We start from the business problem and agree on what is delivered and what is not.'],
+			['02', 'Design', 'I design the key screens on mobile and desktop before coding.'],
+			['03', 'Build', 'I build in parts you can see working, not everything at the end.'],
+			['04', 'Delivery', 'Tests, checked measurement, documentation and support at launch.'],
+		];
+
+const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 · GTM', 'Klaviyo', 'Odoo'];
+---
+
+<Breadcrumbs
+	locale={locale}
+	items={[
+		{ label: es ? 'Productos' : 'Products', href: routes[locale].products },
+		{ label: es ? 'Desarrollo web' : 'Web development' },
+	]}
+/>
+<article class="jx-home jx-bots jx-svc" data-product-detail="desarrollo-web">
+	<PageHero
+		loop="products"
+		id="dev-title"
+		label={es ? 'Servicio · Desarrollo web' : 'Service · Web development'}
+		title={es ? ['Tu tienda en línea,', 'hecha para vender y fácil de mantener.'] : ['Your online store,', 'built to sell and easy to maintain.']}
+		lede={es
+			? 'Diseño y programo tiendas en Shopify, secciones a la medida, integraciones y productos web. Empiezo por lo que le cuesta ventas a tu negocio y termino con pruebas y una entrega documentada.'
+			: 'I design and build Shopify stores, custom sections, integrations and web products. I start from what is costing your business sales and finish with tests and a documented delivery.'}
+	>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_dev_contact">{es ? 'Quiero mi tienda' : 'I want my store'}<Icon name="arrow-right" /></a>
+			<a class="jx-btn jx-btn--ghost" href={routes[locale].work}>{es ? 'Ver casos reales' : 'See real cases'}</a>
+		</div>
+		{desk && (
+			<figure class="jx-svc__stage">
+				<img class="jx-svc__desk" src={desk} alt={es ? 'La tienda de Come Verde en escritorio' : 'The Come Verde store on desktop'} width="1600" height="1000" decoding="async" fetchpriority="high" />
+				{phone && <img class="jx-svc__phone" src={phone} alt={es ? 'La tienda de WU Nutrition en celular' : 'The WU Nutrition store on mobile'} width="780" height="1688" loading="lazy" decoding="async" />}
+				<figcaption class="jx-mono">{es ? 'Proyectos reales · Come Verde y WU Nutrition' : 'Real projects · Come Verde and WU Nutrition'}</figcaption>
+			</figure>
+		)}
+	</PageHero>
+
+	<section class="jx-bots__section" aria-labelledby="dev-builds">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué construyo' : 'What I build'}</p>
+			<h2 id="dev-builds" class="jx-h2"><span>{es ? 'De una sección nueva' : 'From one new section'}</span>{' '}<span class="jx-soft">{es ? 'a la tienda completa.' : 'to the whole store.'}</span></h2>
+			<ul class="jx-points jx-svc__grid3">
+				{builds.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="dev-quality">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo la entrego' : 'How I deliver it'}</p>
+			<h2 id="dev-quality" class="jx-h2"><span>{es ? 'Una tienda bonita no basta.' : 'A pretty store is not enough.'}</span>{' '}<span class="jx-soft">{es ? 'Tiene que vender y aguantar.' : 'It has to sell and last.'}</span></h2>
+			<ul class="jx-points jx-svc__grid4">
+				{qualities.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="dev-proof">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Proyectos reales' : 'Real projects'}</p>
+			<h2 id="dev-proof" class="jx-h2"><span>{es ? 'Lo que ya construí,' : 'What I have built,'}</span>{' '}<span class="jx-soft">{es ? 'con capturas reales.' : 'with real captures.'}</span></h2>
+			<JxProofCards locale={locale} slugs={['wu-nutrition', 'come-verde', 'bloqio-cro-apps', 'tiendaonline']} cases={cases} />
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="dev-steps">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
+			<h2 id="dev-steps" class="jx-h2"><span>{es ? 'Ves avances en el camino,' : 'You see progress along the way,'}</span>{' '}<span class="jx-soft">{es ? 'no una sorpresa al final.' : 'not a surprise at the end.'}</span></h2>
+			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
+			<ul class="jx-svc__stack" aria-label={es ? 'Con qué trabajo' : 'What I work with'}>
+				{stack.map((item) => <li>{item}</li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-close" aria-labelledby="dev-close">
+		<div class="jx-close__card">
+			<h2 id="dev-close" class="jx-close__title"><span>{es ? '¿Vas a lanzar, rehacer' : 'Launching, rebuilding'}</span>{' '}<span class="jx-soft">{es ? 'o crecer tu tienda?' : 'or growing your store?'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes, en qué plataforma estás y qué te gustaría cambiar. Te respondo en menos de un día hábil con cómo lo haría.' : 'Tell me what you sell, which platform you are on and what you would like to change. I reply within one business day with how I would do it.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_dev_contact_bottom">{es ? 'Cuéntame tu proyecto' : 'Tell me about your project'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}consultoria/`}>{es ? 'Si aún no sabes qué construir' : 'If you do not know what to build yet'}</a>
+			</div>
+		</div>
+	</section>
+</article>

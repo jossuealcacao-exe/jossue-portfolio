@@ -5,6 +5,7 @@
 import { routes, type Locale } from '../data/i18n';
 import AiDevSpotlight from './AiDevSpotlight.astro';
 import Breadcrumbs from './Breadcrumbs.astro';
+import DemoVideo from './DemoVideo.astro';
 import Icon, { type IconName } from './Icon.astro';
 import PageHero from './PageHero.astro';
 
@@ -15,6 +16,12 @@ interface Props {
 const { locale } = Astro.props;
 const es = locale === 'es';
 const contactUrl = `${routes[locale].contact}?producto=ia-aplicada`;
+const heroDemo = {
+	wide: '/videos/ia/ia-hero',
+	tall: '/videos/ia/ia-hero-tall',
+	alt: es ? 'Animación abstracta: tarjetas de trabajo que se procesan en una constelación y terminan en una aprobación con palomita.' : 'Abstract animation: work cards processed through a constellation, ending in an approval check mark.',
+	label: es ? 'Tu tarea, resuelta y aprobada' : 'Your task, handled and approved',
+};
 
 type Task = { icon: IconName; title: string; today: string; ai: string };
 const tasks: Task[] = es
@@ -95,6 +102,7 @@ const fit = es
 			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_iap_contact">{es ? 'Quiero esto para mi negocio' : 'I want this for my business'}<Icon name="arrow-right" /></a>
 			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Qué tarea de mi negocio se puede resolver con IA?' : 'Which task in my business could AI handle?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
 		</div>
+		<DemoVideo demo={heroDemo} locale={locale} class="jx-bots__stage" />
 	</PageHero>
 
 	<section class="jx-bots__section" aria-labelledby="iap-tasks">

@@ -1,0 +1,37 @@
+---
+// Tarjetas de casos reales (portada + resumen + enlace) para las páginas de servicio del sistema jx.
+import type { CollectionEntry } from 'astro:content';
+import { casePresentation } from '../data/casePresentation';
+import { routes, type Locale } from '../data/i18n';
+import { caseCover } from '../data/workImages';
+import Icon from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+	slugs: string[];
+	cases: CollectionEntry<'cases'>[];
+}
+
+const { locale, slugs, cases } = Astro.props;
+const es = locale === 'es';
+const items = slugs.flatMap((slug) => {
+	const entry = cases.find((item) => item.data.slug === slug);
+	const cover = caseCover(slug);
+	return entry && cover ? [{ slug, title: entry.data.title, summary: casePresentation(slug, locale)?.summary ?? entry.data.summary, cover }] : [];
+});
+---
+
+<ul class="jx-proofs">
+	{items.map((item) => (
+		<li>
+			<a href={`${routes[locale].work}${item.slug}/`}>
+				<img src={item.cover} alt={es ? `Captura real de ${item.title}` : `Real capture of ${item.title}`} loading="lazy" decoding="async" width="1600" height="1000" />
+				<span class="jx-proofs__body">
+					<strong>{item.title}</strong>
+					<span>{item.summary}</span>
+					<span class="jx-proofs__cue">{es ? 'Ver el caso' : 'See the case'}<Icon name="arrow-right" /></span>
+				</span>
+			</a>
+		</li>
+	))}
+</ul>

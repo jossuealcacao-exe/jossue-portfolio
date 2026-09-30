@@ -3,6 +3,8 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import AhpCommandAtlas from '../../components/AhpCommandAtlas.astro';
 import ChatbotsPage from '../../components/ChatbotsPage.astro';
 import IaAplicadaPage from '../../components/IaAplicadaPage.astro';
+import ConsultoriaPage from '../../components/ConsultoriaPage.astro';
+import DesarrolloWebPage from '../../components/DesarrolloWebPage.astro';
 import CaseDetail from '../../components/CaseDetail.astro';
 import MadrePage from '../../components/MadrePage.astro';
 import PageView from '../../components/PageView.astro';
@@ -115,6 +117,10 @@ const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.des
 			<ChatbotsPage locale={locale} />
 		) : product?.slug === 'ia-aplicada' ? (
 			<IaAplicadaPage locale={locale} />
+		) : product?.slug === 'consultoria' ? (
+			<ConsultoriaPage locale={locale} cases={cases} />
+		) : product?.slug === 'desarrollo-web' ? (
+			<DesarrolloWebPage locale={locale} cases={cases} />
 		) : product ? (
 			<ProductDetail locale={locale} product={product} cases={cases} />
 		) : (

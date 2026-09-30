@@ -23,6 +23,9 @@ const GROUPS = [
 	'.jx-bots__abuse dl > div',
 	'.jx-iap__tasks > li',
 	'.jx-iap__fit > div',
+	'.jx-svc__areas > div',
+	'.jx-svc__case li',
+	'.jx-proofs > li',
 	'[data-home-case]',
 	'.jx-clip',
 ];
