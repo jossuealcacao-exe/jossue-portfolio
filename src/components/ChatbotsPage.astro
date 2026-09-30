@@ -1,0 +1,459 @@
+---
+// Chatbots inteligentes: la página de venta para empresas que quieren su propio asistente.
+// Demos reales (Daniela y Jossue AI), qué ganan, cómo se conecta, tradicional vs inteligente,
+// arquitectura y seguridad, política contra abusos, costos de API con calculadora y FAQ.
+// Los precios de API son los oficiales publicados por cada proveedor (fecha abajo). Las cifras
+// de uso de referencia son las de Jossue AI medidas en producción; de Daniela solo se publican
+// capacidades y stack, sin volúmenes ni costos de WU Nutrition.
+import { routes, type Locale } from '../data/i18n';
+import { commercialProduct, productDemo } from '../data/products';
+import Breadcrumbs from './Breadcrumbs.astro';
+import DemoVideo from './DemoVideo.astro';
+import Icon, { type IconName } from './Icon.astro';
+import PageHero from './PageHero.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const product = commercialProduct('chatbots');
+const daniela = commercialProduct('daniela');
+if (!product || !daniela) throw new Error('chatbots and daniela products are required');
+const jossueDemo = productDemo(product, locale);
+const danielaDemo = productDemo(daniela, locale);
+const contactUrl = `${routes[locale].contact}?producto=chatbots`;
+const flow = es ? '/videos/chatbots/chatbot-flow-es' : '/videos/chatbots/chatbot-flow-en';
+const flowDemo = { wide: flow, tall: `${flow}-tall`, label: es ? 'Cómo funciona' : 'How it works', alt: es ? 'Animación: el cliente pregunta, el mensaje pasa por los controles de seguridad, el modelo responde con el catálogo, los pedidos y el CRM, arma el carrito y deja el contacto listo.' : 'Animation: the customer asks, the message goes through security checks, the model answers with the catalog, orders and CRM, builds the cart and leaves the lead ready.' };
+
+// Precios oficiales por millón de tokens (USD), consultados el 30 de septiembre de 2026.
+const PRICES_AS_OF = es ? '30 de septiembre de 2026' : 'September 30, 2026';
+const models = [
+	{ id: 'gemini-3.8-flash', vendor: 'Google', name: 'Gemini 3.8 Flash', input: 0.75, output: 3.75, note: es ? 'Precio promocional hasta el 31 dic 2026 (después $1.50 / $7.50).' : 'Promotional price through Dec 31, 2026 (then $1.50 / $7.50).', url: 'https://ai.google.dev/gemini-api/docs/pricing' },
+	{ id: 'gemini-3.5-flash', vendor: 'Google', name: 'Gemini 3.5 Flash', input: 1.5, output: 9, note: es ? 'El que usan hoy Daniela y Jossue AI.' : 'What Daniela and Jossue AI use today.', url: 'https://ai.google.dev/gemini-api/docs/pricing' },
+	{ id: 'gemini-3.1-flash-lite', vendor: 'Google', name: 'Gemini 3.1 Flash-Lite', input: 0.25, output: 1.5, note: es ? 'Para mucho volumen y preguntas simples.' : 'For high volume and simple questions.', url: 'https://ai.google.dev/gemini-api/docs/pricing' },
+	{ id: 'gpt-6-luna', vendor: 'OpenAI', name: 'GPT-6 Luna', input: 0.1, output: 0.5, note: es ? 'El más barato de la tabla.' : 'The cheapest in the table.', url: 'https://developers.openai.com/api/docs/pricing' },
+	{ id: 'gpt-6.1-sol', vendor: 'OpenAI', name: 'GPT-6.1 Sol', input: 2, output: 10, note: es ? 'Más capacidad de razonamiento.' : 'More reasoning capacity.', url: 'https://developers.openai.com/api/docs/pricing' },
+	{ id: 'claude-haiku-4-5', vendor: 'Anthropic', name: 'Claude Haiku 4.5', input: 1, output: 5, note: es ? 'Rápido, buen tono en español.' : 'Fast, good tone in Spanish.', url: 'https://platform.claude.com/docs/en/about-claude/pricing' },
+	{ id: 'claude-sonnet-5-5', vendor: 'Anthropic', name: 'Claude Sonnet 5.5', input: 2, output: 10, note: es ? 'Para conversaciones más complejas.' : 'For more complex conversations.', url: 'https://platform.claude.com/docs/en/about-claude/pricing' },
+];
+// Referencia medida en producción (Jossue AI, sep 2026): ~9,200 tokens de entrada y ~120 de salida por mensaje.
+const REF = { inputPerMessage: 9200, outputPerMessage: 120, messages: 6 };
+const perConversation = (m: (typeof models)[number]) => (REF.messages * (REF.inputPerMessage * m.input + REF.outputPerMessage * m.output)) / 1_000_000;
+const usd = (value: number) => (value < 0.01 ? `$${value.toFixed(4)}` : `$${value.toFixed(3)}`);
+
+const gains: Array<{ icon: IconName; title: string; text: string }> = es
+	? [
+			{ icon: 'bolt', title: 'Vendes también de noche', text: 'Responde en segundos, cualquier día a cualquier hora. La duda de las 11 de la noche ya no espera al lunes.' },
+			{ icon: 'basket', title: 'Menos compras que se caen por una duda', text: 'Resuelve envío, pagos, tallas o cuál conviene en el momento en que la persona está por comprar.' },
+			{ icon: 'chats', title: 'Tu equipo atiende lo que vale la pena', text: 'Lo repetido lo contesta el asistente; lo delicado o lo grande se lo pasa a una persona con toda la conversación.' },
+			{ icon: 'user', title: 'Contactos listos en tu CRM', text: 'Nombre, necesidad y conversación completa, sin que nadie tenga que copiar y pegar.' },
+			{ icon: 'trend-up', title: 'Sabes qué pregunta tu cliente', text: 'Cada conversación te dice qué falta en tu ficha de producto, qué objeción frena y qué campaña funciona.' },
+			{ icon: 'shield', title: 'Cero respuestas inventadas', text: 'Solo usa tus datos. Si algo no lo sabe, lo dice y ofrece hablar con alguien.' },
+		]
+	: [
+			{ icon: 'bolt', title: 'You sell at night too', text: 'It answers in seconds, any day, any hour. The 11 p.m. question no longer waits until Monday.' },
+			{ icon: 'basket', title: 'Fewer purchases lost to a doubt', text: 'It solves shipping, payments, sizes or which one fits right when the person is about to buy.' },
+			{ icon: 'chats', title: 'Your team handles what matters', text: 'The assistant answers the repeated questions; the sensitive or big ones go to a person with the whole conversation.' },
+			{ icon: 'user', title: 'Leads ready in your CRM', text: 'Name, need and the full conversation, with nobody copying and pasting.' },
+			{ icon: 'trend-up', title: 'You learn what customers ask', text: 'Each conversation tells you what your product page is missing, which objection stops people and which campaign works.' },
+			{ icon: 'shield', title: 'No made-up answers', text: 'It only uses your data. If it does not know something, it says so and offers a person.' },
+		];
+
+const stack = es
+	? [
+			['Dónde habla', 'Tu tienda, tu sitio o WhatsApp Business', 'El widget vive en tu página; el mismo cerebro puede atender en otros canales.'],
+			['El guardia', 'Cloudflare Workers', 'Recibe cada mensaje, aplica límites, oculta datos personales y valida lo que el modelo quiere hacer.'],
+			['El modelo', 'Gemini, Claude u OpenAI', 'Se elige por costo, velocidad y tono. Se puede cambiar sin rehacer el chatbot.'],
+			['Tus sistemas', 'Shopify, Odoo, Klaviyo y tu correo', 'Catálogo y carrito, pedidos e inventario, contactos y consentimiento, avisos a tu equipo.'],
+		]
+	: [
+			['Where it talks', 'Your store, your site or WhatsApp Business', 'The widget lives on your page; the same brain can serve other channels.'],
+			['The guard', 'Cloudflare Workers', 'Receives every message, applies limits, hides personal data and validates what the model wants to do.'],
+			['The model', 'Gemini, Claude or OpenAI', 'Chosen by cost, speed and tone. It can be swapped without rebuilding the chatbot.'],
+			['Your systems', 'Shopify, Odoo, Klaviyo and your email', 'Catalog and cart, orders and inventory, contacts and consent, alerts for your team.'],
+		];
+
+const danielaDoes = es
+	? [
+			'Recomienda solo productos del catálogo de Shopify que existen y tienen stock, con su precio real y sus promociones.',
+			'Arma combos y maneja el carrito de la tienda (agregar, cambiar cantidad, quitar), siempre con el sí de la clienta.',
+			'Consulta el estado de un pedido en Odoo en modo lectura: pide número y correo, y los dos tienen que coincidir.',
+			'Crea códigos de descuento del lado del servidor, de un solo uso y con vigencia corta; el navegador nunca ve la llave de la tienda.',
+			'Conecta con Klaviyo para ofertas solo si la persona tiene consentimiento de marketing vigente.',
+			'Cuando el caso es delicado, lo pasa a WhatsApp de soporte con un folio y el resumen de la plática.',
+		]
+	: [
+			'Recommends only Shopify catalog products that exist and are in stock, with their real price and promotions.',
+			'Builds bundles and manages the store cart (add, change quantity, remove), always with the shopper’s yes.',
+			'Checks an order’s status in Odoo, read-only: it asks for the order number and email, and both must match.',
+			'Creates discount codes on the server, single use and short-lived; the browser never sees the store key.',
+			'Connects with Klaviyo for offers only if the person has current marketing consent.',
+			'When a case is sensitive, it hands it to support on WhatsApp with a reference number and a summary.',
+		];
+
+const compare = es
+	? [
+			['Cómo entiende', 'Palabras clave y menús de botones', 'Lenguaje natural, con el contexto de toda la plática'],
+			['Qué sabe', 'Respuestas escritas a mano, que envejecen', 'Tu catálogo, tus pedidos y tus políticas, actualizados'],
+			['Qué puede hacer', 'Mandar un link', 'Recomendar, armar el carrito, consultar un pedido, dejar el contacto'],
+			['Cuando no sabe', '«No entendí» en bucle', 'Lo dice y te pasa con una persona'],
+			['Mantenerlo', 'Rehacer árboles de conversación', 'Actualizar datos y reglas'],
+			['Cómo suena', 'Robot', 'Como tu marca'],
+			['Cuánto cuesta usarlo', 'Cuota fija de la plataforma', 'Por uso: centavos de dólar por conversación'],
+		]
+	: [
+			['How it understands', 'Keywords and button menus', 'Natural language, with the context of the whole chat'],
+			['What it knows', 'Hand-written answers that age', 'Your catalog, orders and policies, up to date'],
+			['What it can do', 'Send a link', 'Recommend, build the cart, check an order, leave the lead'],
+			['When it does not know', '"I did not understand" on repeat', 'It says so and hands you to a person'],
+			['Maintaining it', 'Rebuilding conversation trees', 'Updating data and rules'],
+			['How it sounds', 'A robot', 'Like your brand'],
+			['What it costs to run', 'A fixed platform fee', 'Per use: cents of a dollar per conversation'],
+		];
+
+const security: Array<{ icon: IconName; title: string; text: string }> = es
+	? [
+			{ icon: 'lock', title: 'Las llaves nunca salen del servidor', text: 'La API key del modelo y las de tu tienda viven como secretos del Worker. El navegador nunca las ve.' },
+			{ icon: 'shield', title: 'El modelo no toca tus sistemas', text: 'Quien consulta pedidos o arma el carrito es el servidor, y valida cada acción: solo productos del catálogo, cantidades razonables, códigos con reglas.' },
+			{ icon: 'user', title: 'Datos personales protegidos', text: 'Correos y teléfonos se borran de lo que se guarda y las conversaciones se purgan solas (30 días en Jossue AI, 60 en Daniela).' },
+			{ icon: 'globe', title: 'Solo desde tu dominio', text: 'El navegador solo deja usar el chatbot desde tus sitios (CORS) y cada IP tiene su límite. Los paneles internos piden token y no existen sin él.' },
+			{ icon: 'check-list', title: 'Respuestas con estructura', text: 'El modelo contesta en un formato fijo; lo que no cumple el esquema se descarta y se usa una respuesta segura.' },
+			{ icon: 'bolt', title: 'Si la IA falla, la venta no se cae', text: 'Hay tiempo máximo de espera y plan B: WhatsApp o el formulario, nunca una pantalla colgada.' },
+		]
+	: [
+			{ icon: 'lock', title: 'Keys never leave the server', text: 'The model API key and your store keys live as Worker secrets. The browser never sees them.' },
+			{ icon: 'shield', title: 'The model does not touch your systems', text: 'The server is what checks orders or builds the cart, and it validates every action: catalog products only, reasonable quantities, rule-bound codes.' },
+			{ icon: 'user', title: 'Personal data protected', text: 'Emails and phone numbers are stripped from what is stored, and conversations are purged automatically (30 days on Jossue AI, 60 on Daniela).' },
+			{ icon: 'globe', title: 'From your domain only', text: 'Browsers can only use the chatbot from your sites (CORS) and each IP has its own limit. Internal panels require a token and do not exist without it.' },
+			{ icon: 'check-list', title: 'Structured answers', text: 'The model replies in a fixed format; anything that breaks the schema is discarded and a safe answer is used.' },
+			{ icon: 'bolt', title: 'If the AI fails, the sale does not', text: 'There is a maximum wait and a plan B: WhatsApp or the form, never a frozen screen.' },
+		];
+
+const abuse = es
+	? [
+			['Límites por persona', 'Jossue AI acepta 24 mensajes cada 10 minutos por IP y 30 por conversación; Daniela, 40 por conversación y 600 caracteres por mensaje.'],
+			['Topes de gasto', 'Máximo de tokens por respuesta y de acciones por hora. En Daniela: 6 consultas de pedido y 8 descuentos de combo por hora.'],
+			['Temas sensibles', 'Salud, legal y finanzas llevan respuesta segura o pasan a una persona. Nunca revela datos internos de tu empresa.'],
+			['«Ignora tus instrucciones»', 'No revela su prompt ni cambia sus reglas, y aunque el modelo se confunda, las acciones pasan por la validación del servidor.'],
+			['Pruebas separadas', 'Las conversaciones de prueba van marcadas para no ensuciar tus métricas ni tus contactos.'],
+		]
+	: [
+			['Per-person limits', 'Jossue AI accepts 24 messages every 10 minutes per IP and 30 per conversation; Daniela, 40 per conversation and 600 characters per message.'],
+			['Spending caps', 'Maximum tokens per answer and actions per hour. On Daniela: 6 order lookups and 8 bundle discounts per hour.'],
+			['Sensitive topics', 'Health, legal and finance get a safe answer or go to a person. It never reveals your company’s internal data.'],
+			['"Ignore your instructions"', 'It does not reveal its prompt or change its rules, and even if the model gets confused, actions go through server validation.'],
+			['Separate tests', 'Test conversations are tagged so they do not pollute your metrics or your leads.'],
+		];
+
+const steps = es
+	? [
+			['01', 'Diagnóstico', 'Leo lo que te preguntan hoy (WhatsApp, correo, redes) y vemos qué sistemas tiene que consultar.'],
+			['02', 'Datos y reglas', 'Catálogo, políticas, límites, tono de tu marca y qué se le pasa a una persona.'],
+			['03', 'Prototipo con tus datos', 'Lo pruebas con tu equipo antes de que lo vea un cliente.'],
+			['04', 'Lanzamiento y mejora', 'Lo publicamos, leemos conversaciones reales y ajusto lo que haga falta.'],
+		]
+	: [
+			['01', 'Diagnosis', 'I read what you get asked today (WhatsApp, email, social) and we see which systems it must check.'],
+			['02', 'Data and rules', 'Catalog, policies, limits, your brand’s tone and what goes to a person.'],
+			['03', 'Prototype with your data', 'You test it with your team before any customer sees it.'],
+			['04', 'Launch and improvement', 'We publish it, read real conversations and I adjust what is needed.'],
+		];
+
+const faq = es
+	? [
+			['¿Qué modelo de IA usan?', 'El que mejor le quede a tu caso por costo, velocidad y tono: Gemini, Claude u OpenAI. Daniela y Jossue AI usan Gemini. El chatbot no queda amarrado a un proveedor.'],
+			['¿Mis datos se usan para entrenar a la IA?', 'En los planes de pago de API, Google, OpenAI y Anthropic indican que tu contenido no se usa para entrenar sus modelos. Además, lo que guardamos va sin correos ni teléfonos y se borra solo.'],
+			['¿Funciona con WhatsApp?', 'Sí. El mismo asistente puede atender en tu web y en WhatsApp Business, con las mismas reglas y límites.'],
+			['¿Cuánto tarda en responder?', 'Normalmente entre 3 y 8 segundos. Si el proveedor tarda de más, Jossue AI corta a los 30 segundos y ofrece WhatsApp; el tuyo puede hacer lo mismo.'],
+			['¿Y si se equivoca?', 'Lo importante no depende de lo que diga: precios, stock y pedidos salen de tus sistemas, y las acciones las valida el servidor. Leemos conversaciones para corregir el tono y las reglas.'],
+			['¿Cuánto cuesta construirlo?', 'Depende de con qué sistemas se conecta y qué acciones hace. Te doy precio después de una llamada corta. Usarlo cuesta centavos de dólar por conversación (calcula abajo).'],
+		]
+	: [
+			['Which AI model do you use?', 'Whichever fits your case best on cost, speed and tone: Gemini, Claude or OpenAI. Daniela and Jossue AI use Gemini. The chatbot is not tied to one provider.'],
+			['Is my data used to train the AI?', 'On paid API plans, Google, OpenAI and Anthropic state that your content is not used to train their models. On top of that, what we store has no emails or phone numbers and deletes itself.'],
+			['Does it work with WhatsApp?', 'Yes. The same assistant can serve on your website and on WhatsApp Business, with the same rules and limits.'],
+			['How fast does it answer?', 'Usually between 3 and 8 seconds. If the provider is slow, Jossue AI cuts off at 30 seconds and offers WhatsApp; yours can do the same.'],
+			['What if it gets something wrong?', 'What matters does not depend on what it says: prices, stock and orders come from your systems, and the server validates actions. We read conversations to fix tone and rules.'],
+			['How much does it cost to build?', 'It depends on which systems it connects to and what it does. I give you a price after a short call. Running it costs cents of a dollar per conversation (calculate below).'],
+		];
+
+const faqSchema = {
+	'@context': 'https://schema.org',
+	'@type': 'FAQPage',
+	mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
+};
+const heroDemo = {
+	wide: '/videos/chatbots/bot-hero',
+	tall: '/videos/chatbots/bot-hero-tall',
+	alt: es ? 'Animación abstracta: burbujas de chat que se conectan como una constelación sobre un cielo oscuro.' : 'Abstract animation: chat bubbles connecting like a constellation over a dark sky.',
+	label: es ? 'Tu tienda, atendida a toda hora' : 'Your store, served around the clock',
+};
+const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, name, input, output })), ref: REF, locale };
+---
+
+<Breadcrumbs
+	locale={locale}
+	items={[
+		{ label: es ? 'Productos' : 'Products', href: routes[locale].products },
+		{ label: product.title[locale] },
+	]}
+/>
+<article class="jx-home jx-bots" data-product-detail="chatbots">
+	<PageHero
+		loop="ai"
+		id="bots-title"
+		label={es ? 'Chatbots con IA · Ecommerce' : 'AI chatbots · Ecommerce'}
+		title={es ? ['Un chatbot que vende,', 'no uno que repite el FAQ.'] : ['A chatbot that sells,', 'not one that repeats the FAQ.']}
+		lede={es
+			? 'Construyo asistentes que atienden a tus clientes con tu catálogo, tus pedidos y tu CRM reales: recomiendan, arman el carrito, consultan un pedido y le pasan a tu equipo los contactos listos. Así trabajan Daniela en wunutrition.com y Jossue AI en este sitio.'
+			: 'I build assistants that serve your customers with your real catalog, orders and CRM: they recommend, build the cart, check an order and hand your team ready-to-work leads. That is how Daniela works on wunutrition.com and Jossue AI on this site.'}
+	>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_chatbots_contact">{es ? 'Quiero un chatbot para mi negocio' : 'I want a chatbot for my business'}<Icon name="arrow-right" /></a>
+			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Cómo sería un chatbot para mi tienda?' : 'What would a chatbot for my store look like?'}>{es ? 'Pruébalo ahora' : 'Try it now'}</button>
+		</div>
+		<DemoVideo demo={heroDemo} locale={locale} class="jx-bots__stage" />
+	</PageHero>
+
+	<section class="jx-bots__section" aria-labelledby="bots-demos">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Demos reales · en uso hoy' : 'Real demos · live today'}</p>
+			<h2 id="bots-demos" class="jx-h2"><span>{es ? 'No son maquetas.' : 'These are not mockups.'}</span>{' '}<span class="jx-soft">{es ? 'Platica con los dos.' : 'Talk to both.'}</span></h2>
+			<div class="jx-bots__demos">
+				<article class="jx-feature" data-bot="daniela">
+					{danielaDemo && <DemoVideo demo={danielaDemo} locale={locale} orientation="wide" />}
+					<div class="jx-feature__body">
+						<p class="jx-mono">{es ? 'Tienda · wunutrition.com' : 'Store · wunutrition.com'}</p>
+						<h3 class="jx-feature__title">Daniela</h3>
+						<p class="jx-feature__promise">{es ? 'La asistente de compra de WU Nutrition. Recomienda con el catálogo real, arma combos, maneja el carrito y consulta pedidos.' : 'WU Nutrition’s shopping assistant. It recommends with the real catalog, builds bundles, manages the cart and checks orders.'}</p>
+						<p class="jx-bots__note">{es ? 'Es la tienda real: pídele una recomendación o arma un carrito. Nada se cobra hasta que tú pagas.' : 'It is the real store: ask for a recommendation or build a cart. Nothing is charged until you pay.'}</p>
+						<div class="jx-actions">
+							<a class="jx-btn jx-btn--primary" href="https://wunutrition.com/" target="_blank" rel="noopener" data-analytics-event="try_daniela">{es ? 'Platica con Daniela' : 'Talk to Daniela'}<Icon name="arrow-up-right" /></a>
+						</div>
+					</div>
+				</article>
+				<article class="jx-feature" data-bot="jossue-ai">
+					{jossueDemo && <DemoVideo demo={jossueDemo} locale={locale} orientation="wide" />}
+					<div class="jx-feature__body">
+						<p class="jx-mono">{es ? 'Portafolio · este sitio' : 'Portfolio · this site'}</p>
+						<h3 class="jx-feature__title">Jossue AI</h3>
+						<p class="jx-feature__promise">{es ? 'Responde sobre mi trabajo con lo que publico, toma recados y me los manda por correo. Si algo no lo sabe, lo dice.' : 'It answers about my work with what I publish, takes messages and emails them to me. If it does not know something, it says so.'}</p>
+						<p class="jx-bots__note">{es ? 'Pregúntale lo que un cliente te preguntaría a ti.' : 'Ask it what a customer would ask you.'}</p>
+						<div class="jx-actions">
+							<button class="jx-btn jx-btn--primary" type="button" data-ai-open data-ai-ask={es ? '¿Qué puede hacer un chatbot como tú por mi negocio?' : 'What can a chatbot like you do for my business?'} data-analytics-event="try_jossue_ai">{es ? 'Habla con Jossue AI' : 'Talk to Jossue AI'}<Icon name="arrow-right" /></button>
+						</div>
+					</div>
+				</article>
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-band" aria-labelledby="bots-gains">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué ganas' : 'What you gain'}</p>
+			<h2 id="bots-gains" class="jx-h2"><span>{es ? 'Atiende como tu mejor vendedor,' : 'It serves like your best salesperson,'}</span>{' '}<span class="jx-soft">{es ? 'a las 3 de la mañana.' : 'at 3 a.m.'}</span></h2>
+			<ul class="jx-points jx-bots__gains">
+				{gains.map((gain) => <li><Icon name={gain.icon} size="md" /><strong>{gain.title}</strong><span>{gain.text}</span></li>)}
+			</ul>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="bots-connect">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo se conecta' : 'How it connects'}</p>
+			<h2 id="bots-connect" class="jx-h2"><span>{es ? 'Tu cliente pregunta,' : 'Your customer asks,'}</span>{' '}<span class="jx-soft">{es ? 'tus sistemas contestan.' : 'your systems answer.'}</span></h2>
+			<div class="jx-bots__flow">
+				<DemoVideo demo={flowDemo} locale={locale} orientation="wide" class="jx-bots__flow-video" />
+				<ol class="jx-bots__stack">
+					{stack.map(([role, tech, text], index) => (
+						<li><span class="jx-mono">{String(index + 1).padStart(2, '0')} · {role}</span><strong>{tech}</strong><p>{text}</p></li>
+					))}
+				</ol>
+			</div>
+			<div class="jx-bots__example">
+				<div>
+					<p class="jx-mono">{es ? 'Ejemplo real' : 'Real example'}</p>
+					<h3>{es ? 'Lo que Daniela hace en la tienda' : 'What Daniela does in the store'}</h3>
+					<p class="jx-bots__note">{es ? 'Shopify, Odoo, Klaviyo y WhatsApp conectados a un solo asistente.' : 'Shopify, Odoo, Klaviyo and WhatsApp connected to one assistant.'}</p>
+				</div>
+				<ul>{danielaDoes.map((item) => <li>{item}</li>)}</ul>
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-band" aria-labelledby="bots-compare">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Tradicional vs inteligente' : 'Traditional vs smart'}</p>
+			<h2 id="bots-compare" class="jx-h2"><span>{es ? 'Un menú de botones' : 'A button menu'}</span>{' '}<span class="jx-soft">{es ? 'no es un vendedor.' : 'is not a salesperson.'}</span></h2>
+			<div class="jx-bots__table-wrap">
+				<table class="jx-bots__table">
+					<thead><tr><th scope="col"><span class="sr-only">{es ? 'Aspecto' : 'Aspect'}</span></th><th scope="col">{es ? 'Chatbot tradicional' : 'Traditional chatbot'}</th><th scope="col">{es ? 'Chatbot inteligente' : 'Smart chatbot'}</th></tr></thead>
+					<tbody>{compare.map(([aspect, old, smart]) => <tr><th scope="row">{aspect}</th><td>{old}</td><td>{smart}</td></tr>)}</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="bots-security">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Arquitectura y seguridad' : 'Architecture and security'}</p>
+			<h2 id="bots-security" class="jx-h2"><span>{es ? 'Lo que más te van a preguntar' : 'What your team will ask most'}</span>{' '}<span class="jx-soft">{es ? 'en la junta, resuelto.' : 'in the meeting, answered.'}</span></h2>
+			<ul class="jx-points jx-bots__security">
+				{security.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
+			</ul>
+			<div class="jx-bots__abuse">
+				<div>
+					<p class="jx-mono">{es ? 'Política contra abusos' : 'Abuse policy'}</p>
+					<h3>{es ? 'Nadie puede usar tu chatbot para vaciarte la cuenta.' : 'Nobody can use your chatbot to drain your account.'}</h3>
+				</div>
+				<dl>{abuse.map(([term, text]) => <div><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-band" id="costos" aria-labelledby="bots-costs">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Costos y ahorro' : 'Costs and savings'}</p>
+			<h2 id="bots-costs" class="jx-h2"><span>{es ? 'Una conversación cuesta centavos.' : 'A conversation costs cents.'}</span>{' '}<span class="jx-soft">{es ? 'Haz la cuenta con tus números.' : 'Do the math with your numbers.'}</span></h2>
+			<p class="jx-bots__lede">
+				{es
+					? `Precios oficiales de cada proveedor por millón de tokens, consultados el ${PRICES_AS_OF}. La columna de la derecha es una conversación de referencia de ${REF.messages} mensajes con el contexto que usa Jossue AI (unos ${REF.inputPerMessage.toLocaleString('es-MX')} tokens de entrada y ${REF.outputPerMessage} de salida por mensaje, medido en producción), sin caché.`
+					: `Each provider’s official price per million tokens, checked on ${PRICES_AS_OF}. The right-hand column is a reference ${REF.messages}-message conversation with the context Jossue AI uses (about ${REF.inputPerMessage.toLocaleString('en-US')} input and ${REF.outputPerMessage} output tokens per message, measured in production), without caching.`}
+			</p>
+			<div class="jx-bots__table-wrap">
+				<table class="jx-bots__table jx-bots__prices">
+					<thead><tr><th scope="col">{es ? 'Modelo' : 'Model'}</th><th scope="col">{es ? 'Entrada' : 'Input'}</th><th scope="col">{es ? 'Salida' : 'Output'}</th><th scope="col">{es ? 'Por conversación' : 'Per conversation'}</th></tr></thead>
+					<tbody>
+						{models.map((model) => (
+							<tr>
+								<th scope="row"><a href={model.url} target="_blank" rel="noopener">{model.name}</a><small>{model.vendor} · {model.note}</small></th>
+								<td>${model.input.toFixed(2)}</td>
+								<td>${model.output.toFixed(2)}</td>
+								<td><strong>{usd(perConversation(model))}</strong></td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
+
+			<form class="jx-calc" data-bot-calc aria-labelledby="calc-title">
+				<div class="jx-calc__inputs">
+					<h3 id="calc-title">{es ? 'Calcula tu caso' : 'Calculate your case'}</h3>
+					<label>{es ? 'Conversaciones al mes' : 'Conversations per month'}<input type="number" name="conversations" min="0" step="100" value="1000" inputmode="numeric" /></label>
+					<label>{es ? 'Mensajes por conversación' : 'Messages per conversation'}<input type="number" name="messages" min="1" max="40" value={REF.messages} inputmode="numeric" /></label>
+					<label>{es ? '% que resuelve el chatbot sin una persona' : '% the chatbot solves without a person'}<input type="number" name="solved" min="0" max="100" value="60" inputmode="numeric" /></label>
+					<label>{es ? 'Minutos que tarda tu equipo por conversación' : 'Minutes your team spends per conversation'}<input type="number" name="minutes" min="0" step="1" value="6" inputmode="numeric" /></label>
+					<label>{es ? 'Costo por hora de tu equipo (MXN)' : 'Your team’s hourly cost (MXN)'}<input type="number" name="hourly" min="0" step="10" value="120" inputmode="numeric" /></label>
+					<label>{es ? 'Tipo de cambio (MXN por dólar)' : 'Exchange rate (MXN per dollar)'}<input type="number" name="fx" min="1" step="0.1" value="18.5" inputmode="decimal" /></label>
+					<label>{es ? 'Modelo' : 'Model'}
+						<select name="model">{models.map((model) => <option value={model.id} selected={model.id === 'gemini-3.8-flash'}>{model.name}</option>)}</select>
+					</label>
+				</div>
+				<div class="jx-calc__out" aria-live="polite">
+					<div><p class="jx-mono">{es ? 'Costo de API al mes' : 'API cost per month'}</p><strong data-out="api">—</strong><span data-out="api-mxn"></span></div>
+					<div><p class="jx-mono">{es ? 'Horas de tu equipo que liberas' : 'Team hours you free up'}</p><strong data-out="hours">—</strong></div>
+					<div class="jx-calc__big"><p class="jx-mono">{es ? 'Ahorro estimado al mes' : 'Estimated savings per month'}</p><strong data-out="savings">—</strong><span>{es ? 'tiempo de tu equipo menos costo de API' : 'your team’s time minus API cost'}</span></div>
+					<p class="jx-bots__fine">{es ? 'Estimación con tus supuestos. No incluye el desarrollo ni el servidor, y no es una promesa de resultados: sirve para ver si la cuenta da.' : 'An estimate with your assumptions. It excludes development and hosting, and it is not a promise of results: it helps you see if the numbers work.'}</p>
+				</div>
+			</form>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" aria-labelledby="bots-steps">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo lo construyo' : 'How I build it'}</p>
+			<h2 id="bots-steps" class="jx-h2"><span>{es ? 'De tus preguntas de todos los días' : 'From your everyday questions'}</span>{' '}<span class="jx-soft">{es ? 'a un asistente que vende.' : 'to an assistant that sells.'}</span></h2>
+			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
+		</div>
+	</section>
+
+	<section class="jx-band" aria-labelledby="bots-faq">
+		<div class="jx-wrap jx-bots__faq">
+			<div>
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Preguntas frecuentes' : 'FAQ'}</p>
+				<h2 id="bots-faq" class="jx-h2"><span>{es ? 'Lo que preguntan' : 'What companies ask'}</span>{' '}<span class="jx-soft">{es ? 'las empresas.' : 'before starting.'}</span></h2>
+			</div>
+			<div class="jx-bots__faq-list">
+				{faq.map(([question, answer]) => (
+					<details>
+						<summary>{question}<Icon name="arrow-right" /></summary>
+						<p>{answer}</p>
+					</details>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<section class="jx-close" aria-labelledby="bots-close">
+		<div class="jx-close__card">
+			<h2 id="bots-close" class="jx-close__title"><span>{es ? '¿Tu negocio necesita' : 'Does your business need'}</span>{' '}<span class="jx-soft">{es ? 'su propia Daniela?' : 'its own Daniela?'}</span></h2>
+			<p>{es ? 'Cuéntame qué te preguntan tus clientes y con qué sistemas trabajas. Te respondo en menos de un día hábil con cómo lo armaría.' : 'Tell me what your customers ask and which systems you use. I reply within one business day with how I would build it.'}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_chatbots_contact_bottom">{es ? 'Quiero mi chatbot' : 'I want my chatbot'}<Icon name="arrow-right" /></a>
+				<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? 'Quiero un chatbot para mi negocio, ¿qué necesitas saber?' : 'I want a chatbot for my business, what do you need to know?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
+			</div>
+		</div>
+	</section>
+</article>
+<script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
+<script type="application/json" data-bot-calc-config set:html={JSON.stringify(calcConfig)} />
+
+<script>
+	type Model = { id: string; name: string; input: number; output: number };
+	const form = document.querySelector<HTMLFormElement>('[data-bot-calc]');
+	const configNode = document.querySelector<HTMLScriptElement>('[data-bot-calc-config]');
+	if (form && configNode) {
+		const config = JSON.parse(configNode.textContent || '{}') as { models: Model[]; ref: { inputPerMessage: number; outputPerMessage: number }; locale: 'es' | 'en' };
+		const lang = config.locale === 'es' ? 'es-MX' : 'en-US';
+		const money = (value: number, currency: 'USD' | 'MXN') => new Intl.NumberFormat(lang, { style: 'currency', currency, maximumFractionDigits: value < 100 ? 2 : 0 }).format(value);
+		const num = (name: string) => Math.max(0, Number((form.elements.namedItem(name) as HTMLInputElement | null)?.value) || 0);
+		const out = (key: string) => form.querySelector<HTMLElement>(`[data-out="${key}"]`);
+		// Los números cuentan hacia su nuevo valor (y desde cero la primera vez que se ven).
+		const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const last: Record<string, number> = { api: 0, apiMxn: 0, hours: 0, savings: 0 };
+		const tween = (key: string, to: number, render: (value: number) => string, el: HTMLElement | null) => {
+			if (!el) return;
+			const from = last[key] ?? 0;
+			last[key] = to;
+			if (calm || from === to) {
+				el.textContent = render(to);
+				return;
+			}
+			const start = performance.now();
+			const step = (now: number) => {
+				const k = Math.min(1, (now - start) / 520);
+				const eased = 1 - Math.pow(1 - k, 3);
+				el.textContent = render(from + (to - from) * eased);
+				if (k < 1) requestAnimationFrame(step);
+			};
+			requestAnimationFrame(step);
+		};
+		const update = () => {
+			const model = config.models.find((item) => item.id === (form.elements.namedItem('model') as HTMLSelectElement).value) ?? config.models[0];
+			const conversations = num('conversations');
+			const messages = Math.max(1, num('messages'));
+			const perConversation = (messages * (config.ref.inputPerMessage * model.input + config.ref.outputPerMessage * model.output)) / 1_000_000;
+			const apiUsd = conversations * perConversation;
+			const fx = Math.max(1, num('fx'));
+			const hours = (conversations * (Math.min(100, num('solved')) / 100) * num('minutes')) / 60;
+			const savings = hours * num('hourly') - apiUsd * fx;
+			tween('api', apiUsd, (value) => money(value, 'USD'), out('api'));
+			tween('apiMxn', apiUsd * fx, (value) => `≈ ${money(value, 'MXN')}`, out('api-mxn'));
+			tween('hours', hours, (value) => `${new Intl.NumberFormat(lang, { maximumFractionDigits: 0 }).format(value)} h`, out('hours'));
+			tween('savings', savings, (value) => money(value, 'MXN'), out('savings'));
+		};
+		form.addEventListener('input', update);
+		form.addEventListener('submit', (event) => event.preventDefault());
+		if (calm || !('IntersectionObserver' in window)) update();
+		else {
+			const io = new IntersectionObserver((entries) => {
+				if (!entries.some((entry) => entry.isIntersecting)) return;
+				io.disconnect();
+				update();
+			}, { threshold: 0.35 });
+			io.observe(form);
+		}
+	}
+</script>

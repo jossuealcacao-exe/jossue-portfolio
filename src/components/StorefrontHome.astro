@@ -28,7 +28,7 @@ if (!madre) throw new Error('MADRE product is required');
 const others = otherProducts;
 const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
 const madreDemo = productDemo(madre, locale);
-const productIcons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
+const productIcons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', chatbots: 'chats', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 const outside: Record<string, { href: string; label: string }> = {
 	'ahp-plus': { href: 'https://github.com/jossuealcacao-exe/ahp_plus', label: 'GitHub' },
 	daniela: { href: 'https://wunutrition.com/', label: es ? 'Verla en wunutrition.com' : 'See it on wunutrition.com' },
@@ -94,17 +94,17 @@ const method = es
 		<section class="jx-hero" aria-labelledby="jx-hero-title">
 		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>Jossue Alcalá · {es ? 'Guadalajara, México' : 'Guadalajara, Mexico'}</p>
 		<h1 id="jx-hero-title" class="jx-hero__title">
-			<span>{es ? 'Construyo productos digitales' : 'I build digital products'}</span>
+			<span>{es ? 'Ecommerce e IA' : 'Ecommerce and AI'}</span>
 			<span class="jx-soft">{es ? 'que venden y se pueden mantener.' : 'that sell and stay maintainable.'}</span>
 		</h1>
 		<p class="jx-hero__lede">
 			{es
-				? 'Dirijo el ecommerce de WU Nutrition y programo tiendas en Shopify, sitios y herramientas con IA. Lo que te entrego lo puede operar tu equipo sin depender de mí.'
-				: 'I lead ecommerce at WU Nutrition and build Shopify stores, websites and AI tools. What I deliver, your team can run without depending on me.'}
+				? 'Dirijo el ecommerce de WU Nutrition y Come Verde, y construyo lo que vende: tiendas en Shopify, chatbots que atienden con tus datos y herramientas con IA. Lo que te entrego lo opera tu equipo sin depender de mí.'
+				: 'I lead ecommerce at WU Nutrition and Come Verde, and I build what sells: Shopify stores, chatbots that serve with your data and AI tools. What I deliver, your team runs without depending on me.'}
 		</p>
 		<div class="jx-actions">
-			<a class="jx-btn jx-btn--primary" href={routes[locale].work}>{es ? 'Ver mi trabajo' : 'See my work'}<Icon name="arrow-right" /></a>
-			<a class="jx-btn jx-btn--ghost" href="#madre">{es ? 'Conoce MADRE' : 'Meet MADRE'}</a>
+			<a class="jx-btn jx-btn--primary" href={routes[locale].work}>{es ? 'Ver casos reales' : 'See real cases'}<Icon name="arrow-right" /></a>
+			<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}chatbots/`}>{es ? 'Chatbots con IA' : 'AI chatbots'}</a>
 		</div>
 		<dl class="jx-facts">
 			{facts.map(([value, text]) => (
@@ -273,8 +273,8 @@ const method = es
 
 	<section class="jx-close" data-home="close" aria-labelledby="jx-close-title">
 		<div class="jx-close__card">
-			<h2 id="jx-close-title" class="jx-close__title"><span>{es ? '¿Tienes algo en mente?' : 'Have something in mind?'}</span> <span class="jx-soft">{es ? 'Platiquemos.' : 'Let’s talk.'}</span></h2>
-			<p>{es ? 'Cuéntame qué quieres construir y te digo cómo lo haría, cuánto tardaría y qué necesito de ti.' : 'Tell me what you want to build and I will tell you how I would do it, how long it would take and what I need from you.'}</p>
+			<h2 id="jx-close-title" class="jx-close__title"><span>{es ? '¿Tu ecommerce podría vender más?' : 'Could your ecommerce sell more?'}</span> <span class="jx-soft">{es ? 'Te digo por dónde empezar.' : 'I will tell you where to start.'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes y dónde se atora. En menos de un día hábil te respondo con lo primero que haría: una tienda, un chatbot o un ajuste que no cuesta construir.' : 'Tell me what you sell and where it gets stuck. Within one business day I reply with the first thing I would do: a store, a chatbot or a fix that costs nothing to build.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 				<a class="jx-btn jx-btn--ghost" href={routes[locale].about}>{es ? 'Mi trayectoria' : 'My track record'}</a>

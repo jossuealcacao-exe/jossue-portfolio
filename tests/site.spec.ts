@@ -133,11 +133,11 @@ test('commercial catalog presents MADRE as a product and keeps Apex access bound
 	await page.goto('/es/productos/');
 	await expect(page.locator('[data-product-catalog]')).toBeVisible();
 	await expect(page.getByRole('link', { name: 'MADRE', exact: true })).toHaveAttribute('href', '/es/madre/');
-	await expect(page.locator('.catalog__item')).toHaveCount(8);
+	await expect(page.locator('.catalog__item')).toHaveCount(9);
 	// MADRE va primero con una imagen real; el resto lleva su ícono, no un hueco pendiente.
 	await expect(page.locator('.catalog__item').first()).toContainText('MADRE');
 	// MADRE, AHP+ y Daniela llevan su video de demostración, con póster; el resto, su ícono.
-	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(5);
+	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(6);
 	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(3);
 	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(0);
 });
@@ -229,8 +229,9 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 		await expect(page.locator('.global-nav__drawer')).not.toHaveAttribute('open', '');
 	}
 
+	// Servicios lleva a la página de chatbots desde la tarjeta de IA.
 	await page.goto('/es/servicios/');
-	await expect(page.locator('main a[href="/es/ia-y-sistemas/"]')).toBeVisible();
+	await expect(page.locator('main a[href="/es/productos/chatbots/"]').first()).toBeVisible();
 });
 
 test('commercial pages share one hierarchy and CTAs keep usable spacing', async ({ page }) => {
@@ -307,6 +308,28 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 	expect(chapterSpacing.height).toBeGreaterThanOrEqual(42);
 });
 
+test('Chatbots page sells with real demos, security, costs and a working calculator', async ({ page }) => {
+	await page.goto('/es/productos/chatbots/');
+	await expect(page.locator('main h1')).toContainText('Un chatbot que vende');
+	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Productos', 'Chatbots inteligentes']);
+	await expect(page.locator('[data-bot="daniela"] a[href="https://wunutrition.com/"]')).toBeVisible();
+	await expect(page.locator('[data-bot="jossue-ai"] [data-ai-open]')).toBeVisible();
+	await expect(page.locator('.jx-bots__table').first().locator('tbody tr')).toHaveCount(7);
+	await expect(page.locator('.jx-bots__prices tbody tr')).toHaveCount(7);
+	await expect(page.locator('main')).toContainText('30 de septiembre de 2026');
+	// La calculadora responde a los números del visitante.
+	const api = page.locator('[data-out="api"]');
+	const before = await api.textContent();
+	await page.locator('[data-bot-calc] input[name="conversations"]').fill('5000');
+	await expect(api).not.toHaveText(before ?? '');
+	await expect(page.locator('[data-out="savings"]')).toContainText('$');
+	// Preguntas frecuentes para buscadores y asistentes de IA.
+	const faq = await page.locator('script[type="application/ld+json"]').evaluateAll((nodes) => nodes.map((node) => node.textContent ?? '').find((text) => text.includes('FAQPage')));
+	expect(faq).toBeTruthy();
+	await page.goto('/es/contacto/?producto=chatbots');
+	await expect(page.locator('#cf-project')).toHaveValue('Chatbot con IA para mi negocio');
+});
+
 test('Portfolio connects to the independent blog only from the footer', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('header .global-nav__links')).not.toContainText('Blog');
@@ -327,7 +350,7 @@ test('contact page prioritizes direct working channels', async ({ page }) => {
 test('Home leads with a commercial proposition and selected products', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('[data-storefront-home]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Construyo productos digitalesque venden y se pueden mantener.');
+	await expect(page.locator('main h1')).toHaveText('Ecommerce e IAque venden y se pueden mantener.');
 	// MADRE, producto estrella: marca, video que se puede pausar, instalación y showcase.
 	await expect(page.locator('[data-home="madre-wordmark"]')).toHaveAccessibleName('MADRE');
 	await expect(page.locator('[data-home="madre"] [data-jx-demo] video')).toHaveJSProperty('muted', true);
@@ -341,7 +364,7 @@ test('Home leads with a commercial proposition and selected products', async ({ 
 	await expect(page.locator('#madre a[href="https://madre.run/"]')).toBeVisible();
 	await expect(page.locator('#madre a[href="/es/madre/"]')).toBeVisible();
 	await expect(page.locator('[data-home="showcase"] video')).toHaveCount(3);
-	await expect(page.locator('[data-home="products"] > li')).toHaveCount(3);
+	await expect(page.locator('[data-home="products"] > li')).toHaveCount(4);
 	// Consultoría: tres formatos y la llamada a agendar un diagnóstico.
 	await expect(page.locator('[data-home="consulting"] .jx-consult__formats > li')).toHaveCount(3);
 	await expect(page.locator('[data-home="consulting"] a[href="/es/contacto/?producto=consultoria"]')).toBeVisible();

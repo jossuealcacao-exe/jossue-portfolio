@@ -22,8 +22,11 @@ const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 <header class="global-nav" data-global-nav>
 	<div class="global-nav__bar">
 		<a class="global-nav__brand" href={routes[locale].home} aria-label={`Jossue Alcalá — ${locale === 'es' ? 'inicio' : 'home'}`}>
-			<span class="global-nav__brand-name">Jossue Alcalá</span>
-			<small>{locale === 'es' ? 'Producto · Web · IA' : 'Product · Web · AI'}</small>
+			<img class="global-nav__mark" src="/images/brand/jossue-mark.svg" alt="" width="36" height="36" aria-hidden="true" />
+			<span class="global-nav__brand-text">
+				<span class="global-nav__brand-name">Jossue Alcalá</span>
+				<small>{locale === 'es' ? 'Crear · Construir' : 'Create · Build'}</small>
+			</span>
 		</a>
 		<nav class="global-nav__primary" aria-label={locale === 'es' ? 'Navegación principal' : 'Primary navigation'}>
 			<ul class="global-nav__links">
@@ -87,7 +90,7 @@ const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 -->
 <div class="site-bubble" data-site-bubble aria-hidden="true" inert>
 	<nav class="site-bubble__wrap" aria-label={locale === 'es' ? 'Navegación rápida' : 'Quick navigation'}>
-		<a class="site-bubble__brand" href={routes[locale].home}>Jossue Alcalá</a>
+		<a class="site-bubble__brand" href={routes[locale].home}><img src="/images/brand/jossue-mark.svg" alt="" width="26" height="26" aria-hidden="true" />Jossue Alcalá</a>
 		<ul class="site-bubble__links">
 			{navigation[locale].map((item) => (
 				<li><a href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>{item.label}</a></li>

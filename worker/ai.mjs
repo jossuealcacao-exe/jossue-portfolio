@@ -151,7 +151,7 @@ async function callGemini(env, system, history) {
 	} catch (error) {
 		if (!error.retryable) throw error;
 		console.warn('ai gemini retry', error.message);
-		await new Promise((resolve) => setTimeout(resolve, env.JOSSUE_AI_RETRY_MS ?? 600));
+		await new Promise((resolve) => globalThis.setTimeout(resolve, env.JOSSUE_AI_RETRY_MS ?? 600));
 		model = fallback;
 		response = await requestGemini(env, model, system, history);
 	}

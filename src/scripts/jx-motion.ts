@@ -16,6 +16,11 @@ const GROUPS = [
 	'.jx-ai-invite__questions > li',
 	'.jx-spot__list > li',
 	'.jx-consult__formats > li',
+	'.jx-bots__prices tbody tr',
+	'.jx-bots__table:not(.jx-bots__prices) tbody tr',
+	'.jx-bots__stack > li',
+	'.jx-bots__example li',
+	'.jx-bots__abuse dl > div',
 	'[data-home-case]',
 	'.jx-clip',
 ];
@@ -30,6 +35,7 @@ const SINGLES = [
 	'.jx-logos',
 	'.pdp__demo',
 	'.jm section > .jx-wrap > *',
+	'.jx-calc',
 ];
 
 export function initJxMotion(): void {
@@ -81,7 +87,7 @@ export function initJxMotion(): void {
 	});
 
 	// Cifras: el número principal cuenta desde cero la primera vez que se ve.
-	const counters = [...document.querySelectorAll<HTMLElement>('.jx-facts dt, .jx-kpis__value')];
+	const counters = [...document.querySelectorAll<HTMLElement>('.jx-facts dt, .jx-kpis__value, .jx-bots__prices td strong')];
 	const countObserver = new IntersectionObserver(
 		(entries) =>
 			entries.forEach((entry) => {
@@ -99,7 +105,7 @@ function countUp(element: HTMLElement): void {
 	const match = original.match(/\d+(?:[.,]\d+)?/);
 	if (!match) return;
 	const target = Number(match[0].replace(',', '.'));
-	const decimals = match[0].includes('.') || match[0].includes(',') ? 1 : 0;
+	const decimals = (match[0].split(/[.,]/)[1] ?? '').length;
 	const start = performance.now();
 	const duration = 900;
 	const step = (now: number) => {

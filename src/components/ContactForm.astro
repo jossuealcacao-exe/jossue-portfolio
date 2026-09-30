@@ -21,6 +21,7 @@ const copy = es
 			siteUrlPh: 'Opcional · https://tutienda.com',
 			project: '¿Qué necesitas?',
 			options: [
+				'Chatbot con IA para mi negocio',
 				'Consultoría o diagnóstico',
 				'Tienda Shopify o desarrollo web',
 				'Mejorar conversión (UX/CRO)',
@@ -70,6 +71,7 @@ const copy = es
 			siteUrlPh: 'Optional · https://yourstore.com',
 			project: 'What do you need?',
 			options: [
+				'AI chatbot for my business',
 				'Consulting or diagnosis',
 				'Shopify store or web development',
 				'Improve conversion (UX/CRO)',
@@ -197,8 +199,8 @@ const copy = es
 	if (root && form) {
 		const locale = root.dataset.locale ?? 'es';
 		// ?producto=… llega desde las fichas y la sección de consultoría: preselecciona el tipo.
-		// Orden de las opciones: consultoría, tienda/web, conversión, producto a la medida, IA, otra.
-		const productOption: Record<string, number> = { consultoria: 1, 'desarrollo-web': 2, 'ia-aplicada': 5, daniela: 5, madre: 4, 'ahp-plus': 4, 'bloqio-builder': 4, miawseo: 4 };
+		// Orden de las opciones: chatbot, consultoría, tienda/web, conversión, producto a la medida, IA, otra.
+		const productOption: Record<string, number> = { chatbots: 1, daniela: 1, consultoria: 2, 'desarrollo-web': 3, 'ia-aplicada': 6, madre: 5, 'ahp-plus': 5, 'bloqio-builder': 5, miawseo: 5 };
 		const wanted = productOption[new URLSearchParams(location.search).get('producto') ?? ''];
 		const projectSelect = form.querySelector<HTMLSelectElement>('#cf-project');
 		if (wanted && projectSelect && projectSelect.options[wanted]) projectSelect.selectedIndex = wanted;

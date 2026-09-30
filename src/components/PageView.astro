@@ -10,7 +10,7 @@ import ContactForm from './ContactForm.astro';
 import HeroCarousel from './HeroCarousel.astro';
 import AboutPage from './AboutPage.astro';
 import { workImage } from '../data/workImages';
-import AiDevSpotlight from './AiDevSpotlight.astro';
+import AiPage from './AiPage.astro';
 import ConsultingSection from './ConsultingSection.astro';
 import AiInvite from './AiInvite.astro';
 import PageHero from './PageHero.astro';
@@ -88,20 +88,6 @@ const services: Array<{ title: string; text: string; icon: IconName }> = es
 			{ title: 'Put AI to work', text: 'Assistants and automations using your real data and your permissions, where they genuinely save time. Not AI for its own sake.', icon: 'sparkles-ai' },
 			{ title: 'Build what does not exist', text: 'When no app on the market does what you need, I code it. That is how Prometeo and Hermes happened.', icon: 'basket' },
 		];
-
-const aiSystems = es
-	? [
-			['IA dentro del producto', 'Asistentes que acompañan al cliente mientras compra: entienden en qué anda, sugieren, y nunca hacen nada sin que la persona lo apruebe.'],
-			['IA para programar', 'Uso agentes para escribir código, pero con un proceso encima: se define el alcance, se revisa lo que hicieron y queda documentado. No los suelto a que hagan lo que quieran.'],
-			['IA para operar el negocio', 'Asistentes conectados a Shopify, Odoo, el CRM y la publicidad, que responden preguntas que hoy toman media hora de buscar en cinco pestañas.'],
-			['IA para decidir', 'Junta los números que viven regados en varias herramientas y te dice qué mirar primero esta semana.'],
-		]
-	: [
-			['AI inside the product', 'Assistants that help the customer while they shop: they understand what the person is after, suggest, and never act without approval.'],
-			['AI for coding', 'I use agents to write code, but with a process around them: scope is defined, their work is reviewed, and it gets documented. I do not just let them loose.'],
-			['AI for running the business', 'Assistants wired into Shopify, Odoo, the CRM, and the advertising, answering questions that today take half an hour across five tabs.'],
-			['AI for deciding', 'It gathers the numbers scattered across several tools and tells you what to look at first this week.'],
-	];
 
 const painPoints: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
@@ -303,12 +289,12 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				lede={es ? 'Averiguo qué es lo que más te está costando, lo diseño, y me quedo a construirlo contigo. No entrego un documento y me voy.' : 'I figure out what is costing you most, design it, and stay to build it with you. I do not hand over a document and leave.'}
 			>
 				<div class="jx-actions jx-actions--center">
-					<a class="jx-btn jx-btn--primary" href={routes[locale].contact}>{es ? 'Contáctame' : 'Contact me'}<Icon name="arrow-right" /></a>
+					<a class="jx-btn jx-btn--primary" href={routes[locale].contact}>{es ? 'Cuéntame tu caso' : 'Tell me your case'}<Icon name="arrow-right" /></a>
 					<button class="jx-btn jx-btn--ghost" type="button" data-ai-open>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
 				</div>
 			</PageHero>
 			<section class="section service-grid editorial-page__content">
-				{services.map((service, index) => { const shot = serviceShots[index]; const src = shot && workImage(shot.image); return <article class="service-card">{src && <a class="service-card__shot" href={`${routes[locale].work}${shot.slug}/`} aria-label={es ? `Ver el caso ${shot.name}` : `See the ${shot.name} case`}><img src={src} alt="" loading="lazy" decoding="async" /><span>{shot.name}</span></a>}<span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'Explore applied AI'}<Icon name="arrow-right" /></a>}</article>; })}
+				{services.map((service, index) => { const shot = serviceShots[index]; const src = shot && workImage(shot.image); return <article class="service-card">{src && <a class="service-card__shot" href={`${routes[locale].work}${shot.slug}/`} aria-label={es ? `Ver el caso ${shot.name}` : `See the ${shot.name} case`}><img src={src} alt="" loading="lazy" decoding="async" /><span>{shot.name}</span></a>}<span>{String(index + 1).padStart(2, '0')}</span><Icon name={service.icon} size="md" /><h2>{service.title}</h2><p>{service.text}</p>{index === 4 && <a class="link-with-icon" href={`${routes[locale].products}chatbots/`}>{es ? 'Ver chatbots con IA' : 'See AI chatbots'}<Icon name="arrow-right" /></a>}</article>; })}
 			</section>
 			<ConsultingSection locale={locale} id="consultoria-servicios" />
 			<section class="section process-section editorial-page__content">
@@ -322,41 +308,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 	)
 }
 
-{
-	pageKey === 'ai' && (
-		<div class="editorial-page editorial-page--ai">
-			<PageHero
-				loop="ai"
-				id="ai-hero-title"
-				label={es ? 'IA aplicada · AI Dev' : 'Applied AI · AI Dev'}
-				title={es ? ['IA que tu equipo sigue usando', 'después de la primera semana.'] : ['AI your team keeps using', 'after the first week.']}
-				lede={es ? 'Casi toda la IA que se instala en las empresas termina abandonada: no conoce los datos reales, no tiene permisos claros, y nadie sabe qué hizo. Trabajo justo en lo contrario.' : 'Most AI installed at companies ends up abandoned: it does not know the real data, its permissions are unclear, and nobody can tell what it did. I work on exactly the opposite.'}
-			>
-				<div class="jx-actions jx-actions--center">
-					<button class="jx-btn jx-btn--primary" type="button" data-ai-open data-ai-ask={es ? '¿Cómo usa Jossué la IA en una empresa?' : 'How does Jossué use AI in a company?'}>{es ? 'Pruébalo con Jossue AI' : 'Try it with Jossue AI'}<Icon name="arrow-right" /></button>
-				</div>
-			</PageHero>
-			<AiDevSpotlight locale={locale} showPageLink={false} />
-			<section class="section ai-grid editorial-page__content">
-				{aiSystems.map(([title, text], index) => <article><span>0{index + 1}</span><h2>{title}</h2><p>{text}</p></article>)}
-			</section>
-			<section class="section ai-principles editorial-page__content">
-				<div class="section-heading"><p class="index">{es ? 'La diferencia' : 'The difference'}</p><h2>{es ? 'Dónde pongo IA y dónde no.' : 'Where I use AI and where I do not.'}</h2></div>
-				<ul>
-					<li>{es ? 'Empieza por algo que alguien hace a mano todos los días y odia hacer.' : 'It starts from something somebody does by hand every day and hates doing.'}</li>
-					<li>{es ? 'Lo que hace se entiende y se puede deshacer. Nada pasa a tus espaldas.' : 'What it does is understandable and undoable. Nothing happens behind your back.'}</li>
-					<li>{es ? 'Usa los datos reales de tu negocio, respeta quién puede ver qué, y las decisiones importantes siguen siendo tuyas.' : 'It uses your real business data, respects who can see what, and the decisions that matter stay yours.'}</li>
-				</ul>
-				<div class="hero__actions">
-					<a class="button" href={routes[locale].contact}>{es ? 'Quiero mi negocio con IA' : 'I want my business running on AI'}</a>
-					<a class="button button--ghost" href={routes[locale].madre} data-analytics-event="click_madre">
-						{es ? 'Conocer MADRE' : 'Explore MADRE'}
-					</a>
-				</div>
-			</section>
-		</div>
-	)
-}
+{pageKey === 'ai' && <AiPage locale={locale} />}
 
 {pageKey === 'about' && <AboutPage locale={locale} />}
 

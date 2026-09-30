@@ -104,7 +104,7 @@ const specGroups = [
 		<p class="stage__lede">{product.promise[locale]}</p>
 		<div class="stage__actions">
 			<a class="pill" href={contactHref} data-analytics-event="contact_product">
-				{es ? 'Hablar sobre este producto' : 'Discuss this product'}
+				{es ? 'Quiero esto para mi negocio' : 'I want this for my business'}
 				<Icon name="arrow-right" />
 			</a>
 			<a class="pill pill--ghost" href={routes[locale].products}>{es ? 'Volver al catálogo' : 'Back to catalog'}</a>
@@ -114,7 +114,21 @@ const specGroups = [
 
 	{demo ? (
 		<div class="jx-wrap pdp__demo"><DemoVideo demo={demo} locale={locale} /></div>
-	) : <Panel
+	) : null}
+	{product.slug === 'daniela' && (
+		<aside class="pdp__bots" aria-label={es ? 'Chatbots para tu negocio' : 'Chatbots for your business'}>
+			<div>
+				<p class="jx-mono">{es ? 'Para tu negocio' : 'For your business'}</p>
+				<h2>{es ? '¿Quieres una Daniela para tu tienda?' : 'Want a Daniela for your store?'}</h2>
+				<p>{es ? 'Construyo chatbots como ella para otras marcas: con tu catálogo, tus pedidos y tu CRM, y con la misma seguridad del lado del servidor.' : 'I build chatbots like her for other brands: with your catalog, orders and CRM, and the same server-side security.'}</p>
+			</div>
+			<div class="jx-actions">
+				<a class="jx-btn jx-btn--primary" href={`${routes[locale].products}chatbots/`}>{es ? 'Ver chatbots con IA' : 'See AI chatbots'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--ghost" href="https://wunutrition.com/" target="_blank" rel="noopener">{es ? 'Platica con Daniela' : 'Talk to Daniela'}<Icon name="arrow-up-right" /></a>
+			</div>
+		</aside>
+	)}
+	{!demo && <Panel
 		src={caseCover(product.visualSlug)}
 		alt={es ? `Proyecto relacionado con ${product.title[locale]}` : `Project related to ${product.title[locale]}`}
 		slotId={`product-${product.slug}-hero`}

@@ -46,11 +46,11 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 	es: {
 		home: {
 			title: 'Jossue Alcalá — Ecommerce, Shopify e IA aplicada',
-			description: 'Dirijo el ecommerce de WU Nutrition y programo tiendas Shopify, sitios y productos con IA como MADRE, AHP+ y Daniela. Guadalajara, México.',
+			description: 'Ecommerce e IA aplicada: dirijo el ecommerce de WU Nutrition y construyo tiendas Shopify, chatbots con IA y productos como MADRE y Daniela.',
 		},
 		products: {
 			title: 'Productos y servicios — Jossue Alcalá',
-			description: 'MADRE, AHP+, Bloqio Builder, Daniela y Miawseo con su demo en video, más desarrollo web e IA aplicada para tu negocio.',
+			description: 'Chatbots con IA, MADRE, AHP+, Bloqio Builder, Daniela y Miawseo con demo en video, más consultoría y desarrollo web para tu negocio.',
 		},
 		work: {
 			title: 'Casos: Shopify, ecommerce e IA — Jossue Alcalá',
@@ -84,11 +84,11 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 	en: {
 		home: {
 			title: 'Jossue Alcalá — Ecommerce, Shopify and applied AI',
-			description: 'I lead ecommerce at WU Nutrition and build Shopify stores, websites and AI products like MADRE, AHP+ and Daniela. Guadalajara, Mexico.',
+			description: 'Ecommerce and applied AI: I lead ecommerce at WU Nutrition and build Shopify stores, AI chatbots and products like MADRE and Daniela.',
 		},
 		products: {
 			title: 'Products and services — Jossue Alcalá',
-			description: 'MADRE, AHP+, Bloqio Builder, Daniela and Miawseo with video demos, plus web development and applied AI for your business.',
+			description: 'AI chatbots, MADRE, AHP+, Bloqio Builder, Daniela and Miawseo with video demos, plus consulting and web development for your business.',
 		},
 		work: {
 			title: 'Cases: Shopify, ecommerce and AI — Jossue Alcalá',

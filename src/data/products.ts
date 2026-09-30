@@ -1,6 +1,6 @@
 import { routes, type Locale } from './i18n';
 
-export type ProductSlug = 'madre' | 'ahp-plus' | 'bloqio-builder' | 'daniela' | 'miawseo' | 'consultoria' | 'desarrollo-web' | 'ia-aplicada';
+export type ProductSlug = 'madre' | 'ahp-plus' | 'bloqio-builder' | 'daniela' | 'miawseo' | 'chatbots' | 'consultoria' | 'desarrollo-web' | 'ia-aplicada';
 
 /** Video de demostración: horizontal para pantallas anchas y vertical para teléfonos, sin audio. */
 export type ProductDemo = { wide: string; tall: string; label: string; alt: string; credit?: string };
@@ -194,6 +194,39 @@ export const commercialProducts: CommercialProduct[] = [
 		demo: {
 			es: { wide: '/videos/miawseo/miawseo-demo', tall: '/videos/miawseo/miawseo-demo-mobile', label: 'Demo · 22 s', credit: 'Fotos de gatos: Wikimedia Commons, con licencias libres (CC BY, CC BY-SA y dominio público). Autoría y licencia de cada foto en el repositorio de Miawseo.', alt: 'Demo de Miawseo: la portada, el buscador de la Michiteca con «sphynx», la sala del Sphynx pasando dos láminas y la Michi Plaza con las razas.' },
 			en: { wide: '/videos/miawseo/miawseo-demo', tall: '/videos/miawseo/miawseo-demo-mobile', label: 'Demo · 22 s (in Spanish)', credit: 'Cat photos: Wikimedia Commons, under free licenses (CC BY, CC BY-SA and public domain). Author and license of each photo in the Miawseo repository.', alt: 'Miawseo demo: the home page, the Michiteca search with “sphynx”, the Sphynx room moving through two panels, and Michi Plaza with the breeds.' },
+		},
+	},
+	{
+		slug: 'chatbots',
+		kind: 'service-product',
+		category: { es: 'Servicio · IA para ecommerce', en: 'Service · AI for ecommerce' },
+		title: { es: 'Chatbots inteligentes', en: 'Smart chatbots' },
+		promise: {
+			es: 'Un asistente que atiende, vende y consulta pedidos con tus datos reales, a cualquier hora.',
+			en: 'An assistant that serves, sells and checks orders with your real data, at any hour.',
+		},
+		summary: {
+			es: 'Construyo chatbots como Daniela y Jossue AI: conectados a tu catálogo, tus pedidos y tu CRM, con límites y seguridad del lado del servidor. Recomiendan, arman el carrito, consultan un pedido y le pasan a tu equipo los contactos listos.',
+			en: 'I build chatbots like Daniela and Jossue AI: connected to your catalog, orders and CRM, with limits and security on the server side. They recommend, build the cart, check an order and hand your team ready-to-work leads.',
+		},
+		idealFor: {
+			es: 'Tiendas y marcas que reciben las mismas preguntas todos los días, pierden ventas por dudas sin resolver o quieren atender de noche sin contratar un turno más.',
+			en: 'Stores and brands that get the same questions every day, lose sales to unanswered doubts, or want to serve at night without hiring another shift.',
+		},
+		included: {
+			es: ['Diagnóstico de lo que preguntan tus clientes', 'Conexión con tu catálogo, pedidos y CRM', 'Seguridad, límites y política contra abusos', 'Lanzamiento, lectura de conversaciones y mejora'],
+			en: ['Diagnosis of what your customers ask', 'Connection to your catalog, orders and CRM', 'Security, limits and an abuse policy', 'Launch, conversation review and improvement'],
+		},
+		process: {
+			es: ['Diagnóstico', 'Datos y reglas', 'Prototipo con tus datos', 'Lanzamiento y mejora'],
+			en: ['Diagnosis', 'Data and rules', 'Prototype with your data', 'Launch and improvement'],
+		},
+		proofSlugs: ['wu-nutrition'],
+		visualSlug: 'wu-nutrition',
+		status: { es: 'Daniela y Jossue AI en uso', en: 'Daniela and Jossue AI live' },
+		demo: {
+			es: { wide: '/videos/jossue-ai/jossue-ai-demo', tall: '/videos/jossue-ai/jossue-ai-demo-mobile', label: 'Demo · Jossue AI', alt: 'Demo de Jossue AI en jossuealcala.com: se abre el chat, pregunta qué ha construido Jossué y cómo funcionaría un chatbot para una tienda Shopify, y responde en segundos.' },
+			en: { wide: '/videos/jossue-ai/jossue-ai-demo', tall: '/videos/jossue-ai/jossue-ai-demo-mobile', label: 'Demo · Jossue AI (in Spanish)', alt: 'Jossue AI demo on jossuealcala.com: the chat opens, asks what Jossué has built and how a chatbot would work for a Shopify store, and answers in seconds.' },
 		},
 	},
 	{

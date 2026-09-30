@@ -19,7 +19,7 @@ if (!madre) throw new Error('MADRE product is required');
 const alsoFeatured = featuredProducts.filter((product) => product.slug !== 'madre');
 const others = otherProducts;
 const madreDemo = productDemo(madre, locale);
-const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
+const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', chatbots: 'chats', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 
 const method = es
 	? [['01', 'Contexto', 'Qué quieres lograr y con qué cuentas hoy.'], ['02', 'Prioridad', 'Lo que más mueve el negocio va primero.'], ['03', 'Construcción', 'Lo hago funcionar, por partes que puedes revisar.'], ['04', 'Evidencia', 'Pruebas y resultados antes de darlo por hecho.']]
@@ -37,8 +37,8 @@ const method = es
 		</h1>
 		<p class="jx-hero__lede">
 			{es
-				? 'Arriba están mis productos, con su demo. Abajo, lo que construyo para ti. No publico precios porque cada proyecto cambia; te los doy después de una llamada corta.'
-				: 'My own products come first, each with its demo. Below is what I build for you. I do not publish prices because every project changes; I share them after a short call.'}
+				? 'Arriba están mis productos, con su demo. Abajo, lo que construyo para tu negocio: chatbots con IA, tiendas y consultoría. No publico precios porque cada proyecto cambia; te los doy después de una llamada corta.'
+				: 'My own products come first, each with its demo. Below is what I build for your business: AI chatbots, stores and consulting. I do not publish prices because every project changes; I share them after a short call.'}
 		</p>
 	</section>
 	</div>
@@ -76,8 +76,8 @@ const method = es
 				);
 			})}
 			{others.map((product) => (
-				<article class="catalog__item jx-catalog__card">
-					<Icon name={icons[product.slug] ?? 'cube'} size="md" />
+				<article class:list={['catalog__item', 'jx-catalog__card', productDemo(product, locale) && 'jx-catalog__card--demo']}>
+					{productDemo(product, locale) ? <DemoVideo demo={productDemo(product, locale)!} locale={locale} orientation="wide" /> : <Icon name={icons[product.slug] ?? 'cube'} size="md" />}
 					<p class="jx-mono">{product.category[locale]}</p>
 					<h2 class="jx-catalog__title jx-catalog__title--sm"><a href={productHref(product, locale)}>{product.title[locale]}</a></h2>
 					<p class="jx-catalog__promise">{product.promise[locale]}</p>
