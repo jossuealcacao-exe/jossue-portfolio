@@ -297,6 +297,7 @@ const config = {
 			panel.hidden = !open;
 			host.classList.toggle('is-open', open);
 			document.documentElement.classList.toggle('jai-open', open);
+			window.requestAnimationFrame(() => clearConsent());
 			if (open) {
 				hideInvite(true);
 				fitViewport();
@@ -376,6 +377,22 @@ const config = {
 		}
 		inviteText.addEventListener('click', () => setOpen(true));
 		$<HTMLButtonElement>('[data-jai-invite-close]').addEventListener('click', () => hideInvite(true));
+
+		// Mientras el aviso de analítica está visible, el botón sube por encima de él.
+		const consentBanner = document.querySelector<HTMLElement>('[data-analytics-consent]');
+		const clearConsent = () => {
+			if (!consentBanner || consentBanner.hidden || host.classList.contains('is-open')) {
+				host.style.bottom = '';
+				return;
+			}
+			const rect = consentBanner.getBoundingClientRect();
+			host.style.bottom = rect.height ? `${Math.max(0, window.innerHeight - rect.top) + 12}px` : '';
+		};
+		if (consentBanner) {
+			new MutationObserver(clearConsent).observe(consentBanner, { attributes: true, attributeFilter: ['hidden'] });
+			window.addEventListener('resize', clearConsent);
+			window.requestAnimationFrame(clearConsent);
+		}
 
 		leave.hidden = store.get('leadSaved', false);
 		leave.addEventListener('click', () => ask(config.copy.leaveAsk));
