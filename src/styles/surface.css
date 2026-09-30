@@ -512,7 +512,6 @@
 		z-index: 40;
 		background: color-mix(in srgb, var(--surf-0) 78%, transparent);
 		backdrop-filter: saturate(180%) blur(20px);
-		-webkit-backdrop-filter: saturate(180%) blur(20px);
 		border-bottom: 1px solid var(--hairline);
 	}
 
@@ -1009,7 +1008,6 @@
 		border-radius: var(--radius-pill);
 		background: color-mix(in srgb, var(--surf-1) 88%, transparent);
 		backdrop-filter: saturate(180%) blur(18px);
-		-webkit-backdrop-filter: saturate(180%) blur(18px);
 		box-shadow: var(--lift-1);
 	}
 }
@@ -1181,7 +1179,6 @@
 		padding: 0.75rem var(--gutter) calc(0.75rem + env(safe-area-inset-bottom));
 		background: color-mix(in srgb, var(--surf-0) 80%, transparent);
 		backdrop-filter: saturate(180%) blur(20px);
-		-webkit-backdrop-filter: saturate(180%) blur(20px);
 		border-top: 1px solid var(--hairline);
 	}
 

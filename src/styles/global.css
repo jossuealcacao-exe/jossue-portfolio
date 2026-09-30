@@ -1944,7 +1944,6 @@
 	.evidence-lightbox::backdrop {
 		background: color-mix(in srgb, #111111 72%, transparent);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 	}
 
 	.evidence-lightbox[open] {
@@ -2826,7 +2825,6 @@
 
 		.evidence-lightbox::backdrop {
 			backdrop-filter: none;
-			-webkit-backdrop-filter: none;
 		}
 	}
 }

@@ -1984,7 +1984,6 @@
 		border-bottom: 1px solid var(--line);
 		background: color-mix(in srgb, var(--paper) 88%, transparent);
 		backdrop-filter: blur(1rem);
-		-webkit-backdrop-filter: blur(1rem);
 	}
 
 	.case-jump a {
@@ -3687,7 +3686,6 @@
 	   El unico que le faltaba es el aviso de analitica, que flota sobre el hero. */
 	.analytics-consent {
 		background: var(--veil-strong);
-		-webkit-backdrop-filter: blur(1.6rem) saturate(180%);
 		backdrop-filter: blur(1.6rem) saturate(180%);
 	}
 
@@ -3711,7 +3709,6 @@
 	@media (prefers-reduced-transparency: reduce) {
 		.analytics-consent {
 			background: var(--paper);
-			-webkit-backdrop-filter: none;
 			backdrop-filter: none;
 		}
 	}
@@ -3758,7 +3755,6 @@
 		gap: 0.75rem;
 		padding: 0.85rem clamp(0.85rem, 2.5vw, 1.35rem);
 		background: color-mix(in srgb, var(--cover-bg) 92%, transparent);
-		-webkit-backdrop-filter: blur(0.75rem) saturate(150%);
 		backdrop-filter: blur(0.75rem) saturate(150%);
 		color: var(--cover-ink);
 	}

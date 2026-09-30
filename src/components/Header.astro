@@ -78,3 +78,25 @@ const isCurrent = (key: keyof typeof routes[typeof locale]) => {
 		</nav>
 	</div>
 </header>
+
+<!--
+	Burbuja de navegación, con la regla de apple.com: el menú de arriba se va con el scroll y,
+	al pasar el hero, baja esta barra flotante (redondeada, de cristal, a 10 px del borde).
+	Se queda visible también al subir y se esconde al volver arriba. En las fichas de producto
+	la burbuja es el propio submenú de la ficha, así que esta no aparece.
+-->
+<div class="site-bubble" data-site-bubble aria-hidden="true" inert>
+	<nav class="site-bubble__wrap" aria-label={locale === 'es' ? 'Navegación rápida' : 'Quick navigation'}>
+		<a class="site-bubble__brand" href={routes[locale].home}>Jossue Alcalá</a>
+		<ul class="site-bubble__links">
+			{navigation[locale].map((item) => (
+				<li><a href={routes[locale][item.key]} aria-current={isCurrent(item.key) ? 'page' : undefined}>{item.label}</a></li>
+			))}
+		</ul>
+		<div class="site-bubble__actions">
+			<button class="site-bubble__cta site-bubble__cta--ghost" type="button" data-ai-open>Jossue AI</button>
+			<a class="site-bubble__cta" href={routes[locale].contact} data-analytics-event="bubble_contact">{locale === 'es' ? 'Escríbeme' : 'Write to me'}</a>
+			<button class="site-bubble__menu" type="button" data-bubble-menu aria-label={menuLabel}><Icon name="menu" /></button>
+		</div>
+	</nav>
+</div>

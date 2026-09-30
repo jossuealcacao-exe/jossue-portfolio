@@ -194,12 +194,25 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 	await expect(page.locator('body')).toHaveAttribute('data-site-theme', 'default');
 	await expect(page.locator('body')).toHaveCSS('background-color', 'rgb(5, 6, 5)');
 	await expect(page.locator('[data-home="madre"]')).toBeVisible();
-	const headerColor = await page.locator('.global-nav').evaluate((element) => getComputedStyle(element).backgroundColor);
-	expect(headerColor).not.toBe('rgba(0, 0, 0, 0)');
-	await page.evaluate(() => window.scrollTo(0, 640));
-	await expect(page.locator('.global-nav')).toHaveCSS('background-color', headerColor);
-	const scrolledHeader = await page.locator('.global-nav').boundingBox();
-	expect(Math.abs(scrolledHeader?.y ?? 999)).toBeLessThan(1);
+	// Cristal: el fondo translúcido y el desenfoque viven en ::before, no en la cabecera, para
+	// que el panel fijo del menú no quede atrapado dentro de ella.
+	const glass = () => page.locator('.global-nav').evaluate((element) => {
+		const layer = getComputedStyle(element, '::before');
+		return { header: getComputedStyle(element).backdropFilter, blur: layer.backdropFilter, color: layer.backgroundColor };
+	});
+	const topGlass = await glass();
+	expect(topGlass.header).toBe('none');
+	expect(topGlass.blur).toContain('blur');
+	expect(topGlass.color).toMatch(/^rgba\(5, 6, 5, 0\.\d+\)$/);
+	// Regla de apple.com: el menú global se va con el scroll y, al pasar el hero, baja la burbuja.
+	await expect(page.locator('[data-site-bubble]')).not.toHaveClass(/is-revealed/);
+	await page.evaluate(() => window.scrollTo({ top: 1600, behavior: 'instant' }));
+	await expect(page.locator('[data-site-bubble]')).toHaveClass(/is-revealed/);
+	await expect.poll(async () => (await page.locator('.site-bubble__wrap').boundingBox())?.y ?? -1).toBeGreaterThanOrEqual(0);
+	expect((await page.locator('.site-bubble__wrap').boundingBox())?.y ?? 99).toBeLessThan(20);
+	expect((await page.locator('.global-nav').boundingBox())?.y ?? 0).toBeLessThan(0);
+	await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+	await expect(page.locator('[data-site-bubble]')).not.toHaveClass(/is-revealed/);
 
 	const viewport = page.viewportSize();
 	if (viewport && viewport.width < 928) {
@@ -210,6 +223,7 @@ test('header keeps navigation focused and mobile menu supports Escape', async ({
 		await expect(page.getByRole('link', { name: 'Productos', exact: true }).last()).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Contacto', exact: true }).last()).toBeVisible();
 		const menuBox = await page.locator('.global-nav__sheet').boundingBox();
+		expect(menuBox?.height ?? 0, 'el panel del menú ocupa la pantalla').toBeGreaterThan((viewport.height ?? 0) * 0.6);
 		expect(menuBox?.width ?? 0).toBeGreaterThanOrEqual((viewport.width ?? 0) - 1);
 		await page.keyboard.press('Escape');
 		await expect(page.locator('.global-nav__drawer')).not.toHaveAttribute('open', '');
@@ -269,11 +283,12 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 	const sectionOrder = await page.evaluate((ids) => ids.map((id) => document.querySelector(id)?.getBoundingClientRect().top ?? -1), navLinks);
 	expect(sectionOrder.every((top, index) => index === 0 || top > sectionOrder[index - 1]), 'el submenú sigue el orden de la página').toBe(true);
 	await expect(page.locator('.action-bar')).toHaveCount(0);
-	await page.evaluate(() => window.scrollTo(0, 1600));
-	await expect.poll(async () => {
-		const [nav, header] = await Promise.all([page.locator('.chapter-nav').boundingBox(), page.locator('[data-global-nav]').boundingBox()]);
-		return Boolean(nav && header && nav.y >= header.y + header.height - 1);
-	}).toBe(true);
+	// El submenú de la ficha es la burbuja: al pasar el hero flota arriba, a 10 px del borde.
+	await page.evaluate(() => window.scrollTo({ top: 1600, behavior: 'instant' }));
+	await expect(page.locator('.chapter-nav')).toHaveClass(/is-revealed/);
+	await expect.poll(async () => Math.round((await page.locator('.chapter-nav__inner').boundingBox())?.y ?? -99)).toBeGreaterThanOrEqual(0);
+	expect((await page.locator('.chapter-nav__inner').boundingBox())?.y ?? 99).toBeLessThan(20);
+	await expect(page.locator('[data-site-bubble]')).toBeHidden();
 	await page.goto('/es/trabajo/wu-nutrition/');
 	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Casos', 'WU Nutrition']);
 

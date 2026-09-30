@@ -198,12 +198,29 @@
 	}
 
 	/* ---------- navegación ---------- */
+	/* El cristal va en una capa detrás (::before) y no en la cabecera misma: un backdrop-filter
+	   en la cabecera la vuelve el contenedor de sus hijos fijos y el panel del menú del celular
+	   quedaba encerrado en 1 px de alto. */
 	.global-nav {
-		background: rgba(5, 6, 5, 0.78);
-		backdrop-filter: saturate(160%) blur(18px);
-		-webkit-backdrop-filter: saturate(160%) blur(18px);
+		isolation: isolate;
+		background: transparent;
 		border-bottom: 1px solid var(--hair);
 		color: var(--text);
+	}
+
+	.global-nav::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		background: rgba(5, 6, 5, 0.46);
+		backdrop-filter: saturate(180%) blur(22px);
+		transition: background-color 240ms var(--jx-ease);
+		pointer-events: none;
+	}
+
+	.global-nav.is-scrolled::before {
+		background: rgba(5, 6, 5, 0.58);
 	}
 
 	.global-nav__brand-name {
@@ -1695,10 +1712,11 @@
 }
 
 @layer components {
-	/* La barra no cambia de color al bajar: siempre la misma translucidez sobre el negro. */
+	/* La cabecera en sí es transparente; el cristal (fondo translúcido + desenfoque) vive en
+	   .global-nav::before para no atrapar al panel fijo del menú. */
 	.global-nav,
 	.global-nav.is-scrolled {
-		background: rgba(5, 6, 5, 0.78);
+		background: transparent;
 		border-bottom-color: var(--hair);
 	}
 }
@@ -2186,7 +2204,6 @@
 		border-radius: var(--radius-pill);
 		background: rgba(22, 26, 22, 0.92);
 		backdrop-filter: blur(14px);
-		-webkit-backdrop-filter: blur(14px);
 		color: var(--text);
 		box-shadow: 0 0.75rem 2.5rem rgba(0, 0, 0, 0.45);
 		cursor: pointer;
@@ -3443,7 +3460,6 @@
 		border-radius: var(--radius-md);
 		background: rgba(5, 6, 5, 0.78);
 		backdrop-filter: blur(10px);
-		-webkit-backdrop-filter: blur(10px);
 	}
 
 	.portfolio-shot__logo img {
@@ -4007,7 +4023,6 @@
 		border-bottom: 1px solid var(--hair);
 		background: rgba(5, 6, 5, 0.82);
 		backdrop-filter: saturate(160%) blur(18px);
-		-webkit-backdrop-filter: saturate(160%) blur(18px);
 	}
 
 	body:has(.chapter-nav) {
@@ -4215,6 +4230,221 @@
 		.chapter-nav__links {
 			mask-image: linear-gradient(90deg, #000 80%, transparent);
 			-webkit-mask-image: linear-gradient(90deg, #000 80%, transparent);
+		}
+	}
+}
+
+
+/* Panel del menú en el teléfono: el mismo cristal, a pantalla completa bajo la cabecera. */
+@layer utilities {
+	.global-nav__sheet {
+		top: var(--header-h, 4rem);
+		bottom: 0;
+		height: auto;
+		background: rgba(5, 6, 5, 0.72);
+		backdrop-filter: saturate(180%) blur(26px);
+		border-top: 1px solid var(--hair);
+	}
+}
+
+/* Safari anterior a la 18 solo entiende el nombre con prefijo. Va en su propio bloque para que
+   el minificador no lo fusione con el estándar (si están en la misma regla, borra el estándar
+   y Chrome se queda sin cristal). */
+@supports (-webkit-backdrop-filter: none) and (not (backdrop-filter: none)) {
+	.global-nav::before { -webkit-backdrop-filter: saturate(180%) blur(22px); }
+	.global-nav__sheet { -webkit-backdrop-filter: saturate(180%) blur(26px); }
+	.chapter-nav { -webkit-backdrop-filter: saturate(160%) blur(18px); }
+	.jai__launcher { -webkit-backdrop-filter: blur(14px); }
+	.analytics-consent { -webkit-backdrop-filter: blur(1.6rem) saturate(180%); }
+}
+
+/* ================= Navegación con la regla de apple.com ================= */
+@layer utilities {
+	/* 1. El menú global se va con el scroll (ya no es fijo). */
+	.global-nav,
+	.global-nav.is-scrolled {
+		position: relative;
+		top: auto;
+	}
+
+	/* 2. Burbuja flotante: aparece al pasar el hero, a 10 px del borde, de cristal. */
+	.site-bubble {
+		position: fixed;
+		inset: 0 0 auto;
+		z-index: 95;
+		display: flex;
+		justify-content: center;
+		padding: 10px 10px 0;
+		pointer-events: none;
+		transform: translateY(calc(-100% - 12px));
+		transition: transform 230ms var(--jx-ease);
+	}
+
+	.site-bubble.is-revealed {
+		transform: none;
+	}
+
+	.site-bubble__wrap,
+	.chapter-nav__inner {
+		pointer-events: auto;
+		border-radius: 18px;
+		background: rgba(18, 18, 18, 0.8);
+		backdrop-filter: saturate(180%) blur(20px);
+		box-shadow: 0 0 0 1px rgb(40, 40, 40), 0 10px 30px rgba(0, 0, 0, 0.35);
+	}
+
+	.site-bubble__wrap {
+		display: flex;
+		align-items: center;
+		gap: clamp(0.75rem, 2vw, 1.75rem);
+		width: min(100%, 1024px);
+		min-height: 52px;
+		padding: 0.5rem 0.6rem 0.5rem 1.25rem;
+	}
+
+	.site-bubble__brand {
+		flex: none;
+		font-size: 1.0625rem;
+		font-weight: 600;
+		letter-spacing: -0.01em;
+		color: var(--text);
+		text-decoration: none;
+	}
+
+	.site-bubble__links {
+		display: flex;
+		flex: 1;
+		justify-content: center;
+		gap: clamp(0.9rem, 2vw, 1.6rem);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.site-bubble__links li {
+		max-width: none;
+	}
+
+	.site-bubble__links a {
+		font-size: 0.875rem;
+		color: var(--text-2);
+		text-decoration: none;
+		transition: color 160ms var(--jx-ease);
+	}
+
+	.site-bubble__links a:hover,
+	.site-bubble__links a[aria-current='page'] {
+		color: var(--text);
+	}
+
+	.site-bubble__actions {
+		display: flex;
+		flex: none;
+		align-items: center;
+		gap: 0.5rem;
+		margin-left: auto;
+	}
+
+	.site-bubble__cta {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.25rem;
+		padding: 0.35rem 0.95rem;
+		border: 0;
+		border-radius: 120px;
+		background: var(--ivory);
+		color: var(--ivory-ink);
+		font: 600 0.8125rem/1 var(--sans);
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.site-bubble__cta--ghost {
+		background: rgba(18, 18, 18, 0.8);
+		color: var(--text);
+		box-shadow: 0 0 0 1px rgb(110, 110, 115);
+	}
+
+	.site-bubble__menu {
+		display: none;
+		place-items: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		border: 0;
+		border-radius: 50%;
+		background: transparent;
+		color: var(--text);
+		cursor: pointer;
+	}
+
+	.site-bubble__menu .icon {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
+
+	/* En fichas de producto la burbuja es el submenú, así que esta no se muestra. */
+	body:has(.chapter-nav) .site-bubble {
+		display: none;
+	}
+
+	/* 3. Submenú de las fichas: siempre en forma de burbuja. En su lugar arriba se ve normal;
+	      al pegarse se esconde hacia arriba y regresa cuando se pasa el hero. */
+	body:has(.chapter-nav) .chapter-nav,
+	.chapter-nav {
+		top: 0;
+		z-index: 95;
+		padding: 10px var(--gutter) 0;
+		border: 0;
+		background: transparent;
+		backdrop-filter: none;
+		transition: transform 230ms var(--jx-ease);
+	}
+
+	.chapter-nav.is-stuck:not(.is-revealed) {
+		transform: translateY(calc(-100% - 12px));
+	}
+
+	.chapter-nav__inner {
+		max-width: 1024px;
+		margin-inline: auto;
+		padding: 0.4rem 0.6rem 0.4rem 1.25rem;
+		min-height: 52px;
+	}
+
+	body:has(.chapter-nav) {
+		scroll-padding-top: 5.5rem;
+	}
+
+	/* Panel del menú abierto desde la burbuja: debajo de ella. */
+	html.sheet-from-bubble .global-nav__sheet {
+		position: fixed;
+		top: var(--sheet-top, 4.5rem);
+		inset-inline: 10px;
+		bottom: 10px;
+		z-index: 94;
+		border-radius: 18px;
+		box-shadow: 0 0 0 1px rgb(40, 40, 40);
+	}
+
+	@media (max-width: 60rem) {
+		.site-bubble__links {
+			display: none;
+		}
+
+		.site-bubble__cta--ghost {
+			display: none;
+		}
+
+		.site-bubble__menu {
+			display: grid;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.site-bubble,
+		.chapter-nav {
+			transition: none;
 		}
 	}
 }
