@@ -6,6 +6,7 @@ import DemoVideo from './DemoVideo.astro';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
 import ChapterNav from './surface/ChapterNav.astro';
 import Gallery from './surface/Gallery.astro';
 import Panel from './surface/Panel.astro';
@@ -36,11 +37,11 @@ const contactHref = `${routes[locale].contact}?producto=${product.slug}`;
 const demo = productDemo(product, locale);
 
 const chapters = [
-	{ href: '#encaje', label: es ? 'Encaje' : 'Fit' },
-	{ href: '#alcance', label: es ? 'Alcance' : 'Scope' },
-	{ href: '#recorrido', label: es ? 'Recorrido' : 'Process' },
-	...(proofCases.length ? [{ href: '#pruebas', label: es ? 'Pruebas' : 'Proof' }] : []),
-	{ href: '#detalle', label: es ? 'Detalle' : 'Specs' },
+	{ href: '#alcance', label: es ? 'Qué incluye' : 'What is included' },
+	{ href: '#encaje', label: es ? 'Para quién' : 'Who it is for' },
+	{ href: '#recorrido', label: es ? 'Cómo avanzamos' : 'Process' },
+	...(proofCases.length ? [{ href: '#pruebas', label: es ? 'Proyectos' : 'Projects' }] : []),
+	{ href: '#detalle', label: es ? 'Ficha' : 'Specs' },
 ];
 
 // La tabla de detalle recoge lo que la pagina ya dijo, para que el dato
@@ -84,6 +85,13 @@ const specGroups = [
 ---
 
 <article class="pdp" data-product-detail={product.slug}>
+	<Breadcrumbs
+		locale={locale}
+		items={[
+			{ label: es ? 'Productos' : 'Products', href: routes[locale].products },
+			{ label: product.title[locale] },
+		]}
+	/>
 	<ChapterNav
 		title={product.title[locale]}
 		links={chapters}
@@ -213,17 +221,6 @@ const specGroups = [
 			</a>
 		</div>
 	</Stage>
-
-	<div class="action-bar">
-		<span class="action-bar__label">
-			<strong>{product.title[locale]}</strong>
-			<span>{es ? 'Lo definimos en una llamada corta' : 'We define it in a short call'}</span>
-		</span>
-		<a class="pill" href={contactHref} data-analytics-event="contact_product_bar">
-			{es ? 'Hablar' : 'Talk'}
-			<Icon name="arrow-right" />
-		</a>
-	</div>
 
 	<Stage size="tight" class="pdp__related">
 		<p class="stage__eyebrow">{es ? 'Otras rutas' : 'Other routes'}</p>

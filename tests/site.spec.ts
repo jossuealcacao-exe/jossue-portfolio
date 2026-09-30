@@ -261,6 +261,22 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 		if (await close.count()) await expect(close.locator('.stage__title')).toHaveCSS('text-align', 'left');
 	}
 
+	// Breadcrumbs y submenú de la ficha: orden de las secciones y siempre visible bajo la cabecera.
+	await page.goto('/es/productos/daniela/');
+	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Productos', 'Daniela']);
+	await expect(page.locator('.breadcrumbs a').nth(1)).toHaveAttribute('href', '/es/productos/');
+	const navLinks = await page.locator('.chapter-nav__links a').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hash));
+	const sectionOrder = await page.evaluate((ids) => ids.map((id) => document.querySelector(id)?.getBoundingClientRect().top ?? -1), navLinks);
+	expect(sectionOrder.every((top, index) => index === 0 || top > sectionOrder[index - 1]), 'el submenú sigue el orden de la página').toBe(true);
+	await expect(page.locator('.action-bar')).toHaveCount(0);
+	await page.evaluate(() => window.scrollTo(0, 1600));
+	await expect.poll(async () => {
+		const [nav, header] = await Promise.all([page.locator('.chapter-nav').boundingBox(), page.locator('[data-global-nav]').boundingBox()]);
+		return Boolean(nav && header && nav.y >= header.y + header.height - 1);
+	}).toBe(true);
+	await page.goto('/es/trabajo/wu-nutrition/');
+	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Casos', 'WU Nutrition']);
+
 	await page.goto('/es/productos/desarrollo-web/');
 	const chapterCta = page.locator('.chapter-nav__cta');
 	const chapterSpacing = await chapterCta.evaluate((element) => {

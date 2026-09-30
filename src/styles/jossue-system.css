@@ -3996,3 +3996,225 @@
 		}
 	}
 }
+
+/* Submenú de las fichas: fijo justo debajo de la cabecera (que también es fija), no detrás de
+   ella; los saltos a cada sección dejan libre el alto de ambas. */
+@layer utilities {
+	body:has(.chapter-nav) .chapter-nav,
+	.chapter-nav {
+		top: var(--header-h, 81px);
+		z-index: 55;
+		border-bottom: 1px solid var(--hair);
+		background: rgba(5, 6, 5, 0.82);
+		backdrop-filter: saturate(160%) blur(18px);
+		-webkit-backdrop-filter: saturate(160%) blur(18px);
+	}
+
+	body:has(.chapter-nav) {
+		scroll-padding-top: calc(var(--header-h, 81px) + 4.25rem);
+	}
+
+	.chapter-nav__inner {
+		width: min(100% - 2 * var(--jx-gut), var(--jx-wrap));
+		margin-inline: auto;
+		padding-inline: 0;
+	}
+
+	.chapter-nav__title {
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.chapter-nav__links {
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.chapter-nav__links::-webkit-scrollbar {
+		display: none;
+	}
+
+	.chapter-nav__links a {
+		white-space: nowrap;
+		font-size: 0.875rem;
+		color: var(--text-2);
+		text-decoration: none;
+	}
+
+	.chapter-nav__links a:hover,
+	.chapter-nav__links a.is-active,
+	.chapter-nav__links a[aria-current] {
+		color: var(--text);
+	}
+
+	.chapter-nav__cta.pill {
+		flex: none;
+		border-radius: var(--radius-pill);
+		background: var(--ivory);
+		color: var(--ivory-ink);
+		font-weight: 600;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	/* Breadcrumbs con el mismo eje y la misma tipografía que el resto del sitio. */
+	.breadcrumbs {
+		width: min(100% - 2 * var(--jx-gut), var(--jx-wrap));
+		margin-inline: auto;
+		padding: calc(var(--header-h, 81px) + 1rem) 0 0;
+		border: 0;
+	}
+
+	.breadcrumbs ol {
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+		min-width: 0;
+	}
+
+	.breadcrumbs li {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-width: 0;
+		max-width: none;
+		min-height: 2.75rem;
+		font-size: 0.875rem;
+		color: var(--text-2);
+	}
+
+	.breadcrumbs li + li::before {
+		content: '/';
+		align-self: center;
+		color: var(--text-3);
+	}
+
+	.breadcrumbs a {
+		min-height: 2.75rem;
+		color: var(--text-2);
+		text-decoration: none;
+	}
+
+	.breadcrumbs a:hover {
+		color: var(--text);
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.breadcrumbs [aria-current='page'] {
+		overflow: hidden;
+		min-height: 0;
+		font-weight: 500;
+		color: var(--text);
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	.breadcrumbs li:last-child {
+		flex: 1;
+		min-width: 0;
+	}
+
+	@media (max-width: 47.99rem) {
+		.chapter-nav__title {
+			display: none;
+		}
+	}
+}
+
+/* Fichas de producto y de caso: breadcrumbs, submenú, video e imagen principal sobre el mismo
+   eje que el titular y el logo de la cabecera (el margen --gutter de estas páginas). */
+@layer utilities {
+	.breadcrumbs,
+	.chapter-nav__inner {
+		width: auto;
+		margin-inline: 0;
+		padding-inline: var(--gutter);
+	}
+
+	.pdp .pdp__demo {
+		width: auto;
+		margin-inline: 0;
+		padding-inline: var(--gutter);
+	}
+
+	.pdp .panel {
+		padding-inline: var(--gutter);
+	}
+
+	.pdp .panel__media {
+		max-width: none;
+	}
+}
+
+@layer utilities {
+	.breadcrumbs {
+		padding-top: 1rem;
+	}
+
+	.chapter-nav__inner {
+		display: flex;
+		align-items: center;
+		gap: clamp(0.75rem, 2vw, 1.75rem);
+		min-height: 3.75rem;
+		padding-block: 0.5rem;
+	}
+
+	.chapter-nav__title {
+		flex: none;
+		line-height: 1;
+	}
+
+	.chapter-nav__links {
+		display: flex;
+		flex: 1;
+		align-items: center;
+		gap: clamp(0.9rem, 2vw, 1.6rem);
+		min-width: 0;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.chapter-nav__links li {
+		max-width: none;
+	}
+
+	.chapter-nav__links a {
+		display: inline-flex;
+		align-items: center;
+		min-height: 2.75rem;
+		font-family: var(--sans);
+		font-weight: 500;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	.chapter-nav__cta.pill {
+		margin-left: auto;
+		min-height: 2.75rem;
+		padding: 0.5rem 1.15rem;
+		font-size: 0.875rem;
+	}
+}
+
+@layer utilities {
+	.chapter-nav__inner {
+		box-sizing: border-box;
+		width: 100%;
+		max-width: none;
+	}
+}
+
+@layer utilities {
+	@media (max-width: 47.99rem) {
+		.chapter-nav__links {
+			mask-image: linear-gradient(90deg, #000 80%, transparent);
+			-webkit-mask-image: linear-gradient(90deg, #000 80%, transparent);
+		}
+	}
+}
