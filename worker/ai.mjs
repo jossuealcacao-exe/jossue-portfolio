@@ -207,9 +207,39 @@ async function sanitizeHistory(env, sid, messages) {
 	return history.slice(-MAX_HISTORY);
 }
 
+// Red de seguridad para los acentos que el modelo a veces se come. Solo palabras sin ambigüedad
+// («mas», «esta», «solo» se quedan: pueden ir con o sin acento). «Jossue AI» va sin acento.
+const ACCENTS = [
+	[/\bJossue\b(?!\s+AI)/g, 'Jossué'],
+	[/\bcodigo(s?)\b/g, 'código$1'],
+	[/\bCodigo(s?)\b/g, 'Código$1'],
+	[/\btambien\b/g, 'también'],
+	[/\baqui\b/g, 'aquí'],
+	[/\binformacion\b/g, 'información'],
+	[/\bfuncion\b/g, 'función'],
+	[/\bopcion\b/g, 'opción'],
+	[/\bdiseno\b/g, 'diseño'],
+	[/\bcompania\b/g, 'compañía'],
+	[/\bpagina(s?)\b/g, 'página$1'],
+	[/\bunica(s?)\b/g, 'única$1'],
+	[/\bunico(s?)\b/g, 'único$1'],
+	[/\btecnologia(s?)\b/g, 'tecnología$1'],
+	[/\bdia(s?)\b/g, 'día$1'],
+	[/\bhabil\b/g, 'hábil'],
+	[/\bfacil\b/g, 'fácil'],
+	[/\brapido\b/g, 'rápido'],
+	[/\bautomaticamente\b/g, 'automáticamente'],
+	[/\bpublico\b(?=\s+(de|del|que|en|y|,|\.))/g, 'público'],
+];
+
+export function fixAccents(text, locale) {
+	if (locale === 'en') return text;
+	return ACCENTS.reduce((value, [pattern, replacement]) => value.replace(pattern, replacement), String(text));
+}
+
 function sanitizeOutput(data, locale) {
 	const fallback = FALLBACK[locale];
-	const reply = typeof data?.reply === 'string' && data.reply.trim() ? data.reply.trim().slice(0, 1200) : fallback.reply;
+	const reply = typeof data?.reply === 'string' && data.reply.trim() ? fixAccents(data.reply.trim().slice(0, 1200), locale) : fallback.reply;
 	const suggestions = Array.isArray(data?.suggestions)
 		? data.suggestions.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim().slice(0, 60)).slice(0, 3)
 		: [];

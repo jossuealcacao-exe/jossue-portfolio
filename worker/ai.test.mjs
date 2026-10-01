@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { resetKnowledgeCache, redactPII } from './ai.mjs';
+import { fixAccents, resetKnowledgeCache, redactPII } from './ai.mjs';
 import { handleRequest } from './index.mjs';
 
 const ORIGIN = 'https://jossuealcala.com';
@@ -247,4 +247,14 @@ test('a request Gemini rejects is not retried', async () => {
 	} finally {
 		globalThis.fetch = original;
 	}
+});
+
+test('puts back the accents the model sometimes drops, but never in «Jossue AI»', () => {
+	// Respuesta real (30 sep 2026): «protocolo de codigo abierto que Jossue creo».
+	assert.equal(
+		fixAccents('Es de codigo abierto. Jossue lo hizo y Jossue AI lo explica aqui, tambien en su pagina; contesta en un dia habil.', 'es'),
+		'Es de código abierto. Jossué lo hizo y Jossue AI lo explica aquí, también en su página; contesta en un día hábil.',
+	);
+	assert.equal(fixAccents('Jossue builds tools.', 'en'), 'Jossue builds tools.');
+	assert.equal(fixAccents('Yo creo que más vale empezar por la ficha.', 'es'), 'Yo creo que más vale empezar por la ficha.');
 });
