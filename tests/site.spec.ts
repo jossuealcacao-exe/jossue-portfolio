@@ -552,6 +552,8 @@ for (const project of [
 		await expect(page.locator('.case-intro, .case-grid, .approach-list, .deliverable-grid, .case-cta')).toHaveCount(0);
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
+		// Los íconos de las marcas se pintan en marfil (filtro #jx-ivory) para leerse sobre el fondo oscuro.
+		await expect(page.locator('#technology .stack-list img').first()).toHaveCSS('filter', /jx-ivory/);
 		await expect(page.locator('.evidence-shot')).toHaveCount(project.media);
 		await expect(page.locator('.evidence-gallery img')).toHaveCount(project.media);
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);

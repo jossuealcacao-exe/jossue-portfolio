@@ -202,6 +202,9 @@ const structuredData = {
 		<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
 	</head>
 	<body data-site-theme={theme}>
+		<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+			<filter id="jx-ivory" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 0.9255 0 0 0 0 0.9020 0 0 0 0 0.8471 0 0 0 1 0" /></filter>
+		</svg>
 		<a class="skip-link" href="#main">{locale === 'es' ? 'Saltar al contenido' : 'Skip to content'}</a>
 		<Header locale={locale} pathname={pathname} counterpartSlug={counterpartSlug} />
 		<main id="main" tabindex="-1">

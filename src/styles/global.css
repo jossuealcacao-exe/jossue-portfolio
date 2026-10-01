@@ -1220,7 +1220,9 @@
 		width: auto;
 		max-width: 100%;
 		height: 1.55rem;
-		filter: brightness(0) saturate(100%);
+		/* Los íconos de las marcas son de una sola tinta oscura: sobre el sitio oscuro se pintan en marfil
+		   con el filtro #jx-ivory que define BaseLayout. */
+		filter: url(#jx-ivory);
 	}
 
 	.tool-mark--md img {
