@@ -18,8 +18,11 @@
 import { PERSONA } from './persona.mjs';
 
 const GUARD_MODEL = 'gemini-3.1-flash-lite';
+// Respaldo cuando el principal está saturado (429/5xx).
+const GUARD_FALLBACK_MODEL = 'gemini-2.5-flash-lite';
+const GUARD_RETRYABLE = new Set([429, 500, 502, 503, 504]);
 const GEMINI_BASE = 'https://generativelanguage.googleapis.com/v1beta/models';
-const GUARD_TIMEOUT_MS = 6000;
+const GUARD_TIMEOUT_MS = 7000; // los dos intentos juntos
 const WINDOW_MS = 60 * 60_000; // los puntos cuentan durante una hora
 const BLOCK_POINTS = 5; // con 5 puntos en una hora, bloqueo
 const FIRST_BLOCK_MS = 60 * 60_000; // primer bloqueo: 1 hora
@@ -112,36 +115,46 @@ ${ruleHits.length ? `Las reglas automáticas ya marcaron: ${ruleHits.map((hit) =
 Responde solo el JSON.`;
 }
 
-/** Devuelve { verdict, confidence, reason } o null si el vigilante no pudo responder a tiempo. */
+/**
+ * Devuelve { verdict, confidence, reason, model } o null si el vigilante no pudo responder a tiempo.
+ * Si el modelo principal está saturado (429/5xx, pasa seguido con los Flash-Lite), reintenta al
+ * instante con el de respaldo. Los dos intentos comparten el mismo tiempo límite.
+ */
 export async function aiGuard(env, text, previousUserMessages, ruleHits) {
 	if (!env.GEMINI_API_KEY) return null;
 	const boundary = crypto.randomUUID().slice(0, 8).toUpperCase();
-	const model = String(env.JOSSUE_AI_GUARD_MODEL || GUARD_MODEL).replace(/[^\w.-]/g, '');
+	const clean = (value, fallback) => String(value || fallback).replace(/[^\w.-]/g, '');
+	const models = [clean(env.JOSSUE_AI_GUARD_MODEL, GUARD_MODEL), clean(env.JOSSUE_AI_GUARD_FALLBACK_MODEL, GUARD_FALLBACK_MODEL)];
 	const context = previousUserMessages.slice(-3).map((message) => `[mensaje anterior] ${message.slice(0, 400)}`).join('\n');
+	const body = JSON.stringify({
+		systemInstruction: { parts: [{ text: guardPrompt(boundary, ruleHits) }] },
+		contents: [{ role: 'user', parts: [{ text: `<<<${boundary}>>>\n${context ? `${context}\n[último mensaje] ` : ''}${String(text).slice(0, 1200)}\n<<<FIN-${boundary}>>>` }] }],
+		// thinkingBudget 0 comprobado en producción con gemini-3.1-flash-lite (1 oct 2026).
+		generationConfig: { temperature: 0, maxOutputTokens: 120, responseMimeType: 'application/json', responseSchema: GUARD_SCHEMA, thinkingConfig: { thinkingBudget: 0 } },
+	});
 	const controller = new globalThis.AbortController();
 	const timer = globalThis.setTimeout(() => controller.abort(), GUARD_TIMEOUT_MS);
 	try {
-		const response = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
-			method: 'POST',
-			signal: controller.signal,
-			headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
-			body: JSON.stringify({
-				systemInstruction: { parts: [{ text: guardPrompt(boundary, ruleHits) }] },
-				contents: [{ role: 'user', parts: [{ text: `<<<${boundary}>>>\n${context ? `${context}\n[último mensaje] ` : ''}${String(text).slice(0, 1200)}\n<<<FIN-${boundary}>>>` }] }],
-				// thinkingBudget 0 comprobado en producción con gemini-3.1-flash-lite (1 oct 2026).
-				generationConfig: { temperature: 0, maxOutputTokens: 120, responseMimeType: 'application/json', responseSchema: GUARD_SCHEMA, thinkingConfig: { thinkingBudget: 0 } },
-			}),
-		});
-		if (!response.ok) {
-			console.warn('ai guard http', response.status, (await response.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 240));
-			return null;
+		for (const [index, model] of models.entries()) {
+			const response = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
+				method: 'POST',
+				signal: controller.signal,
+				headers: { 'Content-Type': 'application/json', 'x-goog-api-key': env.GEMINI_API_KEY },
+				body,
+			});
+			if (!response.ok) {
+				console.warn('ai guard http', response.status, model, (await response.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 240));
+				if (GUARD_RETRYABLE.has(response.status) && index === 0) continue;
+				return null;
+			}
+			const data = await response.json();
+			const raw = (data?.candidates?.[0]?.content?.parts ?? []).map((part) => part.text ?? '').join('');
+			const parsed = JSON.parse(raw);
+			const verdict = ['ok', ...KINDS].includes(parsed?.verdict) ? parsed.verdict : 'ok';
+			const confidence = Math.min(1, Math.max(0, Number(parsed?.confidence) || 0));
+			return { verdict, confidence, reason: String(parsed?.reason ?? '').slice(0, 160), model };
 		}
-		const data = await response.json();
-		const raw = (data?.candidates?.[0]?.content?.parts ?? []).map((part) => part.text ?? '').join('');
-		const parsed = JSON.parse(raw);
-		const verdict = ['ok', ...KINDS].includes(parsed?.verdict) ? parsed.verdict : 'ok';
-		const confidence = Math.min(1, Math.max(0, Number(parsed?.confidence) || 0));
-		return { verdict, confidence, reason: String(parsed?.reason ?? '').slice(0, 160) };
+		return null;
 	} catch (error) {
 		console.warn('ai guard failed', error?.name ?? error?.message);
 		return null;

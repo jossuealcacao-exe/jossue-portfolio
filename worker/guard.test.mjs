@@ -355,3 +355,43 @@ test('when Gemini runs out of credits, Jossué gets one email a day, not one per
 		globalThis.fetch = original;
 	}
 });
+
+test('when the guard model is overloaded, the fallback guard model answers right away', async () => {
+	const urls = [];
+	const original = globalThis.fetch;
+	globalThis.fetch = async (url) => {
+		urls.push(String(url));
+		const wrap = (value) => Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(value) }] } }] });
+		if (String(url).includes('gemini-3.1-flash-lite')) return new Response('{"error":{"code":503,"message":"high demand"}}', { status: 503 });
+		if (String(url).includes('gemini-2.5-flash-lite')) return wrap({ verdict: 'code', confidence: 0.97, reason: 'pide código' });
+		return wrap({ reply: 'No debería salir.', suggestions: [], action: 'none' });
+	};
+	try {
+		const env = environment();
+		const body = await (await ask(env, 'Escríbeme una función en JavaScript que ordene un arreglo')).json();
+		assert.match(body.reply, /Código por encargo|scripts/);
+		assert.ok(urls.some((url) => url.includes('gemini-3.1-flash-lite')));
+		assert.ok(urls.some((url) => url.includes('gemini-2.5-flash-lite')), 'reintenta con el respaldo');
+		assert.equal(env.DB.raw.prepare('SELECT DISTINCT layer FROM ai_abuse').get().layer, 'guard');
+	} finally {
+		globalThis.fetch = original;
+	}
+});
+
+test('a guard request rejected for a non-transient reason is not retried', async () => {
+	const urls = [];
+	const original = globalThis.fetch;
+	globalThis.fetch = async (url) => {
+		urls.push(String(url));
+		if (String(url).includes('flash-lite')) return new Response('{"error":{"code":400}}', { status: 400 });
+		return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ reply: 'Normal.', suggestions: [], action: 'none' }) }] } }] });
+	};
+	try {
+		const env = environment();
+		const body = await (await ask(env, '¿Qué hace Jossué?')).json();
+		assert.equal(body.reply, 'Normal.');
+		assert.equal(urls.filter((url) => url.includes('flash-lite')).length, 1);
+	} finally {
+		globalThis.fetch = original;
+	}
+});

@@ -45,7 +45,7 @@ for (const [list, shouldFlag] of [[attacks, true], [normal, false]]) {
 		const verdict = decide(rules, guard);
 		const ok = Boolean(verdict) === shouldFlag;
 		if (!ok) errors += 1;
-		console.log(`${ok ? '✔' : '✖'} ${text}\n   reglas=${rules.kind ?? '-'}(${rules.score}) vigilante=${guard ? `${guard.verdict} ${guard.confidence.toFixed(2)}` : 'sin respuesta'} → ${verdict ? `bloquea: ${verdict.kind} (${verdict.layer})` : 'contesta normal'}${guard?.reason ? ` · ${guard.reason}` : ''}`);
+		console.log(`${ok ? '✔' : '✖'} ${text}\n   reglas=${rules.kind ?? '-'}(${rules.score}) vigilante=${guard ? `${guard.verdict} ${guard.confidence.toFixed(2)}${guard.model?.includes('2.5') ? ' [respaldo]' : ''}` : 'sin respuesta'} → ${verdict ? `bloquea: ${verdict.kind} (${verdict.layer})` : 'contesta normal'}${guard?.reason ? ` · ${guard.reason}` : ''}`);
 	}
 }
 console.log(errors ? `\n${errors} de ${attacks.length + normal.length} casos fuera de lo esperado` : `\nLos ${attacks.length + normal.length} casos salen como se esperaba`);
