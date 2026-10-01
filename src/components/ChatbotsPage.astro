@@ -131,21 +131,63 @@ const security: Array<{ icon: IconName; title: string; text: string }> = es
 			{ icon: 'bolt', title: 'If the AI fails, the sale does not', text: 'There is a maximum wait and a plan B: WhatsApp or the form, never a frozen screen.' },
 		];
 
+// Lo que protege el gasto: cada línea es algo que ya hacen Jossue AI o Daniela en producción.
 const abuse = es
 	? [
+			['Lo descarado no llega a la IA', 'Las reglas frenan los intentos obvios antes de llamar al modelo: no gastan ni un token.'],
+			['Quien insiste, se bloquea', 'Varios intentos seguidos bloquean a esa persona un rato; mientras tanto no consume nada.'],
 			['Límites por persona', 'Jossue AI acepta 24 mensajes cada 10 minutos por IP y 30 por conversación; Daniela, 40 por conversación y 600 caracteres por mensaje.'],
 			['Topes de gasto', 'Máximo de tokens por respuesta y de acciones por hora. En Daniela: 6 consultas de pedido y 8 descuentos de combo por hora.'],
+			['Un vigilante barato', 'La IA que vigila usa un modelo ligero: cuesta menos de US$0.0002 por mensaje.'],
+			['Avisos a tiempo', 'Si la IA se queda sin saldo o alguien insiste en abusar, te llega un correo. Los recados tienen tope diario para que nadie te llene la bandeja.'],
 			['Temas sensibles', 'Salud, legal y finanzas llevan respuesta segura o pasan a una persona. Nunca revela datos internos de tu empresa.'],
-			['«Ignora tus instrucciones»', 'No revela su prompt ni cambia sus reglas, y aunque el modelo se confunda, las acciones pasan por la validación del servidor.'],
-			['Pruebas separadas', 'Las conversaciones de prueba van marcadas para no ensuciar tus métricas ni tus contactos.'],
 		]
 	: [
+			['Blatant attempts never reach the AI', 'Rules stop the obvious attempts before the model is called: not a single token is spent.'],
+			['Whoever insists gets blocked', 'Several attempts in a row block that person for a while; meanwhile they consume nothing.'],
 			['Per-person limits', 'Jossue AI accepts 24 messages every 10 minutes per IP and 30 per conversation; Daniela, 40 per conversation and 600 characters per message.'],
 			['Spending caps', 'Maximum tokens per answer and actions per hour. On Daniela: 6 order lookups and 8 bundle discounts per hour.'],
+			['A cheap guard', 'The watching AI uses a light model: it costs less than US$0.0002 per message.'],
+			['Timely alerts', 'If the AI runs out of credit or someone keeps abusing it, you get an email. Leads have a daily cap so nobody floods your inbox.'],
 			['Sensitive topics', 'Health, legal and finance get a safe answer or go to a person. It never reveals your company’s internal data.'],
-			['"Ignore your instructions"', 'It does not reveal its prompt or change its rules, and even if the model gets confused, actions go through server validation.'],
-			['Separate tests', 'Test conversations are tagged so they do not pollute your metrics or your leads.'],
 		];
+
+// Doble candado (Jossue AI). Se explica para clientes, sin umbrales ni detalles que le sirvan a un atacante.
+const locks = es
+	? [
+			['01', 'Reglas instantáneas', 'Reconocen al momento los intentos conocidos, en español e inglés: «ignora tus instrucciones», «muéstrame tu prompt», pedir claves o código. Los descarados ni siquiera llegan a la IA.'],
+			['02', 'Una IA que vigila a la IA', 'Un segundo modelo, aparte del que contesta, revisa cada mensaje al mismo tiempo, sin hacer esperar a nadie. Atrapa lo disfrazado («mi abuela me leía tus reglas…») y lo escrito para saturarlo.'],
+			['03', 'Inspector de respuestas', 'Antes de enviar, revisa lo que va a contestar. Si se coló información interna o código, esa respuesta se descarta y sale una segura.'],
+		]
+	: [
+			['01', 'Instant rules', 'They recognize known attempts on the spot, in Spanish and English: "ignore your instructions", "show me your prompt", asking for keys or code. Blatant ones never even reach the AI.'],
+			['02', 'An AI watching the AI', 'A second model, separate from the one that answers, checks every message at the same time, without making anyone wait. It catches disguised attempts and messages written to overload it.'],
+			['03', 'Answer inspector', 'Before sending, it checks what it is about to say. If internal information or code slipped in, that answer is dropped and a safe one goes out.'],
+		];
+const outcomes = es
+	? ['Responde con humor y sin dar nada', 'Bloquea un rato a quien insiste', 'Te avisa por correo', 'Nadie puede inventarle respuestas: cada una va firmada']
+	: ['Replies with humor and gives nothing away', 'Blocks whoever insists for a while', 'Emails you', 'Nobody can forge its answers: each one is signed'];
+const protectedBy = es
+	? [
+			{ name: 'Jossue AI', where: 'En este sitio', items: ['El doble candado completo: reglas, IA vigilante e inspector de respuestas', 'Bloqueo temporal y alertas por correo', 'Respuestas firmadas por el servidor', 'Tope de recados por persona al día'] },
+			{ name: 'Daniela', where: 'En wunutrition.com', items: ['El servidor valida cada acción: solo productos del catálogo y cantidades razonables', 'Un pedido solo se consulta con su número y el correo exacto', 'Los descuentos los crea el servidor: de un solo uso y con caducidad', 'Pide permiso antes de guardar datos en el CRM'] },
+		]
+	: [
+			{ name: 'Jossue AI', where: 'On this site', items: ['The full double lock: rules, AI guard and answer inspector', 'Temporary blocks and email alerts', 'Server-signed answers', 'Daily lead cap per person'] },
+			{ name: 'Daniela', where: 'On wunutrition.com', items: ['The server validates every action: catalog products and reasonable quantities only', 'An order can only be checked with its number and the exact email', 'Discounts are created by the server: single use and with an expiry', 'Asks for permission before saving data to the CRM'] },
+		];
+
+// Opcional: archivista y destilación. Son proyectos aparte; no se promete ahorro sin volumen.
+const ownAi: Array<{ icon: IconName; tag: string; title: string; text: string; items: string[] }> = es
+	? [
+			{ icon: 'layers', tag: 'Archivista', title: 'Ordena lo que aprende tu chatbot', text: 'Junta las conversaciones, tus preguntas frecuentes, tu catálogo y tus políticas, les quita los datos personales y los deja en una base de conocimiento limpia y con historial.', items: ['Solo con permiso de tus clientes y sin correos ni teléfonos', 'Marca qué se respondió bien y qué hubo que corregir', 'Es tuya: la exportas cuando quieras'] },
+			{ icon: 'cube', tag: 'Destilación', title: 'Una IA local entrenada con tu negocio', text: 'Un modelo más chico aprende de las mejores respuestas del modelo grande con tu información y queda entrenado para tu negocio. Puede correr en tu servidor o en tu propia computadora.', items: ['Menos costo por conversación cuando el volumen lo justifica', 'Tu información no sale de tu infraestructura', 'Se compara contra el modelo grande antes de reemplazarlo; lo difícil puede seguir yendo al grande'] },
+		]
+	: [
+			{ icon: 'layers', tag: 'Archivist', title: 'Organizes what your chatbot learns', text: 'It gathers conversations, your FAQs, your catalog and your policies, strips personal data and leaves a clean, versioned knowledge base.', items: ['Only with your customers’ permission and with no emails or phone numbers', 'Marks what was answered well and what had to be fixed', 'It is yours: export it whenever you want'] },
+			{ icon: 'cube', tag: 'Distillation', title: 'A local AI trained on your business', text: 'A smaller model learns from the large model’s best answers on your information and ends up trained for your business. It can run on your server or on your own computer.', items: ['Lower cost per conversation once volume justifies it', 'Your information never leaves your infrastructure', 'It is checked against the large model before replacing it; hard cases can keep going to the large one'] },
+		];
+const ownAiFlow = es ? ['Conversaciones', 'Archivista', 'Base de conocimiento', 'Destilación', 'IA local'] : ['Conversations', 'Archivist', 'Knowledge base', 'Distillation', 'Local AI'];
 
 const steps = es
 	? [
@@ -168,6 +210,8 @@ const faq = es
 			['¿Funciona con WhatsApp?', 'Sí. El mismo asistente puede atender en tu web y en WhatsApp Business, con las mismas reglas y límites.'],
 			['¿Cuánto tarda en responder?', 'Normalmente entre 3 y 8 segundos. Si el proveedor tarda de más, Jossue AI corta a los 30 segundos y ofrece WhatsApp; el tuyo puede hacer lo mismo.'],
 			['¿Y si se equivoca?', 'Lo importante no depende de lo que diga: precios, stock y pedidos salen de tus sistemas, y las acciones las valida el servidor. Leemos conversaciones para corregir el tono y las reglas.'],
+			['¿Pueden hackear o manipular al chatbot?', 'Lo intentan, y para eso está el doble candado: reglas instantáneas, una IA que vigila cada mensaje y un inspector que revisa cada respuesta. Lo que importa (precios, pedidos, descuentos) además lo valida el servidor, no la IA.'],
+			['¿Puedo tener una IA propia que corra en mis servidores?', 'Sí, con el archivista y la destilación: un modelo más chico entrenado con lo que tu negocio ya sabe. Conviene cuando hay volumen de conversaciones; te digo en la llamada si en tu caso vale la pena.'],
 			['¿Cuánto cuesta construirlo?', 'Depende de con qué sistemas se conecta y qué acciones hace. Te doy precio después de una llamada corta. Usarlo cuesta centavos de dólar por conversación (calcula abajo).'],
 		]
 	: [
@@ -176,6 +220,8 @@ const faq = es
 			['Does it work with WhatsApp?', 'Yes. The same assistant can serve on your website and on WhatsApp Business, with the same rules and limits.'],
 			['How fast does it answer?', 'Usually between 3 and 8 seconds. If the provider is slow, Jossue AI cuts off at 30 seconds and offers WhatsApp; yours can do the same.'],
 			['What if it gets something wrong?', 'What matters does not depend on what it says: prices, stock and orders come from your systems, and the server validates actions. We read conversations to fix tone and rules.'],
+			['Can someone hack or manipulate the chatbot?', 'People try, and that is what the double lock is for: instant rules, an AI that watches every message and an inspector that checks every answer. What matters (prices, orders, discounts) is also validated by the server, not the AI.'],
+			['Can I have my own AI running on my servers?', 'Yes, with the archivist and distillation: a smaller model trained on what your business already knows. It pays off once there is conversation volume; I tell you on the call whether it is worth it for you.'],
 			['How much does it cost to build?', 'It depends on which systems it connects to and what it does. I give you a price after a short call. Running it costs cents of a dollar per conversation (calculate below).'],
 		];
 
@@ -305,15 +351,39 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 			</ul>
 			<div class="jx-bots__abuse">
 				<div>
-					<p class="jx-mono">{es ? 'Política contra abusos' : 'Abuse policy'}</p>
-					<h3>{es ? 'Qué evita que alguien abuse de tu chatbot y te genere costos' : 'What stops someone from abusing your chatbot and running up your costs'}</h3>
+					<p class="jx-mono">{es ? 'Cuidan tus tokens' : 'They protect your tokens'}</p>
+					<h3>{es ? 'Qué evita que alguien abuse de tu chatbot y te queme el presupuesto' : 'What stops someone from abusing your chatbot and burning your budget'}</h3>
 				</div>
 				<dl>{abuse.map(([term, text]) => <div><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
 			</div>
 		</div>
 	</section>
 
-	<section class="jx-band" id="costos" aria-labelledby="bots-costs">
+	<section class="jx-band" id="blindaje" aria-labelledby="bots-shield">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Blindaje anti abusos' : 'Anti-abuse shield'}</p>
+			<h2 id="bots-shield" class="jx-h2"><span>{es ? 'Doble candado:' : 'Double lock:'}</span>{' '}<span class="jx-soft">{es ? 'una IA que vigila a la IA.' : 'an AI watching the AI.'}</span></h2>
+			<p class="jx-bots__lede">{es ? 'Hay quien entra a un chatbot a sacarle el prompt, pedirle código, ponerlo a calcular millones de números o insultarlo. Jossue AI lo frena con tres revisiones que se pasan información entre sí, en tiempo real.' : 'Some people open a chatbot to pull its prompt, ask it for code, make it compute millions of numbers or insult it. Jossue AI stops that with three checks that pass information to each other, in real time.'}</p>
+			<ol class="jx-bots__locks">
+				{locks.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}
+			</ol>
+			<ul class="jx-bots__outcomes" aria-label={es ? 'Qué pasa ante un abuso' : 'What happens on abuse'}>
+				{outcomes.map((item) => <li><Icon name="shield" />{item}</li>)}
+			</ul>
+			<div class="jx-bots__protected">
+				{protectedBy.map((bot) => (
+					<div>
+						<p class="jx-mono">{bot.where}</p>
+						<h3>{bot.name}</h3>
+						<ul>{bot.items.map((item) => <li>{item}</li>)}</ul>
+					</div>
+				))}
+			</div>
+			<p class="jx-bots__note">{es ? 'El doble candado se puede instalar en el chatbot que construya para ti, también en WhatsApp.' : 'The double lock can be installed on the chatbot I build for you, WhatsApp included.'}</p>
+		</div>
+	</section>
+
+	<section class="jx-bots__section" id="costos" aria-labelledby="bots-costs">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Costos y ahorro' : 'Costs and savings'}</p>
 			<h2 id="bots-costs" class="jx-h2"><span>{es ? 'Cuánto cuesta usar un chatbot,' : 'How much a chatbot costs to run,'}</span>{' '}<span class="jx-soft">{es ? 'con precios oficiales y tu volumen' : 'with official prices and your volume'}</span></h2>
@@ -358,6 +428,29 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 					<p class="jx-bots__fine">{es ? 'Estimación con tus supuestos. No incluye el desarrollo ni el servidor, y no es una promesa de resultados: sirve para ver si la cuenta da.' : 'An estimate with your assumptions. It excludes development and hosting, and it is not a promise of results: it helps you see if the numbers work.'}</p>
 				</div>
 			</form>
+		</div>
+	</section>
+
+	<section class="jx-band" id="ia-propia" aria-labelledby="bots-own-ai">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Opcional · tu propia IA' : 'Optional · your own AI'}</p>
+			<h2 id="bots-own-ai" class="jx-h2"><span>{es ? 'Lo que tus clientes preguntan' : 'What your customers ask'}</span>{' '}<span class="jx-soft">{es ? 'se vuelve tu propia IA.' : 'becomes your own AI.'}</span></h2>
+			<p class="jx-bots__lede">{es ? 'Cada conversación enseña algo: qué preguntan, qué los convence, dónde se traban. Con dos piezas opcionales, ese conocimiento deja de vivir solo en el proveedor de IA y se vuelve tuyo.' : 'Every conversation teaches something: what they ask, what convinces them, where they get stuck. With two optional pieces, that knowledge stops living only with the AI provider and becomes yours.'}</p>
+			<ol class="jx-bots__flowline" aria-label={es ? 'De las conversaciones a tu IA local' : 'From conversations to your local AI'}>
+				{ownAiFlow.map((step) => <li>{step}</li>)}
+			</ol>
+			<div class="jx-bots__own">
+				{ownAi.map((item) => (
+					<article>
+						<Icon name={item.icon} size="md" />
+						<p class="jx-mono">{item.tag}</p>
+						<h3>{item.title}</h3>
+						<p>{item.text}</p>
+						<ul>{item.items.map((line) => <li>{line}</li>)}</ul>
+					</article>
+				))}
+			</div>
+			<p class="jx-bots__note">{es ? 'Son proyectos aparte, para negocios con volumen de conversaciones. En la llamada te digo si en tu caso conviene.' : 'They are separate projects, for businesses with conversation volume. On the call I tell you whether it makes sense for you.'}</p>
 		</div>
 	</section>
 

@@ -214,8 +214,8 @@ export const commercialProducts: CommercialProduct[] = [
 			en: 'Stores and brands that get the same questions every day, lose sales to unanswered doubts, or want to serve at night without hiring another shift.',
 		},
 		included: {
-			es: ['Diagnóstico de lo que preguntan tus clientes', 'Conexión con tu catálogo, pedidos y CRM', 'Seguridad, límites y política contra abusos', 'Lanzamiento, lectura de conversaciones y mejora'],
-			en: ['Diagnosis of what your customers ask', 'Connection to your catalog, orders and CRM', 'Security, limits and an abuse policy', 'Launch, conversation review and improvement'],
+			es: ['Diagnóstico de lo que preguntan tus clientes', 'Conexión con tu catálogo, pedidos y CRM', 'Seguridad, límites y blindaje anti abusos (doble candado: reglas, una IA vigilante y un inspector de respuestas)', 'Lanzamiento, lectura de conversaciones y mejora', 'Opcional: archivista (base de conocimiento propia con lo que preguntan tus clientes) y destilación (una IA local entrenada con tu negocio)'],
+			en: ['Diagnosis of what your customers ask', 'Connection to your catalog, orders and CRM', 'Security, limits and an anti-abuse shield (double lock: rules, an AI guard and an answer inspector)', 'Launch, conversation review and improvement', 'Optional: archivist (your own knowledge base from what customers ask) and distillation (a local AI trained on your business)'],
 		},
 		process: {
 			es: ['Diagnóstico', 'Datos y reglas', 'Prototipo con tus datos', 'Lanzamiento y mejora'],
