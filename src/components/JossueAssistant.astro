@@ -112,7 +112,7 @@ const config = {
 </aside>
 
 <script>
-	type Message = { role: 'user' | 'assistant'; content: string; action?: string; page?: string | null };
+	type Message = { role: 'user' | 'assistant'; content: string; sig?: string; action?: string; page?: string | null };
 	type Config = {
 		locale: 'es' | 'en';
 		copy: Record<string, string> & { actions: Record<string, string> };
@@ -253,7 +253,8 @@ const config = {
 						sid,
 						locale: config.locale,
 						page: location.pathname,
-						messages: messages.slice(-12).map(({ role, content }) => ({ role, content })),
+						// Las respuestas del asistente vuelven con su firma: el servidor solo confía en las que firmó él.
+						messages: messages.slice(-12).map(({ role, content, sig }) => ({ role, content, ...(sig ? { sig } : {}) })),
 					}),
 				});
 				window.clearTimeout(timer);
@@ -263,12 +264,18 @@ const config = {
 					note(response.status === 429 ? config.copy.limit : config.copy.error, 'whatsapp');
 					return;
 				}
-				const reply: Message = { role: 'assistant', content: data.reply, action: data.action, page: data.page };
+				const reply: Message = { role: 'assistant', content: data.reply, sig: data.sig, action: data.action, page: data.page };
 				messages.push(reply);
 				store.set('messages', messages);
 				renderMessage(reply);
 				store.set('chips', data.suggestions ?? []);
 				renderChips(data.suggestions ?? []);
+				// Bloqueado por abuso: el chat se queda en pausa en esta sesión.
+				if (data.blocked) {
+					input.disabled = true;
+					send.disabled = true;
+					store.set('blocked', true);
+				}
 				if (data.leadSaved) {
 					store.set('leadSaved', true);
 					leave.hidden = true;
@@ -280,7 +287,7 @@ const config = {
 				note(config.copy.error, 'whatsapp');
 			} finally {
 				busy = false;
-				send.disabled = false;
+				send.disabled = store.get('blocked', false);
 			}
 		}
 
@@ -333,6 +340,11 @@ const config = {
 			input.focus();
 		});
 		chips.dataset.starters = JSON.stringify([...chips.querySelectorAll('button')].map((button) => button.textContent));
+		// Si el servidor bloqueó esta sesión por abuso, el chat sigue en pausa aunque se recargue la página.
+		if (store.get('blocked', false)) {
+			input.disabled = true;
+			send.disabled = true;
+		}
 		chips.addEventListener('click', (event) => {
 			const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-jai-chip]');
 			if (chip) ask(chip.textContent ?? '');

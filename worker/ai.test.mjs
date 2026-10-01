@@ -31,8 +31,8 @@ function aiDatabase() {
 					const role = sql.includes("'user'") ? 'user' : 'assistant';
 					messages.push({ sid: params[0], ts: params[1], role, text: params[2], ipHash: params[3], locale: params[4], page: params[5] });
 				} else if (sql.startsWith('INSERT INTO ai_leads')) {
-					const [id, createdAt, sid, locale, page, name, email, phone, company, need, message] = params;
-					leads.push({ id, createdAt, sid, locale, page, name, email, phone, company, need, message });
+					const [id, createdAt, sid, locale, page, name, email, phone, company, need, message, ipHash] = params;
+					leads.push({ id, createdAt, sid, locale, page, name, email, phone, company, need, message, ipHash });
 				} else if (sql.startsWith('DELETE FROM ai_messages WHERE sid')) {
 					for (let index = messages.length - 1; index >= 0; index -= 1) if (messages[index].sid === params[0]) messages.splice(index, 1);
 				}
@@ -75,10 +75,14 @@ function environment(overrides = {}) {
 	};
 }
 
+// El vigilante de la capa anti abusos (modelo ligero) dice que el mensaje es normal.
+const guardOk = () => Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ verdict: 'ok', confidence: 0.95 }) }] } }] });
+
 function mockGemini(payload) {
 	const calls = [];
 	const original = globalThis.fetch;
 	globalThis.fetch = async (url, init) => {
+		if (String(url).includes('flash-lite')) return guardOk();
 		calls.push({ url: String(url), init, body: JSON.parse(init.body) });
 		return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify(payload) }] } }] });
 	};
@@ -210,6 +214,7 @@ test('a passing Gemini failure is retried once with the fallback model', async (
 	const calls = [];
 	const original = globalThis.fetch;
 	globalThis.fetch = async (url) => {
+		if (String(url).includes('flash-lite')) return guardOk();
 		calls.push(String(url));
 		if (calls.length === 1) return new Response('{"error":{"code":503,"message":"The model is overloaded."}}', { status: 503 });
 		return Response.json({ candidates: [{ finishReason: 'STOP', content: { parts: [{ text: JSON.stringify({ reply: 'Aquí sigo.', suggestions: [], action: 'none' }) }] } }] });
@@ -230,7 +235,11 @@ test('a request Gemini rejects is not retried', async () => {
 	const env = environment({ JOSSUE_AI_RETRY_MS: 0 });
 	let calls = 0;
 	const original = globalThis.fetch;
-	globalThis.fetch = async () => { calls += 1; return new Response('{"error":{"code":400}}', { status: 400 }); };
+	globalThis.fetch = async (url) => {
+		if (String(url).includes('flash-lite')) return guardOk();
+		calls += 1;
+		return new Response('{"error":{"code":400}}', { status: 400 });
+	};
 	try {
 		const response = await ask(env, [{ role: 'user', content: '¿Qué es MADRE?' }]);
 		assert.equal(response.status, 502);

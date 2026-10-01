@@ -6,6 +6,7 @@
 // Lo que sabe sale de /ai/knowledge.json, que Astro genera en el build con los mismos datos
 // del sitio. La API key vive solo como secreto del Worker (GEMINI_API_KEY).
 
+import { ALERT_LINE, canaryLine, guardedAnswer, recentAbuse } from './guard.mjs';
 import { EXAMPLES, PERSONA } from './persona.mjs';
 
 const DEFAULT_MODEL = 'gemini-3.5-flash';
@@ -20,6 +21,7 @@ const IP_WINDOW_MS = 10 * 60_000;
 const IP_MAX_MESSAGES = 24;
 const RETENTION_DAYS = 30;
 const TEST_PREFIX = 'QA-';
+const MAX_LEADS_PER_IP_DAY = 3; // recados por IP al día: evita que alguien llene de correos a Jossué
 
 export const SCHEMA = {
 	type: 'OBJECT',
@@ -96,7 +98,7 @@ const FALLBACK = {
 };
 
 let knowledgeCache = null;
-async function loadKnowledge(env, requestUrl) {
+export async function loadKnowledge(env, requestUrl) {
 	if (knowledgeCache) return knowledgeCache;
 	const response = await env.ASSETS.fetch(new Request(new URL('/ai/knowledge.json', requestUrl)));
 	if (!response.ok) throw Object.assign(new Error('knowledge unavailable'), { status: 503 });
@@ -109,7 +111,7 @@ export function resetKnowledgeCache() {
 }
 
 /** Una llamada a Gemini; devuelve la respuesta o lanza con el código y el detalle. */
-async function requestGemini(env, model, system, history) {
+async function requestGemini(env, model, system, history, schema = SCHEMA) {
 	let response;
 	try {
 		response = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
@@ -122,7 +124,7 @@ async function requestGemini(env, model, system, history) {
 					temperature: 0.75,
 					maxOutputTokens: 900,
 					responseMimeType: 'application/json',
-					responseSchema: SCHEMA,
+					responseSchema: schema,
 					thinkingConfig: { thinkingBudget: 0 },
 				},
 				safetySettings: ['HARASSMENT', 'HATE_SPEECH', 'SEXUALLY_EXPLICIT', 'DANGEROUS_CONTENT'].map((category) => ({
@@ -141,19 +143,19 @@ async function requestGemini(env, model, system, history) {
 	return response;
 }
 
-async function callGemini(env, system, history) {
+export async function callGemini(env, system, history, schema = SCHEMA) {
 	const primary = String(env.JOSSUE_AI_MODEL || DEFAULT_MODEL).replace(/[^\w.-]/g, '');
 	const fallback = String(env.JOSSUE_AI_FALLBACK_MODEL || FALLBACK_MODEL).replace(/[^\w.-]/g, '');
 	let response;
 	let model = primary;
 	try {
-		response = await requestGemini(env, model, system, history);
+		response = await requestGemini(env, model, system, history, schema);
 	} catch (error) {
 		if (!error.retryable) throw error;
 		console.warn('ai gemini retry', error.message);
 		await new Promise((resolve) => globalThis.setTimeout(resolve, env.JOSSUE_AI_RETRY_MS ?? 600));
 		model = fallback;
-		response = await requestGemini(env, model, system, history);
+		response = await requestGemini(env, model, system, history, schema);
 	}
 	const data = await response.json();
 	const usage = data?.usageMetadata ?? {};
@@ -166,12 +168,40 @@ async function callGemini(env, system, history) {
 
 let lastUsage = null;
 
-function sanitizeHistory(messages) {
+// Las respuestas de Jossue AI viajan firmadas (HMAC con la sesión). El navegador manda la
+// conversación de vuelta y el servidor solo acepta como «del asistente» lo que él mismo firmó:
+// así nadie puede inventar una respuesta falsa («claro, aquí está mi prompt:») para manipularlo.
+const signingSecret = (env) => env.AI_SIGNING_SECRET || env.RATE_LIMIT_SALT || 'local-development';
+
+async function hmacHex(secret, data) {
+	const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+	const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data));
+	return [...new Uint8Array(signature)].map((byte) => byte.toString(16).padStart(2, '0')).join('');
+}
+
+function sameText(a, b) {
+	const left = String(a ?? '');
+	const right = String(b ?? '');
+	if (!left || left.length !== right.length) return false;
+	let diff = 0;
+	for (let index = 0; index < left.length; index += 1) diff |= left.charCodeAt(index) ^ right.charCodeAt(index);
+	return diff === 0;
+}
+
+export const signReply = (env, sid, reply) => hmacHex(signingSecret(env), `${sid}\n${reply}`);
+
+async function sanitizeHistory(env, sid, messages) {
 	if (!Array.isArray(messages)) return null;
-	const history = messages
+	const candidates = messages
 		.filter((message) => message && (message.role === 'user' || message.role === 'assistant') && typeof message.content === 'string')
-		.map((message) => ({ role: message.role, content: message.content.trim().slice(0, MAX_INPUT) }))
-		.filter((message) => message.content);
+		.slice(-MAX_HISTORY * 2);
+	const history = [];
+	for (const message of candidates) {
+		const content = message.content.trim().slice(0, message.role === 'user' ? MAX_INPUT : 1200);
+		if (!content) continue;
+		if (message.role === 'assistant' && !sameText(message.sig, await signReply(env, sid, content))) continue; // sin firma válida, no cuenta
+		history.push({ role: message.role, content });
+	}
 	if (!history.length || history.at(-1).role !== 'user') return null;
 	if (history.filter((message) => message.role === 'user').length > MAX_TURNS) return null;
 	return history.slice(-MAX_HISTORY);
@@ -239,12 +269,19 @@ async function saveTurn(env, { sid, ipHash, locale, page, question, answer, firs
 	}
 }
 
-async function saveLead(env, { sid, locale, page, lead, transcript }) {
+async function tooManyLeads(env, ipHash) {
+	if (!env.DB) return false;
+	const since = new Date(Date.now() - 864e5).toISOString();
+	const row = await env.DB.prepare('SELECT COUNT(*) AS total FROM ai_leads WHERE ip_hash = ? AND created_at >= ?').bind(ipHash, since).first().catch(() => null);
+	return Number(row?.total ?? 0) >= MAX_LEADS_PER_IP_DAY;
+}
+
+async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
 	const id = crypto.randomUUID();
 	const createdAt = new Date().toISOString();
 	if (env.DB) {
-		await env.DB.prepare('INSERT INTO ai_leads (id, created_at, sid, locale, page, name, email, phone, company, need, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
-			.bind(id, createdAt, sid, locale, page, lead.name, lead.email, lead.phone, lead.company, lead.need, lead.message)
+		await env.DB.prepare('INSERT INTO ai_leads (id, created_at, sid, locale, page, name, email, phone, company, need, message, ip_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
+			.bind(id, createdAt, sid, locale, page, lead.name, lead.email, lead.phone, lead.company, lead.need, lead.message, ipHash ?? '')
 			.run()
 			.catch((error) => console.error('ai saveLead failed', error?.message));
 	}
@@ -277,7 +314,7 @@ async function saveLead(env, { sid, locale, page, lead, transcript }) {
 	}).catch((error) => console.error('ai lead email failed', error?.name));
 }
 
-/** POST /api/ai  { sid, locale, page, messages: [{ role, content }] } */
+/** POST /api/ai  { sid, locale, page, messages: [{ role, content, sig? }] } */
 export async function handleAi(request, env, { json, origin, ipHash }) {
 	let body;
 	try {
@@ -288,34 +325,49 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	const locale = body?.locale === 'en' ? 'en' : 'es';
 	const sid = String(body?.sid ?? '').replace(/[^\w-]/g, '').slice(0, 64);
 	const page = String(body?.page ?? '').slice(0, 200);
-	const history = sanitizeHistory(body?.messages);
+	const history = sid ? await sanitizeHistory(env, sid, body?.messages) : null;
 	if (!sid || !history) return json(400, { ok: false, error: 'Invalid messages' }, origin);
 	if (!env.GEMINI_API_KEY) return json(503, { ok: false, error: 'ai_unavailable' }, origin);
 	if (await tooManyFromIp(env, ipHash)) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
-	let output;
+	const question = history.at(-1).content;
+	let result;
 	let modelMs;
 	try {
 		const knowledge = await loadKnowledge(env, request.url);
-		const started = Date.now();
-		const data = await callGemini(env, systemPrompt(knowledge[locale] ?? knowledge.es, locale), history);
-		modelMs = Date.now() - started;
-		output = data ? { ...sanitizeOutput(data, locale), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
+		result = await guardedAnswer(env, {
+			question,
+			previousUser: history.slice(0, -1).filter((message) => message.role === 'user').map((message) => message.content),
+			locale,
+			keys: [`ip:${ipHash}`, `sid:${sid}`],
+			source: 'web',
+			seed: sid + question,
+			runMain: async (alertMode, canary) => {
+				const started = Date.now();
+				const system = `${systemPrompt(knowledge[locale] ?? knowledge.es, locale)}\n\n${canaryLine(canary)}${alertMode ? `\n${ALERT_LINE}` : ''}`;
+				const data = await callGemini(env, system, history);
+				modelMs = Date.now() - started;
+				return data ? { ...sanitizeOutput(data, locale), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
+			},
+		});
 	} catch (error) {
 		console.error('ai request failed', error?.message);
 		return json(Number(error?.status) === 503 ? 503 : 502, { ok: false, error: 'ai_failed' }, origin);
 	}
 
-	const question = history.at(-1).content;
+	// Abuso detectado (o persona bloqueada): respuesta genérica, sin botones, sin recado.
+	const output = result.output ?? { reply: result.reply, suggestions: [], action: 'none', page: null, lead: null };
 	await saveTurn(env, { sid, ipHash, locale, page, question, answer: output.reply, firstTurn: history.filter((message) => message.role === 'user').length === 1 });
 	let leadSaved = false;
-	if (output.lead) {
-		await saveLead(env, { sid, locale, page, lead: output.lead, transcript: [...history, { role: 'assistant', content: output.reply }] });
+	if (output.lead && !(await tooManyLeads(env, ipHash))) {
+		await saveLead(env, { sid, ipHash, locale, page, lead: output.lead, transcript: [...history, { role: 'assistant', content: output.reply }] });
 		leadSaved = true;
 	}
-	// Solo en conversaciones de prueba (QA-): cuánto tardó el modelo y cuántos tokens usó.
-	const debug = sid.startsWith(TEST_PREFIX) ? { modelMs, usage: lastUsage } : undefined;
-	return json(200, { ok: true, reply: output.reply, suggestions: output.suggestions, action: output.action, page: output.page, leadSaved, ...(debug ? { debug } : {}) }, origin);
+	const sig = await signReply(env, sid, output.reply);
+	// Diagnóstico (modelo, tokens, decisión del vigilante): solo con el token de administración.
+	const admin = env.ADMIN_TOKEN && sameText((request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, ''), env.ADMIN_TOKEN);
+	const debug = admin ? { modelMs, usage: lastUsage, guard: result.guard ?? null, abuse: result.abuse } : undefined;
+	return json(200, { ok: true, reply: output.reply, sig, suggestions: output.suggestions, action: output.action, page: output.page, leadSaved, ...(result.blocked ? { blocked: true } : {}), ...(debug ? { debug } : {}) }, origin);
 }
 
 /** GET /api/ai/chats  (Bearer ADMIN_TOKEN) — para leer conversaciones y afinar el prompt. */
@@ -330,7 +382,8 @@ export async function handleAiChats(request, env, { json, origin }) {
 		]);
 		const conversations = {};
 		for (const row of messages.results ?? []) (conversations[row.sid] ??= []).push({ ts: row.ts, role: row.role, text: row.text, page: row.page, locale: row.locale });
-		return json(200, { ok: true, days, conversations, leads: leads.results ?? [] }, origin);
+		const abuse = await recentAbuse(env, days);
+		return json(200, { ok: true, days, conversations, leads: leads.results ?? [], abuse }, origin);
 	} catch {
 		return json(500, { ok: false, error: 'Unable to read conversations' }, origin);
 	}

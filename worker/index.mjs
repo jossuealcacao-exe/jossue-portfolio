@@ -1,4 +1,5 @@
 import { handleAi, handleAiChats } from './ai.mjs';
+import { handleWhatsApp } from './whatsapp.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
 const RATE_LIMIT_MS = 60_000;
@@ -239,8 +240,10 @@ async function handleSubmissions(request, env, origin) {
 	}
 }
 
-export async function handleRequest(request, env) {
+export async function handleRequest(request, env, ctx) {
 	const url = new URL(request.url);
+	// WhatsApp (Meta) llama sin Origin y con su propia firma: va antes de las reglas de CORS.
+	if (url.pathname === '/api/whatsapp' || url.pathname.startsWith('/api/whatsapp/')) return handleWhatsApp(request, env, ctx);
 	if (url.pathname === '/' && (request.method === 'GET' || request.method === 'HEAD')) {
 		return localeRedirect(request, url);
 	}
@@ -267,6 +270,7 @@ export async function handleRequest(request, env) {
 				queryEnabled: Boolean(env.ADMIN_TOKEN),
 				notificationEnabled: Boolean(env.CONTACT_EMAIL && env.CONTACT_EMAIL_TO),
 				aiEnabled: Boolean(env.GEMINI_API_KEY),
+				whatsappEnabled: Boolean(env.WHATSAPP_TOKEN && (env.WHATSAPP_APP_SECRET || env.WHATSAPP_WEBHOOK_KEY) && env.WHATSAPP_PHONE_NUMBER_ID),
 			},
 			origin,
 		);

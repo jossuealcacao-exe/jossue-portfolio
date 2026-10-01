@@ -25,11 +25,18 @@ if (asJson) {
 	process.exit(0);
 }
 
-const when = (ts) => new Date(ts).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
 const conversations = Object.entries(payload.conversations ?? {})
 	.map(([sid, turns]) => ({ sid, turns, last: turns.at(-1)?.ts ?? 0 }))
 	.filter((conversation) => !conversation.sid.startsWith('QA-'))
 	.sort((a, b) => b.last - a.last);
+
+const when = (ts) => new Date(ts).toLocaleString('es-MX', { dateStyle: 'short', timeStyle: 'short' });
+const abuse = payload.abuse ?? { events: [], blocks: [] };
+if (abuse.events.length || abuse.blocks.length) {
+	console.log(`\nALERTAS DE ABUSO · ${abuse.events.length} intentos, ${abuse.blocks.length} bloqueos`);
+	for (const block of abuse.blocks) console.log(`  ⛔ bloqueado hasta ${new Date(block.until).toLocaleString('es-MX')} · ${block.reason} · ${block.count} vez/veces`);
+	for (const event of abuse.events.slice(0, 30)) console.log(`  · ${when(event.ts)} · ${event.source} · ${event.kind} (detectó: ${event.layer}) · ${event.excerpt}`);
+}
 
 console.log(`\nRECADOS (${payload.leads?.length ?? 0})`);
 for (const lead of payload.leads ?? []) {
