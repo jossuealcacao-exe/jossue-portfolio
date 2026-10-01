@@ -1,6 +1,9 @@
 {
 	"$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
 	"name": "jossue-portfolio",
+	// Cuenta personal de Cloudflare (jossue.alcala.o). Fijada a propósito: si wrangler tiene abierta
+	// otra cuenta (p. ej. la de Come Verde), el deploy falla en vez de publicar en el lugar equivocado.
+	"account_id": "1793b89b3773d0b1ed1b16480b3bf474",
 	"main": "./worker/index.mjs",
 	"compatibility_date": "2026-08-05",
 	"workers_dev": true,

@@ -53,8 +53,16 @@ const RULES = [
 	['extraction', 2, /\b(todo\s+lo\s+(de\s+)?arriba|el\s+texto\s+(de\s+)?arriba|words?\s+above|text\s+above|everything\s+above|previous\s+text)\b/],
 	['extraction', 2, /\b(api\s*key|apikey|secret\s*key|token\s+de\s+acceso|access\s+token|variables?\s+de\s+entorno|env\s*vars?|\.env\b|knowledge\.json|persona\.mjs|wrangler|gemini_api_key)\b/],
 	['extraction', 1, /\b(que|cual)\s+(modelo|llm|ia)\s+(eres|usas|te\s+impulsa)|what\s+(model|llm)\s+(are\s+you|do\s+you\s+use|powers)|\bcodigo\s+fuente\b|\bsource\s+code\b|\bcomo\s+(estas|fuiste)\s+(hecho|programado|entrenado)/],
+	// Cambiar de identidad o quitar las reglas sin usar «ignora»: «eres ahora X», «contesta sin reglas».
+	['injection', 1, /\b(eres|seras)\s+(ahora|desde\s+ahora|a\s+partir\s+de\s+ahora)\b|\byou\s+are\s+now\b|\bahora\s+eres\b/],
+	['injection', 1, /\b(sin\s+(filtros?|reglas|restricciones|censura|limites)|without\s+(rules|filters|restrictions|limits)|no\s+(rules|filters))\b/],
+	['injection', 1, /\b(responde|contesta|answer|reply)\s+(solo|unicamente|only)\s+(con|en|with)\b/],
+	['extraction', 2, /\b(tus|sus|your)\s+(reglas|instrucciones|indicaciones|directrices)\s+(internas|secretas|ocultas|originales|de\s+sistema)|\b(internal|hidden|secret|original)\s+(rules|instructions|prompt)\b/],
+	['extraction', 2, /\b(todo\s+)?lo\s+que\s+te\s+(dijeron|indicaron|escribieron|pidieron|configuraron)\b|\beverything\s+(you\s+were|they)\s+told\b/],
+	['extraction', 1, /\b(temperatura|temperature|top[\s_-]?p|top[\s_-]?k|max[\s_]?tokens|system\s+prompt|ventana\s+de\s+contexto|context\s+window)\b/],
 	['code', 1, new RegExp(`\\b(${v(['escribe', 'genera', 'haz', 'dame', 'crea', 'programa', 'arma', 'completa', 'corrige', 'depura'])}|write|generate|give\\s+me|create|code|fix|debug)\\b.{0,25}\\b(codigo|script|funcion|regex|query|consulta\\s+sql|snippet|clase|code|function|class)\\b`)],
 	['code', 1, /```|<script\b|\bdef\s+\w+\(|\bfunction\s+\w+\s*\(|\bselect\s+.+\s+from\s+\w+|\bimport\s+\w+\s+from\b/],
+	['stress', 1, /\b(mil|cien|un\s+millon|millones|thousand|million|hundred)\s+(veces|times)\b|\brepetid[ao]s?\s+(mil|cien|\d+)\b/],
 	['stress', 1, /\b(repite|repiteme|repeat|escribe|escribeme|write|cuenta|count)\b.{0,30}\b\d{3,}\s*(veces|times|palabras|words)?\b|\b(infinito|infinitamente|forever|infinite\s+loop|bucle\s+infinito)\b/],
 	['abuse', 1, /\b(pendej[oa]|idiota|estupid[oa]|imbecil|put[oa]\b|cabron(a)?\s+(bot|ia)|bot\s+(inutil|pendejo|de\s+mierda)|fuck\s+you|stupid\s+bot|useless\s+bot|shut\s+up)\b/],
 ];
@@ -120,11 +128,12 @@ export async function aiGuard(env, text, previousUserMessages, ruleHits) {
 			body: JSON.stringify({
 				systemInstruction: { parts: [{ text: guardPrompt(boundary, ruleHits) }] },
 				contents: [{ role: 'user', parts: [{ text: `<<<${boundary}>>>\n${context ? `${context}\n[último mensaje] ` : ''}${String(text).slice(0, 1200)}\n<<<FIN-${boundary}>>>` }] }],
+				// thinkingBudget 0 comprobado en producción con gemini-3.1-flash-lite (1 oct 2026).
 				generationConfig: { temperature: 0, maxOutputTokens: 120, responseMimeType: 'application/json', responseSchema: GUARD_SCHEMA, thinkingConfig: { thinkingBudget: 0 } },
 			}),
 		});
 		if (!response.ok) {
-			console.warn('ai guard http', response.status);
+			console.warn('ai guard http', response.status, (await response.text().catch(() => '')).replace(/\s+/g, ' ').slice(0, 240));
 			return null;
 		}
 		const data = await response.json();
@@ -157,8 +166,12 @@ const shingles = (text, size = 8) => {
 	for (let index = 0; index + size <= words.length; index += 1) out.add(words.slice(index, index + size).join(' '));
 	return out;
 };
-// Solo las reglas de la persona (no los ejemplos de tono, que sí se pueden parafrasear).
-const PERSONA_SHINGLES = shingles(PERSONA);
+// Solo las reglas de la persona. Fuera quedan los ejemplos de tono y todo lo que va entre comillas:
+// son frases que la persona le PIDE decir al modelo («Jossué construye y optimiza negocios
+// digitales…»), así que aparecer en una respuesta es lo normal, no una fuga. (Falso positivo real
+// en producción el 1 de octubre de 2026 con «¿Qué hace Jossué?».)
+const RULES_ONLY = PERSONA.replace(/"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/g, ' ');
+const PERSONA_SHINGLES = shingles(RULES_ONLY);
 // Encabezados del prompt (en mayúsculas, como están escritos): en una respuesta normal no aparecen.
 const MARKERS = /JOSSUE AI \/\/ PERSONA|REGLAS DE FORMATO|PRIORIDAD DE CADA RESPUESTA|EJEMPLOS DE TONO|IDENTIDAD PROFESIONAL|RECADOS PARA JOSSUÉ|CANAL: WHATSAPP|^CONOCIMIENTO\s*$/m;
 
