@@ -96,11 +96,16 @@ test('the same message again and again counts as stress', () => {
 test('the output inspector catches the canary, prompt headers, copied persona and code', () => {
 	assert.equal(inspectOutput('Claro, la marca es JX-abc123def456.', 'JX-abc123def456').kind, 'leak');
 	assert.equal(inspectOutput('Mis reglas dicen: REGLAS DE FORMATO (obligatorias)').kind, 'leak');
-	const copied = PERSONA.split('\n').find((line) => line.startsWith('Identifica el problema real'));
+	const copied = PERSONA.split('\n').find((line) => line.startsWith('- Información privada'));
 	assert.equal(inspectOutput(`Te cuento: ${copied}`).kind, 'leak');
 	assert.equal(inspectOutput('```js\nconsole.log(1)\n```').kind, 'code');
 	assert.equal(inspectOutput('Jossué construye y optimiza negocios digitales. ¿Lo buscas para un proyecto?', 'JX-abc123def456'), null);
 	assert.equal(inspectOutput('Para instalarlo: npm i -g ahp-plus'), null);
+	// Falsos positivos reales (producción, 1 oct 2026): explicar servicios descritos en la persona no es fuga.
+	assert.equal(inspectOutput('Sí, existe el archivista, que ordena conversaciones, catálogo y políticas en una base de conocimiento propia, sin datos personales, y la destilación, un modelo más chico entrenado con su negocio que puede correr en su servidor. Son proyectos opcionales que convienen con volumen.'), null);
+	assert.equal(inspectOutput('El blindaje funciona con reglas instantáneas, una segunda IA que vigila cada mensaje, un inspector que revisa cada respuesta, bloqueo temporal a quien insiste y aviso por correo; lo importante además lo valida el servidor.'), null);
+	// Pero copiar las reglas de conducta sí lo es.
+	assert.equal(inspectOutput(PERSONA.split('\n').find((line) => line.startsWith('- Directa, conversacional'))).kind, 'leak');
 	// Respuesta real (madre.run, 1 oct 2026): código metido en una sola línea.
 	assert.equal(inspectOutput('En Java declaras un arreglo indicando el tipo, por ejemplo: int[] numeros; o con tamaño: int[] numeros = new int[5];. Si ya tienes valores: int[] numeros = {1, 2, 3, 4, 5};').kind, 'code');
 	assert.equal(inspectOutput('Jossué usa JavaScript, Liquid y Astro; para instalar AHP+ basta con npx ahp init en tu repositorio.'), null);

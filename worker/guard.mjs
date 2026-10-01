@@ -182,11 +182,16 @@ const shingles = (text, size = 8) => {
 	for (let index = 0; index + size <= words.length; index += 1) out.add(words.slice(index, index + size).join(' '));
 	return out;
 };
-// Solo las reglas de la persona. Fuera quedan los ejemplos de tono y todo lo que va entre comillas:
-// son frases que la persona le PIDE decir al modelo («Jossué construye y optimiza negocios
-// digitales…»), así que aparecer en una respuesta es lo normal, no una fuga. (Falso positivo real
-// en producción el 1 de octubre de 2026 con «¿Qué hace Jossué?».)
-const RULES_ONLY = PERSONA.replace(/"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/g, ' ');
+// Solo las secciones de la persona que son instrucciones de conducta (quién es, voz, humor, recados,
+// lo que nunca hace). Las que describen a Jossué y sus servicios (identidad, dominios, proyectos,
+// chatbots, archivista, destilación) son información pública que el modelo DEBE repetir, igual que
+// las frases entre comillas que se le piden decir. (Falsos positivos reales en producción el 1 de
+// octubre de 2026: «¿Qué hace Jossué?» y «¿Puedo tener una IA propia…?» salían como «fuga».)
+const BEHAVIOR_SECTIONS = /^(QUIÉN ERES|VOZ|HUMOR|PRIORIDAD DE CADA RESPUESTA|RECADOS PARA JOSSUÉ|NUNCA)\b/;
+const RULES_ONLY = PERSONA.split(/\n(?=[A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑ ]{2,}(?:\s*\(|\n))/)
+	.filter((section) => BEHAVIOR_SECTIONS.test(section.trim()))
+	.join('\n')
+	.replace(/"[^"\n]*"|“[^”\n]*”|«[^»\n]*»/g, ' ');
 const PERSONA_SHINGLES = shingles(RULES_ONLY);
 // Encabezados del prompt (en mayúsculas, como están escritos): en una respuesta normal no aparecen.
 const MARKERS = /JOSSUE AI \/\/ PERSONA|REGLAS DE FORMATO|PRIORIDAD DE CADA RESPUESTA|EJEMPLOS DE TONO|IDENTIDAD PROFESIONAL|RECADOS PARA JOSSUÉ|CANAL: WHATSAPP|^CONOCIMIENTO\s*$/m;
