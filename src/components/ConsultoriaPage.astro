@@ -99,12 +99,12 @@ const steps = es
 />
 <article class="jx-home jx-bots jx-svc" data-product-detail="consultoria">
 	<PageHero
-		loop="services"
+		loop="consultoria"
 		id="consult-title"
 		label={es ? 'Consultoría · Ecommerce y growth' : 'Consulting · Ecommerce and growth'}
 		title={es ? ['Te digo qué te está costando ventas', 'antes de que gastes en construir.'] : ['I tell you what is costing you sales', 'before you spend on building.']}
 		lede={es
-			? 'Reviso tu tienda, tu publicidad y tus números con ojos de negocio, de marketing y de código. Te digo qué arreglar primero, qué puede esperar y qué no hace falta hacer.'
+			? 'Reviso tu tienda, tu publicidad y tus números desde el lado de negocio, de marketing y de código. Te digo qué arreglar primero, qué puede esperar y qué no hace falta hacer.'
 			: 'I review your store, your ads and your numbers through business, marketing and code. I tell you what to fix first, what can wait and what you do not need to do.'}
 	>
 		<div class="jx-actions jx-actions--center">
@@ -122,8 +122,8 @@ const steps = es
 
 	<section class="jx-bots__section" aria-labelledby="consult-signals">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cuándo te sirve' : 'When it helps'}</p>
-			<h2 id="consult-signals" class="jx-h2"><span>{es ? 'Si alguna de estas te suena,' : 'If any of these sounds familiar,'}</span>{' '}<span class="jx-soft">{es ? 'vale la pena una revisión.' : 'a review is worth it.'}</span></h2>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cuándo conviene' : 'When it makes sense'}</p>
+			<h2 id="consult-signals" class="jx-h2"><span>{es ? 'Situaciones en las que' : 'Situations where'}</span>{' '}<span class="jx-soft">{es ? 'conviene una revisión' : 'a review makes sense'}</span></h2>
 			<ul class="jx-points jx-svc__grid3">
 				{signals.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -133,7 +133,7 @@ const steps = es
 	<section class="jx-bots__section" aria-labelledby="consult-formats">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Formas de trabajar' : 'Ways to work'}</p>
-			<h2 id="consult-formats" class="jx-h2"><span>{es ? 'Una sesión, un plan' : 'A session, a plan'}</span>{' '}<span class="jx-soft">{es ? 'o alguien a tu lado cada mes.' : 'or someone at your side every month.'}</span></h2>
+			<h2 id="consult-formats" class="jx-h2"><span>{es ? 'Tres formas de trabajar:' : 'Three ways to work:'}</span>{' '}<span class="jx-soft">{es ? 'sesión, auditoría o acompañamiento' : 'a session, an audit or ongoing guidance'}</span></h2>
 			<ul class="jx-points jx-svc__grid3 jx-svc__formats">
 				{formats.map((item) => <li><Icon name={item.icon} size="md" /><span class="jx-mono">{item.tag}</span><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -143,7 +143,7 @@ const steps = es
 	<section class="jx-bots__section" aria-labelledby="consult-areas">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué reviso' : 'What I review'}</p>
-			<h2 id="consult-areas" class="jx-h2"><span>{es ? 'Todo lo que toca la venta,' : 'Everything that touches the sale,'}</span>{' '}<span class="jx-soft">{es ? 'no solo el diseño.' : 'not only the design.'}</span></h2>
+			<h2 id="consult-areas" class="jx-h2"><span>{es ? 'Las áreas que influyen' : 'The areas that affect'}</span>{' '}<span class="jx-soft">{es ? 'en tus ventas' : 'your sales'}</span></h2>
 			<dl class="jx-svc__areas">
 				{areas.map(([title, text]) => <div><dt>{title}</dt><dd>{text}</dd></div>)}
 			</dl>
@@ -165,7 +165,7 @@ const steps = es
 	<section class="jx-bots__section" aria-labelledby="consult-steps">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
-			<h2 id="consult-steps" class="jx-h2"><span>{es ? 'De una llamada' : 'From one call'}</span>{' '}<span class="jx-soft">{es ? 'a saber qué hacer el lunes.' : 'to knowing what to do on Monday.'}</span></h2>
+			<h2 id="consult-steps" class="jx-h2"><span>{es ? 'De la llamada' : 'From the call'}</span>{' '}<span class="jx-soft">{es ? 'al plan de trabajo' : 'to a work plan'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 		</div>
 	</section>

@@ -1,0 +1,51 @@
+---
+// Escena de AHP+: la terminal con los comandos reales y el árbol de .ahp/ que va creciendo.
+// Los identificadores y el commit son de ilustración.
+import type { Locale } from '../../data/i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+const { locale } = Astro.props;
+const es = locale === 'es';
+---
+
+<div class="scn scn--ahp">
+	<div class="scn__panel scn__panel--term">
+		<header class="scn__bar"><Icon name="terminal" /><strong>{es ? 'Terminal' : 'Terminal'}</strong><span class="scn__swap"><span class="scn__live rv" style="--from: 1; --until: 2">{es ? 'agente A · Codex' : 'agent A · Codex'}</span><span class="scn__live rv" style="--from: 3">{es ? 'agente B · Cursor' : 'agent B · Cursor'}</span></span></header>
+		<div class="term">
+			<p class="term__cmd rv" style="--from: 1"><span>$</span> npx @jossuealcala/ahp-plus@1.4.1 setup .</p>
+			<p class="term__out rv" style="--from: 1">{es ? '✓ .ahp/ creado · adaptadores: codex, claude' : '✓ .ahp/ created · adapters: codex, claude'}</p>
+			<p class="term__cmd rv" style="--from: 2"><span>$</span> ahp record add decision</p>
+			<p class="term__out rv" style="--from: 2">{es ? '✓ decisión registrada' : '✓ decision recorded'}</p>
+			<p class="term__cmd rv" style="--from: 2"><span>$</span> ahp record add evidence</p>
+			<p class="term__out rv" style="--from: 2">{es ? '✓ prueba registrada' : '✓ test result recorded'}</p>
+			<p class="term__cmd rv" style="--from: 3"><span>$</span> ahp handoff create</p>
+			<p class="term__out rv" style="--from: 3">{es ? '✓ relevo listo · rama main · commit 7f3a9c1' : '✓ hand-off ready · branch main · commit 7f3a9c1'}</p>
+			<p class="term__cmd rv" style="--from: 4"><span>$</span> ahp handoff receive</p>
+			<p class="term__out term__out--ok rv" style="--from: 4">READY</p>
+		</div>
+	</div>
+	<div class="scn__panel scn__panel--tree">
+		<header class="scn__bar"><Icon name="layers" /><strong>.ahp/</strong><span class="scn__live">{es ? 'viaja con Git' : 'travels with Git'}</span></header>
+		<ul class="tree">
+			<li class="rv" style="--from: 1">manifest.json</li>
+			<li class="rv" style="--from: 1">state/project.json</li>
+			<li class="rv" style="--from: 1">INDEX.md</li>
+			<li class="rv tree__new" style="--from: 2">records/decisions/DEC-….json</li>
+			<li class="rv tree__new" style="--from: 2">evidence/EVD-….json</li>
+			<li class="rv tree__new" style="--from: 3">handoffs/HOF-….json</li>
+		</ul>
+		<div class="verify rv" style="--from: 4">
+			<p class="jx-mono">{es ? 'El agente que recibe comprueba' : 'The receiving agent checks'}</p>
+			<ul>
+				<li><Icon name="check" />{es ? 'proyecto' : 'project'}</li>
+				<li><Icon name="check" />{es ? 'rama' : 'branch'}</li>
+				<li><Icon name="check" />commit</li>
+				<li><Icon name="check" />{es ? 'cambios locales' : 'local changes'}</li>
+			</ul>
+			<p class="verify__alt">{es ? 'Si algo no coincide: RECONCILIATION_REQUIRED y se detiene.' : 'If something does not match: RECONCILIATION_REQUIRED and it stops.'}</p>
+		</div>
+	</div>
+</div>

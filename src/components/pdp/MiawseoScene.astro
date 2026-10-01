@@ -1,0 +1,53 @@
+---
+// Escena de Miawseo: el mapa de metro (razas y, debajo, historia) y a la derecha lo que pasa en
+// cada paso: la sala de una raza, la subida de una foto y la moderación. Las razas son las reales.
+import type { Locale } from '../../data/i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+const { locale } = Astro.props;
+const es = locale === 'es';
+const stations = ['Maine Coon', 'Siamés', 'Persa', 'Bengalí', 'Sphynx', 'Ragdoll'];
+const rooms = es ? ['Presentación', 'Origen', 'Anatomía', 'Temperamento', 'Cuidados', 'Curiosidad'] : ['Introduction', 'Origin', 'Anatomy', 'Temperament', 'Care', 'Curiosity'];
+const locks = es ? ['Límite por IP', 'Campo trampa', 'Formato real', 'Máx. 5 MB'] : ['Per-IP limit', 'Trap field', 'Real format', 'Max 5 MB'];
+---
+
+<div class="scn scn--metro">
+	<div class="scn__panel scn__panel--map">
+		<header class="scn__bar"><Icon name="compass" /><strong>{es ? 'Michiteca' : 'Michiteca'}</strong><span class="scn__live">M1 · {es ? 'Razas' : 'Breeds'}</span></header>
+		<div class="map">
+			<p class="jx-mono map__line">M1 · {es ? 'Razas' : 'Breeds'}</p>
+			<ol class="map__stops">
+				<li class="map__train rv" style="--from: 2; --until: 2" aria-hidden="true"></li>
+				{stations.map((name, index) => <li class:list={['rv', { 'is-here': name === 'Sphynx' }]} style={`--from: 1`} data-i={index}><i aria-hidden="true"></i><span>{name}</span></li>)}
+			</ol>
+			<p class="jx-mono map__line map__line--2">M2 · {es ? 'Historia' : 'History'}</p>
+			<ol class="map__stops map__stops--2">
+				<li><i aria-hidden="true"></i><span>c. 7500 {es ? 'a. C.' : 'BC'}</span></li><li><i aria-hidden="true"></i><span>…</span></li><li><i aria-hidden="true"></i><span>{es ? 'Estrella de internet' : 'Internet star'}</span></li>
+			</ol>
+		</div>
+	</div>
+	<div class="scn__panel scn__panel--slides">
+		<div class="slide rv" style="--from: 1; --until: 1">
+			<p class="jx-mono">Sphynx · {es ? '6 salas' : '6 rooms'}</p>
+			<p class="slide__big">{es ? 'Cada raza es una estación.' : 'Each breed is a station.'}</p>
+			<p class="slide__small">{es ? 'Se escribe una vez y se genera como página estática.' : 'Written once, generated as a static page.'}</p>
+		</div>
+		<div class="slide rv" style="--from: 2; --until: 2">
+			<p class="jx-mono">Sphynx · {es ? 'Recorrido' : 'Route'}</p>
+			<ol class="rooms">{rooms.map((room, index) => <li style={`--i: ${index}`}><i aria-hidden="true"></i>{room}</li>)}</ol>
+		</div>
+		<div class="slide rv" style="--from: 3; --until: 3">
+			<p class="jx-mono">«{es ? 'Yo tengo uno' : 'I have one'}»</p>
+			<div class="form"><span>{es ? 'Nombre del michi' : 'Cat’s name'}</span><span>{es ? 'Nota (hasta 140)' : 'Note (up to 140)'}</span><span>{es ? 'Foto · JPG, PNG o WebP' : 'Photo · JPG, PNG or WebP'}</span><span>{es ? 'Consentimiento' : 'Consent'}</span></div>
+			<ul class="chips">{locks.map((lock) => <li>{lock}</li>)}</ul>
+		</div>
+		<div class="slide rv" style="--from: 4">
+			<p class="jx-mono">{es ? 'Panel de moderación' : 'Moderation panel'}</p>
+			<div class="mod"><span class="mod__thumb" aria-hidden="true"><Icon name="user" /></span><span class="mod__name">{es ? 'Foto pendiente' : 'Pending photo'}</span><span class="mod__btn">{es ? 'Rechazar' : 'Reject'}</span><span class="mod__btn is-main">{es ? 'Aprobar' : 'Approve'}</span></div>
+			<p class="slide__small">{es ? 'Solo las aprobadas llegan al muro de Michi Plaza. Las demás responden 404.' : 'Only approved ones reach the Michi Plaza wall. The rest answer 404.'}</p>
+		</div>
+	</div>
+</div>

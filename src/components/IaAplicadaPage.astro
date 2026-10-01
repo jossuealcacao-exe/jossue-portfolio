@@ -108,7 +108,7 @@ const fit = es
 	<section class="jx-bots__section" aria-labelledby="iap-tasks">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Ejemplos de tareas' : 'Example tasks'}</p>
-			<h2 id="iap-tasks" class="jx-h2"><span>{es ? 'Lo que hoy le quita horas a tu equipo,' : 'What takes your team hours today,'}</span>{' '}<span class="jx-soft">{es ? 'hecho en segundos y revisado.' : 'done in seconds and reviewed.'}</span></h2>
+			<h2 id="iap-tasks" class="jx-h2"><span>{es ? 'Tareas que hoy llevan horas' : 'Tasks that take hours today'}</span>{' '}<span class="jx-soft">{es ? 'y cómo cambian con IA' : 'and how they change with AI'}</span></h2>
 			<ul class="jx-iap__tasks">
 				{tasks.map((task) => (
 					<li>
@@ -127,7 +127,7 @@ const fit = es
 	<section class="jx-bots__section" aria-labelledby="iap-included">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué incluye' : 'What is included'}</p>
-			<h2 id="iap-included" class="jx-h2"><span>{es ? 'No te entrego una demo.' : 'I do not hand you a demo.'}</span>{' '}<span class="jx-soft">{es ? 'Te entrego algo que ya se usa.' : 'I hand you something already in use.'}</span></h2>
+			<h2 id="iap-included" class="jx-h2"><span>{es ? 'Qué recibes' : 'What you get'}</span>{' '}<span class="jx-soft">{es ? 'al terminar el proyecto' : 'at the end of the project'}</span></h2>
 			<ul class="jx-points jx-iap__included">
 				{included.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -137,7 +137,7 @@ const fit = es
 	<section class="jx-bots__section" aria-labelledby="iap-steps">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
-			<h2 id="iap-steps" class="jx-h2"><span>{es ? 'Cuatro pasos,' : 'Four steps,'}</span>{' '}<span class="jx-soft">{es ? 'y en cada uno decides tú.' : 'and you decide at each one.'}</span></h2>
+			<h2 id="iap-steps" class="jx-h2"><span>{es ? 'Cómo trabajamos' : 'How we work'}</span>{' '}<span class="jx-soft">{es ? 'y dónde decides tú' : 'and where you decide'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 		</div>
 	</section>
@@ -145,10 +145,10 @@ const fit = es
 	<section class="jx-bots__section" aria-labelledby="iap-fit">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Para quién es' : 'Who it is for'}</p>
-			<h2 id="iap-fit" class="jx-h2"><span>{es ? 'Te sirve si ya sabes qué te duele.' : 'It works if you know what hurts.'}</span>{' '}<span class="jx-soft">{es ? 'Y te digo cuándo no.' : 'And I tell you when it does not.'}</span></h2>
+			<h2 id="iap-fit" class="jx-h2"><span>{es ? 'Cuándo conviene' : 'When it makes sense'}</span>{' '}<span class="jx-soft">{es ? 'y cuándo todavía no' : 'and when it does not yet'}</span></h2>
 			<div class="jx-iap__fit">
 				<div class="is-yes">
-					<p class="jx-mono">{es ? 'Te sirve si' : 'It works if'}</p>
+					<p class="jx-mono">{es ? 'Conviene si' : 'It makes sense if'}</p>
 					<ul>{fit.yes.map((line) => <li><span class="jx-iap__mark" aria-hidden="true">✓</span>{line}</li>)}</ul>
 				</div>
 				<div class="is-no">
@@ -163,7 +163,7 @@ const fit = es
 
 	<section class="jx-close" aria-labelledby="iap-close">
 		<div class="jx-close__card">
-			<h2 id="iap-close" class="jx-close__title"><span>{es ? '¿Qué tarea te gustaría' : 'Which task would you like'}</span>{' '}<span class="jx-soft">{es ? 'quitarte de encima?' : 'off your plate?'}</span></h2>
+			<h2 id="iap-close" class="jx-close__title"><span>{es ? '¿Qué tarea quieres' : 'Which task do you want'}</span>{' '}<span class="jx-soft">{es ? 'automatizar primero?' : 'to automate first?'}</span></h2>
 			<p>{es ? 'Cuéntame cuál es y en qué sistemas vive la información. Te respondo en menos de un día hábil con si se puede y por dónde empezaría.' : 'Tell me which one and where the information lives. I reply within one business day with whether it can be done and where I would start.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_iap_contact_bottom">{es ? 'Cuéntame tu caso' : 'Tell me your case'}<Icon name="arrow-right" /></a>

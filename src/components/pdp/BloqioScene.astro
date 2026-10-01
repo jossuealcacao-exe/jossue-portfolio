@@ -1,0 +1,74 @@
+---
+// Escena de Bloqio Builder: Blob a la izquierda (lo que pides y lo que propone) y la página a la
+// derecha, que se arma bloque por bloque. El negocio del ejemplo es inventado.
+import type { Locale } from '../../data/i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+const { locale } = Astro.props;
+const es = locale === 'es';
+
+const plan = es
+	? [
+			['Estructura', 'Agregar «Galería» después de «Beneficios»'],
+			['Textos', 'Reescribir el título de la portada'],
+			['Textos', 'Escribir las preguntas frecuentes'],
+			['Diseño', 'Color de acento cálido'],
+			['Fotos', 'Usar tus fotos de pasteles en la galería'],
+		]
+	: [
+			['Structure', 'Add «Gallery» after «Benefits»'],
+			['Copy', 'Rewrite the cover headline'],
+			['Copy', 'Write the FAQ'],
+			['Design', 'Warm accent color'],
+			['Photos', 'Use your cake photos in the gallery'],
+		];
+---
+
+<div class="scn scn--builder">
+	<div class="scn__panel scn__panel--blob">
+		<header class="scn__bar"><Icon name="sparkles-ai" /><strong>Blob</strong><span class="scn__live">{es ? 'propone, tú aplicas' : 'proposes, you apply'}</span></header>
+		<div class="scn__msgs">
+			<p class="msg msg--me rv" style="--from: 1">{es ? 'Vendo pasteles por encargo en Guadalajara. Quiero que me escriban por WhatsApp.' : 'I sell made-to-order cakes in Guadalajara. I want people to message me on WhatsApp.'}</p>
+			<ul class="chips rv" style="--from: 1" aria-hidden="true">
+				<li>{es ? 'Giro' : 'Trade'}</li><li>{es ? 'Ubicación' : 'Location'}</li><li>{es ? 'Objetivo' : 'Goal'}</li><li>{es ? 'Tono' : 'Tone'}</li>
+			</ul>
+		</div>
+		<ol class="plan rv" style="--from: 3">
+			{
+				plan.map(([group, action], index) => (
+					<li class="rv" style={`--from: 3`}>
+						<span class="plan__box" aria-hidden="true"><Icon name="check" /></span>
+						<span><b>{group}</b> {action}</span>
+						<i class="plan__n" aria-hidden="true">{index + 1}</i>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+	<div class="scn__panel scn__panel--page">
+		<header class="scn__bar"><Icon name="display" /><strong>{es ? 'Tu página' : 'Your page'}</strong><span class="scn__live"><Icon name="mobile" />{es ? 'vista de celular' : 'phone view'}</span></header>
+		<div class="page">
+			<p class="page__empty rv" style="--from: 1; --until: 1">{es ? 'Tu página aparece aquí.' : 'Your page appears here.'}</p>
+			<div class="blk blk--hero rv" style="--from: 2"><b>{es ? 'Portada' : 'Cover'}</b><i class="ln ln--l rv" style="--from: 3"></i><i class="ln ln--s rv" style="--from: 3"></i></div>
+			<div class="blk-row">
+				<div class="blk rv" style="--from: 2"><b>{es ? 'Beneficios' : 'Benefits'}</b><i class="ln ln--s rv" style="--from: 3"></i></div>
+				<div class="blk rv" style="--from: 2"><b>{es ? 'Galería' : 'Gallery'}</b><i class="ln ln--s rv" style="--from: 3"></i></div>
+				<div class="blk rv" style="--from: 2"><b>{es ? 'Preguntas' : 'FAQ'}</b><i class="ln ln--s rv" style="--from: 3"></i></div>
+			</div>
+			<div class="blk blk--cta rv" style="--from: 2"><b>WhatsApp</b></div>
+		</div>
+		<div class="audit rv" style="--from: 4">
+			<p class="jx-mono">{es ? 'Revisión · sin IA' : 'Review · no AI'}</p>
+			<ul>
+				<li><Icon name="check" />{es ? 'Llamado a la acción' : 'Call to action'}</li>
+				<li><Icon name="check" />WhatsApp</li>
+				<li><Icon name="check" />{es ? 'Título y descripción' : 'Title and description'}</li>
+				<li><Icon name="check" />{es ? 'Fotos' : 'Photos'}</li>
+			</ul>
+			<div class="audit__go"><span>{es ? 'Deshacer' : 'Undo'}</span><span class="is-main">{es ? 'Publicar' : 'Publish'}</span></div>
+		</div>
+	</div>
+</div>

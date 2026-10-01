@@ -79,10 +79,10 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 />
 <article class="jx-home jx-bots jx-svc" data-product-detail="desarrollo-web">
 	<PageHero
-		loop="products"
+		loop="web"
 		id="dev-title"
 		label={es ? 'Servicio · Desarrollo web' : 'Service · Web development'}
-		title={es ? ['Tu tienda en línea,', 'hecha para vender y fácil de mantener.'] : ['Your online store,', 'built to sell and easy to maintain.']}
+		title={es ? ['Desarrollo de tiendas en Shopify', 'y sitios web a la medida.'] : ['Shopify store development', 'and custom websites.']}
 		lede={es
 			? 'Diseño y programo tiendas en Shopify, secciones a la medida, integraciones y productos web. Empiezo por lo que le cuesta ventas a tu negocio y termino con pruebas y una entrega documentada.'
 			: 'I design and build Shopify stores, custom sections, integrations and web products. I start from what is costing your business sales and finish with tests and a documented delivery.'}
@@ -113,7 +113,7 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 	<section class="jx-bots__section" aria-labelledby="dev-quality">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo la entrego' : 'How I deliver it'}</p>
-			<h2 id="dev-quality" class="jx-h2"><span>{es ? 'Una tienda bonita no basta.' : 'A pretty store is not enough.'}</span>{' '}<span class="jx-soft">{es ? 'Tiene que vender y aguantar.' : 'It has to sell and last.'}</span></h2>
+			<h2 id="dev-quality" class="jx-h2"><span>{es ? 'Lo que incluye' : 'What every delivery'}</span>{' '}<span class="jx-soft">{es ? 'cada entrega' : 'includes'}</span></h2>
 			<ul class="jx-points jx-svc__grid4">
 				{qualities.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -131,7 +131,7 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 	<section class="jx-bots__section" aria-labelledby="dev-steps">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
-			<h2 id="dev-steps" class="jx-h2"><span>{es ? 'Ves avances en el camino,' : 'You see progress along the way,'}</span>{' '}<span class="jx-soft">{es ? 'no una sorpresa al final.' : 'not a surprise at the end.'}</span></h2>
+			<h2 id="dev-steps" class="jx-h2"><span>{es ? 'Revisas avances' : 'You review progress'}</span>{' '}<span class="jx-soft">{es ? 'en cada etapa' : 'at every stage'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 			<ul class="jx-svc__stack" aria-label={es ? 'Con qué trabajo' : 'What I work with'}>
 				{stack.map((item) => <li>{item}</li>)}

@@ -78,8 +78,8 @@ export const commercialProducts: CommercialProduct[] = [
 			en: 'Anyone working with agents from their IDE who often switches agent, account or machine.',
 		},
 		included: {
-			es: ['Estado, decisiones y pruebas en .ahp/', 'Relevos entre agentes que se comprueban', 'Checkpoints para volver a un punto', 'Sin dependencias: Node y Git'],
-			en: ['State, decisions and test results in .ahp/', 'Checked handoffs between agents', 'Checkpoints to return to', 'No dependencies: Node and Git'],
+			es: ['Estado, decisiones y pruebas en .ahp/', 'Relevos entre agentes que se comprueban', 'Puntos de control para retomar una sesión', 'Sin dependencias: Node y Git'],
+			en: ['State, decisions and test results in .ahp/', 'Checked handoffs between agents', 'Checkpoints to resume a session', 'No dependencies: Node and Git'],
 		},
 		process: {
 			es: ['Instalas', 'Trabajas', 'Entregas', 'El otro comprueba'],
@@ -172,8 +172,8 @@ export const commercialProducts: CommercialProduct[] = [
 			en: 'A cat-breed museum you explore like a metro network, with a community photo wall.',
 		},
 		summary: {
-			es: 'Lo diseñé y lo programé completo en Next.js: 20 salas de razas con su historia, un buscador, y la Michi Plaza, donde la gente sube fotos de su gato. Ninguna foto se publica hasta que alguien la aprueba en el panel de moderación.',
-			en: 'I designed and built it end to end in Next.js: 20 breed rooms with their history, a search box, and Michi Plaza, where people upload photos of their cat. No photo goes public until someone approves it in the moderation panel.',
+			es: 'Lo diseñé y lo programé completo en Next.js: 20 razas con 6 salas cada una, un buscador, y la Michi Plaza, donde la gente sube fotos de su gato. Ninguna foto se publica hasta que alguien la aprueba en el panel de moderación.',
+			en: 'I designed and built it end to end in Next.js: 20 breeds with 6 rooms each, a search box, and Michi Plaza, where people upload photos of their cat. No photo goes public until someone approves it in the moderation panel.',
 		},
 		idealFor: {
 			es: 'Muestra cómo convierto mucho contenido en un recorrido fácil de seguir, y cómo abro un sitio a que la gente participe sin perder el control.',

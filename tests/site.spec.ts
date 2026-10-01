@@ -14,6 +14,12 @@ const routes = [
 	'/es/',
 	'/es/productos/',
 	'/es/productos/bloqio-builder/',
+	'/es/productos/daniela/',
+	'/es/productos/ahp-plus/',
+	'/es/productos/miawseo/',
+	'/es/productos/consultoria/',
+	'/es/productos/desarrollo-web/',
+	'/en/products/daniela/',
 	'/es/trabajo/',
 	'/es/servicios/',
 	'/es/ia-y-sistemas/',
@@ -179,11 +185,69 @@ test('Jossue AI answers through the Worker, offers a next step and falls back wh
 test('product detail is bilingual and routes to a contact conversation', async ({ page }) => {
 	await page.goto('/es/productos/bloqio-builder/');
 	await expect(page.locator('[data-product-detail="bloqio-builder"]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Bloqio Builder');
+	await expect(page.locator('main h1')).toContainText('Un constructor de páginas con IA');
 	await expect(page.locator('main a[data-analytics-event="contact_product"]')).toHaveAttribute('href', '/es/contacto/?producto=bloqio-builder');
 	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/products\/bloqio-builder\/$/);
-	await expect(page.locator('main h1')).toHaveText('Bloqio Builder');
+	await expect(page.locator('main h1')).toContainText('An AI page builder');
+});
+
+for (const slug of ['daniela', 'ahp-plus', 'bloqio-builder', 'miawseo']) {
+	test(`${slug} product page explains the product with a loop, an animated scene, limits and an FAQ`, async ({ page }) => {
+		await page.goto(`/es/productos/${slug}/`);
+		const article = page.locator(`[data-product-detail="${slug}"]`);
+		// Héroe del sistema jx: bucle abstracto detrás y titular centrado en un solo h1.
+		await expect(page.locator('main h1')).toHaveCount(1);
+		await expect(article.locator('.jx-page-hero .jx-loop video')).toHaveAttribute('poster', /\/videos\/hero\/[a-z-]+(-tall)?\.webp$/);
+		await expect(article.locator('.jx-hero__title')).toHaveCSS('text-align', 'center');
+		await expect(article.locator('[data-jx-demo] video')).toHaveCount(1);
+		// Nada de la plantilla vieja: ni barra de capítulos ni escenarios en blanco.
+		await expect(page.locator('.chapter-nav, [data-media-slot]')).toHaveCount(0);
+		// Información: qué hace, cómo funciona, qué incluye, límites, para quién, preguntas y ficha.
+		for (const id of ['pdp-overview', 'pdp-how', 'pdp-included', 'pdp-limits', 'pdp-fit', 'pdp-faq', 'pdp-spec']) await expect(page.locator(`#${id}`)).toHaveCount(1);
+		await expect(article.locator('.pdp-tasks > li').first()).toBeAttached();
+		expect(await article.locator('.pdp-points > li').count()).toBeGreaterThanOrEqual(6);
+		expect(await article.locator('.pdp-limits li').count()).toBeGreaterThanOrEqual(8);
+		expect(await article.locator('.jx-bots__faq-list details').count()).toBeGreaterThanOrEqual(5);
+		expect(await article.locator('.pdp-spec > div').count()).toBeGreaterThanOrEqual(6);
+		const faqSchema = await page.locator('script[type="application/ld+json"]').evaluateAll((nodes) => nodes.map((node) => node.textContent ?? '').find((text) => text.includes('FAQPage')));
+		expect(faqSchema, 'FAQPage en datos estructurados').toBeTruthy();
+		// Los botones del héroe tienen área táctil y espacio propio.
+		for (const button of await article.locator('.jx-page-hero .jx-btn').all()) {
+			const box = await button.boundingBox();
+			if (box && box.width > 0) expect(box.height, 'botón con área táctil').toBeGreaterThanOrEqual(44);
+		}
+	});
+
+	test(`${slug} animated scene follows the steps and can be controlled`, async ({ page }) => {
+		await page.goto(`/es/productos/${slug}/`);
+		const how = page.locator('[data-pdp-how]');
+		await how.scrollIntoViewIfNeeded();
+		await expect(how.locator('[data-pdp-step]')).toHaveCount(4);
+		await expect(how.locator('[data-pdp-step="1"]')).toHaveAttribute('aria-pressed', 'true');
+		// Elegir un paso detiene el avance solo y muestra ese paso.
+		await how.locator('[data-pdp-step="3"]').click();
+		await expect(how.locator('[data-pdp-step="3"]')).toHaveAttribute('aria-pressed', 'true');
+		await expect(how.locator('[data-pdp-step="1"]')).toHaveAttribute('aria-pressed', 'false');
+		await expect(how).toHaveCSS('--step', '3');
+		await expect(how.locator('[data-pdp-toggle]')).toHaveAttribute('aria-pressed', 'true');
+		await page.waitForTimeout(5400);
+		await expect(how.locator('[data-pdp-step="3"]')).toHaveAttribute('aria-pressed', 'true');
+		// El texto de todos los pasos está en la página (lectores de pantalla y buscadores).
+		for (const text of await how.locator('.pdp-how__text').allTextContents()) expect(text.length).toBeGreaterThan(60);
+	});
+}
+
+test('scene steps stay still with reduced motion', async ({ browser }) => {
+	const context = await browser.newContext({ reducedMotion: 'reduce' });
+	const page = await context.newPage();
+	await page.goto('/es/productos/daniela/');
+	const how = page.locator('[data-pdp-how]');
+	await how.scrollIntoViewIfNeeded();
+	await page.waitForTimeout(5600);
+	await expect(how.locator('[data-pdp-step="1"]')).toHaveAttribute('aria-pressed', 'true');
+	await expect(how.locator('[data-pdp-toggle]')).toBeHidden();
+	await context.close();
 });
 
 test('header keeps navigation focused and mobile menu supports Escape', async ({ page }) => {
@@ -245,72 +309,44 @@ test('commercial pages share one hierarchy and CTAs keep usable spacing', async 
 		if (box && box.width > 0) expect(box.height, 'botón con área táctil').toBeGreaterThanOrEqual(44);
 	}
 
-	for (const route of ['/es/productos/bloqio-builder/']) {
+	for (const route of ['/es/productos/bloqio-builder/', '/es/productos/daniela/']) {
 		await page.goto(route);
-		const hero = page.locator('main .stage--hero').first();
-		const heroTitle = hero.locator('.stage__title').first();
-		const heroLede = hero.locator('.stage__lede').first();
-		const titleBox = await heroTitle.boundingBox();
-		const ledeBox = await heroLede.boundingBox();
-		expect(titleBox, `${route}: hero title must render`).not.toBeNull();
-		expect(ledeBox, `${route}: hero lede must render`).not.toBeNull();
-		expect(Math.abs((titleBox?.x ?? 0) - (ledeBox?.x ?? 0)), `${route}: hero title and lede share the same reading edge`).toBeLessThan(1);
-		await expect(heroTitle).toHaveCSS('text-align', 'left');
+		const hero = page.locator('main .jx-page-hero').first();
+		const centers = await hero.evaluate((element) => [...element.querySelectorAll('.jx-hero__title, .jx-hero__lede')].map((node) => { const rect = node.getBoundingClientRect(); return rect.left + rect.width / 2; }));
+		expect(Math.abs(centers[0] - centers[1]), `${route}: título y entradilla comparten el eje`).toBeLessThan(2);
+		await expect(hero.locator('.jx-hero__title')).toHaveCSS('text-align', 'center');
 
-		const firstCta = hero.locator('.stage__actions .pill').first();
-		if (await firstCta.count()) {
-			const spacing = await firstCta.evaluate((element) => {
-				const style = getComputedStyle(element);
-				return {
-					paddingLeft: Number.parseFloat(style.paddingLeft),
-					paddingRight: Number.parseFloat(style.paddingRight),
-					height: element.getBoundingClientRect().height,
-				};
-			});
-			expect(spacing.paddingLeft, `${route}: CTA left padding`).toBeGreaterThanOrEqual(18);
-			expect(spacing.paddingRight, `${route}: CTA right padding`).toBeGreaterThanOrEqual(18);
-			expect(spacing.height, `${route}: CTA touch target`).toBeGreaterThanOrEqual(48);
-		}
+		const firstCta = hero.locator('.jx-actions .jx-btn').first();
+		const spacing = await firstCta.evaluate((element) => {
+			const style = getComputedStyle(element);
+			return { paddingLeft: Number.parseFloat(style.paddingLeft), paddingRight: Number.parseFloat(style.paddingRight), height: element.getBoundingClientRect().height };
+		});
+		expect(spacing.paddingLeft, `${route}: CTA left padding`).toBeGreaterThanOrEqual(18);
+		expect(spacing.paddingRight, `${route}: CTA right padding`).toBeGreaterThanOrEqual(18);
+		expect(spacing.height, `${route}: CTA touch target`).toBeGreaterThanOrEqual(44);
 
-		const close = page.locator('.conversion-chapter').first();
-		if (await close.count()) await expect(close.locator('.stage__title')).toHaveCSS('text-align', 'left');
+		await expect(page.locator('.jx-close__title')).toHaveCSS('text-align', 'center');
 	}
 
-	// Breadcrumbs y submenú de la ficha: orden de las secciones y siempre visible bajo la cabecera.
+	// Breadcrumbs y burbuja: las fichas ya no llevan submenú propio; sus secciones se leen en orden
+	// y, al pasar el héroe, baja la burbuja de navegación de todo el sitio.
 	await page.goto('/es/productos/daniela/');
 	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Productos', 'Daniela']);
 	await expect(page.locator('.breadcrumbs a').nth(1)).toHaveAttribute('href', '/es/productos/');
-	const navLinks = await page.locator('.chapter-nav__links a').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hash));
-	const sectionOrder = await page.evaluate((ids) => ids.map((id) => document.querySelector(id)?.getBoundingClientRect().top ?? -1), navLinks);
-	expect(sectionOrder.every((top, index) => index === 0 || top > sectionOrder[index - 1]), 'el submenú sigue el orden de la página').toBe(true);
+	await expect(page.locator('.chapter-nav')).toHaveCount(0);
 	await expect(page.locator('.action-bar')).toHaveCount(0);
-	// El submenú de la ficha es la burbuja: al pasar el hero flota arriba, a 10 px del borde.
+	const sectionOrder = await page.evaluate(() => ['pdp-overview', 'pdp-how', 'pdp-included', 'pdp-limits', 'pdp-fit', 'pdp-faq', 'pdp-spec', 'pdp-close'].map((id) => document.getElementById(id)?.getBoundingClientRect().top ?? -1));
+	expect(sectionOrder.every((top, index) => index === 0 || top > sectionOrder[index - 1]), 'las secciones siguen el orden de la ficha').toBe(true);
 	await page.evaluate(() => window.scrollTo({ top: 1600, behavior: 'instant' }));
-	await expect(page.locator('.chapter-nav')).toHaveClass(/is-revealed/);
-	await expect.poll(async () => Math.round((await page.locator('.chapter-nav__inner').boundingBox())?.y ?? -99)).toBeGreaterThanOrEqual(0);
-	expect((await page.locator('.chapter-nav__inner').boundingBox())?.y ?? 99).toBeLessThan(20);
-	await expect(page.locator('[data-site-bubble]')).toBeHidden();
+	await expect(page.locator('[data-site-bubble]')).toHaveClass(/is-revealed/);
+	expect((await page.locator('.site-bubble__wrap').boundingBox())?.y ?? 99).toBeLessThan(20);
 	await page.goto('/es/trabajo/wu-nutrition/');
 	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Casos', 'WU Nutrition']);
-
-	await page.goto('/es/productos/bloqio-builder/');
-	const chapterCta = page.locator('.chapter-nav__cta');
-	const chapterSpacing = await chapterCta.evaluate((element) => {
-		const style = getComputedStyle(element);
-		return {
-			paddingLeft: Number.parseFloat(style.paddingLeft),
-			paddingRight: Number.parseFloat(style.paddingRight),
-			height: element.getBoundingClientRect().height,
-		};
-	});
-	expect(chapterSpacing.paddingLeft).toBeGreaterThanOrEqual(13);
-	expect(chapterSpacing.paddingRight).toBeGreaterThanOrEqual(13);
-	expect(chapterSpacing.height).toBeGreaterThanOrEqual(42);
 });
 
 test('Chatbots page sells with real demos, security, costs and a working calculator', async ({ page }) => {
 	await page.goto('/es/productos/chatbots/');
-	await expect(page.locator('main h1')).toContainText('Un chatbot que vende');
+	await expect(page.locator('main h1')).toContainText('Chatbots con IA que atienden');
 	await expect(page.locator('.breadcrumbs li')).toHaveText(['Inicio', 'Productos', 'Chatbots inteligentes']);
 	await expect(page.locator('[data-bot="daniela"] a[href="https://wunutrition.com/"]')).toBeVisible();
 	await expect(page.locator('[data-bot="jossue-ai"] [data-ai-open]')).toBeVisible();

@@ -600,8 +600,14 @@
 	.jx-points .icon {
 		width: 1.75rem;
 		height: 1.75rem;
-		color: var(--phosphor);
+		color: var(--ivory);
 		margin-bottom: 0.4rem;
+	}
+
+	/* El verde fósforo es de MADRE: solo sus bloques conservan los íconos en verde. */
+	.jx-star .jx-points .icon,
+	.jm .jx-points .icon {
+		color: var(--phosphor);
 	}
 
 	.jx-points strong {
@@ -5104,7 +5110,7 @@
 		width: min(100%, 72rem);
 		margin: clamp(2.5rem, 5vw, 4.5rem) auto 0;
 		border-radius: clamp(1.25rem, 2.4vw, 2rem);
-		box-shadow: 0 40px 120px -40px rgba(120, 110, 255, 0.28), 0 0 0 1px rgba(255, 255, 255, 0.06);
+		box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
 	}
 
 	.jx-page-hero .jx-bots__stage .jx-demo__label {
@@ -5762,5 +5768,41 @@
 
 	.jx-page-hero:has(.jx-bots__stage, .jx-svc__stage) > .jx-hero {
 		padding-bottom: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+	}
+}
+
+
+/* Menú del teléfono: la página actual se distingue por su punto marfil y no apagándola, que se
+   leía como «desactivado»; y el panel cierra con una acción en vez de quedar vacío. */
+@layer utilities {
+	.global-nav__index a[aria-current='page'] {
+		color: var(--text);
+	}
+
+	.global-nav__index a[aria-current='page'] > span:nth-child(2)::after {
+		content: '';
+		display: inline-block;
+		width: 0.28em;
+		height: 0.28em;
+		margin-left: 0.28em;
+		border-radius: 50%;
+		background: var(--ivory);
+		vertical-align: 0.18em;
+	}
+
+	.global-nav__index a[aria-current='page'] .global-nav__index-number {
+		color: var(--ivory);
+	}
+
+	.global-nav__sheet-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin: 0 0 clamp(1.5rem, 4vh, 2.5rem);
+	}
+
+	.global-nav__sheet-actions .jx-btn {
+		flex: 1 1 14rem;
+		justify-content: center;
 	}
 }

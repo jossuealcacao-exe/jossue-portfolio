@@ -115,3 +115,60 @@ passed
 - Validate real-world Core Web Vitals and PageSpeed after deployment, with explicit authorization.
 
 final result: passed
+
+---
+
+# Design QA — product detail pages
+
+## Target
+
+- Daniela, AHP+, Bloqio Builder and Miawseo (`ProductDetail.astro`), reviewed against Chatbots, IA aplicada, Consultoría and Desarrollo web, which were already on the jx system.
+- Viewports: 390 × 844 and 1440 × 900 for review, plus 320, 375, 768 and 1024 in the overflow sweep. Spanish and English.
+
+## Source findings
+
+1. Two systems coexisted: four product pages still used the old `.stage` / `.gallery-card` template (flat band hero, no media, four one-line cards, “Cómo avanzamos” as a still image) while the other four used the jx system with a looping hero, demo, comparison tables and FAQ.
+2. The floating chapter bar overlapped content on scroll, was cut off at 390 px (“Qué incluye / Para quién / Hablar”) and suppressed the site-wide navigation bubble on those pages only.
+3. Information was thin: no problem statement, no explanation of how the product works, no limits, no FAQ, no spec table.
+4. The services pages had near-black hero loops (`services`, `products`), so the abstract video was effectively invisible.
+5. Mobile menu: the current page was dimmed to the muted colour, which read as disabled, and the panel ended with empty space.
+6. Token drift: `.jx-points .icon` used the MADRE phosphor green site-wide (overridden page by page), `storefront.css` kept a parallel palette with `#626a5f` text (fails AA), and the hero stage carried a purple glow shadow the system rules exclude.
+7. Hero overflow: a long install command made the centred hero grid wider than the viewport at 390 px.
+8. Copy that the sources did not support: AHP+ “checkpoints para volver a un punto” (they resume a session, they do not restore) and Miawseo “20 salas de razas” (20 breeds with 6 rooms each, 120 rooms).
+
+## Implemented corrections
+
+- `ProductDetail.astro` rebuilt on the jx system; all copy lives in `src/data/productDetails.ts` (ES/EN), drawn from the products’ own code and docs.
+- New “Cómo funciona” scene (`src/components/pdp/`): four steps the visitor can pick, autoplay only while in view, pause button, static with reduced motion. Scenes change one CSS variable (`--step`); text stays in the DOM.
+- Abstract 10 s hero loops for the four products plus Consultoría and Desarrollo web, rendered by `scripts/video/render-hero-loops.mjs` from `scripts/video/hero-loops.html` (WebM, MP4, WebP poster, wide and tall).
+- Chapter bar removed from product pages; the site bubble now appears after the hero like on the other product pages.
+- Mobile menu: current page marked with a dot, full brightness; closing action added.
+- Tokens: phosphor icons scoped to MADRE, storefront palette aliased to the base tokens, purple glow removed, scene radii on the radius scale, hero grid `minmax(0, 1fr)`.
+- Copy fixes in `products.ts` for the two claims above.
+- Copy pass on all product pages and the catalog: headings and ledes rewritten as plain statements of what the section contains (no slogans, no “X, no Y” contrasts, no addressing the reader with “te reconoces / te suena / te toca”), Mexican Spanish, first person. Examples: “Te sirve si te reconoces aquí. Y te digo cuándo no.” became “Cuándo conviene y cuándo todavía no”; “Un chatbot que vende, no uno que repite el FAQ.” became “Chatbots con IA que atienden y venden con tus datos reales.”
+- Tests updated for the new structure and extended with per-product checks (loop, sections, FAQ schema, step control, reduced motion).
+
+## Visual review
+
+- PASS — Hero, section order, alignment and button sizes are the same on all eight product pages.
+- PASS — Each scene shows something different at each of its four steps; panel heights stay stable while steps change.
+- PASS — No document-level horizontal overflow at 320, 375, 390, 768, 1024 and 1440 px, Spanish and English.
+- PASS — Text contrast scan of the eight pages (outside the illustrative scenes): 0 failures against 4.5:1 (3:1 for large text).
+- PASS — One H1 per page; FAQPage structured data on the four rebuilt pages.
+
+## Verification
+
+- `npm run check`: 139 files, 0 errors, 0 warnings, 3 hints (pre-existing).
+- `npm run lint`: passed.
+- Production build: 53 pages. Static routes: 53 verified. Local links: 2,261 verified.
+- Playwright: 440/440 passed at 320, 375, 390, 430, 768, 1024, 1280 and 1440 px.
+- Not run: `blog:check`, API, worker and social suites (outside this change; the worker has unrelated uncommitted edits).
+- Evidence: `audit/product-pages-2026-09-30/` (before and after), regenerated with `scripts/capture-product-qa.mjs`.
+
+## Open items for the owner
+
+- Bloqio Builder is labelled “En beta privada” on the site, but the product code has open sign-up and the commercial site says “Acceso anticipado”. Pick one label.
+- Miawseo’s demo credit says each photo’s licence is in the repository; `CREDITS.md` lists files and some authors, not licences per file.
+- `ahp project check` reports FAIL on this checkout (pre-existing; not repaired here).
+
+final result: passed

@@ -1,0 +1,71 @@
+---
+// Escena de Daniela: la conversación a la izquierda y, a la derecha, lo que revisa el servidor en
+// cada paso. Los textos son una ilustración, no capturas de la tienda.
+import type { Locale } from '../../data/i18n';
+import Icon from '../Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+const { locale } = Astro.props;
+const es = locale === 'es';
+
+const checks: Array<{ from: number; text: string }> = es
+	? [
+			{ from: 1, text: 'Límite por persona' },
+			{ from: 1, text: 'Correos y teléfonos ocultos' },
+			{ from: 2, text: 'Catálogo de Shopify: el producto existe' },
+			{ from: 2, text: 'Hay existencia y precio real' },
+			{ from: 3, text: 'Respuesta con el formato fijo' },
+			{ from: 4, text: 'Acción «agregar al carrito» validada' },
+			{ from: 4, text: 'Caso delicado: pasa a WhatsApp con folio' },
+		]
+	: [
+			{ from: 1, text: 'Per-person limit' },
+			{ from: 1, text: 'Emails and phone numbers hidden' },
+			{ from: 2, text: 'Shopify catalog: the product exists' },
+			{ from: 2, text: 'In stock, with the real price' },
+			{ from: 3, text: 'Reply in the fixed format' },
+			{ from: 4, text: '«Add to cart» action validated' },
+			{ from: 4, text: 'Sensitive case: goes to WhatsApp with a reference' },
+		];
+---
+
+<div class="scn scn--chat">
+	<div class="scn__panel scn__panel--phone">
+		<header class="scn__bar"><span class="scn__avatar" aria-hidden="true">D</span><strong>Daniela</strong><span class="scn__live">{es ? 'en línea' : 'online'}</span></header>
+		<div class="scn__msgs">
+			<p class="msg msg--me rv" style="--from: 1">{es ? 'Últimamente duermo mal por el estrés.' : 'Lately I sleep badly because of stress.'}</p>
+			<div class="msg-slot">
+				<p class="msg msg--bot msg--typing rv" style="--from: 2; --until: 2" aria-hidden="true"><i></i><i></i><i></i></p>
+				<div class="msg msg--bot msg--card rv" style="--from: 3">
+					<p>{es ? 'Te recomiendo este: está en existencia y tiene promoción.' : 'I suggest this one: it is in stock and on promotion.'}</p>
+					<div class="pcard">
+						<span class="pcard__img" aria-hidden="true"><Icon name="flask" /></span>
+						<span class="pcard__body">
+							<strong>{es ? 'Producto del catálogo' : 'Catalog product'}</strong>
+							<small>{es ? 'Precio y promoción reales' : 'Real price and promotion'}</small>
+						</span>
+						<span class="pcard__btn">{es ? 'Agregar' : 'Add'}</span>
+					</div>
+				</div>
+			</div>
+			<p class="msg msg--me rv" style="--from: 4">{es ? 'Sí, agrégalo al carrito.' : 'Yes, add it to the cart.'}</p>
+			<p class="msg msg--bot rv" style="--from: 4">{es ? 'Listo. Ya está en tu carrito.' : 'Done. It is in your cart.'}</p>
+		</div>
+	</div>
+	<div class="scn__panel scn__panel--log">
+		<header class="scn__bar"><Icon name="shield" /><strong>{es ? 'Servidor' : 'Server'}</strong><span class="scn__live">Cloudflare Worker</span></header>
+		<ul class="scn__list">
+			{
+				checks.map((check) => (
+					<li class="rv row" style={`--from: ${check.from}`}>
+						<span class="row__mark" aria-hidden="true"><Icon name="check" /></span>
+						<span>{check.text}</span>
+					</li>
+				))
+			}
+		</ul>
+		<p class="scn__note rv" style="--from: 3">{es ? 'El modelo solo redacta con lo que el servidor le entrega.' : 'The model only writes with what the server hands it.'}</p>
+	</div>
+</div>

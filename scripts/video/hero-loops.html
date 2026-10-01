@@ -1,0 +1,497 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Hero loops</title>
+<style>
+	html, body { margin: 0; background: #050608; }
+	canvas { display: block; }
+</style>
+<canvas id="c"></canvas>
+<script>
+// Bucles abstractos de 10 s para el héroe de cada ficha de producto. Dibujo determinista:
+// renderAt(t) con t en [0, 1) pinta el cuadro entero, sin estado oculto, para que
+// render-hero-loops.mjs lo grabe cuadro por cuadro. Todo lo que se mueve es periódico, así
+// que el último cuadro engancha con el primero. Nada de texto salvo la marca `.ahp/`.
+const TAU = Math.PI * 2;
+const params = new URLSearchParams(location.search);
+const SCENE = params.get('scene') || 'daniela';
+const FORMAT = params.get('fmt') === 'tall' ? 'tall' : 'wide';
+const SIZE = FORMAT === 'tall' ? [720, 1280] : [1600, 900];
+const [W, H] = SIZE;
+const canvas = document.getElementById('c');
+canvas.width = W;
+canvas.height = H;
+const ctx = canvas.getContext('2d');
+const U = Math.min(W, H); // unidad de tamaño: el lado corto
+
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const seg = (t, a, b) => clamp((t - a) / (b - a));
+const ease = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const outCubic = (x) => 1 - Math.pow(1 - x, 3);
+const smooth = (x) => x * x * (3 - 2 * x);
+// sube entre a y b, se mantiene, baja entre c y d
+const env = (t, a, b, c, d) => smooth(seg(t, a, b)) * (1 - smooth(seg(t, c, d)));
+const lerp = (a, b, k) => a + (b - a) * k;
+function rng(seed) { let s = seed >>> 0; return () => (s = (Math.imul(s, 1664525) + 1013904223) >>> 0) / 4294967296; }
+
+const IVORY = '236,230,216';
+const STAR = '223,230,255';
+
+// ---------- fondo: nebulosa, estrellas y grano, igual que el logotipo ----------
+const rand = rng(7);
+const stars = Array.from({ length: FORMAT === 'tall' ? 150 : 240 }, () => ({
+	x: rand() * W, y: rand() * H, r: 0.35 + Math.pow(rand(), 3) * 1.5,
+	base: 0.25 + rand() * 0.6, ph: rand() * TAU, f: 1 + Math.floor(rand() * 3), dx: (rand() - 0.5) * 10, dy: (rand() - 0.5) * 8,
+}));
+const grain = (() => {
+	const g = document.createElement('canvas'); g.width = 256; g.height = 256;
+	const gc = g.getContext('2d'); const img = gc.createImageData(256, 256); const r = rng(99);
+	for (let i = 0; i < img.data.length; i += 4) { const v = 118 + r() * 30; img.data[i] = img.data[i + 1] = img.data[i + 2] = v; img.data[i + 3] = 13; }
+	gc.putImageData(img, 0, 0); return gc.createPattern(g, 'repeat');
+})();
+
+function blob(x, y, r, rgb, a) {
+	const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+	g.addColorStop(0, `rgba(${rgb},${a})`); g.addColorStop(1, `rgba(${rgb},0)`);
+	ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+}
+function background(t, tint) {
+	const a = t * TAU;
+	ctx.fillStyle = '#04050a'; ctx.fillRect(0, 0, W, H);
+	const R = Math.max(W, H);
+	blob(W * (0.26 + 0.03 * Math.sin(a)), H * (0.30 + 0.025 * Math.cos(a)), R * 0.62, '30,38,92', 0.62);
+	blob(W * (0.76 + 0.025 * Math.cos(a)), H * (0.72 + 0.03 * Math.sin(a)), R * 0.55, '58,32,86', 0.46);
+	blob(W * 0.5, H * (0.5 + 0.02 * Math.sin(a + 1)), R * 0.42, '70,92,150', 0.16);
+	if (tint) blob(W * tint.x, H * tint.y, R * tint.r, tint.rgb, tint.a * (0.8 + 0.2 * Math.sin(a * 2)));
+	for (const s of stars) {
+		const k = 0.55 + 0.45 * Math.sin(a * s.f + s.ph);
+		const x = s.x + s.dx * Math.sin(a + s.ph), y = s.y + s.dy * Math.cos(a + s.ph);
+		ctx.globalAlpha = s.base * k;
+		ctx.fillStyle = `rgb(${STAR})`;
+		ctx.beginPath(); ctx.arc(x, y, s.r, 0, TAU); ctx.fill();
+		if (s.r > 1.2) { ctx.globalAlpha *= 0.25; ctx.beginPath(); ctx.arc(x, y, s.r * 3.2, 0, TAU); ctx.fill(); }
+	}
+	ctx.globalAlpha = 1;
+}
+function finish() {
+	// grano estático, viñeta y una zona calma en el centro para que el titular se lea
+	ctx.fillStyle = grain; ctx.fillRect(0, 0, W, H);
+	const v = ctx.createRadialGradient(W / 2, H / 2, U * 0.35, W / 2, H / 2, Math.max(W, H) * 0.78);
+	v.addColorStop(0, 'rgba(2,3,6,0)'); v.addColorStop(1, 'rgba(2,3,6,0.7)');
+	ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
+	const c = ctx.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, FORMAT === 'tall' ? W * 0.62 : W * 0.36);
+	c.addColorStop(0, 'rgba(4,5,9,0.5)'); c.addColorStop(1, 'rgba(4,5,9,0)');
+	ctx.fillStyle = c; ctx.fillRect(0, 0, W, H);
+}
+
+// ---------- primitivas ----------
+function rr(x, y, w, h, r) {
+	r = Math.min(r, w / 2, h / 2);
+	ctx.beginPath();
+	ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+	ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function glass(x, y, w, h, r, a = 1, edge = 0.22, hi = 0) {
+	if (a <= 0.003) return;
+	ctx.save(); ctx.globalAlpha = a;
+	rr(x, y, w, h, r);
+	const g = ctx.createLinearGradient(x, y, x, y + h);
+	g.addColorStop(0, `rgba(196,206,246,${0.15 + hi * 0.14})`); g.addColorStop(1, `rgba(120,132,196,${0.06 + hi * 0.08})`);
+	ctx.fillStyle = g; ctx.fill();
+	ctx.lineWidth = 1.2; ctx.strokeStyle = `rgba(${IVORY},${edge + hi * 0.28})`; ctx.stroke();
+	ctx.restore();
+}
+function node(x, y, r, a = 1) {
+	if (a <= 0.003) return;
+	ctx.save(); ctx.globalAlpha = a;
+	const g = ctx.createRadialGradient(x, y, 0, x, y, r * 3.4);
+	g.addColorStop(0, 'rgba(255,248,232,0.9)'); g.addColorStop(0.35, `rgba(${IVORY},0.45)`); g.addColorStop(1, `rgba(${IVORY},0)`);
+	ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 3.4, 0, TAU); ctx.fill();
+	ctx.fillStyle = '#fffaf0'; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+	ctx.restore();
+}
+function line(x1, y1, x2, y2, a = 0.3, w = 1) {
+	if (a <= 0.003) return;
+	ctx.strokeStyle = `rgba(${IVORY},${a})`; ctx.lineWidth = w; ctx.lineCap = 'round';
+	ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+}
+function ring(x, y, r, a, w = 1.4) {
+	if (a <= 0.003) return;
+	ctx.strokeStyle = `rgba(${IVORY},${a})`; ctx.lineWidth = w; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.stroke();
+}
+function check(x, y, s, a, w = 2) {
+	if (a <= 0.003) return;
+	ctx.save(); ctx.globalAlpha = a; ctx.strokeStyle = '#fffaf0'; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+	ctx.beginPath(); ctx.moveTo(x - s * 0.5, y); ctx.lineTo(x - s * 0.1, y + s * 0.4); ctx.lineTo(x + s * 0.55, y - s * 0.4); ctx.stroke(); ctx.restore();
+}
+// camino por puntos (con esquinas redondeadas) para trenes y paquetes
+function smoothPath(pts, radius) {
+	const out = [pts[0]];
+	for (let i = 1; i < pts.length - 1; i++) {
+		const p0 = pts[i - 1], p1 = pts[i], p2 = pts[i + 1];
+		const d1 = Math.hypot(p1[0] - p0[0], p1[1] - p0[1]), d2 = Math.hypot(p2[0] - p1[0], p2[1] - p1[1]);
+		const r = Math.min(radius, d1 / 2, d2 / 2);
+		const a = [p1[0] + ((p0[0] - p1[0]) / d1) * r, p1[1] + ((p0[1] - p1[1]) / d1) * r];
+		const b = [p1[0] + ((p2[0] - p1[0]) / d2) * r, p1[1] + ((p2[1] - p1[1]) / d2) * r];
+		for (let k = 0; k <= 8; k++) { const s = k / 8; out.push([(1 - s) * (1 - s) * a[0] + 2 * (1 - s) * s * p1[0] + s * s * b[0], (1 - s) * (1 - s) * a[1] + 2 * (1 - s) * s * p1[1] + s * s * b[1]]); }
+	}
+	out.push(pts[pts.length - 1]);
+	let len = 0; const cum = [0];
+	for (let i = 1; i < out.length; i++) { len += Math.hypot(out[i][0] - out[i - 1][0], out[i][1] - out[i - 1][1]); cum.push(len); }
+	return { pts: out, cum, len };
+}
+function at(path, p) {
+	const d = clamp(p) * path.len; let i = 1;
+	while (i < path.cum.length - 1 && path.cum[i] < d) i++;
+	const k = (d - path.cum[i - 1]) / Math.max(1e-6, path.cum[i] - path.cum[i - 1]);
+	const a = path.pts[i - 1], b = path.pts[i];
+	return { x: lerp(a[0], b[0], k), y: lerp(a[1], b[1], k), ang: Math.atan2(b[1] - a[1], b[0] - a[0]) };
+}
+function strokePath(path, a, w = 1, dash) {
+	ctx.save(); ctx.strokeStyle = `rgba(${IVORY},${a})`; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+	if (dash) ctx.setLineDash(dash);
+	ctx.beginPath(); path.pts.forEach((p, i) => (i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke(); ctx.restore();
+}
+// curva suave entre dos puntos (para los paquetes que viajan)
+function arcPath(x1, y1, x2, y2, bend) {
+	const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, dy = y2 - y1, n = Math.hypot(dx, dy) || 1;
+	const cx = mx - (dy / n) * bend, cy = my + (dx / n) * bend;
+	const pts = []; for (let k = 0; k <= 36; k++) { const s = k / 36; pts.push([(1 - s) * (1 - s) * x1 + 2 * (1 - s) * s * cx + s * s * x2, (1 - s) * (1 - s) * y1 + 2 * (1 - s) * s * cy + s * s * y2]); }
+	let len = 0; const cum = [0]; for (let i = 1; i < pts.length; i++) { len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); cum.push(len); }
+	return { pts, cum, len };
+}
+// paquete con cola
+function packet(path, p, a = 1, r = 3.2) {
+	if (p <= 0 || p >= 1 || a <= 0.003) return;
+	for (let k = 7; k >= 1; k--) { const q = at(path, p - k * 0.012); if (p - k * 0.012 < 0) continue; node(q.x, q.y, r * (1 - k * 0.1), a * (1 - k / 8) * 0.55); }
+	const q = at(path, p); node(q.x, q.y, r, a);
+}
+function bottle(x, y, w, h, a, hi) {
+	glass(x, y + h * 0.16, w, h * 0.84, w * 0.28, a, 0.22, hi);
+	glass(x + w * 0.2, y, w * 0.6, h * 0.2, w * 0.12, a, 0.26, hi);
+	ctx.save(); ctx.globalAlpha = a * 0.5; ctx.fillStyle = `rgba(${IVORY},0.18)`; rr(x + w * 0.2, y + h * 0.5, w * 0.6, h * 0.05, 2); ctx.fill(); rr(x + w * 0.28, y + h * 0.6, w * 0.44, h * 0.04, 2); ctx.fill(); ctx.restore();
+}
+function bubble(x, y, w, h, tail, a, fill = 0, hi = 0) {
+	if (a <= 0.003) return;
+	glass(x, y, w, h, h * 0.42, a, 0.2, hi);
+	ctx.save(); ctx.globalAlpha = a * 0.7; ctx.strokeStyle = `rgba(${IVORY},0.2)`; ctx.lineWidth = 1.2;
+	ctx.beginPath(); if (tail === 'left') { ctx.moveTo(x + h * 0.25, y + h); ctx.lineTo(x + h * 0.05, y + h * 1.3); ctx.lineTo(x + h * 0.55, y + h); } else { ctx.moveTo(x + w - h * 0.25, y + h); ctx.lineTo(x + w - h * 0.05, y + h * 1.3); ctx.lineTo(x + w - h * 0.55, y + h); } ctx.stroke(); ctx.restore();
+	if (fill > 0) { ctx.save(); ctx.globalAlpha = a * fill * 0.55; ctx.fillStyle = `rgba(${IVORY},0.35)`; rr(x + h * 0.4, y + h * 0.3, w * 0.62 * fill, h * 0.12, 3); ctx.fill(); if (h > U * 0.07) { rr(x + h * 0.4, y + h * 0.55, w * 0.42 * fill, h * 0.12, 3); ctx.fill(); } ctx.restore(); }
+}
+function dots(x, y, t, a) {
+	for (let i = 0; i < 3; i++) { const k = 0.35 + 0.65 * Math.max(0, Math.sin(t * TAU * 8 - i * 0.9)); ctx.save(); ctx.globalAlpha = a * k; ctx.fillStyle = `rgba(${IVORY},0.9)`; ctx.beginPath(); ctx.arc(x + i * 13, y, 3.4, 0, TAU); ctx.fill(); ctx.restore(); }
+}
+const P = (x, y) => [x * W, y * H];
+
+// ---------- escenas ----------
+const SCENES = {
+	// Una conversación que llega al catálogo, el servidor lo revisa y termina en el carrito.
+	daniela(t) {
+		const w = FORMAT === 'wide';
+		const L = w
+			? { b1: [0.07, 0.30], b2: [0.06, 0.46], b3: [0.09, 0.64], srv: [0.46, 0.13], cat: [0.62, 0.20], c1: [0.74, 0.26], c2: [0.82, 0.38], c3: [0.90, 0.28], cart: [0.84, 0.76] }
+			: { b1: [0.12, 0.12], b2: [0.08, 0.22], b3: [0.14, 0.33], srv: [0.50, 0.46], cat: [0.50, 0.58], c1: [0.20, 0.70], c2: [0.50, 0.74], c3: [0.78, 0.70], cart: [0.50, 0.90] };
+		const bw = w ? U * 0.34 : W * 0.5, bh = w ? U * 0.075 : H * 0.045;
+		const [b1x, b1y] = P(...L.b1), [b2x, b2y] = P(...L.b2), [b3x, b3y] = P(...L.b3);
+		const [sx, sy] = P(...L.srv), [kx, ky] = P(...L.cat);
+		const cs = [L.c1, L.c2, L.c3].map((q) => P(...q));
+		const [cx, cy] = P(...L.cart);
+		// constelación de fondo
+		const base = [[b1x + bw, b1y + bh / 2], [sx, sy], [kx, ky], ...cs, [cx, cy]];
+		line(base[0][0], base[0][1], sx, sy, 0.2); line(sx, sy, kx, ky, 0.26);
+		cs.forEach(([x, y]) => line(kx, ky, x, y + U * 0.04, 0.2)); line(cs[1][0] + U * 0.03, cs[1][1] + U * 0.15, cx, cy, 0.18);
+		// burbujas
+		const e1 = env(t, 0.03, 0.1, 0.9, 0.97), e2 = env(t, 0.12, 0.2, 0.9, 0.97), e3 = env(t, 0.5, 0.57, 0.9, 0.97);
+		bubble(b1x, b1y, bw * 0.78, bh, 'right', e1, smooth(seg(t, 0.06, 0.13)));
+		const typing = seg(t, 0.14, 0.26) < 1 && t > 0.14;
+		bubble(b2x, b2y, bw, bh * 1.55, 'left', e2, smooth(seg(t, 0.26, 0.36)), 0.1);
+		if (typing) dots(b2x + bh * 0.8, b2y + bh * 0.78, t, e2);
+		bubble(b3x, b3y, bw * 0.55, bh, 'right', e3, smooth(seg(t, 0.52, 0.58)));
+		node(b1x + bw * 0.78 + 14, b1y + bh / 2, 2.2, e1 * 0.8);
+		// servidor: guardia con un anillo que late cuando valida
+		node(sx, sy, 4, 0.9);
+		const v1 = env(t, 0.2, 0.26, 0.34, 0.4), v2 = env(t, 0.72, 0.78, 0.84, 0.9);
+		const pr = (v) => ring(sx, sy, 16 + 22 * (1 - v), v * 0.6);
+		pr(v1); pr(v2); check(sx, sy - 0.5, 8, Math.max(v1, v2) * 0.9, 1.8);
+		ring(sx, sy, 12, 0.22 + 0.1 * Math.sin(t * TAU * 2));
+		node(kx, ky, 3.2, 0.8);
+		// paquetes
+		packet(arcPath(b1x + bw * 0.78, b1y + bh / 2, sx, sy, -U * 0.08), seg(t, 0.1, 0.2), env(t, 0.1, 0.12, 0.18, 0.2));
+		packet(arcPath(sx, sy, kx, ky, U * 0.02), seg(t, 0.36, 0.44), 1);
+		// tarjetas de producto: una se elige
+		const pick = env(t, 0.46, 0.54, 0.66, 0.74);
+		cs.forEach(([x, y], i) => {
+			const a = env(t, 0.38 + i * 0.03, 0.46 + i * 0.03, 0.9, 0.97);
+			const hi = i === 1 ? pick : 0;
+			const s = 1 + hi * 0.12;
+			ctx.save(); ctx.translate(x + U * 0.03, y + U * 0.07); ctx.scale(s, s); ctx.translate(-(x + U * 0.03), -(y + U * 0.07));
+			bottle(x, y, U * 0.062, U * 0.14, a, hi); ctx.restore();
+			ctx.save(); ctx.globalAlpha = a * 0.5; ctx.fillStyle = `rgba(${IVORY},0.3)`; rr(x - U * 0.005, y + U * 0.16, U * 0.07, U * 0.014, 3); ctx.fill(); ctx.restore();
+		});
+		packet(arcPath(cs[1][0] + U * 0.03, cs[1][1] + U * 0.15, cx, cy - U * 0.05, U * 0.06), seg(t, 0.58, 0.72), 1);
+		packet(arcPath(sx, sy, cs[1][0] + U * 0.03, cs[1][1], -U * 0.05), seg(t, 0.44, 0.52), env(t, 0.44, 0.46, 0.5, 0.52));
+		// carrito
+		const ca = env(t, 0.5, 0.6, 0.9, 0.97), pop = 1 + 0.18 * env(t, 0.72, 0.75, 0.78, 0.84);
+		ctx.save(); ctx.globalAlpha = ca; ctx.translate(cx, cy); ctx.scale(pop, pop);
+		ctx.strokeStyle = `rgba(${IVORY},0.5)`; ctx.lineWidth = 1.6; ctx.lineJoin = 'round';
+		ctx.beginPath(); ctx.moveTo(-U * 0.05, -U * 0.02); ctx.lineTo(U * 0.05, -U * 0.02); ctx.lineTo(U * 0.038, U * 0.05); ctx.lineTo(-U * 0.038, U * 0.05); ctx.closePath(); ctx.stroke();
+		ctx.beginPath(); ctx.moveTo(-U * 0.03, -U * 0.02); ctx.lineTo(-U * 0.012, -U * 0.055); ctx.moveTo(U * 0.03, -U * 0.02); ctx.lineTo(U * 0.012, -U * 0.055); ctx.stroke();
+		ctx.restore();
+		check(cx, cy + U * 0.012, 9, env(t, 0.74, 0.78, 0.86, 0.92) * 0.9, 2);
+	},
+
+	// El relevo de AHP+: cuatro agentes, una carpeta compartida y un historial que avanza.
+	ahp(t) {
+		const w = FORMAT === 'wide';
+		const L = w
+			? { a: [[0.10, 0.24], [0.90, 0.24], [0.90, 0.64], [0.10, 0.64]], led: [0.5, 0.80], git: 0.935 }
+			: { a: [[0.18, 0.12], [0.82, 0.12], [0.82, 0.88], [0.18, 0.88]], led: [0.5, 0.80], git: 0.965 };
+		const A = L.a.map((q) => P(...q));
+		const [lx, ly] = P(...L.led);
+		const lw = w ? U * 0.5 : W * 0.5, lh = w ? U * 0.15 : H * 0.075;
+		const gy = L.git * H;
+		// historial: línea con confirmaciones (commits) que se encienden en cada relevo
+		line(W * 0.04, gy, W * 0.96, gy, 0.12);
+		const nc = 12;
+		for (let i = 0; i < nc; i++) { const x = lerp(W * 0.06, W * 0.94, i / (nc - 1)); const lit = clamp(0.25 + 0.75 * seg(t * nc * 1.0, i - 0.2, i + 0.6)); node(x, gy, 2.1, 0.35 + lit * 0.55 * (i / nc < t + 0.04 ? 1 : 0.45)); }
+		// carpeta .ahp/
+		const pulse = 0.5 + 0.5 * Math.sin(t * TAU * 4);
+		glass(lx - lw / 2, ly - lh / 2, lw, lh, 14, 1, 0.22, 0.25 * pulse);
+		ctx.save(); ctx.fillStyle = `rgba(${IVORY},0.82)`; ctx.font = `600 ${Math.round(lh * 0.34)}px ui-monospace, 'SF Mono', Menlo, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+		ctx.fillText('.ahp/', lx, ly - lh * 0.12);
+		ctx.globalAlpha = 0.35; ctx.fillRect(lx - lw * 0.32, ly + lh * 0.24, lw * 0.64, 2); ctx.globalAlpha = 0.22; ctx.fillRect(lx - lw * 0.32, ly + lh * 0.34, lw * 0.4, 2); ctx.restore();
+		// agentes: una forma distinta cada uno
+		const shape = (i, x, y, s, a, hi) => {
+			glass(x - s, y - s, s * 2, s * 2, s * 0.5, a, 0.24, hi);
+			ctx.save(); ctx.globalAlpha = a * (0.55 + hi * 0.45); ctx.strokeStyle = `rgba(${IVORY},0.9)`; ctx.lineWidth = 1.6; ctx.lineJoin = 'round'; ctx.beginPath();
+			if (i === 0) ctx.arc(x, y, s * 0.42, 0, TAU);
+			if (i === 1) { ctx.rect(x - s * 0.36, y - s * 0.36, s * 0.72, s * 0.72); }
+			if (i === 2) { ctx.moveTo(x, y - s * 0.44); ctx.lineTo(x + s * 0.44, y + s * 0.36); ctx.lineTo(x - s * 0.44, y + s * 0.36); ctx.closePath(); }
+			if (i === 3) { for (let k = 0; k < 6; k++) { const an = (k / 6) * TAU - TAU / 12; const px = x + Math.cos(an) * s * 0.46, py = y + Math.sin(an) * s * 0.46; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.closePath(); }
+			ctx.stroke(); ctx.restore();
+		};
+		const s = w ? U * 0.058 : W * 0.085;
+		// el testigo pasa 0→1→2→3→0, cada tramo ocupa un cuarto del bucle
+		const leg = Math.floor(t * 4) % 4, lt = (t * 4) % 1;
+		for (let i = 0; i < 4; i++) {
+			const act = i === leg ? env(lt, 0, 0.18, 0.5, 0.7) : i === (leg + 1) % 4 ? env(lt, 0.45, 0.8, 1.01, 1.02) : 0;
+			line(A[i][0], A[i][1], lx, ly - lh * 0.5, 0.14 + act * 0.3);
+			shape(i, A[i][0], A[i][1], s, 1, act);
+		}
+		const from = A[leg], to = A[(leg + 1) % 4];
+		const up = arcPath(from[0], from[1] + s, lx - lw * 0.28, ly - lh / 2, w ? U * 0.1 : W * 0.1);
+		const down = arcPath(lx + lw * 0.28, ly - lh / 2, to[0], to[1] + s, w ? -U * 0.1 : -W * 0.1);
+		packet(up, seg(lt, 0.1, 0.45), env(lt, 0.1, 0.16, 0.4, 0.46));
+		packet(down, seg(lt, 0.55, 0.88), env(lt, 0.55, 0.6, 0.84, 0.9));
+		// el siguiente agente comprueba (proyecto, rama, commit) antes de seguir
+		const ok = env(lt, 0.78, 0.86, 0.96, 1.0);
+		ring(to[0], to[1], s * 1.5 + (1 - ok) * 14, ok * 0.5);
+		check(to[0] + s * 1.5, to[1] - s * 1.5, 9, ok, 2);
+	},
+
+	// Bloqio Builder: bloques que se acomodan en una página, se revisan uno por uno y se ven en el teléfono.
+	bloqio(t) {
+		const w = FORMAT === 'wide';
+		const bx = w ? W * 0.055 : W * 0.1, by = w ? H * 0.16 : H * 0.07, bw = w ? W * 0.30 : W * 0.8, bh = w ? H * 0.66 : H * 0.34;
+		const px = w ? W * 0.82 : W * 0.55, py = w ? H * 0.2 : H * 0.62, pw = w ? W * 0.11 : W * 0.34, ph = w ? H * 0.56 : H * 0.32;
+		// marco del navegador
+		glass(bx, by, bw, bh, 16, 1, 0.2, 0);
+		for (let i = 0; i < 3; i++) { ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = `rgba(${IVORY},0.4)`; ctx.beginPath(); ctx.arc(bx + 18 + i * 14, by + 18, 3.2, 0, TAU); ctx.fill(); ctx.restore(); }
+		line(bx, by + 34, bx + bw, by + 34, 0.12);
+		// cuadrícula del lienzo
+		ctx.save(); ctx.globalAlpha = 0.1; ctx.fillStyle = `rgb(${IVORY})`;
+		for (let gx = bx + 20; gx < bx + bw - 10; gx += 26) for (let gy = by + 52; gy < by + bh - 10; gy += 26) ctx.fillRect(gx, gy, 1.6, 1.6);
+		ctx.restore();
+		const ix = bx + bw * 0.06, iw = bw * 0.88, top = by + 48;
+		const blocks = [
+			{ x: ix, y: top, w: iw, h: bh * 0.24, s: 0.04, from: [0, -60], kind: 'hero' },
+			{ x: ix, y: top + bh * 0.28, w: iw * 0.31, h: bh * 0.18, s: 0.12, from: [-70, 0], kind: 'card' },
+			{ x: ix + iw * 0.345, y: top + bh * 0.28, w: iw * 0.31, h: bh * 0.18, s: 0.17, from: [0, 60], kind: 'card' },
+			{ x: ix + iw * 0.69, y: top + bh * 0.28, w: iw * 0.31, h: bh * 0.18, s: 0.22, from: [70, 0], kind: 'card' },
+			{ x: ix, y: top + bh * 0.5, w: iw, h: bh * 0.12, s: 0.28, from: [-50, 0], kind: 'text' },
+			{ x: ix + iw * 0.2, y: top + bh * 0.66, w: iw * 0.6, h: bh * 0.1, s: 0.34, from: [0, 50], kind: 'cta' },
+		];
+		const out = 1 - smooth(seg(t, 0.9, 0.98));
+		blocks.forEach((b, i) => {
+			const k = outCubic(seg(t, b.s, b.s + 0.1)) * out;
+			const ox = b.from[0] * (1 - outCubic(seg(t, b.s, b.s + 0.1))), oy = b.from[1] * (1 - outCubic(seg(t, b.s, b.s + 0.1)));
+			const rev = env(t, 0.42 + i * 0.07, 0.46 + i * 0.07, 0.49 + i * 0.07, 0.53 + i * 0.07);
+			const done = smooth(seg(t, 0.5 + i * 0.07, 0.54 + i * 0.07)) * out;
+			glass(b.x + ox, b.y + oy, b.w, b.h, 9, k, 0.2, rev);
+			ctx.save(); ctx.globalAlpha = k * 0.55; ctx.fillStyle = `rgba(${IVORY},0.38)`;
+			if (b.kind === 'hero') { rr(b.x + ox + b.w * 0.08, b.y + oy + b.h * 0.26, b.w * 0.5, b.h * 0.13, 4); ctx.fill(); rr(b.x + ox + b.w * 0.08, b.y + oy + b.h * 0.5, b.w * 0.34, b.h * 0.09, 4); ctx.fill(); }
+			if (b.kind === 'card') { ctx.beginPath(); ctx.arc(b.x + ox + b.w * 0.22, b.y + oy + b.h * 0.34, b.h * 0.14, 0, TAU); ctx.fill(); rr(b.x + ox + b.w * 0.14, b.y + oy + b.h * 0.62, b.w * 0.6, b.h * 0.1, 3); ctx.fill(); }
+			if (b.kind === 'text') { rr(b.x + ox + b.w * 0.06, b.y + oy + b.h * 0.28, b.w * 0.7, b.h * 0.12, 3); ctx.fill(); rr(b.x + ox + b.w * 0.06, b.y + oy + b.h * 0.58, b.w * 0.5, b.h * 0.12, 3); ctx.fill(); }
+			if (b.kind === 'cta') { ctx.globalAlpha = k * 0.7; ctx.fillStyle = `rgba(${IVORY},0.55)`; rr(b.x + ox + b.w * 0.3, b.y + oy + b.h * 0.3, b.w * 0.4, b.h * 0.4, b.h * 0.2); ctx.fill(); }
+			ctx.restore();
+			check(b.x + ox + b.w - 14, b.y + oy + 14, 7, done * 0.9, 1.7);
+		});
+		// cursor que recorre los bloques
+		const ct = seg(t, 0.4, 0.82), idx = ct * (blocks.length - 1), i0 = Math.floor(idx), i1 = Math.min(blocks.length - 1, i0 + 1), kk = ease(idx - i0);
+		const cxp = lerp(blocks[i0].x + blocks[i0].w * 0.7, blocks[i1].x + blocks[i1].w * 0.7, kk), cyp = lerp(blocks[i0].y + blocks[i0].h * 0.6, blocks[i1].y + blocks[i1].h * 0.6, kk);
+		const ca = env(t, 0.4, 0.45, 0.8, 0.86);
+		ctx.save(); ctx.globalAlpha = ca; ctx.translate(cxp, cyp); ctx.fillStyle = '#fffaf0'; ctx.strokeStyle = 'rgba(5,6,10,.7)'; ctx.lineWidth = 1;
+		ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 17); ctx.lineTo(4.6, 13); ctx.lineTo(8, 20); ctx.lineTo(10.6, 19); ctx.lineTo(7.2, 12); ctx.lineTo(13, 12); ctx.closePath(); ctx.fill(); ctx.stroke(); ctx.restore();
+		// teléfono: refleja la página
+		const pa = env(t, 0.34, 0.46, 0.9, 0.97);
+		glass(px, py, pw, ph, 22, pa, 0.22, 0.1);
+		ctx.save(); ctx.globalAlpha = pa * 0.6; ctx.fillStyle = `rgba(${IVORY},0.3)`;
+		rr(px + pw * 0.12, py + ph * 0.1, pw * 0.76, ph * 0.18, 6); ctx.fill();
+		for (let r = 0; r < 2; r++) for (let c = 0; c < 2; c++) { rr(px + pw * 0.12 + c * pw * 0.4, py + ph * 0.34 + r * ph * 0.2, pw * 0.36, ph * 0.16, 6); ctx.fill(); }
+		rr(px + pw * 0.12, py + ph * 0.76, pw * 0.76, ph * 0.08, 5); ctx.fill(); ctx.restore();
+		// enlace entre el editor y el teléfono, con un paquete
+		const conn = arcPath(bx + bw, by + bh * 0.4, px, py + ph * 0.35, w ? -U * 0.08 : U * 0.05);
+		strokePath(conn, 0.1 + 0.1 * pa, 1, [3, 6]);
+		packet(conn, seg(t, 0.55, 0.78), env(t, 0.55, 0.6, 0.74, 0.8));
+		// «guardar y publicar»: se enciende al final
+		const pubA = env(t, 0.8, 0.86, 0.94, 0.99);
+		ring(px + pw / 2, py + ph + 26, 12 + (1 - pubA) * 16, pubA * 0.55); check(px + pw / 2, py + ph + 26, 8, pubA, 1.8);
+	},
+
+	// Miawseo: una red de metro con trenes y estaciones que se abren como salas.
+	miawseo(t) {
+		const w = FORMAT === 'wide';
+		const lines = w
+			? [
+				{ c: '236,230,216', pts: [[0.02, 0.22], [0.30, 0.22], [0.38, 0.12], [0.70, 0.12], [0.78, 0.22], [0.98, 0.22]] },
+				{ c: '168,184,255', pts: [[0.02, 0.80], [0.22, 0.80], [0.30, 0.90], [0.66, 0.90], [0.74, 0.80], [0.98, 0.80]] },
+				{ c: '255,196,170', pts: [[0.10, 0.04], [0.10, 0.44], [0.18, 0.52], [0.18, 0.98]] },
+				{ c: '160,230,210', pts: [[0.90, 0.04], [0.90, 0.44], [0.82, 0.52], [0.82, 0.98]] },
+			]
+			: [
+				{ c: '236,230,216', pts: [[0.04, 0.10], [0.50, 0.10], [0.62, 0.18], [0.96, 0.18]] },
+				{ c: '168,184,255', pts: [[0.04, 0.88], [0.40, 0.88], [0.50, 0.80], [0.96, 0.80]] },
+				{ c: '255,196,170', pts: [[0.12, 0.02], [0.12, 0.40], [0.22, 0.48], [0.22, 0.98]] },
+				{ c: '160,230,210', pts: [[0.90, 0.02], [0.90, 0.46], [0.80, 0.54], [0.80, 0.98]] },
+			];
+		const paths = lines.map((l) => smoothPath(l.pts.map(([x, y]) => [x * W, y * H]), U * 0.05));
+		lines.forEach((l, i) => {
+			ctx.save(); ctx.strokeStyle = `rgba(${l.c},0.2)`; ctx.lineWidth = 5; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+			ctx.beginPath(); paths[i].pts.forEach((p, k) => (k ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]))); ctx.stroke();
+			ctx.strokeStyle = `rgba(${l.c},0.5)`; ctx.lineWidth = 1.2; ctx.stroke(); ctx.restore();
+			// estaciones en los vértices y a mitad de tramo
+			l.pts.forEach(([x, y], k) => { ctx.save(); ctx.fillStyle = '#05060a'; ctx.strokeStyle = `rgba(${l.c},0.85)`; ctx.lineWidth = 1.8; ctx.beginPath(); ctx.arc(x * W, y * H, k === 0 || k === l.pts.length - 1 ? 4.5 : 3.6, 0, TAU); ctx.fill(); ctx.stroke(); ctx.restore(); });
+		});
+		// trenes: cada uno hace un recorrido completo por bucle, con distinto desfase
+		lines.forEach((l, i) => {
+			const p = (t * 1 + i * 0.25) % 1, q = at(paths[i], p), tail = at(paths[i], Math.max(0, p - 0.035));
+			const a = env(p, 0.0, 0.05, 0.95, 1.0);
+			ctx.save(); ctx.globalAlpha = a; ctx.translate(q.x, q.y); ctx.rotate(q.ang);
+			rr(-U * 0.034, -U * 0.0095, U * 0.068, U * 0.019, U * 0.0095);
+			const g = ctx.createLinearGradient(-U * 0.034, 0, U * 0.034, 0); g.addColorStop(0, `rgba(${l.c},0.2)`); g.addColorStop(1, `rgba(${l.c},0.95)`); ctx.fillStyle = g; ctx.fill(); ctx.restore();
+			void tail;
+		});
+		// salas: una etiqueta de estación se abre cuando pasa el tren
+		const rooms = w ? [[0.30, 0.22, 0.14], [0.66, 0.90, 0.58], [0.10, 0.30, 0.34], [0.90, 0.30, 0.8], [0.70, 0.12, 0.48]] : [[0.50, 0.10, 0.12], [0.40, 0.88, 0.56], [0.12, 0.30, 0.34], [0.90, 0.30, 0.8]];
+		rooms.forEach(([x, y, at0], i) => {
+			const a = env(t, at0, at0 + 0.05, at0 + 0.13, at0 + 0.18), px2 = x * W, py2 = y * H;
+			const up = y > 0.5 ? -1 : 1, cw = U * 0.15, ch = U * 0.085, ox = Math.min(W - cw - 10, Math.max(10, px2 - cw / 2)), oy = py2 + up * (U * 0.06) - (up < 0 ? ch : 0);
+			line(px2, py2, px2, oy + (up < 0 ? ch : 0), a * 0.3);
+			glass(ox, oy, cw, ch, 10, a, 0.22, 0.12);
+			ctx.save(); ctx.globalAlpha = a * 0.6; ctx.fillStyle = `rgba(${IVORY},0.38)`; ctx.beginPath(); ctx.arc(ox + ch * 0.5, oy + ch * 0.5, ch * 0.24, 0, TAU); ctx.fill(); rr(ox + ch * 0.95, oy + ch * 0.32, cw * 0.5, ch * 0.12, 3); ctx.fill(); rr(ox + ch * 0.95, oy + ch * 0.58, cw * 0.34, ch * 0.1, 3); ctx.fill(); ctx.restore();
+			void i;
+		});
+	},
+
+	// Consultoría: una tienda que se revisa de arriba abajo, el embudo con su fuga y el plan por prioridad.
+	consultoria(t) {
+		const w = FORMAT === 'wide';
+		const sx = w ? W * 0.05 : W * 0.1, sy = w ? H * 0.14 : H * 0.05, sw = w ? W * 0.27 : W * 0.8, sh = w ? H * 0.7 : H * 0.34;
+		// tienda: cabecera, banner, tarjetas y carrito
+		glass(sx, sy, sw, sh, 14, 1, 0.2, 0);
+		line(sx, sy + 30, sx + sw, sy + 30, 0.12);
+		ctx.save(); ctx.globalAlpha = 0.45; ctx.fillStyle = `rgba(${IVORY},0.35)`; rr(sx + 14, sy + 11, sw * 0.18, 9, 4); ctx.fill(); rr(sx + sw - 54, sy + 11, 40, 9, 4); ctx.fill(); ctx.restore();
+		const scan = seg(t, 0.06, 0.62);
+		const rows = [
+			[sy + 44, sh * 0.22, 1],
+			[sy + 44 + sh * 0.27, sh * 0.2, 3],
+			[sy + 44 + sh * 0.51, sh * 0.2, 3],
+		];
+		const yScan = lerp(sy + 30, sy + sh - 8, ease(scan));
+		rows.forEach(([ry, rh, cols], ri) => {
+			const hit = smooth(seg(yScan, ry, ry + rh * 0.6));
+			const leak = ri === 1 ? env(t, 0.34, 0.4, 0.66, 0.74) : 0;
+			for (let c = 0; c < cols; c++) {
+				const cw = (sw - 28 - (cols - 1) * 8) / cols, cx0 = sx + 14 + c * (cw + 8);
+				glass(cx0, ry, cw, rh, 8, 1, 0.16 + hit * 0.1, hit * 0.14 + leak * 0.5);
+				ctx.save(); ctx.globalAlpha = 0.5; ctx.fillStyle = `rgba(${IVORY},0.3)`; rr(cx0 + 8, ry + rh - 16, cw * 0.55, 6, 3); ctx.fill(); ctx.restore();
+			}
+		});
+		const sa = env(t, 0.06, 0.1, 0.58, 0.66);
+		if (sa > 0.01) { const g = ctx.createLinearGradient(0, yScan - 26, 0, yScan); g.addColorStop(0, `rgba(${IVORY},0)`); g.addColorStop(1, `rgba(${IVORY},${0.22 * sa})`); ctx.fillStyle = g; ctx.fillRect(sx + 2, yScan - 26, sw - 4, 26); line(sx + 2, yScan, sx + sw - 2, yScan, 0.6 * sa, 1.5); }
+		// embudo: cuatro barras que se estrechan, con una fuga marcada
+		const fx = w ? W * 0.72 : W * 0.12, fy = w ? H * 0.17 : H * 0.5, fw = w ? W * 0.23 : W * 0.76, fh = w ? H * 0.46 : H * 0.2;
+		const widths = [1, 0.74, 0.3, 0.22];
+		widths.forEach((k, i) => {
+			const a = env(t, 0.1 + i * 0.05, 0.18 + i * 0.05, 0.92, 0.98);
+			const bh = fh / 4 - 8, by = fy + i * (fh / 4), bw = fw * k * outCubic(seg(t, 0.1 + i * 0.05, 0.24 + i * 0.05));
+			glass(fx + (fw - bw) / 2, by, bw, bh, 8, a, 0.2, i === 2 ? env(t, 0.38, 0.46, 0.7, 0.78) * 0.7 : 0);
+		});
+		const lk = env(t, 0.38, 0.46, 0.7, 0.78);
+		ring(fx + fw / 2, fy + fh * 0.5 - 4, 16 + 10 * (1 - lk), lk * 0.6, 1.6);
+		// plan por prioridad: tres renglones que se marcan en orden
+		const px = w ? W * 0.5 : W * 0.12, py = w ? H * 0.8 : H * 0.78, pw = w ? W * 0.3 : W * 0.76;
+		for (let i = 0; i < 3; i++) {
+			const a = env(t, 0.58 + i * 0.08, 0.64 + i * 0.08, 0.92, 0.98), yy = py + i * (w ? 26 : 34);
+			ctx.save(); ctx.globalAlpha = a * 0.7; ctx.fillStyle = `rgba(${IVORY},0.3)`; rr(px + 26, yy, pw * (0.9 - i * 0.18), 8, 4); ctx.fill(); ctx.restore();
+			ring(px + 8, yy + 4, 7, a * 0.5, 1.3); check(px + 8, yy + 4.4, 6, a * smooth(seg(t, 0.64 + i * 0.08, 0.7 + i * 0.08)), 1.6);
+		}
+		const link = arcPath(sx + sw, sy + sh * 0.42, fx, fy + fh * 0.3, w ? -U * 0.1 : U * 0.04);
+		strokePath(link, 0.12, 1, [3, 6]);
+		packet(link, seg(t, 0.2, 0.46), env(t, 0.2, 0.24, 0.42, 0.48));
+	},
+
+	// Desarrollo web: la tienda se arma en escritorio y teléfono, y un paquete recorre alcance → diseño → construcción → entrega.
+	web(t) {
+		const w = FORMAT === 'wide';
+		const dx = w ? W * 0.06 : W * 0.1, dy = w ? H * 0.14 : H * 0.04, dw = w ? W * 0.33 : W * 0.8, dh = w ? H * 0.58 : H * 0.28;
+		glass(dx, dy, dw, dh, 14, 1, 0.2, 0);
+		line(dx, dy + 28, dx + dw, dy + 28, 0.12);
+		const out = 1 - smooth(seg(t, 0.9, 0.98));
+		const blocks = [
+			{ x: dx + 12, y: dy + 40, w: dw - 24, h: dh * 0.24, s: 0.05, from: [0, -40] },
+			{ x: dx + 12, y: dy + 40 + dh * 0.29, w: (dw - 24 - 16) / 3, h: dh * 0.34, s: 0.12, from: [-50, 0] },
+			{ x: dx + 12 + (dw - 24 - 16) / 3 + 8, y: dy + 40 + dh * 0.29, w: (dw - 24 - 16) / 3, h: dh * 0.34, s: 0.17, from: [0, 50] },
+			{ x: dx + 12 + 2 * ((dw - 24 - 16) / 3 + 8), y: dy + 40 + dh * 0.29, w: (dw - 24 - 16) / 3, h: dh * 0.34, s: 0.22, from: [50, 0] },
+		];
+		blocks.forEach((b) => {
+			const k = outCubic(seg(t, b.s, b.s + 0.1)), a = k * out;
+			glass(b.x + b.from[0] * (1 - k), b.y + b.from[1] * (1 - k), b.w, b.h, 8, a, 0.18, env(t, b.s + 0.12, b.s + 0.16, b.s + 0.2, b.s + 0.26) * 0.5);
+			ctx.save(); ctx.globalAlpha = a * 0.5; ctx.fillStyle = `rgba(${IVORY},0.3)`; rr(b.x + 10, b.y + b.h - 18, b.w * 0.5, 6, 3); ctx.fill(); ctx.restore();
+		});
+		// teléfono con la misma tienda
+		const px = w ? W * 0.46 : W * 0.34, py = w ? H * 0.16 : H * 0.4, pw = w ? W * 0.085 : W * 0.3, ph = w ? H * 0.54 : H * 0.26;
+		const pa = env(t, 0.3, 0.4, 0.9, 0.97);
+		glass(px, py, pw, ph, 18, pa, 0.2, 0.06);
+		ctx.save(); ctx.globalAlpha = pa * 0.6; ctx.fillStyle = `rgba(${IVORY},0.28)`; rr(px + pw * 0.12, py + ph * 0.1, pw * 0.76, ph * 0.2, 5); ctx.fill();
+		for (let i = 0; i < 4; i++) rr(px + pw * 0.12 + (i % 2) * pw * 0.4, py + ph * 0.36 + Math.floor(i / 2) * ph * 0.22, pw * 0.36, ph * 0.18, 5), ctx.fill();
+		ctx.restore();
+		// llaves de código flotando
+		[[0.62, 0.22, 0.2], [0.78, 0.4, 0.5], [0.7, 0.62, 0.8]].forEach(([x, y, ph0], i) => {
+			const a = env(t, ph0 - 0.15, ph0 - 0.05, ph0 + 0.1, ph0 + 0.2) * (w ? 1 : 0.8), gx = (w ? x : 0.12 + i * 0.3) * W, gy = (w ? y : 0.72 + i * 0.03) * H;
+			ctx.save(); ctx.globalAlpha = a * 0.55; ctx.strokeStyle = `rgba(${IVORY},0.9)`; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+			ctx.beginPath(); ctx.moveTo(gx - 6, gy - 10); ctx.lineTo(gx - 16, gy); ctx.lineTo(gx - 6, gy + 10); ctx.moveTo(gx + 6, gy - 10); ctx.lineTo(gx + 16, gy); ctx.lineTo(gx + 6, gy + 10); ctx.stroke(); ctx.restore();
+		});
+		// tubería de entrega: cuatro nodos y un paquete
+		const ny = w ? H * 0.87 : H * 0.84, nx0 = w ? W * 0.1 : W * 0.14, nx1 = w ? W * 0.9 : W * 0.86;
+		line(nx0, ny, nx1, ny, 0.16);
+		for (let i = 0; i < 4; i++) {
+			const x = lerp(nx0, nx1, i / 3), on = smooth(seg(t, 0.2 + i * 0.2, 0.26 + i * 0.2));
+			node(x, ny, 3, 0.45 + 0.5 * on); ring(x, ny, 13, 0.16 + 0.34 * on, 1.3); check(x, ny + 0.5, 6, on * (1 - smooth(seg(t, 0.94, 1))), 1.6);
+		}
+		const pipe = arcPath(nx0, ny, nx1, ny, 0);
+		packet(pipe, seg(t, 0.04, 0.9), env(t, 0.04, 0.08, 0.86, 0.92), 3.4);
+	},
+};
+
+const scene = SCENES[SCENE];
+if (!scene) throw new Error(`Escena desconocida: ${SCENE}`);
+window.DURATION = 10;
+window.renderAt = (seconds) => {
+	const t = (((seconds / window.DURATION) % 1) + 1) % 1;
+	ctx.setTransform(1, 0, 0, 1, 0, 0);
+	background(t, SCENE === 'bloqio' ? { x: 0.7, y: 0.4, r: 0.5, rgb: '90,70,160', a: 0.12 } : SCENE === 'miawseo' ? { x: 0.5, y: 0.5, r: 0.7, rgb: '140,90,110', a: 0.08 } : SCENE === 'consultoria' ? { x: 0.3, y: 0.6, r: 0.5, rgb: '60,100,120', a: 0.1 } : null);
+	scene(t);
+	finish();
+};
+window.renderAt(0);
+</script>

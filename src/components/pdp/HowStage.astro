@@ -1,0 +1,117 @@
+---
+// «Cómo funciona» de una ficha de producto: una escena animada y, al lado, los pasos del
+// proceso. Cada paso se puede elegir; la escena avanza sola mientras está a la vista y se
+// detiene con «reducir movimiento», con el botón de pausa o en cuanto el visitante elige un
+// paso. La escena solo cambia la variable --step; lo que aparece en cada paso lo decide el CSS.
+import type { Locale } from '../../data/i18n';
+
+interface Props {
+	locale: Locale;
+	steps: Array<{ title: string; text: string }>;
+	caption: string;
+	scene: string;
+}
+
+const { locale, steps, caption, scene } = Astro.props;
+const es = locale === 'es';
+---
+
+<div class="pdp-how" data-pdp-how data-scene={scene} style="--step: 1" data-count={steps.length}>
+	<div class="pdp-how__stage">
+		<div class="pdp-how__scene" role="img" aria-label={caption}>
+			<slot />
+		</div>
+		<button class="pdp-how__toggle" type="button" data-pdp-toggle aria-pressed="false" hidden>
+			<span data-pdp-toggle-label>{es ? 'Pausar' : 'Pause'}</span>
+		</button>
+	</div>
+	<ol class="pdp-how__steps">
+		{
+			steps.map((step, index) => (
+				<li>
+					<button type="button" data-pdp-step={index + 1} aria-pressed={index === 0 ? 'true' : 'false'}>
+						<span class="jx-mono">{String(index + 1).padStart(2, '0')}</span>
+						<strong>{step.title}</strong>
+						<span class="pdp-how__text">{step.text}</span>
+						<i class="pdp-how__bar" aria-hidden="true"></i>
+					</button>
+				</li>
+			))
+		}
+	</ol>
+</div>
+
+<script>
+	const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+	const es = document.documentElement.lang === 'es';
+	const STEP_MS = 4800;
+
+	for (const root of document.querySelectorAll<HTMLElement>('[data-pdp-how]')) {
+		const count = Number(root.dataset.count) || 4;
+		const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-pdp-step]')];
+		const toggle = root.querySelector<HTMLButtonElement>('[data-pdp-toggle]');
+		const label = root.querySelector('[data-pdp-toggle-label]');
+		let step = 1;
+		let timer = 0;
+		let playing = false;
+		let visible = false;
+		let userPaused = calm;
+
+		const show = (next: number) => {
+			step = next;
+			root.style.setProperty('--step', String(step));
+			buttons.forEach((button) => button.setAttribute('aria-pressed', String(Number(button.dataset.pdpStep) === step)));
+		};
+		const syncToggle = () => {
+			if (!toggle || !label) return;
+			toggle.setAttribute('aria-pressed', String(userPaused));
+			label.textContent = userPaused ? (es ? 'Reproducir' : 'Play') : es ? 'Pausar' : 'Pause';
+			root.classList.toggle('is-running', !userPaused && visible);
+		};
+		const tick = () => {
+			timer = window.setTimeout(() => {
+				show(step >= count ? 1 : step + 1);
+				if (playing) tick();
+			}, STEP_MS);
+		};
+		const play = () => {
+			if (playing || userPaused || !visible) return;
+			playing = true;
+			tick();
+		};
+		const stop = () => {
+			playing = false;
+			window.clearTimeout(timer);
+		};
+
+		buttons.forEach((button) =>
+			button.addEventListener('click', () => {
+				stop();
+				userPaused = true;
+				show(Number(button.dataset.pdpStep));
+				syncToggle();
+			}),
+		);
+		if (toggle) {
+			toggle.hidden = calm;
+			toggle.addEventListener('click', () => {
+				userPaused = !userPaused;
+				if (userPaused) stop();
+				else play();
+				syncToggle();
+			});
+		}
+		if ('IntersectionObserver' in window) {
+			new IntersectionObserver(
+				(entries) => {
+					visible = entries.some((entry) => entry.isIntersecting);
+					if (visible) play();
+					else stop();
+					syncToggle();
+				},
+				{ threshold: 0.35 },
+			).observe(root);
+		}
+		syncToggle();
+	}
+</script>

@@ -47,10 +47,10 @@ const gains: Array<{ icon: IconName; title: string; text: string }> = es
 	? [
 			{ icon: 'bolt', title: 'Vendes también de noche', text: 'Responde en segundos, cualquier día a cualquier hora. La duda de las 11 de la noche ya no espera al lunes.' },
 			{ icon: 'basket', title: 'Menos compras que se caen por una duda', text: 'Resuelve envío, pagos, tallas o cuál conviene en el momento en que la persona está por comprar.' },
-			{ icon: 'chats', title: 'Tu equipo atiende lo que vale la pena', text: 'Lo repetido lo contesta el asistente; lo delicado o lo grande se lo pasa a una persona con toda la conversación.' },
+			{ icon: 'chats', title: 'Tu equipo atiende lo importante', text: 'Lo repetido lo contesta el asistente; lo delicado o lo grande se lo pasa a una persona con toda la conversación.' },
 			{ icon: 'user', title: 'Contactos listos en tu CRM', text: 'Nombre, necesidad y conversación completa, sin que nadie tenga que copiar y pegar.' },
 			{ icon: 'trend-up', title: 'Sabes qué pregunta tu cliente', text: 'Cada conversación te dice qué falta en tu ficha de producto, qué objeción frena y qué campaña funciona.' },
-			{ icon: 'shield', title: 'Cero respuestas inventadas', text: 'Solo usa tus datos. Si algo no lo sabe, lo dice y ofrece hablar con alguien.' },
+			{ icon: 'shield', title: 'Sin respuestas inventadas', text: 'Solo usa tus datos. Si algo no lo sabe, lo dice y ofrece hablar con alguien.' },
 		]
 	: [
 			{ icon: 'bolt', title: 'You sell at night too', text: 'It answers in seconds, any day, any hour. The 11 p.m. question no longer waits until Monday.' },
@@ -63,14 +63,14 @@ const gains: Array<{ icon: IconName; title: string; text: string }> = es
 
 const stack = es
 	? [
-			['Dónde habla', 'Tu tienda, tu sitio o WhatsApp Business', 'El widget vive en tu página; el mismo cerebro puede atender en otros canales.'],
-			['El guardia', 'Cloudflare Workers', 'Recibe cada mensaje, aplica límites, oculta datos personales y valida lo que el modelo quiere hacer.'],
+			['Dónde habla', 'Tu tienda, tu sitio o WhatsApp Business', 'El widget vive en tu página; el mismo asistente puede atender en otros canales.'],
+			['El servidor', 'Cloudflare Workers', 'Recibe cada mensaje, aplica límites, oculta datos personales y valida lo que el modelo quiere hacer.'],
 			['El modelo', 'Gemini, Claude u OpenAI', 'Se elige por costo, velocidad y tono. Se puede cambiar sin rehacer el chatbot.'],
 			['Tus sistemas', 'Shopify, Odoo, Klaviyo y tu correo', 'Catálogo y carrito, pedidos e inventario, contactos y consentimiento, avisos a tu equipo.'],
 		]
 	: [
-			['Where it talks', 'Your store, your site or WhatsApp Business', 'The widget lives on your page; the same brain can serve other channels.'],
-			['The guard', 'Cloudflare Workers', 'Receives every message, applies limits, hides personal data and validates what the model wants to do.'],
+			['Where it talks', 'Your store, your site or WhatsApp Business', 'The widget lives on your page; the same assistant can serve other channels.'],
+			['The server', 'Cloudflare Workers', 'Receives every message, applies limits, hides personal data and validates what the model wants to do.'],
 			['The model', 'Gemini, Claude or OpenAI', 'Chosen by cost, speed and tone. It can be swapped without rebuilding the chatbot.'],
 			['Your systems', 'Shopify, Odoo, Klaviyo and your email', 'Catalog and cart, orders and inventory, contacts and consent, alerts for your team.'],
 		];
@@ -205,7 +205,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 		loop="ai"
 		id="bots-title"
 		label={es ? 'Chatbots con IA · Ecommerce' : 'AI chatbots · Ecommerce'}
-		title={es ? ['Un chatbot que vende,', 'no uno que repite el FAQ.'] : ['A chatbot that sells,', 'not one that repeats the FAQ.']}
+		title={es ? ['Chatbots con IA que atienden', 'y venden con tus datos reales.'] : ['AI chatbots that serve and sell', 'with your real data.']}
 		lede={es
 			? 'Construyo asistentes que atienden a tus clientes con tu catálogo, tus pedidos y tu CRM reales: recomiendan, arman el carrito, consultan un pedido y le pasan a tu equipo los contactos listos. Así trabajan Daniela en wunutrition.com y Jossue AI en este sitio.'
 			: 'I build assistants that serve your customers with your real catalog, orders and CRM: they recommend, build the cart, check an order and hand your team ready-to-work leads. That is how Daniela works on wunutrition.com and Jossue AI on this site.'}
@@ -220,7 +220,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-bots__section" aria-labelledby="bots-demos">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Demos reales · en uso hoy' : 'Real demos · live today'}</p>
-			<h2 id="bots-demos" class="jx-h2"><span>{es ? 'No son maquetas.' : 'These are not mockups.'}</span>{' '}<span class="jx-soft">{es ? 'Platica con los dos.' : 'Talk to both.'}</span></h2>
+			<h2 id="bots-demos" class="jx-h2"><span>{es ? 'Dos asistentes en uso:' : 'Two assistants in use:'}</span>{' '}<span class="jx-soft">{es ? 'Daniela y Jossue AI' : 'Daniela and Jossue AI'}</span></h2>
 			<div class="jx-bots__demos">
 				<article class="jx-feature" data-bot="daniela">
 					{danielaDemo && <DemoVideo demo={danielaDemo} locale={locale} orientation="wide" />}
@@ -253,7 +253,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-band" aria-labelledby="bots-gains">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué ganas' : 'What you gain'}</p>
-			<h2 id="bots-gains" class="jx-h2"><span>{es ? 'Atiende como tu mejor vendedor,' : 'It serves like your best salesperson,'}</span>{' '}<span class="jx-soft">{es ? 'a las 3 de la mañana.' : 'at 3 a.m.'}</span></h2>
+			<h2 id="bots-gains" class="jx-h2"><span>{es ? 'Qué cambia en tu operación' : 'What changes in your operation'}</span>{' '}<span class="jx-soft">{es ? 'con un chatbot' : 'with a chatbot'}</span></h2>
 			<ul class="jx-points jx-bots__gains">
 				{gains.map((gain) => <li><Icon name={gain.icon} size="md" /><strong>{gain.title}</strong><span>{gain.text}</span></li>)}
 			</ul>
@@ -263,7 +263,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-bots__section" aria-labelledby="bots-connect">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo se conecta' : 'How it connects'}</p>
-			<h2 id="bots-connect" class="jx-h2"><span>{es ? 'Tu cliente pregunta,' : 'Your customer asks,'}</span>{' '}<span class="jx-soft">{es ? 'tus sistemas contestan.' : 'your systems answer.'}</span></h2>
+			<h2 id="bots-connect" class="jx-h2"><span>{es ? 'Qué pasa desde que el cliente escribe' : 'What happens from the moment a customer writes'}</span>{' '}<span class="jx-soft">{es ? 'hasta que recibe respuesta' : 'until they get an answer'}</span></h2>
 			<div class="jx-bots__flow">
 				<DemoVideo demo={flowDemo} locale={locale} orientation="wide" class="jx-bots__flow-video" />
 				<ol class="jx-bots__stack">
@@ -286,7 +286,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-band" aria-labelledby="bots-compare">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Tradicional vs inteligente' : 'Traditional vs smart'}</p>
-			<h2 id="bots-compare" class="jx-h2"><span>{es ? 'Un menú de botones' : 'A button menu'}</span>{' '}<span class="jx-soft">{es ? 'no es un vendedor.' : 'is not a salesperson.'}</span></h2>
+			<h2 id="bots-compare" class="jx-h2"><span>{es ? 'Chatbot tradicional' : 'Traditional chatbot'}</span>{' '}<span class="jx-soft">{es ? 'frente a chatbot con IA' : 'versus AI chatbot'}</span></h2>
 			<div class="jx-bots__table-wrap">
 				<table class="jx-bots__table">
 					<thead><tr><th scope="col"><span class="sr-only">{es ? 'Aspecto' : 'Aspect'}</span></th><th scope="col">{es ? 'Chatbot tradicional' : 'Traditional chatbot'}</th><th scope="col">{es ? 'Chatbot inteligente' : 'Smart chatbot'}</th></tr></thead>
@@ -299,14 +299,14 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-bots__section" aria-labelledby="bots-security">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Arquitectura y seguridad' : 'Architecture and security'}</p>
-			<h2 id="bots-security" class="jx-h2"><span>{es ? 'Lo que más te van a preguntar' : 'What your team will ask most'}</span>{' '}<span class="jx-soft">{es ? 'en la junta, resuelto.' : 'in the meeting, answered.'}</span></h2>
+			<h2 id="bots-security" class="jx-h2"><span>{es ? 'Cómo se protegen' : 'How your store and'}</span>{' '}<span class="jx-soft">{es ? 'tu tienda y tu información' : 'your information are protected'}</span></h2>
 			<ul class="jx-points jx-bots__security">
 				{security.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
 			<div class="jx-bots__abuse">
 				<div>
 					<p class="jx-mono">{es ? 'Política contra abusos' : 'Abuse policy'}</p>
-					<h3>{es ? 'Nadie puede usar tu chatbot para vaciarte la cuenta.' : 'Nobody can use your chatbot to drain your account.'}</h3>
+					<h3>{es ? 'Qué evita que alguien abuse de tu chatbot y te genere costos' : 'What stops someone from abusing your chatbot and running up your costs'}</h3>
 				</div>
 				<dl>{abuse.map(([term, text]) => <div><dt>{term}</dt><dd>{text}</dd></div>)}</dl>
 			</div>
@@ -316,7 +316,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-band" id="costos" aria-labelledby="bots-costs">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Costos y ahorro' : 'Costs and savings'}</p>
-			<h2 id="bots-costs" class="jx-h2"><span>{es ? 'Una conversación cuesta centavos.' : 'A conversation costs cents.'}</span>{' '}<span class="jx-soft">{es ? 'Haz la cuenta con tus números.' : 'Do the math with your numbers.'}</span></h2>
+			<h2 id="bots-costs" class="jx-h2"><span>{es ? 'Cuánto cuesta usar un chatbot,' : 'How much a chatbot costs to run,'}</span>{' '}<span class="jx-soft">{es ? 'con precios oficiales y tu volumen' : 'with official prices and your volume'}</span></h2>
 			<p class="jx-bots__lede">
 				{es
 					? `Precios oficiales de cada proveedor por millón de tokens, consultados el ${PRICES_AS_OF}. La columna de la derecha es una conversación de referencia de ${REF.messages} mensajes con el contexto que usa Jossue AI (unos ${REF.inputPerMessage.toLocaleString('es-MX')} tokens de entrada y ${REF.outputPerMessage} de salida por mensaje, medido en producción), sin caché.`
@@ -364,7 +364,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 	<section class="jx-bots__section" aria-labelledby="bots-steps">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo lo construyo' : 'How I build it'}</p>
-			<h2 id="bots-steps" class="jx-h2"><span>{es ? 'De tus preguntas de todos los días' : 'From your everyday questions'}</span>{' '}<span class="jx-soft">{es ? 'a un asistente que vende.' : 'to an assistant that sells.'}</span></h2>
+			<h2 id="bots-steps" class="jx-h2"><span>{es ? 'Cómo lo construyo,' : 'How I build it,'}</span>{' '}<span class="jx-soft">{es ? 'paso por paso' : 'step by step'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 		</div>
 	</section>
@@ -373,7 +373,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 		<div class="jx-wrap jx-bots__faq">
 			<div>
 				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Preguntas frecuentes' : 'FAQ'}</p>
-				<h2 id="bots-faq" class="jx-h2"><span>{es ? 'Lo que preguntan' : 'What companies ask'}</span>{' '}<span class="jx-soft">{es ? 'las empresas.' : 'before starting.'}</span></h2>
+				<h2 id="bots-faq" class="jx-h2"><span>{es ? 'Lo que las empresas' : 'What companies ask'}</span>{' '}<span class="jx-soft">{es ? 'preguntan antes de empezar' : 'before getting started'}</span></h2>
 			</div>
 			<div class="jx-bots__faq-list">
 				{faq.map(([question, answer]) => (
@@ -388,7 +388,7 @@ const calcConfig = { models: models.map(({ id, name, input, output }) => ({ id, 
 
 	<section class="jx-close" aria-labelledby="bots-close">
 		<div class="jx-close__card">
-			<h2 id="bots-close" class="jx-close__title"><span>{es ? '¿Tu negocio necesita' : 'Does your business need'}</span>{' '}<span class="jx-soft">{es ? 'su propia Daniela?' : 'its own Daniela?'}</span></h2>
+			<h2 id="bots-close" class="jx-close__title"><span>{es ? '¿Quieres un chatbot' : 'Do you want a chatbot'}</span>{' '}<span class="jx-soft">{es ? 'como Daniela en tu negocio?' : 'like Daniela for your business?'}</span></h2>
 			<p>{es ? 'Cuéntame qué te preguntan tus clientes y con qué sistemas trabajas. Te respondo en menos de un día hábil con cómo lo armaría.' : 'Tell me what your customers ask and which systems you use. I reply within one business day with how I would build it.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_chatbots_contact_bottom">{es ? 'Quiero mi chatbot' : 'I want my chatbot'}<Icon name="arrow-right" /></a>

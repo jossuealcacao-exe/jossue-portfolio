@@ -26,6 +26,8 @@ const GROUPS = [
 	'.jx-svc__areas > div',
 	'.jx-svc__case li',
 	'.jx-proofs > li',
+	'.pdp-spec > div',
+	'.pdp-how__steps > li',
 	'[data-home-case]',
 	'.jx-clip',
 ];
@@ -41,6 +43,7 @@ const SINGLES = [
 	'.pdp__demo',
 	'.jm section > .jx-wrap > *',
 	'.jx-calc',
+	'.pdp-how__stage',
 ];
 
 export function initJxMotion(): void {
@@ -107,6 +110,11 @@ export function initJxMotion(): void {
 		{ rootMargin: '0px 0px 20% 0px', threshold: 0 },
 	);
 	counters.forEach((element) => {
+		// Las cifras que no son un número a contar (una versión, por ejemplo) se muestran tal cual.
+		if (element.hasAttribute('data-nocount')) {
+			element.classList.add('jx-count-ready');
+			return;
+		}
 		if (inView(element)) countUp(element);
 		else countObserver.observe(element);
 		element.classList.add('jx-count-ready');
