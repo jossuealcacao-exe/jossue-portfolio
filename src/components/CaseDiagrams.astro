@@ -1,4 +1,8 @@
 ---
+// Gráficos de apoyo de un caso (barras, capas, comparaciones y flujos) en el sistema jx.
+// Los números cuentan hacia su valor y las barras se llenan al llegar a ellos.
+import Icon from './Icon.astro';
+
 interface DiagramItem {
 	label: string;
 	value: number;
@@ -21,26 +25,25 @@ interface Props {
 }
 
 const { diagrams, locale } = Astro.props;
-
-const maxBar = (items: DiagramItem[]) => Math.max(...items.map((item) => item.value), 1);
+const peakOf = (items: DiagramItem[]) => Math.max(...items.map((item) => item.value), 1);
 ---
 
-<div class="diagram-gallery" aria-label={locale === 'es' ? 'Diagramas de apoyo' : 'Supporting diagrams'}>
+<div class="cdg" role="group" aria-label={locale === 'es' ? 'Gráficos de apoyo' : 'Supporting charts'}>
 	{
 		diagrams.map((diagram) => {
-			const peak = maxBar(diagram.items);
+			const peak = peakOf(diagram.items);
 			return (
-				<figure class={`diagram diagram--${diagram.kind}`}>
-					<div class="diagram__header">
-						<p class="diagram__id">{diagram.id}</p>
+				<figure class={`cdg__card cdg__card--${diagram.kind}`}>
+					<header class="cdg__head">
+						<p class="jx-mono">{diagram.id}</p>
 						<h3>{diagram.title}</h3>
 						<p>{diagram.caption}</p>
-					</div>
+					</header>
 					{diagram.kind === 'flow' ? (
-						<ol class="diagram-flow">
+						<ol class="cdg-flow">
 							{diagram.items.map((item, index) => (
 								<li>
-									<span>{String(index + 1).padStart(2, '0')}</span>
+									<span class="cdg-flow__n">{String(index + 1).padStart(2, '0')}</span>
 									<div>
 										<strong>{item.label}</strong>
 										{item.detail && <p>{item.detail}</p>}
@@ -49,42 +52,43 @@ const maxBar = (items: DiagramItem[]) => Math.max(...items.map((item) => item.va
 							))}
 						</ol>
 					) : diagram.kind === 'compare' ? (
-						<div class="diagram-compare" role="list">
-							{diagram.items.map((item) => (
-								<div class="diagram-compare__item" role="listitem">
-									<span class="diagram-compare__value">
-										{item.value}
-										{item.unit && <small>{item.unit}</small>}
-									</span>
-									<span class="diagram-compare__label">{item.label}</span>
-									{item.detail && <span class="diagram-compare__detail">{item.detail}</span>}
-								</div>
-							))}
-						</div>
-					) : (
-						<ul class:list={['diagram-bars', { 'diagram-bars--layers': diagram.kind === 'layers' }]}>
+						<ul class="cdg-compare">
 							{diagram.items.map((item) => (
 								<li>
-									<div class="diagram-bars__meta">
+									<span class="cdg-compare__value">
+										<b data-count>{item.value}</b>
+										{item.unit && <small>{item.unit}</small>}
+									</span>
+									<span class="cdg-compare__label">{item.label}</span>
+									{item.detail && <span class="cdg-compare__detail">{item.detail}</span>}
+								</li>
+							))}
+						</ul>
+					) : (
+						<ul class="cdg-bars">
+							{diagram.items.map((item) => (
+								<li>
+									<div class="cdg-bars__meta">
 										<span>{item.label}</span>
-										<strong>
+										<strong data-count>
 											{item.value}
-											{item.unit ?? (diagram.kind === 'layers' || diagram.kind === 'bars' ? '%' : '')}
+											{item.unit ?? '%'}
 										</strong>
 									</div>
-									<div
-										class="diagram-bars__track"
-										aria-hidden="true"
-										style={`--bar:${diagram.kind === 'layers' ? item.value : Math.round((item.value / peak) * 100)}%`}
-									>
+									<div class="cdg-bars__track" aria-hidden="true" style={`--bar: ${diagram.kind === 'layers' ? item.value : Math.round((item.value / peak) * 100)}%`}>
 										<span />
 									</div>
-									{item.detail && <p class="diagram-bars__detail">{item.detail}</p>}
+									{item.detail && <p class="cdg-bars__detail">{item.detail}</p>}
 								</li>
 							))}
 						</ul>
 					)}
-					{diagram.note && <figcaption>{diagram.note}</figcaption>}
+					{diagram.note && (
+						<figcaption>
+							<Icon name="exclamation" />
+							{diagram.note}
+						</figcaption>
+					)}
 				</figure>
 			);
 		})

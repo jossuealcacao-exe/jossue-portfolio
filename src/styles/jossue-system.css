@@ -1682,13 +1682,10 @@
    sistema oscuro eso daría losas claras; se intercambian ahí mismo para que sean superficies
    grafito con texto claro, sin tocar sus reglas internas. */
 @layer components {
-	.case-cta,
 	.section-grid--inverted,
-	.principles-block,
-	.case-ambience__frame,
-	.project-visual--abstract,
-	.ahp-atlas__capability--lead,
-	.ahp-atlas__proof-stage {
+.project-visual--abstract,
+.ahp-atlas__capability--lead,
+.ahp-atlas__proof-stage {
 		--ink: var(--card);
 		--paper: var(--text);
 		--muted: var(--text-2);
@@ -1696,9 +1693,7 @@
 		border-radius: var(--radius-xl);
 	}
 
-	.case-cta .button,
-	.section-grid--inverted .button,
-	.principles-block .button {
+	.section-grid--inverted .button {
 		--ink: var(--ivory);
 		--paper: var(--ivory-ink);
 	}
@@ -2967,9 +2962,8 @@
 /* Jerarquía única: las fichas de caso, de producto y AHP+ usan la misma escala y el mismo
    peso que los héroes del sitio, en vez del titular gigante y apretado de la versión anterior. */
 @layer utilities {
-	.case-intro h1,
 	.pdp-hero .stage__title,
-	.ahp-atlas__hero h1 {
+.ahp-atlas__hero h1 {
 		max-width: 18ch;
 		font-size: clamp(2.5rem, 1rem + 5vw, 5rem);
 		font-weight: 600;
@@ -2982,9 +2976,8 @@
 		color: var(--text-2);
 	}
 
-	.case-intro__lede,
 	.pdp-hero .stage__lede,
-	.ahp-atlas__hero .hero__lede {
+.ahp-atlas__hero .hero__lede {
 		max-width: 36em;
 		font-size: var(--jx-lede);
 		line-height: 1.45;
@@ -3556,13 +3549,9 @@
 		letter-spacing: -0.02em;
 	}
 
-	.case-cover__shot {
-		max-width: 100%;
-	}
+	
 
-	.case-cover__shot > img {
-		aspect-ratio: 16 / 9;
-	}
+	
 
 	@media (max-width: 60rem) {
 		.portfolio-entry__link,
@@ -4254,7 +4243,6 @@
 		}
 	}
 }
-
 
 /* Panel del menú en el teléfono: el mismo cristal, a pantalla completa bajo la cabecera. */
 @layer utilities {
@@ -5096,7 +5084,6 @@
 		}
 	}
 
-
 	@media (prefers-reduced-motion: reduce) {
 		.jx-typer__caret {
 			animation: none;
@@ -5709,8 +5696,6 @@
 
 @layer utilities {
 	/* Cuerpo de los casos y del Atlas de AHP+: mismo marco que el encabezado. */
-	.case-study > .section,
-	.case-study > section,
 	.ahp-atlas .shell {
 		box-sizing: border-box;
 		width: min(100% - 2 * var(--jx-gut), var(--jx-wrap));
@@ -5720,9 +5705,7 @@
 	}
 
 	/* La tarjeta de cierre del caso conserva su relleno interior; su borde va en el eje. */
-	.case-study > .case-cta {
-		padding-inline: clamp(1.25rem, 1rem + 3vw, 5rem);
-	}
+	
 }
 
 @layer utilities {
@@ -5770,7 +5753,6 @@
 		padding-bottom: clamp(1rem, 0.5rem + 2vw, 2.5rem);
 	}
 }
-
 
 /* Menú del teléfono: la página actual se distingue por su punto marfil y no apagándola, que se
    leía como «desactivado»; y el panel cierra con una acción en vez de quedar vacío. */

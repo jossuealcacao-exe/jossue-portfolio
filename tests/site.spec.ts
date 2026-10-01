@@ -516,7 +516,7 @@ for (const project of [
 	test(`${project.slug} presents a commercial bilingual project narrative`, async ({ page }) => {
 		await page.goto(`/es/trabajo/${project.slug}/`);
 		await expect(page.locator('main h1')).toHaveText(project.title);
-		await expect(page.locator('.case-intro .eyebrow')).toContainText(project.categoryEs);
+		await expect(page.locator('.jx-page-hero .jx-label')).toContainText(project.categoryEs);
 		if (project.media > 0) {
 			await expect(page.locator('main')).toContainText('Explora el proyecto');
 			await expect(page.locator('main')).not.toContainText('La experiencia en contexto.');
@@ -527,25 +527,29 @@ for (const project of [
 		await expect(page.locator('main')).not.toContainText('Placeholder');
 		await expect(page.locator('main [data-media-slot]')).toHaveCount(0);
 		if (project.slug === 'ahp-plus') {
-			await expect(page.locator('.case-brand')).toContainText('AHP+');
 			await expect(page.locator('main')).toContainText('AHP+ 1.4.1');
 			await expect(page.locator('main')).toContainText('.ahp/');
 			await expect(page.locator('main')).not.toContainText('AHP+ 1.0');
 			await expect(page.locator('#links a[href="https://github.com/jossuealcacao-exe/ahp_plus"]')).toBeVisible();
 			await expect(page.locator('#links a[href="https://www.npmjs.com/package/@jossuealcala/ahp-plus"]')).toBeVisible();
-
-			const deliveryColumns = await page.locator('#delivery .deliverable-grid').evaluate((element) =>
-				getComputedStyle(element).gridTemplateColumns.split(' ').length,
-			);
-			expect(deliveryColumns).toBe(1);
+			expect(await page.locator('#delivery .case-deliver li').count()).toBeGreaterThanOrEqual(4);
 			// Sistema de madre.run: botones marfil con tinta oscura, cierre sobre grafito, pie en la banda.
-			await expect(page.locator('#command-atlas .button')).toHaveCSS('background-color', 'rgb(236, 230, 216)');
-			await expect(page.locator('#command-atlas .button')).toHaveCSS('color', 'rgb(18, 17, 14)');
-			await expect(page.locator('.case-cta h2')).toHaveCSS('color', 'rgb(238, 241, 234)');
-			await expect(page.locator('.case-cta .button')).toHaveCSS('color', 'rgb(18, 17, 14)');
+			await expect(page.locator('#command-atlas .jx-btn--primary')).toHaveCSS('background-color', 'rgb(236, 230, 216)');
+			await expect(page.locator('#command-atlas .jx-btn--primary')).toHaveCSS('color', 'rgb(18, 17, 14)');
+			await expect(page.locator('.jx-close__title')).toHaveCSS('color', 'rgb(238, 241, 234)');
+			await expect(page.locator('.jx-close .jx-btn--primary')).toHaveCSS('color', 'rgb(18, 17, 14)');
 			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(238, 241, 234)');
 			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(124, 132, 121)');
 		}
+		// Mismo sistema que las fichas de producto: bucle abstracto, índice del caso, entregables con
+		// ícono, otros tres casos y cierre; nada de la plantilla editorial anterior.
+		await expect(page.locator('main h1')).toHaveCount(1);
+		await expect(page.locator('.jx-page-hero .jx-loop video')).toHaveAttribute('poster', /\/videos\/hero\/[a-z-]+(-tall)?\.webp$/);
+		await expect(page.locator('.jx-page-hero .jx-hero__title')).toHaveCSS('text-align', 'center');
+		expect(await page.locator('.case-toc a').count()).toBeGreaterThanOrEqual(6);
+		expect(await page.locator('#delivery .case-deliver li svg').count()).toBeGreaterThanOrEqual(3);
+		await expect(page.locator('.jx-proofs > li')).toHaveCount(3);
+		await expect(page.locator('.case-intro, .case-grid, .approach-list, .deliverable-grid, .case-cta')).toHaveCount(0);
 		await expect(page.locator('#technology .stack-list li').first()).toBeVisible();
 		await expect(page.locator('#technology .stack-list img').first()).toBeVisible();
 		await expect(page.locator('.evidence-shot')).toHaveCount(project.media);
@@ -564,7 +568,7 @@ for (const project of [
 		await switchLanguage(page);
 		await expect(page).toHaveURL(new RegExp(`/en/work/${project.slug}/$`));
 		await expect(page.locator('main h1')).toHaveText(project.title);
-		await expect(page.locator('.case-intro .eyebrow')).toContainText(project.categoryEn);
+		await expect(page.locator('.jx-page-hero .jx-label')).toContainText(project.categoryEn);
 		await expect(page.locator('.case-cover [data-case-cover] img')).toBeVisible();
 		if (project.media > 0) await expect(page.locator('main')).toContainText('Explore the project');
 		await expect(page.locator('.media-placeholder')).toHaveCount(0);
@@ -576,6 +580,20 @@ for (const project of [
 		}
 	});
 }
+
+test('case page shows reading progress and its index jumps to the sections', async ({ page }) => {
+	await page.goto('/es/trabajo/wu-nutrition/');
+	const bar = page.locator('.case-progress i');
+	await expect(bar).toHaveCSS('transform', /matrix\(0, 0, 0, 1|none/);
+	await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' }));
+	await expect.poll(async () => bar.evaluate((element) => new DOMMatrix(getComputedStyle(element).transform).a)).toBeGreaterThan(0.95);
+	await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+	// Cada enlace del índice lleva a una sección que existe, en el mismo orden de la página.
+	const targets = await page.locator('.case-toc a').evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).hash));
+	const tops = await page.evaluate((ids) => ids.map((id) => document.querySelector(id)?.getBoundingClientRect().top ?? -1), targets);
+	expect(tops.every((top) => top !== -1), 'todas las secciones del índice existen').toBe(true);
+	expect(tops.every((top, index) => index === 0 || top > tops[index - 1]), 'el índice sigue el orden de la página').toBe(true);
+});
 
 test('MADRE keeps a disciplined reading edge and never overflows the viewport', async ({ page }) => {
 	await page.goto('/es/madre/');

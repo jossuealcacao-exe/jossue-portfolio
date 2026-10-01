@@ -925,23 +925,14 @@
 
 	/* --- Superficies de contenido --- */
 	.case-card,
-	.service-card,
-	.diagram,
-	.principles-block,
-	.project-link,
-	.evidence-frame,
-	.case-ambience,
-	.stack-list li,
-	.deliverable-grid li,
-	.outcome-list li {
+.service-card,
+.evidence-frame,
+.stack-list li {
 		border-radius: var(--radius-lg);
 	}
 
 	.case-card,
-	.service-card,
-	.diagram,
-	.principles-block,
-	.project-link {
+.service-card {
 		background: var(--surf-1);
 		box-shadow: var(--lift-1);
 		border-color: transparent;
@@ -950,24 +941,17 @@
 			box-shadow var(--motion-base) var(--ease-apple);
 	}
 
-	.case-card:hover,
-	.project-link:hover { transform: translateY(-0.3rem); box-shadow: var(--lift-3); }
+	.case-card:hover { transform: translateY(-0.3rem); box-shadow: var(--lift-3); }
 
-	.deliverable-grid li,
-	.outcome-list li {
-		background: var(--surf-1);
-		box-shadow: var(--lift-1);
-		border-color: transparent;
-	}
+	
 
-	.case-ambience__frame,
 	.evidence-frame {
 		border-radius: var(--radius-lg);
 		overflow: hidden;
 	}
 
-	.case-ambience { box-shadow: var(--lift-2); background: var(--surf-1); padding: clamp(0.75rem, 1.5vw, 1.15rem); }
-	.case-ambience__caption { padding: clamp(0.75rem, 1.6vw, 1.25rem); }
+	
+	
 
 	/* El carrusel se queda como esta: solo su marco toma la esquina nueva. */
 	.evidence-carousel__viewport { border-radius: var(--radius-xl); }

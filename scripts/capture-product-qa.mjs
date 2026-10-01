@@ -1,5 +1,5 @@
-// Captura de evidencia de las fichas de producto: héroe en escritorio y teléfono y la escena de
-// «Cómo funciona» en sus cuatro pasos. Necesita el sitio corriendo (QA_BASE_URL, por defecto
+// Captura de evidencia de las fichas de producto y de caso: héroe en escritorio y teléfono, la escena de
+// «Cómo funciona» en sus cuatro pasos y el héroe y el recorrido de dos casos. Necesita el sitio corriendo (QA_BASE_URL, por defecto
 // http://localhost:4321). Escribe en audit/product-pages-2026-09-30/.
 import { mkdir } from 'node:fs/promises';
 import path from 'node:path';
@@ -8,6 +8,7 @@ import { chromium } from '@playwright/test';
 const baseUrl = process.env.QA_BASE_URL ?? 'http://localhost:4321';
 const outputDirectory = path.resolve('audit/product-pages-2026-09-30');
 const products = ['daniela', 'ahp-plus', 'bloqio-builder', 'miawseo'];
+const cases = ['wu-nutrition', 'ahp-plus'];
 await mkdir(outputDirectory, { recursive: true });
 
 const browser = await chromium.launch({ headless: true });
@@ -30,6 +31,14 @@ try {
 				await page.waitForTimeout(1100);
 				await page.locator('.pdp-how__stage').screenshot({ path: path.join(outputDirectory, `${slug}-scene-step${step}.png`) });
 			}
+		}
+		for (const slug of cases) {
+			await page.goto(`${baseUrl}/es/trabajo/${slug}/`, { waitUntil: 'networkidle' });
+			await page.waitForTimeout(1500);
+			await page.screenshot({ path: path.join(outputDirectory, `case-${slug}-${view.name}-hero.png`) });
+			await page.locator('#delivery').scrollIntoViewIfNeeded();
+			await page.waitForTimeout(900);
+			await page.screenshot({ path: path.join(outputDirectory, `case-${slug}-${view.name}-delivery.png`) });
 		}
 		await context.close();
 	}

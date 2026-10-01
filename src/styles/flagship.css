@@ -761,32 +761,13 @@
 		box-shadow: none;
 	}
 
-	.case-brand {
-		display: inline-flex;
-		min-height: 2rem;
-		align-items: center;
-		padding: 0.4rem 0.65rem;
-		border: 1px solid var(--flagship-line-dark);
-		color: #f7f7f3;
-		font-size: 0.7rem;
-		font-weight: 750;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-	}
+	
 
-	.case-cover {
-		width: min(calc(100% - (2 * var(--gutter))), 92rem);
-		margin: clamp(3rem, 7vw, 7rem) auto;
-	}
+	
 
-	.deliverable-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-	}
+	
 
-	.deliverable-grid li {
-		border-right: 0;
-	}
+	
 
 	.brand-strip .brand-label {
 		display: grid;

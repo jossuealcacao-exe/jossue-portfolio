@@ -172,3 +172,41 @@ final result: passed
 - `ahp project check` reports FAIL on this checkout (pre-existing; not repaired here).
 
 final result: passed
+
+---
+
+# Design QA — case detail pages
+
+## Target
+
+- The nine case pages (`/es/trabajo/<caso>/`, `/en/work/<caso>/`), rendered by `CaseDetail.astro`, brought onto the same system as the product pages.
+
+## Source findings
+
+1. The case template was the old editorial one: flat left-aligned hero with an outlined brand tag, a left index column beside every section, plain bordered lists for approach and outcome, a bare list of deliverables and diagrams drawn with 9 px bars. It shared no component, icon, loop or motion with the product pages.
+2. Its look came from rules spread over five stylesheets (`global`, `redesign`, `surface`, `flagship`, `editorial`), several of them defining the same selector (`.diagram` and `.case-cover` three times).
+3. No orientation on a 9–11k px page, no related cases, and a closing line (“¿Te suena parecido?”) in the generic register the copy pass removed elsewhere.
+
+## Implemented corrections
+
+- `CaseDetail.astro` rebuilt on the jx system: centred hero with an abstract loop (`caseLoop` in `src/data/caseExtras.ts` reuses the existing loops), framed real screenshot, three facts, secondary button to the live project or to the matching product or service page.
+- New elements: “En este caso” index of anchors, reading-progress bar, challenge as three icon cards (context, problem, my part), approach as a journey whose connector line draws as it enters, deliverables as icon cards (icon chosen from the text, no repeats), numbered outcome cards whose check pops in, principles as bordered chips, tech stack chips, link cards with a kind icon, three related cases and a closing card with a contact button and a Jossue AI prompt.
+- `CaseDiagrams.astro` rewritten with its own `cdg-*` classes: bars fill and numbers count up when they enter the viewport; comparison and flow charts restyled.
+- `PageHero` accepts a label slot and a screen-reader-only joiner, so “Nombre — descriptor” titles keep their exact text.
+- Styles in `src/styles/case.css`, tokens only. The `.sr-only` joiner, reduced motion and phone widths are covered.
+- Dead legacy CSS removed with a brace-aware script: 151 rules and blocks (old `case-intro`, `case-grid`, `approach-list`, `deliverable-grid`, `outcome-list`, `principles-block`, `case-prose`, `case-cta`, `diagram*`, `project-link*`, old `.case-cover` and `.case-brand` copies) from `global`, `redesign`, `surface`, `flagship`, `editorial` and `jossue-system`, about 550 lines. A 32-screenshot comparison (16 routes, desktop and phone) before and after showed no change beyond render noise that also appears between two runs of the unpruned CSS.
+- Tests updated to the new structure and extended: loop, index, icons, related cases, no legacy classes, reading progress and index order.
+
+## Verification
+
+- `npm run check`: 0 errors, 0 warnings, 3 hints (pre-existing). `npm run lint`: passed.
+- Production build: 53 pages. Static routes: 53. Local links: 2,339.
+- Playwright: 448/448 passed at 320, 375, 390, 430, 768, 1024, 1280 and 1440 px.
+- Sweep of the nine cases at 320, 375, 390, 768, 1024 and 1440 px in Spanish and English: no horizontal overflow, no console errors, one H1. Text contrast scan: 0 failures.
+- Evidence: `audit/product-pages-2026-09-30/` (`case-*` after, `before-case-*` before).
+
+## Not changed
+
+- `ChapterNav.astro` and its CSS are no longer used by any page; `site-bubble.ts` and `motion.ts` still reference `.chapter-nav` / `.case-jump`. Removing them is a separate, small cleanup.
+
+final result: passed

@@ -1,14 +1,23 @@
 ---
-import type { CollectionEntry } from 'astro:content';
+// Ficha de caso en el sistema jx, el mismo de las fichas de producto: héroe centrado con un
+// bucle abstracto detrás, la captura real del proyecto, un índice del caso y secciones que
+// alternan fondo (el reto, el enfoque, lo que construí, gráficos, galería, cómo quedó,
+// tecnología y enlaces), más otros casos y el cierre. Los textos salen de casePresentation.ts
+// y de la colección de casos; aquí solo se presentan.
+import { getCollection, type CollectionEntry } from 'astro:content';
 import { brandForCaseSlug } from '../data/brands';
+import { caseLoop, caseProduct, iconFor, positioningLabel, splitCaseTitle } from '../data/caseExtras';
 import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
-import Breadcrumbs from './Breadcrumbs.astro';
+import { productHref, commercialProduct } from '../data/products';
 import { caseCover } from '../data/workImages';
+import Breadcrumbs from './Breadcrumbs.astro';
 import CaseAmbience from './CaseAmbience.astro';
 import CaseDiagrams from './CaseDiagrams.astro';
 import CaseMedia from './CaseMedia.astro';
-import Icon from './Icon.astro';
+import Icon, { type IconName } from './Icon.astro';
+import JxProofCards from './JxProofCards.astro';
+import PageHero from './PageHero.astro';
 import ProjectVisual from './ProjectVisual.astro';
 import StackList from './StackList.astro';
 
@@ -28,25 +37,58 @@ const projectLinks = data.projectLinks?.length ? data.projectLinks : undefined;
 const isAhpPlus = data.slug === 'ahp-plus';
 const presentation = casePresentation(data.slug, locale);
 if (!presentation) throw new Error(`Missing public presentation for ${locale}/${data.slug}`);
+const cover = caseCover(data.slug);
+const title = splitCaseTitle(data.title);
+const contactHref = routes[locale].contact;
+
+// Otros tres casos publicados del mismo idioma, a partir del siguiente en la lista.
+const published = (await getCollection('cases', ({ data: item }) => item.lang === locale && item.publication.publish)).sort((a, b) => a.data.title.localeCompare(b.data.title));
+const at = published.findIndex((item) => item.data.slug === data.slug);
+const others = [1, 2, 3].map((step) => published[(at + step) % published.length]).filter((item) => item && item.data.slug !== data.slug);
+const relatedCases = others.map((item) => item.data.slug);
+
+// Botón secundario del héroe: el proyecto vivo si lo hay; si no, su ficha de producto o servicio.
+const live = projectLinks?.find((link) => link.kind === 'live');
+const related = caseProduct[data.slug];
+const relatedProduct = related ? commercialProduct(related.slug) : undefined;
+const secondary = live
+	? { href: live.href, label: es ? 'Ver el proyecto' : 'See the project', external: true }
+	: relatedProduct
+		? { href: productHref(relatedProduct, locale), label: related?.kind === 'service' ? (es ? 'Ver el servicio' : 'See the service') : es ? 'Ver el producto' : 'See the product', external: false }
+		: { href: routes[locale].work, label: es ? 'Ver todos los casos' : 'See all cases', external: false };
+
 const chapters = [
-	{ id: 'challenge', heading: es ? 'El problema' : 'The problem' },
-	...(publishableAmbience && !caseCover(data.slug) ? [{ id: 'context-scene', heading: es ? 'Contexto visual' : 'Visual context' }] : []),
-	{ id: 'approach', heading: es ? 'El enfoque' : 'The approach' },
-	{ id: 'delivery', heading: es ? 'Qué construí' : 'What I built' },
-	...(publishableDiagrams ? [{ id: 'signals', heading: es ? 'Gráficos' : 'Signals' }] : []),
-	...(publishableMedia ? [{ id: 'gallery', heading: es ? 'El producto' : 'The product' }] : []),
-	{ id: 'outcome', heading: es ? 'Cómo quedó' : 'How it turned out' },
-	...(isAhpPlus ? [{ id: 'command-atlas', heading: es ? 'Guía de comandos' : 'Command guide' }] : []),
-	{ id: 'technology', heading: es ? 'Tecnología' : 'Technology' },
-	...(projectLinks ? [{ id: 'links', heading: es ? 'Verlo tú mismo' : 'See it yourself' }] : []),
+	{ id: 'challenge', label: es ? 'El reto' : 'The challenge' },
+	...(publishableAmbience && !cover ? [{ id: 'context-scene', label: es ? 'Contexto visual' : 'Visual context' }] : []),
+	{ id: 'approach', label: es ? 'El enfoque' : 'The approach' },
+	{ id: 'delivery', label: es ? 'Entregables' : 'Deliverables' },
+	...(publishableDiagrams ? [{ id: 'signals', label: es ? 'Gráficos' : 'Charts' }] : []),
+	...(publishableMedia ? [{ id: 'gallery', label: es ? 'El producto' : 'The product' }] : []),
+	{ id: 'outcome', label: es ? 'Cómo quedó' : 'How it turned out' },
+	...(isAhpPlus ? [{ id: 'command-atlas', label: es ? 'Guía de comandos' : 'Command guide' }] : []),
+	{ id: 'technology', label: es ? 'Tecnología' : 'Technology' },
+	...(projectLinks ? [{ id: 'links', label: es ? 'Enlaces' : 'Links' }] : []),
 ];
-const sectionNumber = (id: string) => String(chapters.findIndex((chapter) => chapter.id === id) + 1).padStart(2, '0');
+const num = (id: string) => String(chapters.findIndex((chapter) => chapter.id === id) + 1).padStart(2, '0');
+const chapterLabel = (id: string) => `${num(id)} · ${chapters.find((chapter) => chapter.id === id)?.label}`;
+let tone = 0;
+const next = () => (tone++ % 2 === 0 ? 'jx-bots__section' : 'jx-band');
+
 const linkKindCopy = {
 	repo: es ? 'Repositorio' : 'Repository',
 	live: es ? 'Proyecto vivo' : 'Live project',
 	reference: es ? 'Consulta' : 'Reference',
 } as const;
-const cover = caseCover(data.slug);
+const linkKindIcon: Record<'repo' | 'live' | 'reference', IconName> = { repo: 'code', live: 'globe', reference: 'compass' };
+
+const stackNumeric = (value: string) => /^\d+$/.test(value);
+const facts: Array<{ value: string; label: string }> = [
+	{ value: positioningLabel[data.positioning ?? 'client-work'][locale], label: es ? 'tipo de proyecto' : 'type of project' },
+	{ value: data.stack.slice(0, 2).join(' · '), label: es ? 'especialidad' : 'focus' },
+	publishableMedia?.length
+		? { value: String(publishableMedia.length), label: es ? 'capturas reales del proyecto' : 'real screenshots of the project' }
+		: { value: String(data.stack.length), label: es ? 'tecnologías en el stack' : 'technologies in the stack' },
+];
 ---
 
 <Breadcrumbs
@@ -56,131 +98,161 @@ const cover = caseCover(data.slug);
 		{ label: data.title },
 	]}
 />
-<article class="case-study">
-	<header class="case-intro">
-		<div class="case-intro__frame">
-		<div class="case-intro__kicker">
-			{
-				brand && (
-					<div class="case-brand">
-						<span>{brand.name[locale]}</span>
-					</div>
-				)
-			}
-			<p class="eyebrow">{presentation.category}</p>
+<div class="case-progress" aria-hidden="true"><i></i></div>
+<article class="jx-home jx-casepg" data-case-detail={data.slug}>
+	<PageHero loop={caseLoop[data.slug] ?? 'work'} id="case-title" title={title.parts} joiner={title.joiner} lede={presentation.summary}>
+		<Fragment slot="label">
+			{brand && !data.title.toLowerCase().startsWith(brand.name[locale].toLowerCase()) && <span class="case-brand">{brand.name[locale]}</span>}
+			{presentation.category}
+		</Fragment>
+		<div class="jx-actions jx-actions--center">
+			<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact">{es ? 'Iniciar conversación' : 'Start a conversation'}<Icon name="arrow-right" /></a>
+			<a class="jx-btn jx-btn--ghost" href={secondary.href} {...(secondary.external ? { target: '_blank', rel: 'noopener' } : {})}>{secondary.label}<Icon name={secondary.external ? 'arrow-up-right' : 'arrow-right'} /></a>
 		</div>
-		<div class="case-intro__grid">
-			<div class="case-intro__main">
-				<h1>{data.title}</h1>
-				<p class="case-intro__lede">{presentation.summary}</p>
+		<div class="case-cover">
+			{cover ? (
+				<figure class="case-stage" data-case-cover={data.slug}>
+					<img src={cover} alt={es ? `Portada de ${data.title}` : `${data.title} home page`} width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async" />
+					<figcaption class="jx-mono">{es ? 'Captura real del proyecto' : 'Real screenshot of the project'}</figcaption>
+				</figure>
+			) : (
+				<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
+			)}
+		</div>
+		<dl class="jx-facts">
+			{facts.map((fact) => <div><dt data-nocount={stackNumeric(fact.value) ? undefined : ''}>{fact.value}</dt><dd>{fact.label}</dd></div>)}
+		</dl>
+	</PageHero>
+
+	<nav class="case-toc jx-wrap" aria-label={es ? 'En este caso' : 'In this case'}>
+		<p class="jx-mono">{es ? 'En este caso' : 'In this case'}</p>
+		<ol>
+			{chapters.map((chapter) => <li><a href={`#${chapter.id}`}><span>{num(chapter.id)}</span>{chapter.label}</a></li>)}
+		</ol>
+	</nav>
+
+	<section id="challenge" class={next()} aria-labelledby="case-challenge">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('challenge')}</p>
+			<h2 id="case-challenge" class="jx-h2"><span>{es ? 'Qué estaba' : 'What was'}</span>{' '}<span class="jx-soft">{es ? 'pasando' : 'going on'}</span></h2>
+			<div class="case-duo">
+				<article>
+					<Icon name="compass" size="md" />
+					<p class="jx-mono">{es ? 'Contexto' : 'Context'}</p>
+					<p>{presentation.context}</p>
+				</article>
+				<article>
+					<Icon name="exclamation" size="md" />
+					<p class="jx-mono">{es ? 'El problema' : 'The problem'}</p>
+					<p>{presentation.challenge}</p>
+				</article>
+				<article class="case-duo__wide">
+					<Icon name="user" size="md" />
+					<p class="jx-mono">{es ? 'Mi parte' : 'My part'}</p>
+					<p>{presentation.role}</p>
+				</article>
 			</div>
-			<dl class="case-intro__facts">
-				<div><dt>{es ? 'Qué hice yo' : 'What I did'}</dt><dd>{presentation.role}</dd></div>
-				<div><dt>{es ? 'Especialidad' : 'Focus'}</dt><dd>{data.stack.slice(0, 3).join(' · ')}</dd></div>
-			</dl>
-		</div>
-		</div>
-	</header>
-	<div class="case-cover" data-reveal>
-		{cover ? (
-			<figure class="portfolio-shot case-cover__shot" data-case-cover={data.slug}>
-				<span class="portfolio-shot__bar" aria-hidden="true"><i></i><i></i><i></i></span>
-				<img src={cover} alt={es ? `Portada de ${data.title}` : `${data.title} home page`} width="1600" height="1000" loading="eager" fetchpriority="high" decoding="async" />
-			</figure>
-		) : (
-			<ProjectVisual slug={data.slug} title={data.title} stack={data.stack} locale={locale} priority />
-		)}
-	</div>
-	<section id="challenge" class="section case-grid" data-case-section>
-		<p class="index">{sectionNumber('challenge')} / {es ? 'El reto' : 'The challenge'}</p>
-		<div class="case-prose flow">
-			<h2>{es ? 'Qué estaba pasando.' : 'What was going on.'}</h2>
-			<p>{presentation.context}</p>
-			<p>{presentation.challenge}</p>
 		</div>
 	</section>
+
 	{publishableAmbience && !cover && (
-		<section id="context-scene" class="section case-grid case-context-scene" data-case-section>
-			<p class="index">{sectionNumber('context-scene')} / {es ? 'Contexto visual' : 'Visual context'}</p>
-			<div class="flow">
-				<h2>{es ? 'Dónde pasa este proyecto.' : 'Where this project happens.'}</h2>
+		<section id="context-scene" class={next()} aria-labelledby="case-scene">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('context-scene')}</p>
+				<h2 id="case-scene" class="jx-h2"><span>{es ? 'Dónde pasa' : 'Where this'}</span>{' '}<span class="jx-soft">{es ? 'este proyecto' : 'project happens'}</span></h2>
 				<CaseAmbience ambience={publishableAmbience} locale={locale} slug={data.slug} title={data.title} />
 			</div>
 		</section>
 	)}
-	<section id="approach" class="section case-grid" data-case-section>
-		<p class="index">{sectionNumber('approach')} / {es ? 'El enfoque' : 'The approach'}</p>
-		<div class="flow">
-			<h2>{es ? 'Cómo decidí resolverlo.' : 'How I decided to solve it.'}</h2>
-			<ol class="approach-list">
-				{presentation.approach.map((item, index) => <li><span>{String(index + 1).padStart(2, '0')}</span><p>{item}</p></li>)}
+
+	<section id="approach" class={next()} aria-labelledby="case-approach">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('approach')}</p>
+			<h2 id="case-approach" class="jx-h2"><span>{es ? 'Cómo decidí' : 'How I decided'}</span>{' '}<span class="jx-soft">{es ? 'resolverlo' : 'to solve it'}</span></h2>
+			<ol class="case-flow">
+				{presentation.approach.map((item, index) => <li><span class="case-flow__n">{String(index + 1).padStart(2, '0')}</span><p>{item}</p></li>)}
 			</ol>
 		</div>
 	</section>
-	<section id="delivery" class="section case-grid" data-case-section>
-		<p class="index">{sectionNumber('delivery')} / {es ? 'Trabajo realizado' : 'What I delivered'}</p>
-		<div class="flow">
-			<h2>{es ? 'Lo que quedó hecho.' : 'What got built.'}</h2>
-			<ul class="deliverable-grid">
-				{presentation.deliverables.map((item) => <li>{item}</li>)}
+
+	<section id="delivery" class={next()} aria-labelledby="case-delivery">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('delivery')}</p>
+			<h2 id="case-delivery" class="jx-h2"><span>{es ? 'Lo que quedó' : 'What got'}</span>{' '}<span class="jx-soft">{es ? 'hecho' : 'built'}</span></h2>
+			<ul class="jx-points case-deliver" style={`--cols: ${presentation.deliverables.length % 3 === 0 ? 3 : 2}`}>
+				{presentation.deliverables.map((item, index) => <li><Icon name={iconFor(item, index)} size="md" /><span>{item}</span></li>)}
 			</ul>
 		</div>
 	</section>
+
 	{publishableDiagrams && (
-		<section id="signals" class="section case-grid case-signals" data-case-section>
-			<p class="index">{sectionNumber('signals')} / {es ? 'Gráficos' : 'Signals'}</p>
-			<div class="flow">
-				<h2>{es ? 'Los números en gráficos.' : 'The numbers as charts.'}</h2>
+		<section id="signals" class={next()} aria-labelledby="case-signals">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('signals')}</p>
+				<h2 id="case-signals" class="jx-h2"><span>{es ? 'Los números' : 'The numbers'}</span>{' '}<span class="jx-soft">{es ? 'en gráficos' : 'as charts'}</span></h2>
 				<CaseDiagrams diagrams={publishableDiagrams} locale={locale} />
 			</div>
 		</section>
 	)}
+
 	{publishableMedia && (
-		<section id="gallery" class="section case-grid case-gallery" data-case-section>
-			<p class="index">{sectionNumber('gallery')} / {es ? 'El producto' : 'The product'}</p>
-			<div class="flow">
-				<h2>{es ? 'Explora el proyecto' : 'Explore the project'}</h2>
+		<section id="gallery" class={next()} aria-labelledby="case-gallery">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('gallery')}</p>
+				<h2 id="case-gallery" class="jx-h2"><span>{es ? 'Explora' : 'Explore'}</span>{' '}<span class="jx-soft">{es ? 'el proyecto' : 'the project'}</span></h2>
 				<CaseMedia media={publishableMedia} locale={locale} />
 			</div>
 		</section>
 	)}
-	<section id="outcome" class="section case-grid" data-case-section>
-		<p class="index">{sectionNumber('outcome')} / {es ? 'Resultado' : 'Outcome'}</p>
-		<div class="flow">
-			<h2>{es ? 'Qué cambió al final.' : 'What changed in the end.'}</h2>
-			<ul class="outcome-list">{presentation.outcomes.map((item) => <li>{item}</li>)}</ul>
-			<div class="principles-block">
-				<p class="eyebrow">{es ? 'Lo que no negocié' : 'What I would not compromise on'}</p>
-				<ul>{presentation.principles.map((item) => <li>{item}</li>)}</ul>
+
+	<section id="outcome" class={next()} aria-labelledby="case-outcome">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('outcome')}</p>
+			<h2 id="case-outcome" class="jx-h2"><span>{es ? 'Qué cambió' : 'What changed'}</span>{' '}<span class="jx-soft">{es ? 'al final' : 'in the end'}</span></h2>
+			<ul class="case-outcomes">
+				{presentation.outcomes.map((item) => <li><span class="case-outcomes__mark" aria-hidden="true"><Icon name="check" /></span><p>{item}</p></li>)}
+			</ul>
+			<div class="case-principles">
+				<p class="jx-mono">{es ? 'Lo que no negocié' : 'What I would not compromise on'}</p>
+				<ul>
+					{presentation.principles.map((item) => <li><Icon name="shield" /><span>{item}</span></li>)}
+				</ul>
 			</div>
 		</div>
 	</section>
+
 	{isAhpPlus && (
-		<section id="command-atlas" class="section case-grid" data-case-section>
-			<p class="index">{sectionNumber('command-atlas')} / {es ? 'Guía de comandos' : 'Command guide'}</p>
-			<div class="flow">
-				<h2>{es ? 'Instala y opera AHP+ en cualquier plataforma.' : 'Install and operate AHP+ on any platform.'}</h2>
-				<p>{es ? 'Una guía humana para entender AHP+ 1.4.1, ver una ejecución real, instalarlo con un comando y encontrar después la instrucción exacta para terminal o chat.' : 'A human guide to understanding AHP+ 1.4.1, seeing a real run, installing it with one command, and then finding the exact terminal or chat instruction.'}</p>
-				<a class="button" href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">{es ? 'Abrir Command Atlas' : 'Open Command Atlas'}</a>
+		<section id="command-atlas" class={next()} aria-labelledby="case-atlas">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('command-atlas')}</p>
+				<h2 id="case-atlas" class="jx-h2"><span>{es ? 'Instala y opera AHP+' : 'Install and operate AHP+'}</span>{' '}<span class="jx-soft">{es ? 'en cualquier plataforma' : 'on any platform'}</span></h2>
+				<div class="case-callout">
+					<Icon name="terminal" size="md" />
+					<p>{es ? 'Una guía para entender AHP+ 1.4.1, ver una ejecución real, instalarlo con un comando y encontrar después la instrucción exacta para terminal o chat.' : 'A guide to understanding AHP+ 1.4.1, seeing a real run, installing it with one command, and then finding the exact terminal or chat instruction.'}</p>
+					<a class="jx-btn jx-btn--primary" href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">{es ? 'Abrir Command Atlas' : 'Open Command Atlas'}<Icon name="arrow-right" /></a>
+				</div>
 			</div>
 		</section>
 	)}
-	<section id="technology" class="section case-grid" data-case-section>
-		<p class="index">{sectionNumber('technology')} / {es ? 'Tecnología' : 'Technology'}</p>
-		<div class="flow">
-			<h2>{es ? 'Con qué está hecho.' : 'What it is made with.'}</h2>
+
+	<section id="technology" class={next()} aria-labelledby="case-tech">
+		<div class="jx-wrap">
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('technology')}</p>
+			<h2 id="case-tech" class="jx-h2"><span>{es ? 'Con qué' : 'What it is'}</span>{' '}<span class="jx-soft">{es ? 'está hecho' : 'made with'}</span></h2>
 			<StackList stack={data.stack} locale={locale} />
 		</div>
 	</section>
+
 	{projectLinks && (
-		<section id="links" class="section case-grid case-links" data-case-section>
-			<p class="index">{sectionNumber('links')} / {es ? 'Repos y consulta' : 'Repos and links'}</p>
-			<div class="flow">
-				<h2>{es ? 'Ábrelo y compruébalo.' : 'Open it and check for yourself.'}</h2>
-				<ul class="project-link-list">
+		<section id="links" class={next()} aria-labelledby="case-links">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('links')}</p>
+				<h2 id="case-links" class="jx-h2"><span>{es ? 'Ábrelo' : 'Open it'}</span>{' '}<span class="jx-soft">{es ? 'y compruébalo' : 'and check for yourself'}</span></h2>
+				<ul class="case-links">
 					{projectLinks.map((link) => (
 						<li>
-							<a class="project-link" href={link.href} rel="noreferrer">
+							<a class="case-link" href={link.href} target="_blank" rel="noopener noreferrer">
+								<Icon name={linkKindIcon[link.kind]} size="md" />
 								<span>
 									<small>{linkKindCopy[link.kind]}</small>
 									<strong>{link.label}</strong>
@@ -194,13 +266,39 @@ const cover = caseCover(data.slug);
 		</section>
 	)}
 
-	<section class="section case-grid case-cta">
-		<p class="index">{es ? '¿Te suena parecido?' : 'Sound familiar?'}</p>
-		<div class="flow">
-			<h2>{presentation.cta}</h2>
-			<a class="button" href={routes[locale].contact} data-analytics-event="click_contact">
-				{es ? 'Iniciar conversación' : 'Start a conversation'}
-			</a>
+	{relatedCases.length > 0 && (
+		<section class={next()} aria-labelledby="case-more">
+			<div class="jx-wrap">
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Más casos' : 'More cases'}</p>
+				<h2 id="case-more" class="jx-h2"><span>{es ? 'Otros proyectos' : 'Other projects'}</span>{' '}<span class="jx-soft">{es ? 'que puedes revisar' : 'you can review'}</span></h2>
+				<JxProofCards locale={locale} slugs={relatedCases} cases={published} />
+			</div>
+		</section>
+	)}
+
+	<section class="jx-close" aria-labelledby="case-close">
+		<div class="jx-close__card">
+			<h2 id="case-close" class="jx-close__title"><span>{es ? 'Hablemos de' : 'Let’s talk about'}</span>{' '}<span class="jx-soft">{es ? 'tu proyecto' : 'your project'}</span></h2>
+			<p>{presentation.cta}</p>
+			<div class="jx-actions jx-actions--center">
+				<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact_bottom">{es ? 'Iniciar conversación' : 'Start a conversation'}<Icon name="arrow-right" /></a>
+				<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? `Quiero algo parecido a ${data.title}, ¿por dónde empezamos?` : `I want something like ${data.title}, where do we start?`}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
+			</div>
 		</div>
 	</section>
 </article>
+
+<script>
+	// Barra de lectura: cuánto de la ficha llevas recorrido.
+	const bar = document.querySelector<HTMLElement>('.case-progress i');
+	if (bar) {
+		let frame = 0;
+		const update = () => {
+			frame = 0;
+			const max = document.documentElement.scrollHeight - window.innerHeight;
+			bar.style.transform = `scaleX(${max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0})`;
+		};
+		window.addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
+		update();
+	}
+</script>

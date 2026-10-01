@@ -28,6 +28,16 @@ const GROUPS = [
 	'.jx-proofs > li',
 	'.pdp-spec > div',
 	'.pdp-how__steps > li',
+	'.case-duo > article',
+	'.case-flow > li',
+	'.case-deliver > li',
+	'.cdg__card',
+	'.cdg-compare > li',
+	'.evidence-shot',
+	'.case-outcomes > li',
+	'.case-principles li',
+	'.case-links > li',
+	'.case-toc li',
 	'[data-home-case]',
 	'.jx-clip',
 ];
@@ -44,6 +54,7 @@ const SINGLES = [
 	'.jm section > .jx-wrap > *',
 	'.jx-calc',
 	'.pdp-how__stage',
+	'.case-callout',
 ];
 
 export function initJxMotion(): void {
@@ -99,7 +110,7 @@ export function initJxMotion(): void {
 	// - Las que ya se ven al cargar arrancan en 0 (el CSS las tiene ocultas hasta aquí) y cuentan.
 	// - Las de más abajo conservan su valor real en la página (lectores de pantalla, copiar texto)
 	//   y empiezan a contar un poco ANTES de entrar en pantalla, para que el salto a 0 no se vea.
-	const counters = [...document.querySelectorAll<HTMLElement>('.jx-facts dt, .jx-kpis__value, .jx-bots__prices td strong')];
+	const counters = [...document.querySelectorAll<HTMLElement>('.jx-facts dt, .jx-kpis__value, .jx-bots__prices td strong, .cdg [data-count]')];
 	const countObserver = new IntersectionObserver(
 		(entries) =>
 			entries.forEach((entry) => {

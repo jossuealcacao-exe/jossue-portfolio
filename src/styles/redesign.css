@@ -221,14 +221,12 @@
 
 	/* While pinned, the in-flow kicker hands off to the fixed chip (no duplicate). */
 	.section-heading > .index,
-	.profile-section > .index,
-	.case-grid > .index {
+.profile-section > .index {
 		transition: opacity 180ms var(--ease-out);
 	}
 
 	.section-heading > .index.is-spy-active,
-	.profile-section > .index.is-spy-active,
-	.case-grid > .index.is-spy-active {
+.profile-section > .index.is-spy-active {
 		opacity: 0;
 	}
 
@@ -585,12 +583,7 @@
 	}
 
 	/* On dark surfaces the hover outline keeps the button's resting light color. */
-	.case-cta .button:hover,
-	.case-cta .button:active {
-		border-color: var(--paper);
-		color: var(--paper);
-		background: transparent;
-	}
+	
 
 	.button--ghost {
 		border-color: var(--line-strong);
@@ -1961,19 +1954,11 @@
 		line-height: 1.45;
 	}
 
-	.case-cover {
-		margin-bottom: clamp(2rem, 5vw, 4rem);
-	}
+	
 
-	.case-cover .project-visual {
-		min-height: clamp(22rem, 64vw, 48rem);
-		aspect-ratio: 16 / 9;
-		border-radius: var(--radius-lg);
-	}
+	
 
-	.case-cover .project-visual--wu-nutrition img {
-		max-width: 38%;
-	}
+	
 
 	.case-jump {
 		top: var(--header-h);
@@ -2008,341 +1993,105 @@
 		font-weight: 800;
 	}
 
-	.case-grid {
-		gap: var(--space-4);
-		scroll-margin-top: calc(var(--header-h) + 4rem);
-	}
+	
 
-	.case-prose p {
-		max-width: 52ch;
-		font-size: clamp(1.15rem, 1.8vw, 1.35rem);
-		line-height: 1.6;
-	}
+	
 
-	.approach-list {
-		display: grid;
-		padding: 0;
-		border-top: 1px solid var(--line-strong);
-		list-style: none;
-	}
+	
 
-	.approach-list li {
-		display: grid;
-		grid-template-columns: 2.5rem minmax(0, 1fr);
-		gap: 1rem;
-		padding-block: 1.25rem;
-		border-bottom: 1px solid var(--line);
-	}
+	
 
-	.approach-list span {
-		color: var(--muted);
-		font-size: 0.75rem;
-	}
+	
 
-	.approach-list p {
-		font-family: var(--heading);
-		font-size: clamp(1.25rem, 2.2vw, 1.85rem);
-		line-height: 1.2;
-	}
+	
 
-	.deliverable-grid {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr);
-		gap: 1px;
-		padding: 1px;
-		border-radius: var(--radius-lg);
-		overflow: hidden;
-		background: var(--line);
-		list-style: none;
-	}
+	
 
-	.deliverable-grid li {
-		min-height: 0;
-		padding: clamp(1.25rem, 3vw, 2rem);
-		background: var(--surface);
-		font-family: var(--heading);
-		font-size: clamp(1.15rem, 2vw, 1.55rem);
-		line-height: 1.25;
-	}
+	
 
-	.outcome-list {
-		display: grid;
-		gap: 0;
-		padding: 0;
-		border-top: 1px solid var(--line-strong);
-		list-style: none;
-	}
+	
 
-	.outcome-list li {
-		padding-block: 1.1rem;
-		border-bottom: 1px solid var(--line);
-		font-family: var(--heading);
-		font-size: clamp(1.3rem, 2.5vw, 2rem);
-		line-height: 1.2;
-	}
+	
 
-	.principles-block {
-		display: grid;
-		gap: 1rem;
-		margin-top: var(--space-3);
-		padding: var(--space-3);
-		border-radius: var(--radius-lg);
-		color: var(--paper);
-		background: var(--ink);
-	}
+	
 
-	.principles-block ul {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.55rem;
-		padding: 0;
-		list-style: none;
-	}
+	
 
-	.principles-block li {
-		padding: 0.5rem 0.75rem;
-		border: 1px solid color-mix(in srgb, var(--paper) 24%, transparent);
-		border-radius: var(--radius-pill);
-	}
+	
 
-	.principles-block .eyebrow {
-		color: color-mix(in srgb, var(--paper) 70%, transparent);
-	}
+	
 
-	.case-gallery > .flow {
-		max-width: none;
-	}
+	
 
-	.case-context-scene > .flow {
-		max-width: none;
-	}
+	
 
-	.case-ambience {
-		display: grid;
-		gap: 0;
-		margin: var(--space-2) 0 0;
-		border: 1px solid var(--line);
-		background: var(--surface);
-	}
+	
 
-	.case-ambience__frame {
-		aspect-ratio: 16 / 9;
-		overflow: hidden;
-		background: var(--ink);
-	}
+	
 
-	.case-ambience__frame img {
-		display: block;
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-	}
+	
 
-	.case-ambience__caption {
-		display: grid;
-		gap: var(--space-2);
-		padding: clamp(1.25rem, 3vw, 2rem);
-		border-top: 1px solid var(--line);
-	}
+	
 
-	.case-ambience__summary {
-		display: grid;
-		gap: 0.55rem;
-		max-width: 54ch;
-	}
+	
 
-	.case-ambience__summary > p:last-child {
-		font-family: var(--heading);
-		font-size: clamp(1.25rem, 2.5vw, 2rem);
-		font-weight: 800;
-		line-height: 1.15;
-	}
+	
 
-	.case-ambience__provenance {
-		display: grid;
-		align-content: start;
-		gap: 0.35rem;
-		color: var(--muted);
-		font-size: 0.78rem;
-		line-height: 1.4;
-	}
+	
 
-	.case-ambience__provenance strong {
-		color: var(--ink);
-		font-size: 0.72rem;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		/* La advertencia es la linea que sostiene la honestidad del bloque.
-		   Sin esto parte en "AMBIENTACION, NO / CAPTURA." y deja huerfana
-		   justo la palabra que hace el trabajo. */
-		text-wrap: balance;
-	}
+	
 
-	@media (min-width: 64rem) {
-		.case-ambience__caption {
-			grid-template-columns: minmax(0, 1.5fr) minmax(15rem, 0.5fr);
-			align-items: start;
-		}
-	}
+	
 
-	.case-signals > .flow,
-	.case-links > .flow {
-		max-width: none;
-	}
+	
 
-	.diagram-gallery {
-		display: grid;
-		gap: var(--space-2);
-	}
+	
 
-	.diagram {
-		display: grid;
-		gap: var(--space-2);
-		/* <figure> UA margins (40px per side) were shrinking the card on mobile. */
-		margin: 0;
-		padding: clamp(1.25rem, 3vw, 2rem);
-		border: 1px solid var(--line);
-		background: var(--surface);
-	}
+	
 
-	.diagram__header {
-		display: grid;
-		gap: 0.5rem;
-	}
+	
 
-	.diagram__id {
-		color: var(--muted);
-		font-size: 0.72rem;
-		font-weight: 800;
-		letter-spacing: 0.12em;
-		text-transform: uppercase;
-	}
+	
 
-	.diagram__header h3 {
-		font-size: clamp(1.5rem, 3vw, 2.5rem);
-	}
+	
 
-	.diagram__header p,
-	.diagram figcaption {
-		max-width: 62ch;
-		color: var(--muted);
-	}
+	
 
-	.diagram-bars {
-		display: grid;
-		gap: 1rem;
-		padding: 0;
-		list-style: none;
-	}
+	
 
-	.diagram-bars li {
-		display: grid;
-		gap: 0.45rem;
-	}
+	
 
-	.diagram-bars__meta {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 1rem;
-		font-weight: 800;
-	}
+	
 
-	.diagram-bars__track {
-		height: 0.8rem;
-		border: 1px solid var(--line-strong);
-		background: var(--paper);
-	}
+	
 
-	.diagram-bars__track span {
-		display: block;
-		width: var(--bar);
-		height: 100%;
-		background: var(--ink);
-	}
+	
 
-	.diagram-bars__detail,
-	.diagram-compare__detail {
-		color: var(--muted);
-	}
+	
 
-	.diagram-flow {
-		display: grid;
-		gap: 0;
-		padding: 0;
-		list-style: none;
-	}
+	
 
-	.diagram-flow li {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 1rem;
-		padding-block: 1rem;
-		border-top: 1px solid var(--line);
-	}
+	
 
-	.diagram-flow li:first-child {
-		border-top: 0;
-	}
+	
 
-	.diagram-flow li > span {
-		display: inline-grid;
-		width: 2.5rem;
-		height: 2.5rem;
-		place-items: center;
-		border: 1px solid var(--line-strong);
-		background: var(--paper);
-		font-family: var(--mono);
-		font-size: 0.72rem;
-		font-weight: 800;
-		color: var(--muted);
-	}
+	
 
-	.diagram-flow strong {
-		display: block;
-		margin-bottom: 0.25rem;
-		font-weight: 900;
-	}
+	
 
-	.diagram-flow p {
-		margin: 0;
-		color: var(--muted);
-	}
+	
 
-	.diagram-compare {
-		display: grid;
-		gap: 1rem;
-	}
+	
 
-	.diagram-compare__item {
-		display: grid;
-		gap: 0.25rem;
-		padding-block: 1rem;
-		border-top: 1px solid var(--line);
-	}
+	
 
-	.diagram-compare__value {
-		font-family: var(--heading);
-		font-size: clamp(2.8rem, 7vw, 5rem);
-		font-weight: 900;
-		line-height: 1;
-		letter-spacing: 0;
-	}
+	
 
-	.diagram-compare__value small {
-		margin-left: 0.2rem;
-		font-size: 0.28em;
-	}
+	
 
-	.diagram-compare__label {
-		font-weight: 800;
-	}
+	
 
-	@media (min-width: 64rem) {
-		.diagram-gallery {
-			grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
-		}
-	}
+	
 
 	.evidence-gallery {
 		margin-top: var(--space-2);
@@ -2587,53 +2336,19 @@
 		}
 	}
 
-	.project-link-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
-		gap: 0.75rem;
-		padding: 0;
-		list-style: none;
-	}
+	
 
-	.project-link {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) auto;
-		align-items: center;
-		gap: 1rem;
-		min-height: 5.25rem;
-		padding: 1rem 1.25rem;
-		border: 1px solid var(--line);
-		background: var(--surface);
-		text-decoration: none;
-	}
+	
 
-	.project-link:hover {
-		border-color: var(--ink);
-	}
+	
 
-	.project-link small {
-		display: block;
-		color: var(--muted);
-		font-size: 0.72rem;
-		font-weight: 800;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-	}
+	
 
-	.project-link strong {
-		font-family: var(--heading);
-		font-size: 1.25rem;
-	}
+	
 
-	.case-cta {
-		margin-top: var(--space-4);
-		padding: clamp(2rem, 6vw, 5rem);
-		border-radius: var(--radius-lg);
-	}
+	
 
-	.case-cta h2 {
-		max-width: 18ch;
-	}
+	
 
 	.contact-layout {
 		display: grid;
@@ -3375,14 +3090,9 @@
 			font-size: clamp(2.6rem, 12vw, 4rem);
 		}
 
-		.case-cover .project-visual {
-			min-height: 20rem;
-			aspect-ratio: 4 / 3;
-		}
+		
 
-		.case-cover .project-visual--wu-nutrition img {
-			max-width: 62%;
-		}
+		
 
 		.case-jump {
 			margin-inline: calc(var(--gutter) * -1);
