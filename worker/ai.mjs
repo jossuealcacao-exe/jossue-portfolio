@@ -138,7 +138,7 @@ async function requestGemini(env, model, system, history, schema = SCHEMA) {
 	}
 	if (!response.ok) {
 		const detail = await response.text().catch(() => '');
-		throw Object.assign(new Error(`gemini ${response.status} (${model}): ${detail.slice(0, 300)}`), { status: 502, retryable: RETRYABLE.has(response.status) });
+		throw Object.assign(new Error(`gemini ${response.status} (${model}): ${detail.slice(0, 300)}`), { status: 502, upstream: response.status, retryable: RETRYABLE.has(response.status) });
 	}
 	return response;
 }
@@ -314,6 +314,49 @@ async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
 	}).catch((error) => console.error('ai lead email failed', error?.name));
 }
 
+// Gemini sin saldo o sin cuota: Jossue AI deja de contestar y nadie se entera. Se le avisa a
+// Jossué por correo, como máximo una vez al día (la marca vive en ai_blocks con until = 0, así no
+// cuenta como bloqueo de nadie).
+const PROVIDER_ALERT_KEY = 'system:provider-alert';
+const PROVIDER_ALERT_EVERY_MS = 24 * 60 * 60_000;
+
+export function isProviderBillingError(error) {
+	const detail = String(error?.message ?? '');
+	return Number(error?.upstream) === 402 || /RESOURCE_EXHAUSTED|prepayment|credits are depleted|billing|quota/i.test(detail);
+}
+
+export async function alertProviderProblem(env, error, source = 'web') {
+	if (!isProviderBillingError(error) || !env.DB || !env.CONTACT_EMAIL || !String(env.CONTACT_EMAIL_TO ?? '').trim()) return false;
+	const now = Date.now();
+	const row = await env.DB.prepare('SELECT alerted_at FROM ai_blocks WHERE key = ?').bind(PROVIDER_ALERT_KEY).first().catch(() => null);
+	if (row && now - Number(row.alerted_at) < PROVIDER_ALERT_EVERY_MS) return false;
+	await env.DB.prepare(
+		`INSERT INTO ai_blocks (key, until, reason, count, alerted_at) VALUES (?, 0, ?, 1, ?)
+		 ON CONFLICT (key) DO UPDATE SET reason = excluded.reason, count = ai_blocks.count + 1, alerted_at = excluded.alerted_at`,
+	)
+		.bind(PROVIDER_ALERT_KEY, `gemini ${error?.upstream ?? ''}`.trim(), now)
+		.run()
+		.catch(() => null);
+	const upstream = Number(error?.upstream) || 0;
+	const what = upstream === 402 ? 'Gemini se quedó sin saldo (402)' : `Gemini rechazó por cuota (${upstream || 'sin código'})`;
+	await env.CONTACT_EMAIL.send({
+		to: String(env.CONTACT_EMAIL_TO).trim(),
+		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI · Avisos' },
+		subject: `Jossue AI no está contestando: ${what}`,
+		text: [
+			`${what}. Desde ${new Date(now).toISOString()} Jossue AI no puede responder ${source === 'whatsapp' ? 'en WhatsApp' : 'en jossuealcala.com'}.`,
+			'',
+			'Qué ve la gente: en el sitio, el mensaje de error con la opción de escribirte por WhatsApp; en WhatsApp, que le pasa el chat a Jossué.',
+			'Qué hacer: recargar o activar el cobro en https://ai.studio/projects (el proyecto de tu GEMINI_API_KEY). En cuanto haya saldo, vuelve solo; no hay que publicar nada.',
+			'',
+			`Detalle: ${String(error?.message ?? '').slice(0, 300)}`,
+			'',
+			'Este aviso llega como máximo una vez al día.',
+		].join('\n'),
+	}).catch((mailError) => console.error('ai provider alert failed', mailError?.name));
+	return true;
+}
+
 /** POST /api/ai  { sid, locale, page, messages: [{ role, content, sig? }] } */
 export async function handleAi(request, env, { json, origin, ipHash }) {
 	let body;
@@ -352,6 +395,7 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 		});
 	} catch (error) {
 		console.error('ai request failed', error?.message);
+		await alertProviderProblem(env, error, 'web');
 		return json(Number(error?.status) === 503 ? 503 : 502, { ok: false, error: 'ai_failed' }, origin);
 	}
 

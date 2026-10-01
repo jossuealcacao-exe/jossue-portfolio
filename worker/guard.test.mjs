@@ -298,3 +298,28 @@ test('the chats panel lists abuse attempts and blocks', async () => {
 		models.restore();
 	}
 });
+
+test('when Gemini runs out of credits, Jossué gets one email a day, not one per visitor', async () => {
+	const original = globalThis.fetch;
+	globalThis.fetch = async () =>
+		new Response(JSON.stringify({ error: { code: 402, message: 'Your prepayment credits are depleted.', status: 'RESOURCE_EXHAUSTED' } }), { status: 402 });
+	try {
+		const env = environment();
+		const first = await ask(env, '¿Qué hace Jossué?');
+		assert.equal(first.status, 502);
+		await ask(env, '¿Y MADRE?', { sid: 'otra', ip: '198.51.100.9' });
+		await ask(env, '¿Y Daniela?', { sid: 'otra-mas', ip: '198.51.100.10' });
+		assert.equal(env.emails.length, 1);
+		assert.match(env.emails[0].subject, /Jossue AI no está contestando: Gemini se quedó sin saldo \(402\)/);
+		assert.match(env.emails[0].text, /ai\.studio\/projects/);
+		// La marca del aviso no aparece como bloqueo de nadie.
+		const panel = await (await handleRequest(new Request(`${ORIGIN}/api/ai/chats`, { headers: { Origin: ORIGIN, Authorization: 'Bearer admin-token' } }), env)).json();
+		assert.equal(panel.abuse.blocks.length, 0);
+		// Al día siguiente, si sigue sin saldo, vuelve a avisar.
+		env.DB.raw.prepare("UPDATE ai_blocks SET alerted_at = 1 WHERE key = 'system:provider-alert'").run();
+		await ask(env, '¿Sigue caído?', { sid: 'dia-2', ip: '198.51.100.11' });
+		assert.equal(env.emails.length, 2);
+	} finally {
+		globalThis.fetch = original;
+	}
+});

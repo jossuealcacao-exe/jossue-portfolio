@@ -21,7 +21,7 @@
 // que escribe Jossué) y WA_HANDOFF_HOURS (después de pasarle un chat).
 
 import { PERSONA } from './persona.mjs';
-import { SCHEMA, callGemini, loadKnowledge, redactPII } from './ai.mjs';
+import { SCHEMA, alertProviderProblem, callGemini, loadKnowledge, redactPII } from './ai.mjs';
 import { ALERT_LINE, blockedUntil, canaryLine, guardedAnswer } from './guard.mjs';
 
 const KNOWLEDGE_URL = 'https://jossuealcala.com/';
@@ -287,6 +287,7 @@ async function onIncoming(env, message, contact) {
 		});
 	} catch (error) {
 		console.error('wa ai failed', error?.message);
+		await alertProviderProblem(env, error, 'whatsapp');
 	}
 	// Abuso: respuesta genérica, sin pasarle nada a Jossué (la alerta, si toca, ya salió por correo).
 	if (result?.abuse) {
