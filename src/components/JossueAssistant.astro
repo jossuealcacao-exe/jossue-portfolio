@@ -43,11 +43,12 @@ const copy = es
 				askUrl: 'Gracias, {name}. ¿Cuál es la dirección de tu sitio?',
 				url: 'tusitio.com',
 				run: 'Hacer mi auditoría',
-				steps: ['Abriendo tu sitio', 'Midiendo la velocidad en celular', 'Revisando lo que ve tu cliente', 'Buscando qué te cuesta ventas', 'Escribiendo tus 3 áreas de oportunidad'],
+				steps: ['Abriendo tu sitio', 'Midiendo la velocidad en celular', 'Revisando lo que ve tu cliente', 'Buscando qué te cuesta ventas', 'Escribiendo tus áreas de oportunidad'],
 				waiting: 'Auditando {domain}…',
 				doneTitle: 'Tu auditoría express de {domain}',
 				health: 'Salud',
-				areas: 'Tus 3 áreas de oportunidad',
+				areas: 'Tus {n} áreas de oportunidad',
+				areaOne: 'Tu área de oportunidad',
 				why: 'Por qué importa',
 				fix: 'Por dónde empezaría',
 				severity: { high: 'Alta', medium: 'Media', low: 'Baja' },
@@ -92,11 +93,12 @@ const copy = es
 				askUrl: 'Thanks, {name}. What is your site’s address?',
 				url: 'yoursite.com',
 				run: 'Run my audit',
-				steps: ['Opening your site', 'Measuring mobile speed', 'Checking what your customer sees', 'Looking for what costs you sales', 'Writing your 3 opportunity areas'],
+				steps: ['Opening your site', 'Measuring mobile speed', 'Checking what your customer sees', 'Looking for what costs you sales', 'Writing your opportunity areas'],
 				waiting: 'Auditing {domain}…',
 				doneTitle: 'Your express audit of {domain}',
 				health: 'Health',
-				areas: 'Your 3 opportunity areas',
+				areas: 'Your {n} opportunity areas',
+				areaOne: 'Your opportunity area',
 				why: 'Why it matters',
 				fix: 'Where I would start',
 				severity: { high: 'High', medium: 'Medium', low: 'Low' },
@@ -187,7 +189,7 @@ const config = {
 	type Message = { role: 'user' | 'assistant'; content: string; sig?: string; action?: string; page?: string | null };
 	type AuditCopy = {
 		invite: string; start: string; intro: string; name: string; email: string; consent: string; next: string; askUrl: string; url: string; run: string;
-		steps: string[]; waiting: string; doneTitle: string; health: string; areas: string; why: string; fix: string; severity: Record<string, string>;
+		steps: string[]; waiting: string; doneTitle: string; health: string; areas: string; areaOne: string; why: string; fix: string; severity: Record<string, string>;
 		pdf: string; report: string; talk: string; doneNote: string; errors: Record<string, string>;
 	};
 	type Copy = {
@@ -437,7 +439,7 @@ const config = {
 				ring.setAttribute('aria-label', `${A.health}: ${audit.score ?? '—'} / 100`);
 				ring.append(make('strong', '', audit.score === null ? '—' : String(audit.score)), make('small', '', A.health));
 				head.append(ring, make('p', 'jai__audit-title', fill(A.doneTitle, { domain: audit.domain })));
-				card.append(head, make('p', 'jai__audit-kicker', A.areas));
+				card.append(head, make('p', 'jai__audit-kicker', audit.findings.length === 1 ? A.areaOne : fill(A.areas, { n: String(audit.findings.length) })));
 				const areas = make('ol', 'jai__areas');
 				audit.findings.forEach((finding) => {
 					const item = make('li');

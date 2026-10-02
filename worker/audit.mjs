@@ -148,15 +148,15 @@ async function notifyOwner(env, row) {
 			? [
 					`Salud: ${audit.score ?? '—'} / 100`,
 					'',
-					'Las 3 áreas de oportunidad:',
-					...audit.findings.map((item, index) => `${index + 1}. ${item.title} (${item.severity})\n   Por qué importa: ${item.business_effect}\n   Qué haría: ${item.recommendation}`),
+					audit.findings.length === 1 ? 'El área de oportunidad:' : `Las ${audit.findings.length} áreas de oportunidad:`,
+					...audit.findings.map((item, index) => `${index + 1}. ${item.title} (${item.severity})\n   Por qué importa: ${item.business_effect}${item.recommendation ? `\n   Qué haría: ${item.recommendation}` : ''}`),
 					'',
 					audit.report_url && `Informe: ${audit.report_url}`,
 					audit.pdf_url && `PDF: ${audit.pdf_url}`,
 				]
 			: ['No hubo informe: escríbele tú con la revisión a mano.']),
 		'',
-		'Siguiente paso sugerido: escríbele hoy mismo, ofreciendo revisar con él la primera mejora.',
+		'Siguiente paso sugerido: escríbele hoy mismo y ofrécele revisar juntos la primera mejora.',
 	].filter((line) => line !== null && line !== undefined && line !== false);
 	await env.CONTACT_EMAIL.send({
 		to: recipient,
