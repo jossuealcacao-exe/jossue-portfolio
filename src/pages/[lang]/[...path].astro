@@ -8,6 +8,7 @@ import DesarrolloWebPage from '../../components/DesarrolloWebPage.astro';
 import CaseDetail from '../../components/CaseDetail.astro';
 import MadrePage from '../../components/MadrePage.astro';
 import PageView from '../../components/PageView.astro';
+import PrivacyPage from '../../components/PrivacyPage.astro';
 import ProductCatalog from '../../components/ProductCatalog.astro';
 import ProductDetail from '../../components/ProductDetail.astro';
 import { casePresentation } from '../../data/casePresentation';
@@ -22,7 +23,7 @@ type PageProps =
 
 export async function getStaticPaths() {
 	const paths: Array<{ params: { lang: Locale; path: string }; props: PageProps }> = [];
-	const pageKeys = ['products', 'work', 'services', 'ai', 'about', 'contact', 'ahpAtlas', 'madre'] as const;
+	const pageKeys = ['products', 'work', 'services', 'ai', 'about', 'contact', 'ahpAtlas', 'madre', 'privacy'] as const;
 
 	for (const locale of ['es', 'en'] as const) {
 		for (const pageKey of pageKeys) {
@@ -111,6 +112,8 @@ const description = publicCase?.summary ?? product?.summary[locale] ?? meta!.des
 			<AhpCommandAtlas locale={locale} />
 		) : pageKey === 'madre' ? (
 			<MadrePage locale={locale} />
+		) : pageKey === 'privacy' ? (
+			<PrivacyPage locale={locale} />
 		) : pageKey === 'products' ? (
 			<ProductCatalog locale={locale} />
 		) : product?.slug === 'chatbots' ? (

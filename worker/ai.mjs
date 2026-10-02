@@ -292,6 +292,21 @@ async function tooManyFromIp(env, ipHash) {
 	return Number(row?.total ?? 0) >= IP_MAX_MESSAGES;
 }
 
+// Plazos del aviso de privacidad (/es/privacidad/): chat 30 días; recados, auditorías y mensajes del
+// formulario 12 meses; registros de seguridad 90 días. Si cambian aquí, cambian allá.
+export async function purgeExpired(env, now = Date.now()) {
+	if (!env.DB) return;
+	const year = now - 365 * 864e5;
+	await env.DB.batch([
+		env.DB.prepare('DELETE FROM ai_messages WHERE ts < ?').bind(now - RETENTION_DAYS * 864e5),
+		env.DB.prepare('DELETE FROM ai_leads WHERE created_at < ?').bind(new Date(year).toISOString()),
+		env.DB.prepare('DELETE FROM ai_audits WHERE created_at < ?').bind(year),
+		env.DB.prepare('DELETE FROM submissions WHERE created_at < ?').bind(new Date(year).toISOString()),
+		env.DB.prepare('DELETE FROM ai_abuse WHERE ts < ?').bind(now - 90 * 864e5),
+		env.DB.prepare("DELETE FROM ai_blocks WHERE until < ? AND key NOT LIKE 'system:%'").bind(now - 90 * 864e5),
+	]).catch((error) => console.error('ai purge failed', error?.message));
+}
+
 async function saveTurn(env, { sid, ipHash, locale, page, question, answer, firstTurn }) {
 	if (!env.DB || !sid) return;
 	try {
@@ -302,7 +317,7 @@ async function saveTurn(env, { sid, ipHash, locale, page, question, answer, firs
 			env.DB.prepare("INSERT INTO ai_messages (sid, ts, role, text, ip_hash, locale, page) VALUES (?, ?, 'assistant', ?, ?, ?, ?)").bind(sid, ts + 1, redactPII(answer).slice(0, 2000), ipHash, locale, page),
 		]);
 		// Purga perezosa, como en Daniela: de vez en cuando y no en cada turno.
-		if (Math.random() < 0.03) await env.DB.prepare('DELETE FROM ai_messages WHERE ts < ?').bind(ts - RETENTION_DAYS * 864e5).run();
+		if (Math.random() < 0.03) await purgeExpired(env, ts);
 	} catch (error) {
 		console.error('ai saveTurn failed', error?.message);
 	}

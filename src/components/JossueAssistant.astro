@@ -178,7 +178,7 @@ const config = {
 			<textarea id="jai-input" rows="1" maxlength="800" placeholder={copy.placeholder} data-jai-input enterkeyhint="send"></textarea>
 			<button class="jai__send" type="submit" aria-label={copy.send} data-jai-send><Icon name="arrow-right" /></button>
 		</form>
-		<p class="jai__disclosure">{copy.disclosure}</p>
+		<p class="jai__disclosure">{copy.disclosure} <a href={routes[locale].privacy}>{es ? 'Aviso de privacidad' : 'Privacy notice'}</a></p>
 	</section>
 	<script type="application/json" data-jai-config set:html={JSON.stringify(config)} />
 </aside>
@@ -375,7 +375,12 @@ const config = {
 					box.type = 'checkbox';
 					box.name = 'consent';
 					box.checked = Boolean(state.consent);
-					consent.append(box, make('span', '', A.consent));
+					const consentText = make('span', '', `${A.consent} `);
+					const privacy = make('a', '', config.locale === 'es' ? 'Aviso de privacidad' : 'Privacy notice');
+					privacy.href = config.routes.privacy;
+					privacy.target = '_blank';
+					consentText.append(privacy);
+					consent.append(box, consentText);
 					formNode.append(consent);
 				} else {
 					formNode.append(make('p', '', fill(A.askUrl, { name: (state.name ?? '').split(' ')[0] })), field('text', 'url', A.url));

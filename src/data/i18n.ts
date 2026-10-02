@@ -1,6 +1,6 @@
 export const locales = ['es', 'en'] as const;
 export type Locale = (typeof locales)[number];
-export type PageKey = 'home' | 'products' | 'work' | 'services' | 'ai' | 'about' | 'contact' | 'ahpAtlas' | 'madre';
+export type PageKey = 'home' | 'products' | 'work' | 'services' | 'ai' | 'about' | 'contact' | 'ahpAtlas' | 'madre' | 'privacy';
 
 export const routes: Record<Locale, Record<PageKey, string>> = {
 	es: {
@@ -13,6 +13,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
 		contact: '/es/contacto/',
 		ahpAtlas: '/es/recursos/ahp-plus/',
 		madre: '/es/madre/',
+		privacy: '/es/privacidad/',
 	},
 	en: {
 		home: '/en/',
@@ -24,6 +25,7 @@ export const routes: Record<Locale, Record<PageKey, string>> = {
 		contact: '/en/contact/',
 		ahpAtlas: '/en/resources/ahp-plus/',
 		madre: '/en/madre/',
+		privacy: '/en/privacy/',
 	},
 };
 
@@ -68,6 +70,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 			title: 'Sobre mí: Head of E-commerce y AI Dev — Jossue Alcalá',
 			description: 'Más de 8 años en growth, paid media, SEO y CRO. Dirijo el ecommerce de WU Nutrition y Come Verde y construyo productos con IA. CV en PDF.',
 		},
+		privacy: {
+			title: 'Aviso de privacidad — Jossue Alcalá',
+			description: 'Qué datos recabo en el sitio, el chat Jossue AI, la auditoría express y WhatsApp, para qué los uso, cuánto tiempo los guardo y cómo ejercer tus derechos ARCO.',
+		},
 		contact: {
 			title: 'Contacto — Jossue Alcalá · Shopify, CRO e IA',
 			description: 'Escríbeme por correo, WhatsApp o el formulario, o pregúntale a Jossue AI. Contesto en menos de un día hábil.',
@@ -105,6 +111,10 @@ export const metadata: Record<Locale, Record<PageKey, { title: string; descripti
 		about: {
 			title: 'About: Head of E-commerce and AI Dev — Jossue Alcalá',
 			description: '8+ years across growth, paid media, SEO and CRO. I lead ecommerce at WU Nutrition and Come Verde and build AI products. PDF CV.',
+		},
+		privacy: {
+			title: 'Privacy notice — Jossue Alcalá',
+			description: 'What data I collect on the site, the Jossue AI chat, the express audit and WhatsApp, what I use it for, how long I keep it and how to exercise your rights.',
 		},
 		contact: {
 			title: 'Contact — Jossue Alcalá · Shopify, CRO and AI',

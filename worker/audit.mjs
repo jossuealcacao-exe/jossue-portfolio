@@ -120,7 +120,7 @@ function cleanFindings(list) {
 		.slice(0, 3)
 		.map((item) => ({
 			title: clip(item?.title, 140),
-			category: clip(item?.category, 40),
+			category: clip(item?.category_label || item?.category, 40),
 			severity: ['high', 'medium', 'low'].includes(item?.severity) ? item.severity : 'medium',
 			business_effect: clip(item?.business_effect, 400),
 			recommendation: clip(item?.recommendation, 400),

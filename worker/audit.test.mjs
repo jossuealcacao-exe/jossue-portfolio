@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
+import { readFileSync } from 'node:fs';
 import { normalizeSite } from './audit.mjs';
 import { handleRequest } from './index.mjs';
 import { d1 } from './test-d1.mjs';
@@ -249,4 +250,28 @@ test('a site that asks robots not to crawl it gets an honest message', async () 
 	} finally {
 		apex.restore();
 	}
+});
+
+test('retention promised in the privacy notice is enforced', async () => {
+	const { purgeExpired } = await import('./ai.mjs');
+	const env = environment();
+	const db = env.DB.raw;
+	db.exec(readFileSync(new URL('../migrations/0001_contact_submissions.sql', import.meta.url), 'utf8'));
+	const now = Date.now();
+	const old = now - 400 * 864e5;
+	const recent = now - 10 * 864e5;
+	db.prepare("INSERT INTO ai_messages (sid, ts, role, text, ip_hash) VALUES ('a', ?, 'user', 'viejo', 'x'), ('b', ?, 'user', 'nuevo', 'x')").run(now - 31 * 864e5, recent);
+	db.prepare("INSERT INTO ai_leads (id, created_at, sid) VALUES ('l1', ?, 's'), ('l2', ?, 's')").run(new Date(old).toISOString(), new Date(recent).toISOString());
+	db.prepare("INSERT INTO ai_audits (id, created_at, updated_at, sid, ip_hash, name, email, consent_at, url, domain, status) VALUES ('A1', ?, ?, 's', 'x', 'n', 'e', 1, 'u', 'd', 'done'), ('A2', ?, ?, 's', 'x', 'n', 'e', 1, 'u', 'd', 'done')").run(old, old, recent, recent);
+	db.prepare("INSERT INTO submissions (id, created_at, name, email, project_type, message, consent, ip_hash) VALUES ('S1', ?, 'n', 'e', 'p', 'm', 1, 'x'), ('S2', ?, 'n', 'e', 'p', 'm', 1, 'x')").run(new Date(old).toISOString(), new Date(recent).toISOString());
+	db.prepare("INSERT INTO ai_abuse (ts, key, kind, layer) VALUES (?, 'k', 'injection', 'rules'), (?, 'k', 'injection', 'rules')").run(now - 91 * 864e5, recent);
+	db.prepare("INSERT INTO ai_blocks (key, until) VALUES ('ip:viejo', ?), ('system:provider-alert', 0)").run(now - 91 * 864e5);
+	await purgeExpired(env, now);
+	const count = (table) => db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get().n;
+	assert.equal(count('ai_messages'), 1, 'chat: 30 días');
+	assert.equal(count('ai_leads'), 1, 'recados: 12 meses');
+	assert.equal(count('ai_audits'), 1, 'auditorías: 12 meses');
+	assert.equal(count('submissions'), 1, 'formulario: 12 meses');
+	assert.equal(count('ai_abuse'), 1, 'seguridad: 90 días');
+	assert.deepEqual(db.prepare('SELECT key FROM ai_blocks').all().map((row) => row.key), ['system:provider-alert'], 'la marca del aviso de saldo se queda');
 });

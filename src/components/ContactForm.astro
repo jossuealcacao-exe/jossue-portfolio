@@ -1,6 +1,6 @@
 ---
 import { contact, contactEndpoint } from '../data/contact';
-import type { Locale } from '../data/i18n';
+import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
 
 interface Props {
@@ -170,7 +170,7 @@ const copy = es
 		<div class="field">
 			<label class="consent">
 				<input type="checkbox" name="consent" value="yes" required data-error={copy.errConsent} />
-				<span>{copy.consent}</span>
+				<span>{copy.consent} <a href={routes[locale].privacy}>{locale === 'es' ? 'Aviso de privacidad' : 'Privacy notice'}</a></span>
 			</label>
 			<p class="field__error" data-error-for="consent" aria-live="polite"></p>
 		</div>
