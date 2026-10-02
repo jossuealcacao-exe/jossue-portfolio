@@ -1,0 +1,383 @@
+---
+// Agenda de llamadas de 10 minutos. Los horarios salen de /api/booking/slots (worker/booking.mjs):
+// martes, miércoles y viernes de 10:00 a 18:00 y sábado de 9:00 a 13:00, hora de Guadalajara.
+// Jossué le llama a la persona a la hora. La cita queda en este navegador para poder cancelarla.
+import { contact } from '../data/contact';
+import { routes, type Locale } from '../data/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+}
+
+const { locale } = Astro.props;
+const es = locale === 'es';
+const copy = es
+	? {
+		label: 'Llamada de 10 minutos · gratis',
+		title: 'Agenda una llamada conmigo.',
+		soft: 'Yo te llamo.',
+		lede: 'Elige un horario y déjame tu número. A esa hora te marco y en 10 minutos platicamos qué necesitas y por dónde empezaría yo. No tienes que contratar nada.',
+		hours: 'Martes, miércoles y viernes de 10:00 a 18:00 · sábado de 9:00 a 13:00 · hora de Guadalajara',
+		day: 'Elige el día',
+		time: 'Elige la hora',
+		you: 'Tus datos',
+		loading: 'Cargando horarios…',
+		empty: 'No hay horarios libres en las próximas semanas. Escríbeme por WhatsApp y lo acomodamos.',
+		failed: 'No pude cargar la agenda. Escríbeme por WhatsApp y lo acomodamos.',
+		yourTime: 'tu hora',
+		name: 'Nombre',
+		email: 'Correo',
+		phone: 'Teléfono (te llamo aquí)',
+		phoneHint: 'Si tu número no es de México, ponle el código de país, por ejemplo +1 415 555 0100',
+		topic: '¿De qué quieres hablar? (opcional)',
+		topicHint: 'Una línea basta: «mi tienda no vende», «quiero un chatbot»…',
+		consent: 'Acepto que Jossué me llame y me escriba sobre esta llamada. Mis datos solo se usan para eso.',
+		privacy: 'Aviso de privacidad',
+		pickFirst: 'Primero elige un horario.',
+		submit: 'Agendar llamada',
+		sending: 'Agendando…',
+		required: 'Falta este dato.',
+		badEmail: 'Revisa tu correo.',
+		badPhone: 'Revisa tu teléfono. Deben ser 10 dígitos, o incluir el código de país si no es de México.',
+		needConsent: 'Necesito tu permiso para llamarte.',
+		doneTitle: 'Listo, tu llamada quedó agendada',
+		doneText: 'Te llamo el {when} (hora de Guadalajara) al {phone}. Si te surge algo, puedes cancelarla aquí mismo.',
+		ics: 'Agregar a mi calendario',
+		google: 'Google Calendar',
+		cancel: 'Cancelar la llamada',
+		cancelConfirm: '¿Seguro que quieres cancelar tu llamada?',
+		cancelled: 'Cancelé tu llamada. Si quieres, elige otro horario.',
+		another: 'Agendar otra',
+		altTitle: '¿Prefieres escribir?',
+		altText: 'Mi asistente, Jossue AI, te contesta al momento aquí en el sitio y en WhatsApp. Lo que necesite una respuesta mía me lo pasa a mí.',
+		whatsapp: 'Escribir por WhatsApp',
+		chat: 'Preguntarle a Jossue AI',
+		waText: 'Hola Jossué, quiero platicar contigo sobre mi negocio.',
+		errors: { invalid_name: 'Revisa tu nombre.', invalid_email: 'Revisa tu correo.', invalid_phone: 'Revisa tu teléfono. Deben ser 10 dígitos, o incluir el código de país si no es de México.', consent_required: 'Necesito tu permiso para llamarte.', blocked: 'Por ahora no puedo agendar la llamada desde tu conexión. Escríbeme por WhatsApp.', booking_unavailable: 'La agenda no está disponible ahorita. Escríbeme por WhatsApp.' },
+	}
+	: {
+		label: '10-minute call · free',
+		title: 'Book a call with me.',
+		soft: 'I will call you.',
+		lede: 'Pick a time and leave me your number. I call you at that time, and in 10 minutes we talk about what you need and where I would start. You do not have to hire anything.',
+		hours: 'Tuesday, Wednesday and Friday 10:00–18:00 · Saturday 9:00–13:00 · Guadalajara time',
+		day: 'Pick the day',
+		time: 'Pick the time',
+		you: 'Your details',
+		loading: 'Loading times…',
+		empty: 'There are no free times in the coming weeks. Message me on WhatsApp and we will find one.',
+		failed: 'I could not load the calendar. Message me on WhatsApp and we will find a time.',
+		yourTime: 'your time',
+		name: 'Name',
+		email: 'Email',
+		phone: 'Phone (I call you here)',
+		phoneHint: 'With country code if outside Mexico, e.g. +1 415 555 0100',
+		topic: 'What do you want to talk about? (optional)',
+		topicHint: 'One line is enough: “my store does not sell”, “I want a chatbot”…',
+		consent: 'I agree that Jossué may call me and write to me about this call. My data is only used for that.',
+		privacy: 'Privacy notice',
+		pickFirst: 'Pick a time first.',
+		submit: 'Book the call',
+		sending: 'Booking…',
+		required: 'This is required.',
+		badEmail: 'Check your email.',
+		badPhone: 'Check your phone: 10 digits, or with country code if outside Mexico.',
+		needConsent: 'I need your permission to call you.',
+		doneTitle: 'Done, your call is booked',
+		doneText: 'I will call you on {when} (Guadalajara time) at {phone}. If something comes up, you can cancel it right here.',
+		ics: 'Add to my calendar',
+		google: 'Google Calendar',
+		cancel: 'Cancel the call',
+		cancelConfirm: 'Are you sure you want to cancel your call?',
+		cancelled: 'I cancelled your call. Pick another time if you like.',
+		another: 'Book another',
+		altTitle: 'Prefer to write?',
+		altText: 'My assistant, Jossue AI, answers right away here on the site and on WhatsApp. Anything that needs my reply, it passes on to me.',
+		whatsapp: 'Message on WhatsApp',
+		chat: 'Ask Jossue AI',
+		waText: 'Hi Jossué, I would like to talk with you about my business.',
+		errors: { invalid_name: 'Check your name.', invalid_email: 'Check your email.', invalid_phone: 'Check your phone: 10 digits, or with country code if outside Mexico.', consent_required: 'I need your permission to call you.', blocked: 'I cannot book from your connection right now. Message me on WhatsApp.', booking_unavailable: 'The calendar is not available right now. Message me on WhatsApp.' },
+	};
+const whatsappHref = contact.whatsapp ? `${contact.whatsapp}?text=${encodeURIComponent(copy.waText)}` : null;
+const config = { locale, copy };
+---
+
+<section class="jx-booking" data-booking aria-labelledby="booking-title">
+	<script type="application/json" data-booking-config set:html={JSON.stringify(config)} />
+	<div class="jx-wrap">
+		<header class="jx-booking__head">
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{copy.label}</p>
+			<h1 id="booking-title" class="jx-booking__title"><span>{copy.title}</span> <span class="jx-soft">{copy.soft}</span></h1>
+			<p class="jx-booking__lede">{copy.lede}</p>
+			<p class="jx-booking__hours"><Icon name="calendar" />{copy.hours}</p>
+		</header>
+
+		<div class="jx-booking__card" data-booking-flow>
+			<div class="jx-booking__picker">
+				<h2 class="jx-booking__step"><span>1</span>{copy.day}</h2>
+				<div class="jx-booking__days" data-booking-days role="group" aria-label={copy.day}>
+					<p class="jx-booking__note" data-booking-message>{copy.loading}</p>
+				</div>
+				<h2 class="jx-booking__step"><span>2</span>{copy.time}</h2>
+				<div class="jx-booking__times" data-booking-times role="group" aria-label={copy.time}></div>
+			</div>
+
+			<form class="form jx-booking__form" data-booking-form novalidate>
+				<h2 class="jx-booking__step"><span>3</span>{copy.you}</h2>
+				<p class="jx-booking__chosen" data-booking-chosen>{copy.pickFirst}</p>
+				<div class="field">
+					<label for="bk-name">{copy.name}</label>
+					<input id="bk-name" name="name" type="text" autocomplete="name" maxlength="120" required />
+				</div>
+				<div class="field">
+					<label for="bk-email">{copy.email}</label>
+					<input id="bk-email" name="email" type="email" autocomplete="email" inputmode="email" maxlength="200" required />
+				</div>
+				<div class="field">
+					<label for="bk-phone">{copy.phone}</label>
+					<input id="bk-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" maxlength="24" required aria-describedby="bk-phone-hint" />
+					<p class="field__meta" id="bk-phone-hint">{copy.phoneHint}</p>
+				</div>
+				<div class="field">
+					<label for="bk-topic">{copy.topic}</label>
+					<input id="bk-topic" name="topic" type="text" maxlength="300" placeholder={copy.topicHint} />
+				</div>
+				<div class="honeypot" aria-hidden="true">
+					<label for="bk-website">Website</label>
+					<input id="bk-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+				</div>
+				<label class="consent">
+					<input type="checkbox" name="consent" required />
+					<span>{copy.consent} <a href={routes[locale].privacy} target="_blank">{copy.privacy}</a></span>
+				</label>
+				<div class="form__actions">
+					<button class="button" type="submit" data-booking-submit>{copy.submit}</button>
+					<p class="form__status" data-booking-status role="status" aria-live="polite"></p>
+				</div>
+			</form>
+		</div>
+
+		<div class="jx-booking__done" data-booking-done hidden>
+			<span class="jx-booking__mark" aria-hidden="true"><Icon name="check" size="md" /></span>
+			<div>
+				<h2>{copy.doneTitle}</h2>
+				<p data-booking-done-text></p>
+				<div class="jx-actions">
+					<a class="jx-btn jx-btn--primary" data-booking-ics href="#" data-analytics-event="booking_add_calendar"><Icon name="calendar" />{copy.ics}</a>
+					<a class="jx-btn" data-booking-google href="#" target="_blank" rel="noreferrer">{copy.google}<Icon name="arrow-up-right" /></a>
+					<button class="jx-btn jx-booking__cancel" type="button" data-booking-cancel>{copy.cancel}</button>
+				</div>
+			</div>
+		</div>
+
+		<aside class="jx-booking__alt">
+			<div>
+				<h2>{copy.altTitle}</h2>
+				<p>{copy.altText}</p>
+			</div>
+			<div class="jx-actions">
+				{whatsappHref && <a class="jx-btn" href={whatsappHref} rel="noreferrer" data-analytics-event="booking_whatsapp"><Icon name="chat" />{copy.whatsapp}</a>}
+				<button class="jx-btn" type="button" data-ai-open data-analytics-event="booking_open_chat">{copy.chat}<Icon name="arrow-right" /></button>
+			</div>
+		</aside>
+		<noscript><p class="jx-booking__note">{copy.failed}</p></noscript>
+	</div>
+</section>
+
+<script>
+	import { trackLead } from '../scripts/analytics';
+
+	type Copy = Record<string, string> & { errors: Record<string, string> };
+	type Saved = { id: string; token: string; slot: number; end: number; when: string; phone: string };
+	const root = document.querySelector<HTMLElement>('[data-booking]');
+	if (root) {
+		const { locale, copy } = JSON.parse(root.querySelector('[data-booking-config]')?.textContent ?? '{}') as { locale: 'es' | 'en'; copy: Copy };
+		const $ = <T extends HTMLElement>(selector: string) => root.querySelector<T>(selector)!;
+		const daysNode = $('[data-booking-days]');
+		const timesNode = $('[data-booking-times]');
+		const chosen = $('[data-booking-chosen]');
+		const form = $<HTMLFormElement>('[data-booking-form]');
+		const status = $('[data-booking-status]');
+		const submit = $<HTMLButtonElement>('[data-booking-submit]');
+		const flow = $('[data-booking-flow]');
+		const done = $('[data-booking-done]');
+		const KEY = 'jossue-booking';
+		const TZ = 'America/Mexico_City';
+		const lang = locale === 'en' ? 'en-US' : 'es-MX';
+		const params = new URLSearchParams(window.location.search);
+		const origin = params.get('origen') ?? params.get('from') ?? '';
+		const source = ['chat', 'auditoria', 'whatsapp', 'contacto', 'inicio'].includes(origin) ? origin : 'web';
+		let selected: number | null = null;
+		let days: { date: string; slots: number[] }[] = [];
+
+		const fmt = (options: Intl.DateTimeFormatOptions, tz?: string) => new Intl.DateTimeFormat(lang, { ...options, ...(tz ? { timeZone: tz } : {}) });
+		const dayFmt = fmt({ weekday: 'short', day: 'numeric', month: 'short' }, TZ);
+		const longParts = fmt({ weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12: locale === 'en' }, TZ);
+		// Igual que whenLabel del Worker: «martes 6 de octubre a las 10:15».
+		const longFmt = {
+			format(ms: number) {
+				const p = Object.fromEntries(longParts.formatToParts(ms).map((part) => [part.type, part.value]));
+				return locale === 'en' ? `${p.weekday}, ${p.month} ${p.day} at ${p.hour}:${p.minute} ${p.dayPeriod ?? ''}`.trim() : `${p.weekday} ${p.day} de ${p.month} a las ${p.hour}:${p.minute}`;
+			},
+		};
+		const hourFmt = fmt({ hour: '2-digit', minute: '2-digit', hour12: locale === 'en' }, TZ);
+		const localHour = fmt({ hour: '2-digit', minute: '2-digit', hour12: locale === 'en' });
+		const make = (tag: string, className = '', text = '') => {
+			const node = document.createElement(tag);
+			if (className) node.className = className;
+			if (text) node.textContent = text;
+			return node;
+		};
+		const read = (): Saved | null => {
+			try {
+				const value = JSON.parse(localStorage.getItem(KEY) ?? 'null');
+				return value && value.slot > Date.now() ? value : null;
+			} catch {
+				return null;
+			}
+		};
+		const write = (value: Saved | null) => {
+			try {
+				if (value) localStorage.setItem(KEY, JSON.stringify(value));
+				else localStorage.removeItem(KEY);
+			} catch {
+				// Sin almacenamiento la confirmación solo vive en esta pestaña.
+			}
+		};
+
+		function renderTimes(date: string) {
+			timesNode.replaceChildren();
+			const day = days.find((item) => item.date === date);
+			for (const start of day?.slots ?? []) {
+				const label = hourFmt.format(start);
+				const theirs = localHour.format(start);
+				const button = make('button', 'jx-booking__time', label) as HTMLButtonElement;
+				button.type = 'button';
+				button.setAttribute('aria-pressed', String(start === selected));
+				if (theirs !== label) button.append(make('small', '', `${copy.yourTime} ${theirs}`));
+				button.addEventListener('click', () => {
+					selected = start;
+					timesNode.querySelectorAll('button').forEach((node) => node.setAttribute('aria-pressed', 'false'));
+					button.setAttribute('aria-pressed', 'true');
+					chosen.textContent = longFmt.format(start);
+					chosen.classList.add('is-set');
+					status.textContent = '';
+				});
+				timesNode.append(button);
+			}
+		}
+
+		function renderDays(active?: string) {
+			daysNode.replaceChildren();
+			if (!days.length) {
+				daysNode.append(make('p', 'jx-booking__note', copy.empty));
+				return;
+			}
+			const current = active && days.some((item) => item.date === active) ? active : days[0].date;
+			for (const day of days.slice(0, 14)) {
+				const button = make('button', 'jx-booking__day') as HTMLButtonElement;
+				button.type = 'button';
+				const [weekday, ...rest] = dayFmt.format(Date.parse(`${day.date}T18:00:00Z`)).replace(',', '').split(' ');
+				button.append(make('span', '', weekday), make('strong', '', rest.join(' ')));
+				button.setAttribute('aria-pressed', String(day.date === current));
+				button.addEventListener('click', () => {
+					daysNode.querySelectorAll('button').forEach((node) => node.setAttribute('aria-pressed', 'false'));
+					button.setAttribute('aria-pressed', 'true');
+					renderTimes(day.date);
+				});
+				daysNode.append(button);
+			}
+			renderTimes(current);
+		}
+
+		async function load() {
+			try {
+				const response = await fetch('/api/booking/slots', { headers: { Accept: 'application/json' } });
+				const data = await response.json();
+				if (!response.ok || !data.ok) throw new Error('slots');
+				days = data.days ?? [];
+				const keep = selected ? days.find((day) => day.slots.includes(selected!))?.date : undefined;
+				if (selected && !keep) {
+					selected = null;
+					chosen.textContent = copy.pickFirst;
+					chosen.classList.remove('is-set');
+				}
+				renderDays(keep);
+			} catch {
+				daysNode.replaceChildren(make('p', 'jx-booking__note', copy.failed));
+			}
+		}
+
+		const stamp = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+		function showDone(saved: Saved) {
+			flow.hidden = true;
+			done.hidden = false;
+			$('[data-booking-done-text]').textContent = copy.doneText.replace('{when}', saved.when).replace('{phone}', saved.phone);
+			$<HTMLAnchorElement>('[data-booking-ics]').href = `/api/booking/${saved.id}.ics?t=${encodeURIComponent(saved.token)}`;
+			const google = new URL('https://calendar.google.com/calendar/render');
+			google.searchParams.set('action', 'TEMPLATE');
+			google.searchParams.set('text', locale === 'en' ? 'Call with Jossué Alcalá (10 min)' : 'Llamada con Jossué Alcalá (10 min)');
+			google.searchParams.set('dates', `${stamp(saved.slot)}/${stamp(saved.end)}`);
+			google.searchParams.set('details', locale === 'en' ? 'Jossué will call you at the number you left.' : 'Jossué te llama al número que dejaste.');
+			$<HTMLAnchorElement>('[data-booking-google]').href = google.toString();
+		}
+
+		$('[data-booking-cancel]').addEventListener('click', async () => {
+			const saved = read();
+			if (!saved || !window.confirm(copy.cancelConfirm)) return;
+			const response = await fetch('/api/booking/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: saved.id, token: saved.token }) }).catch(() => null);
+			if (response && (response.ok || response.status === 404)) {
+				write(null);
+				done.hidden = true;
+				flow.hidden = false;
+				selected = null;
+				chosen.textContent = copy.pickFirst;
+				chosen.classList.remove('is-set');
+				status.textContent = copy.cancelled;
+				await load();
+			}
+		});
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			const data = new FormData(form);
+			const value = (name: string) => String(data.get(name) ?? '').trim();
+			if (!selected) return void (status.textContent = copy.pickFirst);
+			if (value('name').length < 2) return void (status.textContent = copy.errors.invalid_name);
+			if (!/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(value('email'))) return void (status.textContent = copy.badEmail);
+			if (value('phone').replace(/\D/g, '').length < 10) return void (status.textContent = copy.badPhone);
+			if (!data.get('consent')) return void (status.textContent = copy.needConsent);
+			submit.disabled = true;
+			status.textContent = copy.sending;
+			try {
+				const response = await fetch('/api/booking', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+					body: JSON.stringify({ slot: selected, name: value('name'), email: value('email'), phone: value('phone'), topic: value('topic'), website: value('website'), consent: true, locale, source, page: window.location.pathname }),
+				});
+				const result = await response.json();
+				if (response.ok && result.booking) {
+					const saved = result.booking as Saved;
+					write(saved);
+					trackLead('booking');
+					form.reset();
+					status.textContent = '';
+					showDone(saved);
+					done.scrollIntoView({ block: 'center' });
+					return;
+				}
+				status.textContent = result.message ?? copy.errors[result.error] ?? copy.errors.booking_unavailable;
+				if (['slot_taken', 'slot_invalid'].includes(result.error)) await load();
+			} catch {
+				status.textContent = copy.errors.booking_unavailable;
+			} finally {
+				submit.disabled = false;
+			}
+		});
+
+		const saved = read();
+		if (saved) showDone(saved);
+		void load();
+	}
+</script>

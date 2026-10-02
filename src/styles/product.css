@@ -886,12 +886,14 @@
 		}
 	}
 
-	.form {
+	/* El formulario dibujado en la escena de MiawSEO. Antes era .form a secas y encajonaba cada
+	   <span> de los formularios reales (contacto, agenda). */
+	.scene-form {
 		display: grid;
 		gap: 0.4rem;
 	}
 
-	.form span {
+	.scene-form span {
 		padding: 0.55rem 0.8rem;
 		border: 1px solid var(--hair-2);
 		border-radius: var(--radius-md);

@@ -53,3 +53,6 @@ _inputs/media/
 .ahp/cache/
 .ahp/tmp/
 # AHP+:END
+
+# Estado local de wrangler dev (D1 local, temporales)
+.wrangler/

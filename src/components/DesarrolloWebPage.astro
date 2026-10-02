@@ -25,48 +25,48 @@ const phone = workImage('wu-home-campaign');
 type Card = { icon: IconName; title: string; text: string };
 const builds: Card[] = es
 	? [
-			{ icon: 'basket', title: 'Tiendas en Shopify', text: 'Temas completos sobre Online Store 2.0: tu equipo arma páginas con secciones, sin tocar código.' },
-			{ icon: 'display', title: 'Rediseños', text: 'Cambio lo que frena la venta sin perder lo que ya funciona: posiciones en Google, medición y contenido.' },
-			{ icon: 'layers', title: 'Secciones a la medida', text: 'Carruseles, comparadores, kits, reseñas: piezas que tu tema no trae y que tu equipo puede reutilizar.' },
+			{ icon: 'basket', title: 'Tiendas en Shopify', text: 'Armo la plantilla completa de tu tienda con el sistema de bloques de Shopify (Online Store 2.0). Tú o tu equipo arman páginas nuevas sin tocar código.' },
+			{ icon: 'display', title: 'Rediseños', text: 'Cambio lo que está frenando tus ventas y cuido lo que ya funciona, como tu lugar en Google, tus mediciones y tus textos.' },
+			{ icon: 'layers', title: 'Partes nuevas para tu tienda', text: 'Carruseles, comparadores, paquetes de productos o reseñas. Lo que tu plantilla no trae, hecho para que lo vuelvas a usar en otras páginas.' },
 			{ icon: 'cube', title: 'Apps y funciones', text: 'Cuando ninguna app hace lo que necesitas, la programo. Así nacieron Prometeo y Hermes.' },
-			{ icon: 'nodes', title: 'Integraciones', text: 'Tu tienda conectada con tu ERP, tu CRM, tu correo y tus marketplaces, sin copiar datos a mano.' },
-			{ icon: 'code', title: 'Sitios y productos web', text: 'Sitios rápidos y herramientas propias fuera de Shopify, como este sitio o MADRE.' },
+			{ icon: 'nodes', title: 'Conexión con tus sistemas', text: 'Conecto tu tienda con tu sistema administrativo (ERP), tu lista de clientes (CRM), tu correo y los marketplaces donde vendes, para que nadie copie datos a mano.' },
+			{ icon: 'code', title: 'Páginas y herramientas fuera de Shopify', text: 'Páginas que abren rápido y herramientas hechas para un negocio en particular, como este sitio o MADRE.' },
 		]
 	: [
-			{ icon: 'basket', title: 'Shopify stores', text: 'Full themes on Online Store 2.0: your team builds pages with sections, without touching code.' },
-			{ icon: 'display', title: 'Redesigns', text: 'I change what holds back the sale without losing what already works: Google rankings, measurement and content.' },
-			{ icon: 'layers', title: 'Custom sections', text: 'Carousels, comparisons, bundles, reviews: pieces your theme lacks that your team can reuse.' },
+			{ icon: 'basket', title: 'Shopify stores', text: 'I build your store’s full template with Shopify’s block system (Online Store 2.0). You or your team put together new pages without touching code.' },
+			{ icon: 'display', title: 'Redesigns', text: 'I change what is holding back your sales and protect what already works, like your place on Google, your tracking and your text.' },
+			{ icon: 'layers', title: 'New parts for your store', text: 'Carousels, comparisons, product bundles or reviews. What your template does not include, built so you can reuse it on other pages.' },
 			{ icon: 'cube', title: 'Apps and features', text: 'When no app does what you need, I build it. That is how Prometeo and Hermes happened.' },
-			{ icon: 'nodes', title: 'Integrations', text: 'Your store connected to your ERP, CRM, email and marketplaces, with no copying data by hand.' },
-			{ icon: 'code', title: 'Websites and web products', text: 'Fast websites and your own tools outside Shopify, like this site or MADRE.' },
+			{ icon: 'nodes', title: 'Connections to your systems', text: 'I connect your store to your back-office system (ERP), your customer list (CRM), your email and the marketplaces where you sell, so nobody copies data by hand.' },
+			{ icon: 'code', title: 'Websites and tools outside Shopify', text: 'Websites that open fast and tools built for one specific business, like this site or MADRE.' },
 		];
 
 const qualities: Card[] = es
 	? [
-			{ icon: 'mobile', title: 'Rápida en celular', text: 'Mido la velocidad con datos reales antes y después de entregar.' },
-			{ icon: 'pen', title: 'Tu equipo la edita', text: 'Cambiar un banner o una colección no requiere llamar a un programador.' },
-			{ icon: 'pulse', title: 'Medida desde el día uno', text: 'GA4, píxeles y eventos de compra listos y revisados antes de lanzar.' },
-			{ icon: 'check-list', title: 'Documentada', text: 'Pruebas, notas de cada decisión y un manual corto para quien siga.' },
+			{ icon: 'mobile', title: 'Rápida en celular', text: 'Mido cuánto tarda en abrir antes de empezar y después de entregar, con datos de visitantes reales.' },
+			{ icon: 'pen', title: 'La puedes cambiar tú', text: 'Para cambiar un banner o una categoría de productos no tienes que llamar a un programador.' },
+			{ icon: 'pulse', title: 'Mide tus ventas desde el primer día', text: 'Dejo Google Analytics y los píxeles de tus anuncios registrando cada compra, y lo reviso antes de lanzar.' },
+			{ icon: 'check-list', title: 'Con manual y notas', text: 'Te entrego las pruebas que hice, por qué decidí cada cosa y un manual corto para quien la trabaje después.' },
 		]
 	: [
-			{ icon: 'mobile', title: 'Fast on mobile', text: 'I measure speed with real data before and after delivery.' },
-			{ icon: 'pen', title: 'Your team edits it', text: 'Changing a banner or a collection does not require calling a developer.' },
-			{ icon: 'pulse', title: 'Measured from day one', text: 'GA4, pixels and purchase events ready and checked before launch.' },
-			{ icon: 'check-list', title: 'Documented', text: 'Tests, notes on each decision and a short manual for whoever comes next.' },
+			{ icon: 'mobile', title: 'Fast on mobile', text: 'I measure how long it takes to open before I start and after I deliver, with data from real visitors.' },
+			{ icon: 'pen', title: 'You can change it yourself', text: 'Changing a banner or a product category does not mean calling a developer.' },
+			{ icon: 'pulse', title: 'Tracks your sales from day one', text: 'I set up Google Analytics and your ad pixels to record every purchase, and I check it before launch.' },
+			{ icon: 'check-list', title: 'With a manual and notes', text: 'I hand you the tests I ran, why I decided each thing and a short manual for whoever works on it next.' },
 		];
 
 const steps = es
 	? [
-			['01', 'Alcance', 'Empezamos por el problema de negocio y acordamos qué se entrega y qué no.'],
-			['02', 'Diseño', 'Diseño las pantallas clave en celular y escritorio antes de programar.'],
-			['03', 'Construcción', 'Programo por partes que puedes ver funcionando, no todo al final.'],
-			['04', 'Entrega', 'Pruebas, medición revisada, documentación y acompañamiento en el lanzamiento.'],
+			['01', 'Alcance', 'Me cuentas qué problema quieres resolver y acordamos qué incluye el proyecto y qué no.'],
+			['02', 'Diseño', 'Antes de programar, diseño las pantallas principales en celular y en computadora para que las revises.'],
+			['03', 'Construcción', 'Programo por partes y te las voy enseñando funcionando. No tienes que esperar al final para ver algo.'],
+			['04', 'Entrega', 'Pruebo todo, reviso que las mediciones funcionen, te dejo el manual y te acompaño en el lanzamiento.'],
 		]
 	: [
-			['01', 'Scope', 'We start from the business problem and agree on what is delivered and what is not.'],
-			['02', 'Design', 'I design the key screens on mobile and desktop before coding.'],
-			['03', 'Build', 'I build in parts you can see working, not everything at the end.'],
-			['04', 'Delivery', 'Tests, checked measurement, documentation and support at launch.'],
+			['01', 'Scope', 'You tell me which problem you want to solve and we agree on what the project includes and what it does not.'],
+			['02', 'Design', 'Before coding, I design the main screens on mobile and desktop for you to review.'],
+			['03', 'Build', 'I build in parts and show them to you working. You do not have to wait until the end to see something.'],
+			['04', 'Delivery', 'I test everything, check that tracking works, leave you the manual and stay with you through launch.'],
 		];
 
 const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 · GTM', 'Klaviyo', 'Odoo'];
@@ -84,14 +84,14 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 		loop="web"
 		id="dev-title"
 		label={es ? 'Servicio · Desarrollo web' : 'Service · Web development'}
-		title={es ? ['Desarrollo de tiendas en Shopify', 'y sitios web a la medida.'] : ['Shopify store development', 'and custom websites.']}
+		title={es ? ['Hago tiendas en Shopify y páginas web', 'que abren rápido y que tú puedes actualizar.'] : ['I build Shopify stores and websites', 'that open fast and that you can update.']}
 		lede={es
-			? 'Diseño y programo tiendas en Shopify, secciones a la medida, integraciones y productos web. Empiezo por lo que le cuesta ventas a tu negocio y termino con pruebas y una entrega documentada.'
-			: 'I design and build Shopify stores, custom sections, integrations and web products. I start from what is costing your business sales and finish with tests and a documented delivery.'}
+			? 'Diseño y programo tu tienda o tu página, le agrego lo que tu plantilla no trae y la conecto con los sistemas que ya usas. Antes de diseñar veo qué te está haciendo perder ventas, y al final te entrego todo probado y con un manual.'
+			: 'I design and build your store or your website, add what your template does not include and connect it to the systems you already use. Before designing I look at what is making you lose sales, and at the end I hand everything over tested and with a manual.'}
 	>
 		<div class="jx-actions jx-actions--center">
 			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_dev_contact">{es ? 'Quiero mi tienda' : 'I want my store'}<Icon name="arrow-right" /></a>
-			<a class="jx-btn jx-btn--ghost" href={routes[locale].work}>{es ? 'Ver casos reales' : 'See real cases'}</a>
+			<a class="jx-btn jx-btn--ghost" href={routes[locale].work}>{es ? 'Ver proyectos reales' : 'See real projects'}</a>
 		</div>
 		{desk && (
 			<figure class="jx-svc__stage">
@@ -132,7 +132,7 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 
 	<section class="jx-bots__section" aria-labelledby="dev-steps">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Los pasos' : 'The steps'}</p>
 			<h2 id="dev-steps" class="jx-h2"><span>{es ? 'Revisas avances' : 'You review progress'}</span>{' '}<span class="jx-soft">{es ? 'en cada etapa' : 'at every stage'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 			<ul class="jx-svc__stack" aria-label={es ? 'Con qué trabajo' : 'What I work with'}>
@@ -145,11 +145,11 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 
 	<section class="jx-close" aria-labelledby="dev-close">
 		<div class="jx-close__card">
-			<h2 id="dev-close" class="jx-close__title"><span>{es ? '¿Vas a lanzar, rehacer' : 'Launching, rebuilding'}</span>{' '}<span class="jx-soft">{es ? 'o crecer tu tienda?' : 'or growing your store?'}</span></h2>
-			<p>{es ? 'Cuéntame qué vendes, en qué plataforma estás y qué te gustaría cambiar. Te respondo en menos de un día hábil con cómo lo haría.' : 'Tell me what you sell, which platform you are on and what you would like to change. I reply within one business day with how I would do it.'}</p>
+			<h2 id="dev-close" class="jx-close__title"><span>{es ? '¿Vas a abrir tu tienda en línea' : 'Opening your online store'}</span>{' '}<span class="jx-soft">{es ? 'o a rehacer la que tienes?' : 'or rebuilding the one you have?'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes, en qué plataforma estás y qué te gustaría cambiar. En menos de un día hábil te respondo con cómo lo haría.' : 'Tell me what you sell, which platform you are on and what you would like to change. Within one business day I reply with how I would do it.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_dev_contact_bottom">{es ? 'Cuéntame tu proyecto' : 'Tell me about your project'}<Icon name="arrow-right" /></a>
-				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}consultoria/`}>{es ? 'Si aún no sabes qué construir' : 'If you do not know what to build yet'}</a>
+				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}consultoria/`}>{es ? 'Si todavía no sabes qué necesitas' : 'If you are not sure yet what you need'}</a>
 			</div>
 		</div>
 	</section>

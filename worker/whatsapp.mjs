@@ -23,6 +23,7 @@
 import { PERSONA } from './persona.mjs';
 import { SCHEMA, alertProviderProblem, callGemini, loadKnowledge, redactPII } from './ai.mjs';
 import { ALERT_LINE, blockedUntil, canaryLine, guardedAnswer } from './guard.mjs';
+import { notify, notifyEnabled } from './notify.mjs';
 
 const KNOWLEDGE_URL = 'https://jossuealcala.com/';
 const MAX_HISTORY = 14; // mensajes que se mandan al modelo
@@ -63,12 +64,13 @@ CANAL: WHATSAPP
 - Respuestas de chat: 1 a 3 frases, texto plano, sin markdown ni viñetas. Como mucho una URL de jossuealcala.com si de verdad ayuda.
 - Ya tienes su número de WhatsApp: NO se lo pidas. Para un recado basta con lo que necesita (y su nombre si lo quiere dar).${profileName ? `\n- Su nombre de perfil de WhatsApp es «${profileName}»; úsalo con naturalidad solo si viene al caso.` : ''}
 - Aquí solo atiendes temas del trabajo de Jossué. Si piden algo ajeno (tareas, poemas, programar algo general, que seas un asistente para todo), di con amabilidad que por aquí solo ves temas de Jossué.
-- handoff.needed = true cuando: quiere cotizar, contratar o agendar una llamada (reason quote); habla de un proyecto en curso o es cliente (project); pagos, facturas o contratos (payment); una queja (complaint); pide hablar con Jossué (asks_for_jossue); es algo personal o parece que lo conoce (personal); o la respuesta no está en el CONOCIMIENTO (unknown).
+- Si quiere una llamada con Jossué, dale la agenda: https://jossuealcala.com/es/agenda/?origen=whatsapp (llamadas de 10 minutos; martes, miércoles y viernes de 10:00 a 18:00 y sábado de 9:00 a 13:00, hora de Guadalajara; él le llama). Eso no necesita handoff, salvo que además pida algo más.
+- handoff.needed = true cuando: quiere cotizar o contratar (reason quote); habla de un proyecto en curso o es cliente (project); pagos, facturas o contratos (payment); una queja (complaint); pide hablar con Jossué (asks_for_jossue); es algo personal o parece que lo conoce (personal); o la respuesta no está en el CONOCIMIENTO (unknown).
 - Con handoff.needed = true, tu reply dice que se lo pasas a Jossué y que él le contesta por aquí mismo. No prometas tiempos ("en cuanto pueda" está bien). No sigas vendiendo ni hagas más preguntas que las necesarias para que Jossué entienda el caso.
 - handoff.summary: qué necesita y qué falta que conteste o decida Jossué, en 1 o 2 frases y en español.
 - lead.ready = true solo si además dejó un recado claro para Jossué.
 - Los mensajes marcados [Jossué] los escribió Jossué en persona desde su app: no te contradigas con ellos.
-- Si habla de su sitio o su tienda, puedes ofrecerle la auditoría express gratis del chat de jossuealcala.com (3 áreas de oportunidad en un par de minutos). Aquí no se hace: no uses action audit.
+- Si habla de su sitio o su tienda, puedes ofrecerle la auditoría express gratis del chat de jossuealcala.com (en un par de minutos le dice las 3 cosas que más le conviene corregir de su página). Aquí no se hace: no uses action audit.
 
 CONOCIMIENTO
 ${knowledge}`;
@@ -177,14 +179,13 @@ const sendText = (env, to, body) => graph(env, { recipient_type: 'individual', t
 // ---------- aviso a Jossué ----------
 
 async function notifyOwner(env, { kind, waId, profileName, summary, lead, transcript }) {
-	const recipient = String(env.CONTACT_EMAIL_TO ?? '').trim();
 	if (env.DB && lead) {
 		await env.DB.prepare('INSERT INTO ai_leads (id, created_at, sid, locale, page, name, email, phone, company, need, message) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)')
 			.bind(crypto.randomUUID(), new Date().toISOString(), `wa:${waId.slice(-4)}`, 'es', 'whatsapp', lead.name || profileName || '', lead.email || '', `+${waId}`, lead.company || '', lead.need || summary || '', lead.message || '')
 			.run()
 			.catch((error) => console.error('wa lead failed', error?.message));
 	}
-	if (!env.CONTACT_EMAIL || !recipient) return;
+	if (!notifyEnabled(env)) return;
 	const who = profileName || `+${waId}`;
 	const text = [
 		`${REASON[kind] ?? REASON.other} · WhatsApp`,
@@ -201,12 +202,11 @@ async function notifyOwner(env, { kind, waId, profileName, summary, lead, transc
 	]
 		.filter((line) => line !== undefined && line !== null && line !== false)
 		.join('\n');
-	await env.CONTACT_EMAIL.send({
-		to: recipient,
-		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI · WhatsApp' },
-		subject: `WhatsApp · ${who.slice(0, 40)} necesita tu respuesta${summary ? ` · ${summary.slice(0, 70)}` : ''}`,
+	await notify(env, {
+		kind: 'whatsapp',
+		subject: `${who.slice(0, 40)} necesita tu respuesta${summary ? ` · ${summary.slice(0, 70)}` : ''}`,
 		text,
-	}).catch((error) => console.error('wa owner email failed', error?.name));
+	});
 }
 
 // ---------- lógica ----------

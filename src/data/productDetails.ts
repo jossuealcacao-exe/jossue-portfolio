@@ -72,15 +72,15 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			en: ['An assistant that helps people choose and buy,', 'with the store’s real data.'],
 		},
 		lede: {
-			es: 'Daniela atiende a los clientes de WU Nutrition en wunutrition.com. Recomienda productos del catálogo de Shopify, arma combos, maneja el carrito y consulta pedidos. Los precios, las existencias y las promociones salen de la tienda, no de lo que el modelo recuerde.',
-			en: 'Daniela serves WU Nutrition’s customers on wunutrition.com. She recommends products from the Shopify catalog, builds bundles, manages the cart and checks orders. Prices, stock and promotions come from the store, not from what the model remembers.',
+			es: 'Daniela atiende a los clientes de WU Nutrition en wunutrition.com. Recomienda productos del catálogo de Shopify, arma combos, maneja el carrito y consulta pedidos. Los precios, las existencias y las promociones salen de la tienda, no de lo que la IA recuerde.',
+			en: 'Daniela serves WU Nutrition’s customers on wunutrition.com. She recommends products from the Shopify catalog, builds bundles, manages the cart and checks orders. Prices, stock and promotions come from the store, not from what the AI remembers.',
 		},
 		cta: { es: 'Quiero un asistente como Daniela', en: 'I want an assistant like Daniela' },
 		secondary: { label: { es: 'Platica con Daniela', en: 'Talk to Daniela' }, href: 'https://wunutrition.com/', external: true },
 		facts: [
-			{ value: { es: '6', en: '6' }, label: { es: 'funciones, y el servidor valida cada una', en: 'functions, each one validated by the server' } },
-			{ value: { es: '60 días', en: '60 days' }, label: { es: 'de conservación de cada conversación', en: 'retention for each conversation' } },
-			{ value: { es: '3–8 s', en: '3–8 s' }, label: { es: 'es el tiempo normal de respuesta', en: 'is the usual response time' } },
+			{ value: { es: '6', en: '6' }, label: { es: 'funciones, y el servidor revisa cada una', en: 'functions, and the server checks each one' } },
+			{ value: { es: '60 días', en: '60 days' }, label: { es: 'se guarda cada conversación, y después se borra', en: 'each conversation is kept, then deleted' } },
+			{ value: { es: '3–8 s', en: '3–8 s' }, label: { es: 'tarda normalmente en contestar', en: 'is how long she usually takes to answer' } },
 		],
 		overview: {
 			label: { es: 'Qué hace', en: 'What she does' },
@@ -108,13 +108,13 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					icon: 'envelope',
 					title: { es: '¿Dónde está mi pedido?', en: 'Where is my order?' },
 					before: { es: 'Escribe a soporte y espera a que alguien lo busque.', en: 'They write to support and wait for someone to look it up.' },
-					after: { es: 'Pide número de pedido y correo. Si coinciden, consulta el estado en Odoo en modo lectura.', en: 'She asks for the order number and email. If they match, she checks the status in Odoo, read-only.' },
+					after: { es: 'Pide número de pedido y correo. Si coinciden, consulta el estado en Odoo (el sistema de pedidos) sin poder modificar nada.', en: 'She asks for the order number and email. If they match, she checks the status in Odoo (the order system) without being able to change anything.' },
 				},
 				{
 					icon: 'badge-percent',
 					title: { es: 'Descuentos', en: 'Discounts' },
 					before: { es: 'Un código fijo que cualquiera puede compartir.', en: 'A fixed code anyone can share.' },
-					after: { es: 'Códigos de un solo uso y vigencia corta, creados en el servidor. Las ofertas por correo solo van a quien dio su consentimiento en Klaviyo.', en: 'Single-use, short-lived codes created on the server. Email offers only go to people who gave consent in Klaviyo.' },
+					after: { es: 'Códigos que sirven una sola vez y vencen pronto, creados en el servidor. Las ofertas por correo solo le llegan a quien aceptó recibirlas (en Klaviyo).', en: 'Codes that work once and expire soon, created on the server. Email offers only reach people who agreed to receive them (in Klaviyo).' },
 				},
 				{
 					icon: 'bolt',
@@ -132,32 +132,32 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 		},
 		how: {
 			label: { es: 'Cómo funciona', en: 'How it works' },
-			title: { es: ['Qué pasa entre la clienta,', 'el servidor y el modelo'], en: ['What happens between the shopper,', 'the server and the model'] },
+			title: { es: ['Qué pasa desde que la clienta escribe', 'hasta que recibe respuesta'], en: ['What happens from the moment the shopper writes', 'until she gets an answer'] },
 			lede: {
-				es: 'Elige un paso para ver qué ocurre en esa etapa. El modelo de IA no tiene acceso directo a la tienda: todo pasa por el servidor.',
-				en: 'Pick a step to see what happens at that stage. The AI model has no direct access to the store: everything goes through the server.',
+				es: 'Elige un paso para ver qué ocurre en esa etapa. La IA no entra directo a la tienda. Todo pasa primero por el servidor, que es donde están las reglas.',
+				en: 'Pick a step to see what happens at that stage. The AI does not reach the store directly. Everything goes through the server first, which is where the rules live.',
 			},
 			caption: { es: 'Ilustración de una conversación con Daniela', en: 'Illustration of a conversation with Daniela' },
 			steps: [
 				{
 					title: { es: 'Necesidad', en: 'Need' },
 					text: {
-						es: 'La clienta escribe como hablaría con una persona. El mensaje llega a un Worker de Cloudflare, que aplica los límites por persona y borra correos y teléfonos antes de guardar nada.',
-						en: 'The shopper writes the way they would talk to a person. The message reaches a Cloudflare Worker, which applies per-person limits and strips emails and phone numbers before anything is stored.',
+						es: 'La clienta escribe como hablaría con una persona. El mensaje llega al servidor (un Worker de Cloudflare), que aplica los límites por persona y borra correos y teléfonos antes de guardar nada.',
+						en: 'The shopper writes the way they would talk to a person. The message reaches the server (a Cloudflare Worker), which applies per-person limits and strips emails and phone numbers before anything is stored.',
 					},
 				},
 				{
 					title: { es: 'Datos', en: 'Data' },
 					text: {
-						es: 'El servidor consulta el catálogo de Shopify (existencia y precio) y, si preguntan por un pedido, Odoo en modo lectura. El modelo no tiene acceso directo a ningún sistema.',
-						en: 'The server checks the Shopify catalog (stock and price) and, if someone asks about an order, Odoo in read-only mode. The model has no direct access to any system.',
+						es: 'El servidor consulta el catálogo de Shopify (existencia y precio) y, si preguntan por un pedido, Odoo sin poder modificarlo. La IA no entra directo a ningún sistema.',
+						en: 'The server checks the Shopify catalog (stock and price) and, if someone asks about an order, Odoo without being able to change it. The AI does not reach any system directly.',
 					},
 				},
 				{
 					title: { es: 'Asistencia', en: 'Assistance' },
 					text: {
-						es: 'El modelo redacta la respuesta en un formato fijo, con lo que el servidor le entregó: producto, precio, promoción. Si algo no cumple el formato, se descarta y sale una respuesta segura.',
-						en: 'The model writes the reply in a fixed format, using what the server handed it: product, price, promotion. Anything that breaks the format is discarded and a safe reply goes out.',
+						es: 'La IA redacta la respuesta en un formato fijo, solo con lo que el servidor le entregó (producto, precio y promoción). Si la respuesta no cumple el formato, se descarta y en su lugar se manda una respuesta segura.',
+						en: 'The AI writes the reply in a fixed format, using only what the server handed it (product, price and promotion). If the reply breaks the format, it is discarded and a safe reply goes out instead.',
 					},
 				},
 				{
@@ -175,9 +175,9 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			items: [
 				{ icon: 'basket', title: { es: 'Recomendación con catálogo real', en: 'Recommendations from the real catalog' }, text: { es: 'Solo productos de Shopify que existen y tienen stock, con su precio y sus promociones vigentes.', en: 'Only Shopify products that exist and are in stock, with their current price and promotions.' } },
 				{ icon: 'layers', title: { es: 'Combos y carrito', en: 'Bundles and cart' }, text: { es: 'Arma combos y maneja el carrito de la tienda. Agregar, cambiar cantidad o quitar siempre pasa por la confirmación de la clienta.', en: 'Builds bundles and manages the store cart. Adding, changing quantity or removing always goes through the shopper’s confirmation.' } },
-				{ icon: 'envelope', title: { es: 'Pedidos en modo lectura', en: 'Read-only orders' }, text: { es: 'Consulta el estado en Odoo con número de pedido y correo, y los dos tienen que coincidir. No escribe nada.', en: 'Checks the status in Odoo with order number and email, and both must match. It writes nothing.' } },
-				{ icon: 'badge-percent', title: { es: 'Descuentos de un solo uso', en: 'Single-use discounts' }, text: { es: 'Se crean del lado del servidor y duran poco. La llave de la tienda nunca llega al navegador.', en: 'Created on the server and short-lived. The store key never reaches the browser.' } },
-				{ icon: 'user', title: { es: 'Consentimiento de marketing', en: 'Marketing consent' }, text: { es: 'Las ofertas conectadas con Klaviyo solo van a quien tiene consentimiento de marketing vigente.', en: 'Offers connected to Klaviyo only go to people with current marketing consent.' } },
+				{ icon: 'envelope', title: { es: 'Consulta de pedidos, sin modificar nada', en: 'Order lookups, without changing anything' }, text: { es: 'Consulta el estado en Odoo con número de pedido y correo, y los dos tienen que coincidir. No puede cambiar nada.', en: 'Checks the status in Odoo with order number and email, and both must match. She cannot change anything.' } },
+				{ icon: 'badge-percent', title: { es: 'Descuentos de un solo uso', en: 'Single-use discounts' }, text: { es: 'Se crean en el servidor y vencen pronto. La clave de acceso a la tienda nunca llega al navegador del cliente.', en: 'Created on the server and expire soon. The store’s access key never reaches the customer’s browser.' } },
+				{ icon: 'user', title: { es: 'Consentimiento de marketing', en: 'Marketing consent' }, text: { es: 'Las ofertas conectadas con Klaviyo solo le llegan a quien aceptó recibir promociones y no se ha dado de baja.', en: 'Offers connected to Klaviyo only reach people who agreed to receive promotions and have not opted out.' } },
 				{ icon: 'chats', title: { es: 'Paso a una persona de soporte', en: 'Hand-off to a support person' }, text: { es: 'Cuando el caso es delicado, lo pasa a WhatsApp de soporte con un folio y el resumen de la plática.', en: 'When a case is sensitive, she hands it to support on WhatsApp with a reference number and a summary.' } },
 			],
 		},
@@ -188,14 +188,14 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			doesNotLabel: { es: 'Lo que no puede hacer', en: 'What she cannot do' },
 			does: {
 				es: [
-					'Responde solo desde el dominio de la tienda (CORS) y con un límite por IP.',
+					'Solo responde dentro de la página de la tienda (CORS) y limita los mensajes por conexión (límite por IP).',
 					'Acepta 40 mensajes por conversación y 600 caracteres por mensaje.',
 					'Pone topes por hora: 6 consultas de pedido y 8 descuentos de combo.',
 					'Borra correos y teléfonos de lo que guarda y purga las conversaciones a los 60 días.',
 					'Marca aparte las conversaciones de prueba para no ensuciar las métricas.',
 				],
 				en: [
-					'Answers only from the store’s domain (CORS) and with a per-IP limit.',
+					'Only answers inside the store’s own site (CORS) and limits messages per connection (per-IP limit).',
 					'Accepts 40 messages per conversation and 600 characters per message.',
 					'Sets hourly caps: 6 order lookups and 8 bundle discounts.',
 					'Strips emails and phone numbers from what it stores and purges conversations after 60 days.',
@@ -205,14 +205,14 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			doesNot: {
 				es: [
 					'Inventar precios, productos ni promociones.',
-					'Mostrarle al navegador la llave de la tienda ni la del modelo.',
+					'Dejar ver en el navegador las claves de acceso de la tienda o de la IA.',
 					'Escribir en Odoo: solo lee, y solo con un número de pedido y un correo que coincidan.',
 					'Contestar por su cuenta temas de salud, legales o financieros: da una respuesta segura o pasa con una persona.',
 					'Revelar sus instrucciones ni cambiar sus reglas porque alguien se lo pida.',
 				],
 				en: [
 					'Make up prices, products or promotions.',
-					'Show the browser the store key or the model key.',
+					'Expose the store’s or the AI’s access keys in the browser.',
 					'Write to Odoo: it only reads, and only with an order number and an email that match.',
 					'Answer health, legal or financial topics on its own: it gives a safe answer or hands over to a person.',
 					'Reveal its instructions or change its rules because someone asks.',
@@ -231,17 +231,17 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 		},
 		faq: {
 			es: [
-				['¿Puede inventar precios o productos?', 'No. Los precios y el stock vienen de los sistemas de la tienda, y el servidor valida cada acción antes de ejecutarla. El modelo solo redacta y estructura la respuesta.'],
+				['¿Puede inventar precios o productos?', 'No. Los precios y el stock vienen de los sistemas de la tienda, y el servidor valida cada acción antes de ejecutarla. La IA solo redacta la respuesta y la ordena.'],
 				['¿Ve mis pedidos?', 'Solo en lectura y solo si el número de pedido y el correo coinciden. Las conversaciones se guardan sin correos ni teléfonos y se purgan a los 60 días.'],
-				['¿Me manda promociones sin permiso?', 'No. Las ofertas conectadas con Klaviyo solo se usan si la persona tiene consentimiento de marketing vigente.'],
-				['¿Qué pasa si es un caso delicado o falla la IA?', 'Pasa a WhatsApp de soporte con un folio y el resumen de la plática. Si el proveedor del modelo tarda, hay un tiempo máximo de espera y un plan B; nunca una pantalla colgada.'],
+				['¿Me manda promociones sin permiso?', 'No. Las ofertas conectadas con Klaviyo solo se usan si la persona aceptó recibir promociones y ese permiso sigue vigente.'],
+				['¿Qué pasa si es un caso delicado o falla la IA?', 'Pasa a WhatsApp de soporte con un folio y el resumen de la plática. Si la IA tarda en contestar, hay un tiempo máximo de espera y un plan B, así que nadie se queda con la pantalla colgada.'],
 				['¿Puedo tener un asistente como Daniela en mi tienda?', 'Sí. Construyo asistentes como ella para otras marcas, también para WhatsApp Business. Te doy el precio después de una llamada corta; usarla cuesta centavos de dólar por conversación.'],
 			],
 			en: [
-				['Can she make up prices or products?', 'No. Prices and stock come from the store’s systems, and the server validates every action before running it. The model only writes and structures the reply.'],
+				['Can she make up prices or products?', 'No. Prices and stock come from the store’s systems, and the server validates every action before running it. The AI only writes the reply and puts it in order.'],
 				['Can she see my orders?', 'Only read-only, and only if the order number and email match. Conversations are stored without emails or phone numbers and purged after 60 days.'],
-				['Does she send promotions without permission?', 'No. Offers connected to Klaviyo are only used if the person has current marketing consent.'],
-				['What happens in a sensitive case or if the AI fails?', 'It goes to support on WhatsApp with a reference number and a summary of the chat. If the model provider is slow there is a maximum wait and a plan B; never a frozen screen.'],
+				['Does she send promotions without permission?', 'No. Offers connected to Klaviyo are only used if the person agreed to receive promotions and that permission still stands.'],
+				['What happens in a sensitive case or if the AI fails?', 'It goes to support on WhatsApp with a reference number and a summary of the chat. If the AI is slow to answer there is a maximum wait and a plan B, so nobody is left staring at a frozen screen.'],
 				['Can I have an assistant like Daniela in my store?', 'Yes. I build assistants like her for other brands, also for WhatsApp Business. I give you a price after a short call; running one costs cents of a dollar per conversation.'],
 			],
 		},
@@ -249,7 +249,7 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			{ term: { es: 'Tipo', en: 'Type' }, detail: { es: 'Producto propio, en uso en wunutrition.com', en: 'Own product, live on wunutrition.com' } },
 			{ term: { es: 'Dónde habla', en: 'Where it talks' }, detail: { es: 'El widget de la tienda en Shopify; con las mismas reglas puede atender en WhatsApp Business', en: 'The store widget on Shopify; with the same rules it can also serve on WhatsApp Business' } },
 			{ term: { es: 'Servidor', en: 'Server' }, detail: { es: 'Cloudflare Workers', en: 'Cloudflare Workers' } },
-			{ term: { es: 'Modelo', en: 'Model' }, detail: { es: 'Gemini, intercambiable sin rehacer el asistente', en: 'Gemini, swappable without rebuilding the assistant' } },
+			{ term: { es: 'Modelo de IA', en: 'AI model' }, detail: { es: 'Gemini, y se puede cambiar por otro sin rehacer el asistente', en: 'Gemini, and it can be swapped for another without rebuilding the assistant' } },
 			{ term: { es: 'Sistemas conectados', en: 'Connected systems' }, detail: { es: 'Shopify (catálogo y carrito), Odoo (pedidos, solo lectura), Klaviyo (consentimiento) y WhatsApp (relevo)', en: 'Shopify (catalog and cart), Odoo (orders, read-only), Klaviyo (consent) and WhatsApp (hand-off)' } },
 			{ term: { es: 'Idioma', en: 'Language' }, detail: { es: 'Español', en: 'Spanish' } },
 			{ term: { es: 'Precio de uno para tu tienda', en: 'Price of one for your store' }, detail: { es: 'Después de una llamada corta, cuando sepa con qué sistemas se conecta', en: 'After a short call, once I know which systems it connects to' } },
@@ -301,7 +301,7 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					icon: 'chat',
 					title: { es: 'Cambias de agente', en: 'You switch agents' },
 					before: { es: 'Le explicas el proyecto desde cero al siguiente.', en: 'You explain the project from scratch to the next one.' },
-					after: { es: 'Lee .ahp/ y retoma: el estado actual, las decisiones vigentes y qué se probó.', en: 'It reads .ahp/ and picks up: the current state, the decisions in force and what was tested.' },
+					after: { es: 'Lee .ahp/ y retoma con el estado actual, las decisiones vigentes y lo que ya se probó.', en: 'It reads .ahp/ and picks up with the current state, the decisions in force and what was already tested.' },
 				},
 				{
 					icon: 'check-list',
@@ -313,13 +313,13 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					icon: 'shield',
 					title: { es: 'Cambió el commit o la rama', en: 'The commit or branch changed' },
 					before: { es: 'El agente nuevo trabaja sobre otra versión y nadie se entera.', en: 'The new agent works on another version and nobody notices.' },
-					after: { es: 'Antes de seguir compara proyecto, rama, commit y cambios locales. Si no coinciden, se detiene y pide reconciliar.', en: 'Before continuing it compares project, branch, commit and local changes. If they do not match, it stops and asks to reconcile.' },
+					after: { es: 'Antes de seguir compara proyecto, rama, commit y cambios locales. Si no coinciden, se detiene y te pide resolver la diferencia.', en: 'Before continuing it compares project, branch, commit and local changes. If they do not match, it stops and asks you to sort out the difference.' },
 				},
 				{
 					icon: 'terminal',
 					title: { es: 'Cambias de computadora o de cuenta', en: 'You change machine or account' },
 					before: { es: 'El contexto se queda en la máquina o la cuenta anterior.', en: 'The context stays on the previous machine or account.' },
-					after: { es: 'Viaja con el repositorio: haces tu pull y el siguiente agente tiene lo mismo.', en: 'It travels with the repository: you pull and the next agent has the same thing.' },
+					after: { es: 'Viaja con el repositorio. Haces pull y el siguiente agente tiene lo mismo.', en: 'It travels with the repository. You pull and the next agent has the same thing.' },
 				},
 			],
 		},
@@ -342,8 +342,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{
 					title: { es: 'Trabajas', en: 'Work' },
 					text: {
-						es: 'Mientras trabaja, el agente anota decisiones, tareas, riesgos y pruebas con record add. Cada una es su propio archivo, así Git las mezcla sin pelearse.',
-						en: 'While it works, the agent logs decisions, tasks, risks and test results with record add. Each one is its own file, so Git merges them without fights.',
+						es: 'Mientras trabaja, el agente anota decisiones, tareas, riesgos y pruebas con record add. Cada una es su propio archivo, así Git las junta sin conflictos.',
+						en: 'While it works, the agent logs decisions, tasks, risks and test results with record add. Each one is its own file, so Git merges them without conflicts.',
 					},
 				},
 				{
@@ -369,8 +369,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{ icon: 'layers', title: { es: 'Estado, decisiones y pruebas', en: 'State, decisions and tests' }, text: { es: 'Un archivo por registro (decisión, tarea, bug, riesgo, QA, requisito, evidencia) dentro de .ahp/, versionado con Git.', en: 'One file per record (decision, task, bug, risk, QA, requirement, evidence) inside .ahp/, versioned with Git.' } },
 				{ icon: 'shield', title: { es: 'Relevos que se comprueban', en: 'Hand-offs that get checked' }, text: { es: 'Compara proyecto, árbol, rama, commit y cambios locales. Si no coinciden, el resultado es RECONCILIATION_REQUIRED.', en: 'Compares project, tree, branch, commit and local changes. If they do not match, the result is RECONCILIATION_REQUIRED.' } },
 				{ icon: 'compass', title: { es: 'Puntos de control', en: 'Checkpoints' }, text: { es: 'Marcan dónde quedó una sesión y cuál es la siguiente acción, para retomarla. No sustituyen tus commits ni tus respaldos.', en: 'Mark where a session stopped and what the next action is, so you can resume it. They do not replace your commits or backups.' } },
-				{ icon: 'chats', title: { es: 'Mensajes entre agentes', en: 'Messages between agents' }, text: { es: 'message send, reply e inbox dejan eventos operativos con huella SHA-256. No guardan la conversación completa.', en: 'message send, reply and inbox leave operational events with a SHA-256 fingerprint. They do not store the full conversation.' } },
-				{ icon: 'lock', title: { es: 'No ejecuta acciones sensibles', en: 'No sensitive actions' }, text: { es: 'Nunca hace commit, push, merge, deploy, publicación ni eliminación. Tampoco se concede autoridad a sí mismo.', en: 'It never commits, pushes, merges, deploys, publishes or deletes. It does not grant itself authority either.' } },
+				{ icon: 'chats', title: { es: 'Mensajes entre agentes', en: 'Messages between agents' }, text: { es: 'message send, reply e inbox dejan avisos con una huella SHA-256, que prueba que no se alteraron. No guardan la conversación completa.', en: 'message send, reply and inbox leave notices with a SHA-256 fingerprint, which proves they were not altered. They do not store the full conversation.' } },
+				{ icon: 'lock', title: { es: 'No ejecuta acciones sensibles', en: 'No sensitive actions' }, text: { es: 'Nunca hace commit, push, merge, deploy, publicación ni eliminación. Tampoco se da permisos a sí mismo.', en: 'It never commits, pushes, merges, deploys, publishes or deletes. It does not give itself permissions either.' } },
 				{ icon: 'code', title: { es: 'Adaptadores por agente', en: 'Per-agent adapters' }, text: { es: 'Codex con la skill $ahp, Claude Code con CLAUDE.md, Cursor y OpenCode con /ahp, y cualquier otro agente con AGENTS.md.', en: 'Codex with the $ahp skill, Claude Code with CLAUDE.md, Cursor and OpenCode with /ahp, and any other agent with AGENTS.md.' } },
 			],
 		},
@@ -491,13 +491,13 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					icon: 'compass',
 					title: { es: 'No saber por dónde empezar', en: 'Not knowing where to start' },
 					before: { es: 'Una página en blanco y ninguna idea de qué secciones necesita un negocio como el tuyo.', en: 'A blank page and no idea which sections a business like yours needs.' },
-					after: { es: 'Contestas giro, ubicación, objetivo (agendar, cotizar, contactar o presentar) y tono; el sitio sale armado a partir de una plantilla.', en: 'You answer trade, location, goal (book, quote, get in touch or present) and tone; the site comes out assembled from a template.' },
+					after: { es: 'Contestas a qué te dedicas, dónde estás, qué quieres que haga la gente (agendar, cotizar, contactarte o conocer tu negocio) y en qué tono. El sitio sale armado a partir de una plantilla.', en: 'You answer what you do, where you are, what you want people to do (book, ask for a quote, get in touch or learn about your business) and in what tone. The site comes out assembled from a template.' },
 				},
 				{
 					icon: 'pen',
 					title: { es: 'Escribir los textos', en: 'Writing the copy' },
 					before: { es: 'Cada título y cada párrafo salen de cero.', en: 'Every headline and paragraph starts from zero.' },
-					after: { es: 'Blob reescribe un campo y ves el Antes y el Después. Tú decides: aplicar, descartar o revertir.', en: 'Blob rewrites a field and you see Before and After. You decide: apply, discard or revert.' },
+					after: { es: 'Blob reescribe un campo y ves el Antes y el Después. Tú decides si lo aplicas, lo descartas o lo regresas como estaba.', en: 'Blob rewrites a field and you see Before and After. You decide whether to apply it, discard it or put it back the way it was.' },
 				},
 				{
 					icon: 'shield',
@@ -509,7 +509,7 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					icon: 'check-list',
 					title: { es: 'Saber si está lista', en: 'Knowing if it is ready' },
 					before: { es: 'Publicas sin saber qué le falta.', en: 'You publish without knowing what is missing.' },
-					after: { es: 'Una auditoría sin IA califica de 0 a 100 en 9 áreas (llamado a la acción, contacto, WhatsApp, fotos, SEO) y te dice qué falta.', en: 'An audit without AI scores 0 to 100 across 9 areas (call to action, contact, WhatsApp, photos, SEO) and tells you what is missing.' },
+					after: { es: 'Una revisión automática, sin IA, califica tu página de 0 a 100 en 9 áreas (llamado a la acción, contacto, WhatsApp, fotos, que te encuentren en Google) y te dice qué falta.', en: 'An automatic check, without AI, scores your page 0 to 100 across 9 areas (call to action, contact, WhatsApp, photos, being found on Google) and tells you what is missing.' },
 				},
 			],
 		},
@@ -525,8 +525,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{
 					title: { es: 'Intención', en: 'Intent' },
 					text: {
-						es: 'Cuentas qué vendes, dónde y qué quieres que haga la gente. Puedes pedirle a Blob que la arme o armarla tú con un asistente por reglas, sin cuenta.',
-						en: 'You say what you sell, where, and what you want people to do. You can ask Blob to build it or build it yourself with a rules-based assistant, no account needed.',
+						es: 'Cuentas qué vendes, dónde y qué quieres que haga la gente. Puedes pedirle a Blob que la arme o armarla tú con un asistente de preguntas que no usa IA, sin crear cuenta.',
+						en: 'You say what you sell, where, and what you want people to do. You can ask Blob to build it or build it yourself with a question-based assistant that uses no AI, without creating an account.',
 					},
 				},
 				{
@@ -559,7 +559,7 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{ icon: 'layers', title: { es: 'Bloques para cada sección', en: 'Blocks for every section' }, text: { es: 'Más de 30 tipos: portada, servicios, galería, catálogo, testimonios, preguntas frecuentes, ubicación y horarios, paquetes, WhatsApp y contacto.', en: 'More than 30 types: cover, services, gallery, catalog, testimonials, FAQ, location and hours, packages, WhatsApp and contact.' } },
 				{ icon: 'sparkles-ai', title: { es: 'Blob, el asistente', en: 'Blob, the assistant' }, text: { es: 'Reescribe textos, propone un plan, arma un borrador desde una conversación y sugiere cómo publicar. Corre en el servidor.', en: 'Rewrites copy, proposes a plan, builds a draft from a conversation and suggests how to publish. It runs on the server.' } },
 				{ icon: 'mobile', title: { es: 'Vista de celular', en: 'Phone view' }, text: { es: 'Alternas entre escritorio y móvil mientras editas, y hay un editor pensado para el teléfono.', en: 'You switch between desktop and mobile while editing, and there is an editor designed for the phone.' } },
-				{ icon: 'globe', title: { es: 'Lo básico de SEO', en: 'The SEO basics' }, text: { es: 'Título, descripción, imagen para compartir, canonical, Open Graph y datos estructurados de negocio local (opcional).', en: 'Title, description, share image, canonical, Open Graph and optional local-business structured data.' } },
+				{ icon: 'globe', title: { es: 'Lo básico para aparecer en Google (SEO)', en: 'The basics for showing up on Google (SEO)' }, text: { es: 'Título, descripción e imagen para cuando compartan tu página, más los datos que leen Google y las redes (canonical, Open Graph y, si quieres, datos de negocio local).', en: 'Title, description and an image for when your page is shared, plus the data Google and social networks read (canonical, Open Graph and, if you want, local-business data).' } },
 				{ icon: 'pen', title: { es: 'Temas y plantillas', en: 'Themes and templates' }, text: { es: '9 plantillas base, más de 30 colores de acento, 17 tipografías, modo claro u oscuro y un color propio.', en: '9 base templates, more than 30 accent colors, 17 typefaces, light or dark mode and a custom color.' } },
 				{ icon: 'download', title: { es: 'Publicar o llevártela', en: 'Publish or take it with you' }, text: { es: 'Publicas en un enlace, un subdominio o tu dominio, o descargas la página (PDF o archivos HTML, CSS y JS).', en: 'You publish on a link, a subdomain or your own domain, or download the page (PDF or HTML, CSS and JS files).' } },
 			],
@@ -588,14 +588,14 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 					'Publicar por su cuenta.',
 					'Inventar imágenes: solo usa las que tú subiste.',
 					'Montar una tienda en línea: no tiene carrito ni pagos. Es para páginas de presentación, servicios y contacto.',
-					'Prometer posicionamiento en Google: revisa lo básico de SEO, nada más.',
+					'Prometerte los primeros lugares en Google. Revisa lo básico de SEO y nada más.',
 					'Darte un lienzo de diseño libre: arrastrar sirve para ordenar bloques.',
 				],
 				en: [
 					'Publish on its own.',
 					'Make up images: it only uses the ones you uploaded.',
 					'Run an online store: there is no cart or payments. It is for presentation, services and contact pages.',
-					'Promise Google rankings: it checks the SEO basics, nothing more.',
+					'Promise you top spots on Google. It checks the SEO basics and nothing more.',
 					'Give you a free-form design canvas: dragging is for ordering blocks.',
 				],
 			},
@@ -671,8 +671,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			label: { es: 'Qué resuelve', en: 'What it solves' },
 			title: { es: ['Cómo ordené mucho contenido', 'y cómo reviso lo que sube la gente'], en: ['How I organized a lot of content', 'and how I review what people upload'] },
 			lede: {
-				es: 'Miawseo es mi muestra de cómo convierto mucho contenido en un recorrido fácil de seguir, y de cómo abro un sitio a que la gente participe sin perder el control de lo que se publica.',
-				en: 'Miawseo is my sample of how I turn a lot of content into a path that is easy to follow, and how I open a site to contributions without losing control of what gets published.',
+				es: 'Con Miawseo enseño cómo convierto mucho contenido en un recorrido fácil de seguir, y cómo abro un sitio a que la gente participe sin perder el control de lo que se publica.',
+				en: 'With Miawseo I show how I turn a lot of content into a path that is easy to follow, and how I open a site to contributions without losing control of what gets published.',
 			},
 			beforeLabel: { es: 'El reto', en: 'The challenge' },
 			afterLabel: { es: 'Cómo lo resolví', en: 'How I solved it' },
@@ -715,8 +715,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{
 					title: { es: 'Contenido', en: 'Content' },
 					text: {
-						es: 'Cada raza se escribe una vez, con sus seis salas, y el sitio la genera como página estática. Las fotos vienen de Wikimedia Commons, con un retrato dibujado de respaldo si falta una.',
-						en: 'Each breed is written once, with its six rooms, and the site generates it as a static page. Photos come from Wikimedia Commons, with a drawn portrait as a fallback when one is missing.',
+						es: 'Cada raza se escribe una vez, con sus seis salas, y el sitio la convierte en una página fija (estática). Las fotos vienen de Wikimedia Commons, con un retrato dibujado de respaldo si falta una.',
+						en: 'Each breed is written once, with its six rooms, and the site turns it into a fixed (static) page. Photos come from Wikimedia Commons, with a drawn portrait as a fallback when one is missing.',
 					},
 				},
 				{
@@ -736,8 +736,8 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{
 					title: { es: 'Moderación', en: 'Moderation' },
 					text: {
-						es: 'La foto queda pendiente. En el panel de moderación se ve la vista previa y se aprueba o se rechaza. Solo las aprobadas se sirven; las demás responden 404.',
-						en: 'The photo stays pending. In the moderation panel you see the preview and approve or reject it. Only approved ones are served; the rest answer 404.',
+						es: 'La foto queda pendiente. En el panel de moderación se ve la vista previa y se aprueba o se rechaza. Solo se muestran las aprobadas. Si alguien pide otra, el sitio responde que no existe (404).',
+						en: 'The photo stays pending. In the moderation panel you see the preview and approve or reject it. Only approved ones are shown. If someone asks for another, the site answers that it does not exist (404).',
 					},
 				},
 			],
@@ -749,9 +749,9 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 				{ icon: 'compass', title: { es: 'Navegación tipo metro', en: 'Metro-style navigation' }, text: { es: 'Línea M1 de razas y línea M2 de historia, con buscador. Una tercera línea está en construcción.', en: 'Line M1 for breeds and line M2 for history, with search. A third line is under construction.' } },
 				{ icon: 'layers', title: { es: '120 salas', en: '120 rooms' }, text: { es: 'Seis por raza: presentación, origen, anatomía, temperamento, cuidados y curiosidad. Se navegan con el teclado.', en: 'Six per breed: introduction, origin, anatomy, temperament, care and curiosity. You can move through them with the keyboard.' } },
 				{ icon: 'user', title: { es: 'Michi Plaza', en: 'Michi Plaza' }, text: { es: 'Un muro por raza con las fotos aprobadas. La ficha de cada raza muestra las primeras 6.', en: 'A wall per breed with the approved photos. Each breed’s page shows the first 6.' } },
-				{ icon: 'shield', title: { es: 'Candados al subir', en: 'Locks on upload' }, text: { es: 'Límite por IP, campo trampa, tiempo mínimo, formato real de la imagen y tamaño máximo de 5 MB.', en: 'Per-IP limit, a trap field, minimum time, the image’s real format and a 5 MB maximum.' } },
+				{ icon: 'shield', title: { es: 'Candados al subir', en: 'Locks on upload' }, text: { es: 'Límite por IP, un campo oculto que solo llenan los bots, un tiempo mínimo para llenar el formulario, revisión del formato real de la imagen y tamaño máximo de 5 MB.', en: 'Per-IP limit, a hidden field only bots fill in, a minimum time to fill in the form, a check of the image’s real format and a 5 MB maximum.' } },
 				{ icon: 'check-list', title: { es: 'Panel de moderación', en: 'Moderation panel' }, text: { es: 'Lista de fotos pendientes con vista previa y botones para aprobar o rechazar, protegido con un token.', en: 'List of pending photos with a preview and buttons to approve or reject, protected by a token.' } },
-				{ icon: 'code', title: { es: 'Tecnología', en: 'Technology' }, text: { es: 'Next.js 15, React 19 y TypeScript estricto, sin librerías de ejecución extra.', en: 'Next.js 15, React 19 and strict TypeScript, with no extra runtime libraries.' } },
+				{ icon: 'code', title: { es: 'Tecnología', en: 'Technology' }, text: { es: 'Next.js 15, React 19 y TypeScript estricto, sin librerías extra al ejecutarse.', en: 'Next.js 15, React 19 and strict TypeScript, with no extra runtime libraries.' } },
 			],
 		},
 		limits: {
@@ -762,13 +762,13 @@ export const productDetails: Partial<Record<ProductSlug, ProductDetailContent>> 
 			does: {
 				es: [
 					'Revisa el contenido real del archivo (JPG, PNG o WebP), de 200 a 8000 px y hasta 5 MB.',
-					'Acepta 5 subidas cada 10 minutos por IP y descarta bots con un campo trampa y un tiempo mínimo.',
+					'Acepta 5 subidas cada 10 minutos por IP y descarta bots con un campo oculto y un tiempo mínimo.',
 					'Guarda las fotos fuera de la carpeta pública y bloquea rutas tramposas.',
 					'Sirve una foto solo si está aprobada.',
 				],
 				en: [
 					'Checks the file’s real content (JPG, PNG or WebP), from 200 to 8000 px and up to 5 MB.',
-					'Accepts 5 uploads every 10 minutes per IP and drops bots with a trap field and a minimum time.',
+					'Accepts 5 uploads every 10 minutes per IP and drops bots with a hidden field and a minimum time.',
 					'Keeps photos outside the public folder and blocks tricky paths.',
 					'Serves a photo only once it is approved.',
 				],

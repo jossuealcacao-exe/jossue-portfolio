@@ -115,7 +115,8 @@ test('stores a valid contact and exposes it only with the admin token', async ()
 	assert.equal(env.DB.rows.length, 1);
 	assert.equal(env.emails.length, 1);
 	assert.equal(env.emails[0].to, 'owner@example.com');
-	assert.equal(env.emails[0].from.email, 'hola@jossuealcala.com');
+	assert.equal(env.emails[0].from.email, 'avisos@jossuealcala.com');
+	assert.match(env.emails[0].subject, /^Nuevo cliente · /);
 	assert.equal(env.emails[0].replyTo.email, 'maria@example.com');
 	assert.match(env.emails[0].text, /El carrito abandona mucho/);
 

@@ -1,10 +1,12 @@
 import { handleAi, handleAiChats } from './ai.mjs';
 import { handleAuditCreate, handleAuditStatus } from './audit.mjs';
 import { handleWhatsApp } from './whatsapp.mjs';
+import { notify } from './notify.mjs';
+import { sendDailySummary } from './digest.mjs';
+import { handleBookingCancel, handleBookingCreate, handleBookingIcs, handleCalendarFeed, handleSlots } from './booking.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
 const RATE_LIMIT_MS = 60_000;
-const CONTACT_FROM = 'hola@jossuealcala.com';
 const CANONICAL_ORIGIN = 'https://jossuealcala.com';
 const DEFAULT_LOCALE = 'es';
 const SUPPORTED_LOCALES = new Set(['es', 'en']);
@@ -125,7 +127,7 @@ async function safeEqual(left, right) {
 	return leftHash === rightHash;
 }
 
-function contactEmail(submission, id, createdAt, recipient) {
+function contactEmail(submission, id, createdAt) {
 	const optionalField = (label, value) => (value ? `${label}: ${value}` : null);
 	const lines = [
 		'Nueva solicitud desde jossuealcala.com',
@@ -144,28 +146,15 @@ function contactEmail(submission, id, createdAt, recipient) {
 	].filter((line) => line !== null);
 
 	return {
-		to: recipient,
-		from: { email: CONTACT_FROM, name: 'Portafolio Jossue Alcala' },
+		kind: 'client',
 		replyTo: { email: submission.email, name: singleLine(submission.name, 120) },
-		subject: `Nueva solicitud: ${singleLine(submission.projectType, 70)} - ${singleLine(submission.name, 70)}`,
+		subject: `${singleLine(submission.name, 70)} · formulario · ${singleLine(submission.projectType, 70)}`,
 		text: lines.join('\n'),
 	};
 }
 
 async function sendContactNotification(env, submission, id, createdAt) {
-	const recipient = clean(env.CONTACT_EMAIL_TO, 200);
-	if (!env.CONTACT_EMAIL || !recipient) return false;
-
-	try {
-		await env.CONTACT_EMAIL.send(contactEmail(submission, id, createdAt, recipient));
-		return true;
-	} catch (error) {
-		console.error('Contact email notification failed', {
-			submissionId: id,
-			name: error?.name ?? 'Error',
-		});
-		return false;
-	}
+	return notify(env, contactEmail(submission, id, createdAt));
 }
 
 function clientIp(request) {
@@ -272,6 +261,8 @@ export async function handleRequest(request, env, ctx) {
 				notificationEnabled: Boolean(env.CONTACT_EMAIL && env.CONTACT_EMAIL_TO),
 				aiEnabled: Boolean(env.GEMINI_API_KEY),
 				auditEnabled: Boolean(env.APEX_TOKEN),
+				bookingEnabled: Boolean(env.DB),
+				calendarFeedEnabled: Boolean(env.CALENDAR_FEED_KEY),
 				whatsappEnabled: Boolean(env.WHATSAPP_TOKEN && (env.WHATSAPP_APP_SECRET || env.WHATSAPP_WEBHOOK_KEY) && env.WHATSAPP_PHONE_NUMBER_ID),
 			},
 			origin,
@@ -289,6 +280,15 @@ export async function handleRequest(request, env, ctx) {
 	}
 	const auditMatch = url.pathname.match(/^\/api\/audit\/(AE-[A-Za-z0-9]{8,40})$/);
 	if (auditMatch && request.method === 'GET') return handleAuditStatus(request, env, { json, origin }, auditMatch[1]);
+	if (url.pathname === '/api/booking/slots' && request.method === 'GET') return handleSlots(env, { json, origin });
+	if (url.pathname === '/api/booking' && request.method === 'POST') {
+		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
+		return handleBookingCreate(request, env, { json, origin, ipHash });
+	}
+	if (url.pathname === '/api/booking/cancel' && request.method === 'POST') return handleBookingCancel(request, env, { json, origin });
+	if (url.pathname === '/api/booking/calendar.ics' && request.method === 'GET') return handleCalendarFeed(request, env);
+	const icsMatch = url.pathname.match(/^\/api\/booking\/(CALL-[a-f0-9]{16})\.ics$/);
+	if (icsMatch && request.method === 'GET') return handleBookingIcs(request, env, icsMatch[1]);
 	if (url.pathname === '/api/ai/chats' && request.method === 'GET') {
 		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
 		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);
@@ -298,4 +298,8 @@ export async function handleRequest(request, env, ctx) {
 	return env.ASSETS.fetch(request);
 }
 
-export default { fetch: handleRequest };
+export default {
+	fetch: handleRequest,
+	// Cron de wrangler.jsonc: el resumen diario a las 8:00 de Guadalajara.
+	scheduled: (controller, env, ctx) => ctx.waitUntil(sendDailySummary(env, controller.scheduledTime)),
+};

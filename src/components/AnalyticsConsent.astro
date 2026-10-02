@@ -1,39 +1,58 @@
 ---
+// Aviso de cookies. Nada de medición ni publicidad se carga sin permiso: Google entra con el modo de
+// consentimiento v2 (todo «denied» por defecto) y el pixel de Meta ni siquiera se descarga hasta que
+// la persona acepta la publicidad. La opción de publicidad solo aparece si hay pixel o Google Ads.
+// Lo que dice este aviso tiene que coincidir con el apartado 6 de PrivacyPage.astro.
 import { analyticsConfig } from '../data/analytics';
-import type { Locale } from '../data/i18n';
+import { routes, type Locale } from '../data/i18n';
 
 interface Props {
 	locale: Locale;
 }
 
 const { locale } = Astro.props;
-const copy = locale === 'es'
+const { ga4Id, metaPixelId, googleAdsId, googleAdsLeadLabel } = analyticsConfig;
+const ads = Boolean(metaPixelId || googleAdsId);
+const es = locale === 'es';
+const copy = es
 	? {
-		label: 'Preferencias de analítica',
-		text: 'Uso Google Analytics para entender qué contenido resulta útil y mejorar el sitio.',
-		accept: 'Aceptar analítica',
-		reject: 'Continuar sin analítica',
+		label: 'Preferencias de cookies',
+		text: ads
+			? 'Uso Google Analytics para saber qué contenido sirve y, si lo aceptas, cookies de publicidad de Meta y Google para medir mis anuncios y mostrártelos.'
+			: 'Uso Google Analytics para entender qué contenido resulta útil y mejorar el sitio.',
+		all: ads ? 'Aceptar todo' : 'Aceptar analítica',
+		analytics: 'Solo analítica',
+		reject: ads ? 'Rechazar todo' : 'Continuar sin analítica',
+		more: 'Aviso de privacidad',
 	}
 	: {
-		label: 'Analytics preferences',
-		text: 'I use Google Analytics to understand which content is useful and improve the site.',
-		accept: 'Accept analytics',
-		reject: 'Continue without analytics',
+		label: 'Cookie preferences',
+		text: ads
+			? 'I use Google Analytics to learn which content is useful and, if you accept, Meta and Google advertising cookies to measure my ads and show them to you.'
+			: 'I use Google Analytics to understand which content is useful and improve the site.',
+		all: ads ? 'Accept all' : 'Accept analytics',
+		analytics: 'Analytics only',
+		reject: ads ? 'Reject all' : 'Continue without analytics',
+		more: 'Privacy notice',
 	};
 ---
 
 {
-	analyticsConfig.ga4Id && (
+	(ga4Id || ads) && (
 		<aside
 			class="analytics-consent"
 			data-analytics-consent
-			data-measurement-id={analyticsConfig.ga4Id}
+			data-measurement-id={ga4Id ?? ''}
+			data-ads-id={googleAdsId ?? ''}
+			data-ads-lead={googleAdsId && googleAdsLeadLabel ? `${googleAdsId}/${googleAdsLeadLabel}` : ''}
+			data-pixel-id={metaPixelId ?? ''}
 			aria-label={copy.label}
 			hidden
 		>
-			<p>{copy.text}</p>
+			<p>{copy.text} <a href={routes[locale].privacy}>{copy.more}</a></p>
 			<div class="analytics-consent__actions">
-				<button type="button" class="button" data-analytics-accept>{copy.accept}</button>
+				<button type="button" class="button" data-analytics-accept>{copy.all}</button>
+				{ads && ga4Id && <button type="button" class="analytics-consent__secondary" data-analytics-only>{copy.analytics}</button>}
 				<button type="button" class="analytics-consent__reject" data-analytics-reject>{copy.reject}</button>
 			</div>
 		</aside>
@@ -41,40 +60,131 @@ const copy = locale === 'es'
 }
 
 <script>
-	const STORAGE_KEY = 'jossue-analytics-consent';
+	type Choice = { analytics: boolean; ads: boolean };
+	const STORAGE_KEY = 'jossue-consent';
+	const OLD_KEY = 'jossue-analytics-consent';
 	const consent = document.querySelector<HTMLElement>('[data-analytics-consent]');
 
-	function loadAnalytics(measurementId: string) {
-		if (document.querySelector(`script[data-ga4="${measurementId}"]`)) return;
-		window.dataLayer ??= [];
-		window.gtag = function gtag() {
-			// eslint-disable-next-line prefer-rest-params -- gtag.js consumes the Arguments object.
-			window.dataLayer?.push(arguments);
-		};
-		window.gtag('js', new Date());
-		window.gtag('config', measurementId, { anonymize_ip: true });
+	const read = (key: string) => {
+		try {
+			return localStorage.getItem(key);
+		} catch {
+			return null;
+		}
+	};
+	const write = (choice: Choice) => {
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(choice));
+		} catch {
+			// Sin almacenamiento la elección dura lo que dura la página; se vuelve a preguntar después.
+		}
+	};
 
-		const script = document.createElement('script');
-		script.async = true;
-		script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(measurementId)}`;
-		script.dataset.ga4 = measurementId;
-		document.head.append(script);
+	function saved(adsOffered: boolean): Choice | null {
+		try {
+			const choice = JSON.parse(read(STORAGE_KEY) ?? 'null');
+			if (choice && typeof choice.analytics === 'boolean' && typeof choice.ads === 'boolean') return choice;
+		} catch {
+			// Un valor dañado cuenta como «sin elegir».
+		}
+		// Quien eligió antes de que existiera la publicidad: un «no» se respeta para todo; un «sí» a la
+		// analítica no es un «sí» a la publicidad, así que solo se vuelve a preguntar si hay publicidad.
+		const old = read(OLD_KEY);
+		if (old === 'denied') return { analytics: false, ads: false };
+		if (old === 'granted' && !adsOffered) return { analytics: true, ads: false };
+		return null;
+	}
+
+	function google(choice: Choice, ga4: string, adsId: string) {
+		const wanted = (choice.analytics && ga4) || (choice.ads && adsId);
+		if (!window.gtag) {
+			if (!wanted) return;
+			window.dataLayer ??= [];
+			window.gtag = function gtag() {
+				// eslint-disable-next-line prefer-rest-params -- gtag.js consumes the Arguments object.
+				window.dataLayer?.push(arguments);
+			};
+			window.gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+			window.gtag('js', new Date());
+			const script = document.createElement('script');
+			script.async = true;
+			script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(ga4 || adsId)}`;
+			script.dataset.ga4 = ga4 || adsId;
+			document.head.append(script);
+		}
+		const ads = choice.ads ? 'granted' : 'denied';
+		window.gtag('consent', 'update', { analytics_storage: choice.analytics ? 'granted' : 'denied', ad_storage: ads, ad_user_data: ads, ad_personalization: ads });
+		const configured = (window.__jxGoogle ??= new Set<string>());
+		if (choice.analytics && ga4 && !configured.has(ga4)) {
+			configured.add(ga4);
+			window.gtag('config', ga4, { anonymize_ip: true });
+		}
+		if (choice.ads && adsId && !configured.has(adsId)) {
+			configured.add(adsId);
+			// Sin conversiones mejoradas: a Google no se le manda ni nombre ni correo.
+			window.gtag('config', adsId, { allow_enhanced_conversions: false });
+		}
+	}
+
+	function meta(choice: Choice, pixelId: string) {
+		if (!pixelId) return;
+		if (!choice.ads) {
+			window.fbq?.('consent', 'revoke');
+			return;
+		}
+		if (!window.fbq) {
+			const fbq = function (...args: unknown[]) {
+				if (fbq.callMethod) fbq.callMethod(...args);
+				else fbq.queue.push(args);
+			} as FbqStub;
+			fbq.push = fbq;
+			fbq.loaded = true;
+			fbq.version = '2.0';
+			fbq.queue = [];
+			window.fbq = fbq;
+			window._fbq = fbq;
+			const script = document.createElement('script');
+			script.async = true;
+			script.src = 'https://connect.facebook.net/en_US/fbevents.js';
+			document.head.append(script);
+			fbq('consent', 'grant');
+			// Sin coincidencia avanzada: a Meta no se le manda ni nombre ni correo.
+			fbq('init', pixelId);
+			fbq('track', 'PageView');
+			return;
+		}
+		window.fbq('consent', 'grant');
 	}
 
 	if (consent) {
-		const measurementId = consent.dataset.measurementId;
-		const savedPreference = localStorage.getItem(STORAGE_KEY);
-		if (savedPreference === 'granted' && measurementId) loadAnalytics(measurementId);
-		else if (savedPreference !== 'denied') consent.hidden = false;
+		const ga4 = consent.dataset.measurementId ?? '';
+		const adsId = consent.dataset.adsId ?? '';
+		const pixelId = consent.dataset.pixelId ?? '';
+		const adsOffered = Boolean(adsId || pixelId);
+		const apply = (choice: Choice) => {
+			google(choice, ga4, adsId);
+			meta(choice, pixelId);
+		};
+		const choose = (choice: Choice) => {
+			write(choice);
+			consent.hidden = true;
+			apply(choice);
+		};
 
-		consent.querySelector('[data-analytics-accept]')?.addEventListener('click', () => {
-			localStorage.setItem(STORAGE_KEY, 'granted');
-			consent.hidden = true;
-			if (measurementId) loadAnalytics(measurementId);
-		});
-		consent.querySelector('[data-analytics-reject]')?.addEventListener('click', () => {
-			localStorage.setItem(STORAGE_KEY, 'denied');
-			consent.hidden = true;
+		const current = saved(adsOffered);
+		if (current) apply(current);
+		else consent.hidden = false;
+
+		consent.querySelector('[data-analytics-accept]')?.addEventListener('click', () => choose({ analytics: Boolean(ga4), ads: adsOffered }));
+		consent.querySelector('[data-analytics-only]')?.addEventListener('click', () => choose({ analytics: true, ads: false }));
+		consent.querySelector('[data-analytics-reject]')?.addEventListener('click', () => choose({ analytics: false, ads: false }));
+		// «Preferencias de cookies» en el pie: vuelve a mostrar el aviso para cambiar la elección.
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement | null)?.closest('[data-consent-open]');
+			if (!trigger) return;
+			event.preventDefault();
+			consent.hidden = false;
+			consent.querySelector<HTMLButtonElement>('button')?.focus();
 		});
 	}
 </script>
@@ -105,10 +215,16 @@ const copy = locale === 'es'
 		line-height: 1.5;
 	}
 
+	.analytics-consent p a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
 	.analytics-consent__actions {
 		display: flex;
 		align-items: center;
-		gap: 1rem;
+		gap: 0.75rem 1rem;
 		flex-wrap: wrap;
 	}
 
@@ -117,7 +233,9 @@ const copy = locale === 'es'
 		padding: 0.75rem 1rem;
 	}
 
+	.analytics-consent__secondary,
 	.analytics-consent__reject {
+		min-height: 2.75rem;
 		padding: 0.5rem 0;
 		border: 0;
 		background: transparent;
@@ -127,6 +245,10 @@ const copy = locale === 'es'
 		text-decoration: underline;
 		text-underline-offset: 0.2em;
 		cursor: pointer;
+	}
+
+	.analytics-consent__secondary {
+		color: inherit;
 	}
 
 	@media (max-width: 40rem) {

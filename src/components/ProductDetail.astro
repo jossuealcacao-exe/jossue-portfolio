@@ -204,7 +204,7 @@ const cols = rows.length % 3 === 0 ? 3 : 2;
 	<section class={next()} aria-labelledby="pdp-spec">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Ficha técnica' : 'Spec sheet'}</p>
-			<h2 id="pdp-spec" class="jx-h2"><span>{es ? 'Datos' : 'Key facts'}</span>{' '}<span class="jx-soft">{es ? `de ${title}` : `about ${title}`}</span></h2>
+			<h2 id="pdp-spec" class="jx-h2"><span>{es ? 'Datos clave' : 'Key facts'}</span>{' '}<span class="jx-soft">{es ? `de ${title}` : `about ${title}`}</span></h2>
 			<dl class="pdp-spec">
 				{detail.spec.map((row) => <div><dt>{row.term[locale]}</dt><dd>{row.detail[locale]}</dd></div>)}
 			</dl>

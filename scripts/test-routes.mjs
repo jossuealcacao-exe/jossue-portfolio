@@ -29,6 +29,7 @@ const routes = [
 	'/es/contacto/',
 	'/es/recursos/ahp-plus/',
 	'/es/privacidad/',
+	'/es/agenda/',
 	'/en/',
 	'/en/work/',
 	...caseSlugs.map((slug) => `/en/work/${slug}/`),
@@ -41,6 +42,7 @@ const routes = [
 	'/en/contact/',
 	'/en/resources/ahp-plus/',
 	'/en/privacy/',
+	'/en/book-a-call/',
 ];
 
 const failures = [];

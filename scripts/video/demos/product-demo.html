@@ -1,0 +1,525 @@
+<!doctype html>
+<!--
+  Demos de producto para jossuealcala.com: Daniela, Chatbots (Jossue AI), Bloqio Builder y
+  Miawseo. ?p=<id>&fmt=wide|tall (1920×1080 / 1080×1920). Cada fotograma sale de
+  renderAt(t), que es asíncrona porque busca el cuadro exacto de la grabación;
+  render-demo.mjs lo graba cuadro por cuadro.
+  Las grabaciones son las demos reales que ya publica el sitio (public/videos/<producto>/).
+  Cada frase sale de src/data/products.ts, src/data/productDetails.ts o
+  src/components/ChatbotsPage.astro; nada se promete que el sitio no diga.
+-->
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Demo de producto</title>
+<style>
+  :root { --font: "SF Pro Display", -apple-system, BlinkMacSystemFont, system-ui, sans-serif; --mono: "SF Mono", ui-monospace, Menlo, monospace; --ink: #f4f4f1; --ink-2: #a7aba3; --ink-3: #7d8279; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; overflow: hidden; }
+  #stage { position: relative; overflow: hidden; background: #07080a; font-family: var(--font); color: var(--ink); -webkit-font-smoothing: antialiased; }
+  .glow { position: absolute; inset: -20%; pointer-events: none; }
+  #grain { position: absolute; inset: 0; opacity: .05; pointer-events: none; z-index: 50; }
+  #black { position: absolute; inset: 0; background: #000; opacity: 0; z-index: 60; }
+  .abs { position: absolute; }
+  .scene { position: absolute; inset: 0; opacity: 0; visibility: hidden; }
+  .mono { font-family: var(--mono); }
+
+  /* barra superior */
+  #top { position: absolute; display: flex; align-items: center; gap: 18px; z-index: 20; }
+  #top .chip { display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 22px 0 16px; border-radius: 999px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); font-weight: 700; font-size: 24px; letter-spacing: -.01em; }
+  #top .chip i { width: 14px; height: 14px; border-radius: 50%; background: var(--acc); box-shadow: 0 0 18px var(--acc); }
+  #top .site { font: 500 20px/1 var(--mono); letter-spacing: .1em; color: var(--ink-3); }
+  #steps { position: absolute; display: flex; gap: 10px; z-index: 20; }
+  #steps b { width: 46px; height: 6px; border-radius: 3px; background: rgba(255,255,255,.14); overflow: hidden; position: relative; }
+  #steps b s { position: absolute; inset: 0; width: 0; background: var(--acc); }
+
+  /* textos */
+  .cap .k { display: flex; align-items: center; gap: 14px; font: 600 22px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--acc); }
+  .cap .k i { width: 11px; height: 11px; border-radius: 50%; background: var(--acc); }
+  .cap h2 { margin-top: 26px; font-weight: 700; letter-spacing: -.03em; line-height: 1.06; text-wrap: balance; }
+  .cap p { margin-top: 24px; color: var(--ink-2); line-height: 1.35; text-wrap: pretty; }
+  .cap h2 em { font-style: normal; color: var(--acc); }
+
+  /* grabación enmarcada */
+  .frame { position: absolute; overflow: hidden; border-radius: 22px; background: #000; box-shadow: 0 0 0 1px rgba(255,255,255,.12), 0 40px 90px rgba(0,0,0,.6); }
+  .frame.phone { border-radius: 44px; box-shadow: 0 0 0 10px #15171a, 0 0 0 11px rgba(255,255,255,.14), 0 40px 90px rgba(0,0,0,.6); }
+  .frame .zoom { position: absolute; inset: 0; }
+  .frame video { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .credit { position: absolute; font: 500 16px/1 var(--mono); letter-spacing: .06em; color: var(--ink-3); }
+
+  /* gran titular (intro, problema, cierre) */
+  .big { position: absolute; display: flex; flex-direction: column; justify-content: center; }
+  .big .name { font-weight: 800; letter-spacing: -.045em; line-height: .92; }
+  .big .tag { margin-top: 30px; color: var(--ink-2); font-weight: 600; letter-spacing: -.015em; line-height: 1.2; text-wrap: balance; }
+  .big .mark { width: 110px; height: 110px; border-radius: 32px; background: var(--acc); display: grid; place-items: center; margin-bottom: 44px; box-shadow: 0 20px 60px color-mix(in srgb, var(--acc) 45%, transparent); }
+  .big .mark svg { width: 58px; height: 58px; color: var(--acc-ink); }
+  .big h1 { font-weight: 800; letter-spacing: -.04em; line-height: 1.02; text-wrap: balance; }
+  .big h1 em { font-style: normal; color: var(--acc); }
+  .big .sub { margin-top: 30px; color: var(--ink-2); font-weight: 500; line-height: 1.3; text-wrap: balance; }
+  .big .url { margin-top: 48px; display: inline-flex; align-self: flex-start; align-items: center; gap: 16px; padding: 24px 34px; border-radius: 999px; background: var(--acc); color: var(--acc-ink); font: 700 34px/1 var(--mono); letter-spacing: -.01em; }
+  .big .foot { margin-top: 30px; font: 500 22px/1.4 var(--mono); letter-spacing: .08em; color: var(--ink-3); }
+
+  /* diagrama abstracto (IA aplicada) */
+  .dg { position: absolute; }
+  .dg svg.wires { position: absolute; inset: 0; overflow: visible; }
+  .dg svg.wires path { fill: none; stroke: color-mix(in srgb, var(--acc) 60%, transparent); stroke-width: 3; stroke-linecap: round; }
+  .dg svg.wires circle { fill: var(--acc); }
+  .nd { position: absolute; display: flex; align-items: center; gap: 16px; border-radius: 22px; background: #17191c; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), 0 20px 50px rgba(0,0,0,.4); padding: 0 24px; font-size: 30px; font-weight: 700; letter-spacing: -.015em; }
+  .nd svg { width: 34px; height: 34px; flex-shrink: 0; color: var(--acc); }
+  .nd.core { justify-content: center; padding: 0; border-radius: 50%; background: color-mix(in srgb, var(--acc) 14%, #07080a); box-shadow: 0 0 0 3px var(--acc), 0 0 0 22px color-mix(in srgb, var(--acc) 10%, transparent), 0 0 80px color-mix(in srgb, var(--acc) 35%, transparent); font: 800 46px/1 var(--mono); color: var(--acc); }
+  .nd.card { flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 0; padding: 28px 30px; }
+  .nd.card .ttl { display: flex; align-items: center; gap: 14px; font-size: 30px; margin-bottom: 16px; }
+  .nd .row { display: flex; align-items: center; gap: 16px; height: 74px; border-top: 1px solid rgba(255,255,255,.08); }
+  .nd .row i { flex: 1; height: 14px; border-radius: 7px; background: rgba(255,255,255,.14); }
+  .nd .row em { font-style: normal; font: 700 19px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 10px 14px; border-radius: 999px; background: var(--acc); color: var(--acc-ink); white-space: nowrap; }
+  .nd .row em.warn, .nd.warn em { background: #ffb547; color: #2b1800; }
+  .nd .row small { font: 600 18px/1 var(--mono); color: var(--ink-3); white-space: nowrap; }
+  .nd.warn { box-shadow: inset 0 0 0 2px #ffb547, 0 20px 50px rgba(0,0,0,.4); }
+  .nd.warn svg { color: #ffb547; }
+  .nd.ok { background: var(--acc); color: var(--acc-ink); }
+  .nd.ok svg { color: var(--acc-ink); }
+
+  /* comparación (chatbots) */
+  .cmp { display: grid; gap: 26px; }
+  .cmp > div { border-radius: 28px; padding: 40px 44px; background: #17191c; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); display: flex; flex-direction: column; }
+  .cmp > div.win { box-shadow: inset 0 0 0 3px var(--acc), 0 30px 80px color-mix(in srgb, var(--acc) 18%, transparent); }
+  .cmp .who { display: flex; align-items: center; gap: 14px; font: 600 22px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+  .cmp .who svg { width: 30px; height: 30px; color: var(--acc); }
+  .cmp .num { margin-top: 26px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+  .cmp .win .num { color: var(--acc); }
+  .cmp .per { margin-top: 12px; color: var(--ink-2); font-weight: 600; }
+  .cmp ul { margin-top: 26px; list-style: none; display: grid; gap: 14px; }
+  .cmp li { display: flex; gap: 14px; align-items: baseline; color: var(--ink); font-weight: 600; }
+  .cmp li b { color: var(--ink-3); font: 600 20px/1 var(--mono); width: 26px; flex-shrink: 0; }
+  .fine { color: var(--ink-3); font: 500 19px/1.45 var(--mono); letter-spacing: .02em; }
+
+  /* tarjetas */
+  .cards { display: grid; gap: 26px; }
+  .card { display: flex; gap: 26px; align-items: flex-start; padding: 40px 40px; border-radius: 26px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.09); }
+  .card .n { flex-shrink: 0; width: 54px; height: 54px; border-radius: 16px; background: var(--acc); color: var(--acc-ink); display: grid; place-items: center; font: 800 24px/1 var(--mono); }
+  .card .n.x { background: transparent; box-shadow: inset 0 0 0 2px #ff6b5e; color: #ff6b5e; }
+  .card b { display: block; font-weight: 700; letter-spacing: -.02em; line-height: 1.15; }
+  .card span { display: block; margin-top: 10px; color: var(--ink-2); line-height: 1.3; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div class="glow" id="glow"></div>
+  <div id="top"><span class="chip"><i></i><span id="pname"></span></span><span class="site">jossuealcala.com</span></div>
+  <div id="steps"></div>
+  <div id="scenes"></div>
+  <svg id="grain" width="100%" height="100%" aria-hidden="true"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter><rect width="100%" height="100%" filter="url(#n)"/></svg>
+  <div id="black"></div>
+</div>
+
+<script>
+const Q = new URLSearchParams(location.search);
+const FMT = Q.get('fmt') === 'tall' ? 'tall' : 'wide';
+const W = FMT === 'wide' ? 1920 : 1080, H = FMT === 'wide' ? 1080 : 1920;
+const V = '../../../public/videos/';
+const ICON = {
+  chat: '<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h-1A.5.5 0 0 1 4 15.5z"/>',
+  blocks: '<rect x="4" y="4" width="16" height="6" rx="1.6"/><rect x="4" y="13" width="7" height="7" rx="1.6"/><rect x="14" y="13" width="6" height="7" rx="1.6"/>',
+  cat: '<path d="M5 9V4l4 3h6l4-3v5a7 7 0 0 1-14 0z"/><path d="M9.5 12h.01M14.5 12h.01"/>',
+  spark: '<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/>',
+};
+
+/* ---------- guion por producto (fuentes en el comentario de arriba) ---------- */
+const PRODUCTS = {
+  daniela: {
+    name: 'Daniela', acc: '#ff5c93', ink: '#2a0613', glow: ['#ff5c93', '#ff9a5c'], icon: 'chat',
+    tagline: 'Asistente de ventas con IA · en uso en wunutrition.com',
+    url: 'jossuealcala.com/es/productos/daniela',
+    scenes: [
+      { type: 'intro', dur: 2.6 },
+      { type: 'problem', dur: 4.6, h: 'Son las 11 de la noche y una clienta <em>tiene una duda.</em>', sub: 'Si nadie le contesta, la compra se queda a medias.' },
+      { type: 'clip', dur: 5.4, src: { wide: 'daniela/daniela-demo', tall: 'daniela/daniela-demo-mobile' }, clip: { wide: [1.8, 6.8], tall: [1.6, 6.6] },
+        k: 'A cualquier hora', h: 'Le escribe a Daniela como le escribiría a una persona.', sub: 'Contesta normalmente en 3 a 8 segundos, cualquier día.' },
+      { type: 'clip', dur: 6.4, src: { wide: 'daniela/daniela-demo', tall: 'daniela/daniela-demo-mobile' }, clip: { wide: [7.0, 11.4], tall: [6.6, 10.8] },
+        zoom: { wide: { x: .86, y: .5, s: 1.9 }, tall: { x: .5, y: .72, s: 1.12 } },
+        k: 'Catálogo real', h: 'Le recomienda un producto <em>que existe, con su precio real.</em>', sub: 'Precios, existencias y promociones salen de Shopify, no de lo que la IA recuerde.' },
+      { type: 'clip', dur: 5.8, src: { wide: 'daniela/daniela-demo', tall: 'daniela/daniela-demo-mobile' }, clip: { wide: [11.4, 16.1], tall: [10.8, 15.8] },
+        k: 'Carrito', h: 'Y lo agrega al carrito, <em>siempre con su sí.</em>', sub: 'Arma combos y cambia cantidades solo cuando la clienta confirma.' },
+      { type: 'cards', dur: 7.6, k: 'Lo que hace sola', h: 'Seis funciones, y el servidor revisa cada una.', items: [
+        ['1', 'Recomienda con el catálogo real', 'Solo productos con stock, con su precio y promociones.'],
+        ['2', 'Consulta pedidos en Odoo', 'Con número y correo que coincidan. No puede modificar nada.'],
+        ['3', 'Descuentos de un solo uso', 'Los crea el servidor y vencen pronto.'],
+        ['4', 'Pasa a una persona', 'Lo delicado va a WhatsApp con folio y resumen.'] ] },
+      { type: 'cards', dur: 7.0, k: 'Lo que no puede hacer', h: 'Sin respuestas inventadas.', items: [
+        ['×', 'Inventar precios, productos o promociones', ''],
+        ['×', 'Dejar ver las claves de la tienda', 'Se quedan en el servidor, nunca en el navegador.'],
+        ['×', 'Contestar temas de salud por su cuenta', 'Da una respuesta segura o pasa con una persona.'],
+        ['×', 'Guardar correos y teléfonos', 'Los borra, y purga cada plática a los 60 días.'] ] },
+      { type: 'outro', dur: 5.0, h: '¿Quieres una <em>Daniela</em> en tu tienda?', foot: 'Shopify · Odoo · Klaviyo · WhatsApp' },
+    ],
+  },
+
+  chatbots: {
+    name: 'Chatbots con IA', acc: '#f2cf7a', ink: '#241a04', glow: ['#f2cf7a', '#7ab8f2'], icon: 'spark',
+    tagline: 'Asistentes como Daniela y Jossue AI, conectados a los datos de tu negocio',
+    url: 'jossuealcala.com/es/productos/chatbots',
+    scenes: [
+      { type: 'intro', dur: 2.8 },
+      { type: 'problem', dur: 5.0, h: 'Tus clientes preguntan lo mismo todos los días, y <em>la venta se cae</em> cuando nadie contesta.', sub: 'Un bot de menús responde «no entendí». Uno con IA entiende lo que la persona escribe, como lo escribe.' },
+      { type: 'clip', dur: 5.2, src: { wide: 'jossue-ai/jossue-ai-demo', tall: 'jossue-ai/jossue-ai-demo-mobile' }, clip: { wide: [1.6, 6.2], tall: [0.8, 4.4] },
+        zoom: { wide: { x: .83, y: .5, s: 2.0 }, tall: { x: .5, y: .5, s: 1.0 } },
+        k: 'Jossue AI, en mi sitio', h: 'Le preguntas lo que sea, con tus palabras.', sub: 'Contesta solo con lo que yo publico. Si algo no lo sabe, lo dice.' },
+      { type: 'clip', dur: 5.6, src: { wide: 'jossue-ai/jossue-ai-demo', tall: 'jossue-ai/jossue-ai-demo-mobile' }, clip: { wide: [6.2, 11.6], tall: [4.4, 8.4] },
+        zoom: { wide: { x: .83, y: .5, s: 2.0 }, tall: { x: .5, y: .45, s: 1.12 } },
+        k: 'Al momento', h: 'Responde en segundos <em>y te lleva a la página correcta.</em>', sub: 'Cada respuesta trae el botón para ver más.' },
+      { type: 'clip', dur: 7.2, src: { wide: 'jossue-ai/jossue-ai-demo', tall: 'jossue-ai/jossue-ai-demo-mobile' }, clip: { wide: [12.0, 24.6], tall: [8.4, 18.3] }, rate: 1.7,
+        zoom: { wide: { x: .83, y: .55, s: 2.0 }, tall: { x: .5, y: .55, s: 1.12 } },
+        k: 'Para tu tienda', h: 'Le pregunté cómo sería uno para una tienda en Shopify.', sub: 'Recomienda productos, arma el carrito y consulta pedidos sin inventar precios ni promociones.' },
+      { type: 'cards', dur: 7.6, k: 'Qué resuelve', h: 'Lo que cambia en tu negocio.', items: [
+        ['1', 'Vendes también de noche', 'La duda de las 11 de la noche ya no espera al lunes.'],
+        ['2', 'Menos compras que se caen por una duda', 'Resuelve envío, pagos o cuál conviene en el momento.'],
+        ['3', 'Tu equipo atiende lo importante', 'Lo delicado o una venta grande pasa a una persona.'],
+        ['4', 'Los datos del cliente, ya guardados', 'Quedan en tu lista de clientes (CRM), sin copiar y pegar.'] ] },
+      { type: 'cards', dur: 7.2, k: 'Cómo se protege', h: 'La IA no toca tus sistemas.', items: [
+        ['1', 'Las claves se quedan en el servidor', 'El navegador del cliente nunca las ve.'],
+        ['2', 'El servidor revisa cada acción', 'Solo productos de tu catálogo y descuentos con tus reglas.'],
+        ['3', 'Una segunda IA vigila los mensajes', 'Lo obvio se frena antes de llegar y no te cuesta nada.'],
+        ['4', 'Si la IA falla, la venta no se cae', 'Ofrece WhatsApp o el formulario. La pantalla nunca se congela.'] ] },
+      { type: 'outro', dur: 5.2, h: '¿Quieres uno para <em>tu negocio?</em>', foot: 'Tu tienda, tu sitio o WhatsApp · centavos de dólar por conversación' },
+    ],
+  },
+
+  'bloqio-builder': {
+    name: 'Bloqio Builder', acc: '#5b8cff', ink: '#06122e', glow: ['#5b8cff', '#a07bff'], icon: 'blocks',
+    tagline: 'Constructor de páginas con IA · en beta privada',
+    url: 'jossuealcala.com/es/productos/bloqio-builder',
+    scenes: [
+      { type: 'intro', dur: 2.6 },
+      { type: 'problem', dur: 4.8, h: 'Necesitas una página para tu negocio y <em>no tienes diseñador.</em>', sub: 'Y no quieres que una IA publique cosas sin preguntarte.' },
+      { type: 'clip', dur: 6.0, src: { wide: 'bloqio/bloqio-demo', tall: 'bloqio/bloqio-demo' }, clip: { wide: [0.2, 6.6], tall: [0.2, 6.6] },
+        k: 'Por bloques', h: 'Tu página se arma por bloques: <em>portada, menú, ubicación, contacto.</em>', sub: 'Los reordenas arrastrando, los ocultas o los quitas.' },
+      { type: 'clip', dur: 6.0, src: { wide: 'bloqio/bloqio-demo', tall: 'bloqio/bloqio-demo' }, clip: { wide: [7.2, 12.8], tall: [7.2, 12.8] },
+        zoom: { wide: { x: .5, y: .4, s: 1.55 }, tall: { x: .5, y: .4, s: 1.55 } },
+        k: 'Editas en vivo', h: 'Cambias un texto y <em>la página se actualiza al instante.</em>', sub: 'Campos en lenguaje normal: título, descripción, botón, foto.' },
+      { type: 'clip', dur: 5.4, src: { wide: 'bloqio/bloqio-demo', tall: 'bloqio/bloqio-demo' }, clip: { wide: [13.0, 17.8], tall: [13.0, 17.8] },
+        k: 'Vista de celular', h: 'Revisas cómo se ve en el teléfono antes de publicar.', sub: 'Escritorio y celular, en el mismo editor.' },
+      { type: 'clip', dur: 5.2, src: { wide: 'bloqio/bloqio-demo', tall: 'bloqio/bloqio-demo' }, clip: { wide: [18.0, 22.4], tall: [18.0, 22.4] },
+        k: 'Diseño', h: 'Cambias el tema y <em>toda la página cambia con él.</em>', sub: 'Colores, tipografía y fondos desde un solo panel.' },
+      { type: 'cards', dur: 7.8, k: 'Blob, su asistente con IA', h: 'La IA propone. Tú apruebas cada cambio.', items: [
+        ['1', 'Propone un plan de hasta cinco acciones', 'En Estructura, Textos, Diseño y Fotos.'],
+        ['2', 'Tú eliges cuáles aplicar', 'Y puedes deshacer lo que no te guste.'],
+        ['3', 'Agregar o quitar un bloque pide tu sí', 'Nada cambia de golpe.'],
+        ['4', 'Publicar es un paso aparte', 'La página sale solo cuando tú lo decides.'] ] },
+      { type: 'outro', dur: 5.0, h: '¿Quieres probar <em>Bloqio Builder?</em>', foot: 'Beta privada · escríbeme y te digo cómo entrar' },
+    ],
+  },
+
+  miawseo: {
+    name: 'Miawseo', acc: '#9b6bff', ink: '#14062e', glow: ['#9b6bff', '#ff4d4d'], icon: 'cat',
+    tagline: 'Un museo de razas de gato que se recorre como una red de metro',
+    url: 'jossuealcala.com/es/productos/miawseo',
+    credit: 'Fotos de gatos: Wikimedia Commons (CC BY, CC BY-SA y dominio público)',
+    scenes: [
+      { type: 'intro', dur: 2.6 },
+      { type: 'problem', dur: 4.8, h: '20 razas, 6 salas cada una: <em>120 salas</em> en las que es fácil perderse.', sub: 'Lo resolví ordenando el contenido como una red de metro.' },
+      { type: 'clip', dur: 5.4, src: { wide: 'miawseo/miawseo-demo', tall: 'miawseo/miawseo-demo-mobile' }, clip: { wide: [0.2, 3.8], tall: [0.2, 2.9] },
+        k: 'La Michiteca', h: 'Cada raza es una <em>estación de metro.</em>', sub: 'La línea M1 recorre las razas y la M2 cuenta la historia entre michis y humanos.' },
+      { type: 'clip', dur: 5.0, src: { wide: 'miawseo/miawseo-demo', tall: 'miawseo/miawseo-demo-mobile' }, clip: { wide: [3.8, 7.8], tall: [2.9, 6.8] },
+        zoom: { wide: { x: .32, y: .35, s: 1.5 }, tall: { x: .5, y: .3, s: 1.15 } },
+        k: 'Buscador', h: 'Escribes «sphynx» y <em>llegas directo a su estación.</em>', sub: 'Busca por nombre, origen o frase.' },
+      { type: 'clip', dur: 6.6, src: { wide: 'miawseo/miawseo-demo', tall: 'miawseo/miawseo-demo-mobile' }, clip: { wide: [7.8, 15.8], tall: [6.8, 13.8] }, rate: 1.3,
+        k: 'Seis salas por raza', h: 'Origen, anatomía, temperamento, cuidados y más.', sub: 'Pasas de sala en sala como en un museo.' },
+      { type: 'clip', dur: 5.6, src: { wide: 'miawseo/miawseo-demo', tall: 'miawseo/miawseo-demo-mobile' }, clip: { wide: [15.8, 22.3], tall: [13.8, 20.9] }, rate: 1.2,
+        k: 'Michi Plaza', h: 'Un muro donde la gente <em>sube la foto de su gato.</em>', sub: 'Organizado por raza.' },
+      { type: 'cards', dur: 7.4, k: 'Moderación', h: 'Abierto a la comunidad, sin perder el control.', items: [
+        ['1', 'Revisa el archivo real', 'JPG, PNG o WebP, de 200 a 8000 px y hasta 5 MB.'],
+        ['2', 'Filtros contra el spam', 'Frenan lo obvio antes de guardar nada.'],
+        ['3', 'Cada foto queda pendiente', 'Se aprueba o se rechaza en el panel de moderación.'],
+        ['4', 'Solo se muestran las aprobadas', 'Ninguna foto se publica sin revisión.'] ] },
+      { type: 'outro', dur: 5.0, h: '¿Tienes mucho contenido y <em>necesitas ordenarlo?</em>', foot: 'Diseñado y programado en Next.js' },
+    ],
+  },
+};
+
+/* IA aplicada: sin grabación. Diagramas abstractos de tres tareas que la página pone de
+   ejemplo (IaAplicadaPage.astro, «Tareas que hoy llevan horas»). Las filas son esquemas,
+   no datos: nada se presenta como un caso real. */
+const IC = {
+  file: '<path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  chat: '<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v7a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h-1A.5.5 0 0 1 4 15.5z"/>',
+  db: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>',
+  check: '<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  store: '<path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM9 20v-6h6v6"/>',
+  ad: '<path d="M4 10v4h3l6 4V6L7 10z"/><path d="M17 9a4 4 0 0 1 0 6"/>',
+  chart: '<path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-3"/>',
+  sheet: '<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/>',
+  inbox: '<path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5l1 3h6l1-3h5"/>',
+  alert: '<path d="M12 3 2 20h20z"/><path d="M12 10v4M12 17h.01"/>',
+};
+const ico = (k) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+const rows = (list) => list.map(([st, warn, tag]) => `<div class="row"><i></i>${tag ? `<small>${tag}</small>` : ''}<em class="${warn ? 'warn' : ''}">${st}</em></div>`).join('');
+PRODUCTS['ia-aplicada'] = {
+  name: 'IA Aplicada', acc: '#5eead4', ink: '#032420', glow: ['#5eead4', '#8b7bff'], icon: 'spark',
+  tagline: 'Una tarea que repites cada semana, resuelta con IA y revisada por una persona',
+  url: 'jossuealcala.com/es/productos/ia-aplicada',
+  scenes: [
+    { type: 'intro', dur: 2.8 },
+    { type: 'problem', dur: 4.8, h: '¿Cuántas horas a la semana <em>se van en lo mismo?</em>', sub: 'Capturar pedidos, armar el reporte del lunes, repartir correos de soporte.' },
+    { type: 'diagram', dur: 7.0, k: 'Ejemplo · captura de pedidos', h: 'La IA lee los pedidos <em>y los carga al sistema.</em>', sub: 'Lo que no cuadra queda marcado para que una persona lo revise.',
+      nodes: [
+        { at: .5, k: 'chip', ic: 'file', t: 'PDF', wide: [30, 110, 240, 96], tall: [20, 20, 300, 96] },
+        { at: .7, k: 'chip', ic: 'mail', t: 'Correo', wide: [30, 312, 240, 96], tall: [350, 20, 300, 96] },
+        { at: .9, k: 'chip', ic: 'chat', t: 'WhatsApp', wide: [30, 514, 240, 96], tall: [680, 20, 300, 96] },
+        { at: 1.4, k: 'core', t: 'IA', wide: [456, 270, 180, 180], tall: [410, 220, 180, 180] },
+        { at: 2.2, k: 'card', ic: 'db', t: 'Tu sistema', html: rows([['Cargado'], ['Cargado'], ['Revisar', 1]]), rowAt: 2.6, wide: [760, 110, 360, 420], tall: [140, 500, 720, 400] },
+        { at: 4.0, k: 'ok', ic: 'check', t: 'Una persona aprueba', wide: [760, 580, 360, 90], tall: [240, 950, 520, 90] },
+      ],
+      links: [[0, 3, 1.4], [1, 3, 1.5], [2, 3, 1.6], [3, 4, 2.1]] },
+    { type: 'diagram', dur: 6.6, k: 'Ejemplo · el reporte de la semana', h: 'Te llega solo cada lunes, <em>con el origen de cada número.</em>', sub: 'Y lo que conviene revisar primero, marcado.',
+      nodes: [
+        { at: .5, k: 'chip', ic: 'store', t: 'Tienda', wide: [30, 40, 250, 110], tall: [20, 20, 470, 96] },
+        { at: .65, k: 'chip', ic: 'ad', t: 'Anuncios', wide: [30, 210, 250, 110], tall: [510, 20, 470, 96] },
+        { at: .8, k: 'chip', ic: 'chart', t: 'Analítica', wide: [30, 380, 250, 110], tall: [20, 136, 470, 96] },
+        { at: .95, k: 'chip', ic: 'sheet', t: 'Hoja', wide: [30, 550, 250, 110], tall: [510, 136, 470, 96] },
+        { at: 1.4, k: 'core', t: 'IA', wide: [456, 270, 180, 180], tall: [410, 320, 180, 180] },
+        { at: 2.2, k: 'card', ic: 'chart', t: 'Reporte · lunes', html: rows([['Ventas', 0, 'de: Tienda'], ['Anuncios', 0, 'de: Anuncios'], ['Visitas', 0, 'de: Analítica'], ['Revisar primero', 1]]), rowAt: 2.6, wide: [740, 90, 380, 540], tall: [140, 600, 720, 440] },
+      ],
+      links: [[0, 4, 1.4], [1, 4, 1.5], [2, 4, 1.6], [3, 4, 1.7], [4, 5, 2.1]] },
+    { type: 'diagram', dur: 6.6, k: 'Ejemplo · correos de soporte', h: 'Cada mensaje le llega <em>a quien lo debe atender.</em>', sub: 'Los que no quedan claros esperan a que una persona los revise.',
+      nodes: [
+        { at: .5, k: 'card', ic: 'inbox', t: 'Bandeja', html: rows([['Nuevo'], ['Nuevo'], ['Nuevo']]), rowAt: .7, wide: [30, 160, 300, 400], tall: [260, 10, 480, 330] },
+        { at: 1.4, k: 'core', t: 'IA', wide: [456, 270, 180, 180], tall: [410, 400, 180, 180] },
+        { at: 2.1, k: 'chip', ic: 'user', t: 'Ventas', wide: [780, 40, 340, 110], tall: [20, 680, 470, 100] },
+        { at: 2.3, k: 'chip', ic: 'user', t: 'Soporte', wide: [780, 200, 340, 110], tall: [510, 680, 470, 100] },
+        { at: 2.5, k: 'chip', ic: 'user', t: 'Envíos', wide: [780, 360, 340, 110], tall: [20, 800, 470, 100] },
+        { at: 3.0, k: 'warn', ic: 'alert', t: 'Espera a una persona', wide: [780, 540, 340, 130], tall: [510, 800, 470, 100] },
+      ],
+      links: [[0, 1, 1.3], [1, 2, 2.0], [1, 3, 2.2], [1, 4, 2.4], [1, 5, 2.9]] },
+    { type: 'cards', dur: 7.6, k: 'Cómo trabajamos', h: 'Una tarea a la vez, y tú decides.', items: [
+      ['01', 'Tarea', 'Elegimos una que se repite y medimos cuánto te cuesta hoy.'],
+      ['02', 'Datos', 'La conecto con tu tienda, tu ERP, tu CRM, una hoja o tu correo.'],
+      ['03', 'Control', 'Qué puede tocar, un registro de todo y dónde decide una persona.'],
+      ['04', 'Prueba', 'Tu equipo la usa con casos reales y la comparamos con antes.'] ] },
+    { type: 'outro', dur: 5.2, h: '¿Qué tarea te gustaría <em>dejar de hacer a mano?</em>', foot: 'Primero entiendo la tarea, después elijo la herramienta' },
+  ],
+};
+
+/* Chatbots, versión abstracta: qué hace, qué ahorra y cuánto cuesta la API frente a una
+   persona en línea. Números: la calculadora de ChatbotsPage.astro con sus valores de ejemplo
+   (1,000 conversaciones, 6 mensajes, 60 % resuelto, 6 min, $120 MXN/h, $18.5 MXN/USD), el
+   consumo medido de Jossue AI (9,200 tokens de entrada y 120 de salida por mensaje) y el
+   precio de Gemini 3.5 Flash al 30 sep 2026 ($1.50 / $9 por millón):
+   6 × (9,200 × 1.5 + 120 × 9) / 1e6 = $0.0893 por conversación → $89.28 USD ≈ $1,652 MXN.
+   60 h × $120 = $7,200 MXN. Turno de una persona: 8 h × 22 días = 176 h × $120 = $21,120 MXN
+   (supuesto de este video, marcado en pantalla). */
+PRODUCTS['chatbots-ia'] = {
+  name: 'Chatbots con IA', acc: '#f2cf7a', ink: '#241a04', glow: ['#f2cf7a', '#7ab8f2'], icon: 'spark',
+  tagline: 'Atienden a tus clientes a cualquier hora, con los datos reales de tu negocio',
+  url: 'jossuealcala.com/es/productos/chatbots',
+  scenes: [
+    { type: 'intro', dur: 2.8 },
+    { type: 'problem', dur: 4.8, h: 'Una duda que nadie contesta <em>es una venta que se va.</em>', sub: 'Y mientras, tu equipo pasa el día contestando lo mismo.' },
+    { type: 'diagram', dur: 7.2, k: 'Cómo ayuda', h: 'Entiende la pregunta y <em>contesta con tus datos.</em>', sub: 'Lo delicado pasa a una persona, con toda la conversación.',
+      nodes: [
+        { at: .5, k: 'chip', ic: 'chat', t: 'Una duda', wide: [30, 110, 250, 96], tall: [20, 20, 300, 96] },
+        { at: .7, k: 'chip', ic: 'chat', t: 'Un pedido', wide: [30, 312, 250, 96], tall: [350, 20, 300, 96] },
+        { at: .9, k: 'chip', ic: 'chat', t: 'Una compra', wide: [30, 514, 250, 96], tall: [680, 20, 300, 96] },
+        { at: 1.4, k: 'core', t: 'IA', wide: [456, 270, 180, 180], tall: [410, 200, 180, 180] },
+        { at: 2.1, k: 'card', ic: 'db', t: 'Tus datos', html: rows([['Catálogo'], ['Pedidos'], ['Clientes (CRM)']]), rowAt: 2.4, wide: [740, 30, 380, 340], tall: [150, 450, 700, 330] },
+        { at: 3.3, k: 'ok', ic: 'check', t: 'Respuesta en segundos', wide: [740, 420, 380, 96], tall: [20, 850, 470, 100] },
+        { at: 3.7, k: 'warn', ic: 'user', t: 'Pasa a una persona', wide: [740, 570, 380, 96], tall: [510, 850, 470, 100] },
+      ],
+      links: [[0, 3, 1.4], [1, 3, 1.5], [2, 3, 1.6], [3, 4, 2.0], [4, 5, 3.2], [4, 6, 3.6]] },
+    { type: 'diagram', dur: 7.0, k: 'Lo que te ahorra', h: '<em>60 horas al mes</em> de tu equipo, con 1,000 conversaciones.', sub: 'Supuestos de ejemplo de mi calculadora: el chatbot resuelve 60 % sin una persona y cada conversación le toma 6 minutos a tu equipo.',
+      nodes: [
+        { at: .5, k: 'chip', ic: 'inbox', t: '1,000 conversaciones', wide: [20, 312, 300, 96], tall: [230, 20, 540, 100] },
+        { at: 1.2, k: 'core', t: 'IA', wide: [456, 270, 180, 180], tall: [410, 210, 180, 180] },
+        { at: 2.0, k: 'card', ic: 'chart', t: 'Al mes', html: rows([['600 las resuelve el chatbot'], ['400 pasan a tu equipo', 1]]), rowAt: 2.3, wide: [740, 90, 380, 270], tall: [150, 470, 700, 260] },
+        { at: 3.4, k: 'ok', ic: 'check', t: '60 h liberadas', wide: [740, 420, 380, 110], tall: [150, 790, 700, 110] },
+      ],
+      links: [[0, 1, 1.1], [1, 2, 1.9], [2, 3, 3.2]] },
+    { type: 'compare', dur: 9.0, k: 'Cuánto cuesta', h: 'La IA frente a una persona en línea, <em>al mes.</em>',
+      cols: [
+        { win: true, ic: 'spark', who: 'Chatbot con IA', num: '≈ $1,650 MXN', per: '1,000 conversaciones · $89 USD de API', li: ['24 horas, los 7 días', 'Contesta en segundos', 'Cobra solo lo que usa'] },
+        { ic: 'user', who: 'Una persona en línea', num: '≈ $21,120 MXN', per: 'un turno: 8 h × 22 días × $120/h', li: ['8 horas al día', 'Contesta lo mismo una y otra vez', 'Atiende lo delicado mejor que nadie'] },
+      ],
+      fine: 'Solo el uso de la API (Gemini 3.5 Flash, precios al 30 sep 2026, $18.5 MXN por dólar), sin desarrollo ni servidor. $120 MXN por hora es el valor de ejemplo de mi calculadora: pon el tuyo. El chatbot no reemplaza a tu equipo: le quita lo repetido.' },
+    { type: 'cards', dur: 7.0, k: 'Cómo se protege', h: 'La IA no toca tus sistemas.', items: [
+      ['1', 'Las claves se quedan en el servidor', 'El navegador del cliente nunca las ve.'],
+      ['2', 'El servidor revisa cada acción', 'Solo productos de tu catálogo y descuentos con tus reglas.'],
+      ['3', 'Una segunda IA vigila los mensajes', 'Lo obvio se frena antes de llegar y no te cuesta nada.'],
+      ['4', 'Si la IA falla, la venta no se cae', 'Ofrece WhatsApp o el formulario.'] ] },
+    { type: 'outro', dur: 5.2, h: '¿Cuánto te ahorraría <em>a ti?</em>', foot: 'Calcula tu caso en la página · tu tienda, tu sitio o WhatsApp' },
+  ],
+};
+
+const P = PRODUCTS[Q.get('p')] ?? PRODUCTS.daniela;
+document.documentElement.style.setProperty('--acc', P.acc);
+document.documentElement.style.setProperty('--acc-ink', P.ink);
+const stage = document.getElementById('stage');
+stage.style.width = `${W}px`; stage.style.height = `${H}px`;
+document.getElementById('pname').textContent = P.name;
+document.getElementById('glow').style.background = `radial-gradient(38% 34% at 22% 30%, ${P.glow[0]}55, transparent 70%), radial-gradient(40% 36% at 82% 78%, ${P.glow[1]}40, transparent 72%)`;
+
+/* ---------- maquetación por formato ---------- */
+const L = FMT === 'wide' ? {
+  top: [72, 56], steps: [1520, 80],
+  frame: { x: 72, y: 150, w: 1152, h: 720, phone: false }, cap: { x: 1290, y: 150, w: 560, h: 720, h2: 54, p: 28 },
+  big: { x: 160, y: 120, w: 1600, h: 840, name: 150, tag: 40, h1: 92, sub: 36 },
+  cards: { x: 72, y: 130, w: 1776, h: 880, cols: 2, h2: 66, b: 42, s: 29 }, credit: [72, 900],
+} : {
+  top: [64, 110], steps: [64, 190],
+  frame: { x: 0, y: 760, w: 0, h: 0, phone: true }, cap: { x: 64, y: 250, w: 952, h: 480, h2: 64, p: 32 },
+  big: { x: 80, y: 260, w: 920, h: 1300, name: 140, tag: 40, h1: 96, sub: 38 },
+  cards: { x: 64, y: 250, w: 952, h: 1560, cols: 1, h2: 72, b: 44, s: 31 }, credit: [64, 1840],
+};
+const topBar = document.getElementById('top'); topBar.style.left = `${L.top[0]}px`; topBar.style.top = `${L.top[1]}px`;
+const stepsEl = document.getElementById('steps'); stepsEl.style.left = `${L.steps[0]}px`; stepsEl.style.top = `${L.steps[1]}px`;
+
+/* ---------- escenas ---------- */
+let t0 = 0;
+const SC = P.scenes.map((s) => { const o = { ...s, a: t0, b: t0 + s.dur }; t0 += s.dur; return o; });
+const DURATION = t0;
+const host = document.getElementById('scenes');
+const story = SC.filter((s) => ['clip', 'cards', 'diagram', 'compare'].includes(s.type));
+stepsEl.innerHTML = story.map(() => '<b><s></s></b>').join('');
+
+const capHTML = (s) => `<div class="cap abs" style="left:${L.cap.x}px;top:${L.cap.y}px;width:${L.cap.w}px;height:${L.cap.h}px;display:flex;flex-direction:column;justify-content:${FMT === 'wide' ? 'center' : 'flex-start'}">
+  <div class="k"><i></i>${s.k}</div><h2 style="font-size:${L.cap.h2}px">${s.h}</h2><p style="font-size:${L.cap.p}px">${s.sub ?? ''}</p></div>`;
+
+SC.forEach((s, i) => {
+  const el = document.createElement('div'); el.className = 'scene'; el.id = `s${i}`;
+  if (s.type === 'intro') {
+    el.innerHTML = `<div class="big" style="left:${L.big.x}px;top:${L.big.y}px;width:${L.big.w}px;height:${L.big.h}px">
+      <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICON[P.icon]}</svg></div>
+      <div class="name" style="font-size:${L.big.name}px">${P.name}</div><div class="tag" style="font-size:${L.big.tag}px">${P.tagline}</div></div>`;
+  } else if (s.type === 'problem' || s.type === 'outro') {
+    el.innerHTML = `<div class="big" style="left:${L.big.x}px;top:${L.big.y}px;width:${L.big.w}px;height:${L.big.h}px">
+      ${s.type === 'problem' ? '<div class="cap"><div class="k"><i></i>El problema</div></div><div style="height:30px"></div>' : ''}
+      <h1 style="font-size:${L.big.h1}px">${s.h}</h1>
+      ${s.sub ? `<div class="sub" style="font-size:${L.big.sub}px">${s.sub}</div>` : ''}
+      ${s.type === 'outro' ? `<div class="url">${P.url} →</div><div class="foot">${s.foot}</div>` : ''}</div>`;
+  } else if (s.type === 'clip') {
+    const phone = L.frame.phone && !s.src.tall.startsWith('bloqio');
+    let f = { ...L.frame };
+    if (FMT === 'tall') f = phone ? { x: (W - 520) / 2, y: 760, w: 520, h: 1125 } : { x: 40, y: 780, w: 1000, h: 1060 };
+    s.f = f;
+    el.innerHTML = `${capHTML(s)}<div class="frame${phone ? ' phone' : ''}" style="left:${f.x}px;top:${f.y}px;width:${f.w}px;height:${f.h}px"><div class="zoom"><video muted preload="auto" src="${V}${s.src[FMT]}.webm"></video></div></div>
+      ${P.credit ? `<div class="credit" style="left:${L.credit[0]}px;top:${FMT === 'wide' ? L.credit[1] : f.y - 46}px">${P.credit}</div>` : ''}`;
+  } else if (s.type === 'diagram') {
+    const box = FMT === 'wide' ? { x: 72, y: 150, w: 1152, h: 720 } : { x: 40, y: 780, w: 1000, h: 1060 };
+    s.box = box;
+    const nodes = s.nodes.map((n, j) => {
+      const [x, y, w, h] = n[FMT]; n.c = [x + w / 2, y + h / 2];
+      const cls = n.k === 'core' ? 'core' : n.k === 'card' ? 'card' : n.k === 'ok' ? 'ok' : n.k === 'warn' ? 'warn' : '';
+      const inner = n.k === 'core' ? n.t : n.k === 'card' ? `<div class="ttl">${ico(n.ic)}${n.t}</div>${n.html}` : `${ico(n.ic)}<span>${n.t}</span>`;
+      return `<div class="nd ${cls}" data-n="${j}" style="left:${x}px;top:${y}px;width:${w}px;height:${h}px">${inner}</div>`;
+    }).join('');
+    const wires = s.links.map(([a, b], j) => { const [x1, y1] = s.nodes[a].c, [x2, y2] = s.nodes[b].c; const mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+      const d = FMT === 'wide' ? `M${x1} ${y1} C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}` : `M${x1} ${y1} C${x1} ${my} ${x2} ${my} ${x2} ${y2}`;
+      return `<path data-l="${j}" d="${d}"/><circle data-d="${j}" r="8"/>`; }).join('');
+    el.innerHTML = `${capHTML(s)}<div class="dg" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"><svg class="wires" width="${box.w}" height="${box.h}">${wires}</svg>${nodes}</div>`;
+  } else if (s.type === 'compare') {
+    const wide = FMT === 'wide';
+    el.innerHTML = `<div class="abs" style="left:${L.cards.x}px;top:${L.cards.y}px;width:${L.cards.w}px;height:${L.cards.h}px;display:flex;flex-direction:column;justify-content:center">
+      <div class="cap"><div class="k"><i></i>${s.k}</div><h2 style="font-size:${L.cards.h2}px">${s.h}</h2></div>
+      <div class="cmp" style="margin-top:${wide ? 44 : 50}px;grid-template-columns:repeat(${wide ? 2 : 1},minmax(0,1fr))">
+      ${s.cols.map((c) => `<div class="${c.win ? 'win' : ''}"><div class="who">${ico(c.ic === 'spark' ? 'chat' : c.ic)}${c.who}</div><div class="num" style="font-size:${wide ? 84 : 92}px">${c.num}</div><div class="per" style="font-size:${wide ? 26 : 30}px">${c.per}</div>
+        <ul style="font-size:${wide ? 28 : 31}px">${c.li.map((x, j) => `<li><b>0${j + 1}</b>${x}</li>`).join('')}</ul></div>`).join('')}
+      </div><p class="fine" style="margin-top:${wide ? 28 : 34}px">${s.fine}</p></div>`;
+  } else if (s.type === 'cards') {
+    el.innerHTML = `<div class="abs" style="left:${L.cards.x}px;top:${L.cards.y}px;width:${L.cards.w}px;height:${L.cards.h}px;display:flex;flex-direction:column;justify-content:center">
+      <div class="cap"><div class="k"><i></i>${s.k}</div><h2 style="font-size:${L.cards.h2}px">${s.h}</h2></div>
+      <div class="cards" style="margin-top:${FMT === 'wide' ? 50 : 60}px;grid-template-columns:repeat(${L.cards.cols},minmax(0,1fr))">
+      ${s.items.map(([n, b, sp]) => `<div class="card"><div class="n${n === '×' ? ' x' : ''}">${n}</div><div><b style="font-size:${L.cards.b}px">${b}</b>${sp ? `<span style="font-size:${L.cards.s}px">${sp}</span>` : ''}</div></div>`).join('')}
+      </div></div>`;
+  }
+  host.append(el);
+});
+
+/* pistas para el sonido */
+const CUES = [];
+SC.forEach((s, i) => {
+  CUES.push({ t: s.a, k: i === 0 ? 'intro' : 'scene' });
+  if (s.type === 'cards') s.items.forEach((_, j) => CUES.push({ t: s.a + .7 + j * .32, k: 'item' }));
+  if (s.type === 'clip' || s.type === 'problem' || s.type === 'diagram') CUES.push({ t: s.a + .35, k: 'text' });
+  if (s.type === 'diagram') s.nodes.forEach((n) => CUES.push({ t: s.a + n.at, k: 'item' }));
+  if (s.type === 'compare') [.8, 1.6].forEach((d) => CUES.push({ t: s.a + d, k: 'item' }));
+  if (s.type === 'outro') CUES.push({ t: s.a + .9, k: 'outro' });
+});
+
+/* ---------- animación ---------- */
+const cl = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const p = (t, a, b) => cl((t - a) / (b - a));
+const out3 = (x) => 1 - Math.pow(1 - x, 3);
+const io3 = (x) => (x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+const back = (x) => { const c = 1.5; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const F = .35; // fundido entre escenas
+
+// Espera a que el cuadro buscado esté pintado (requestVideoFrameCallback), no solo «seeked»:
+// sin eso, a veces la captura salía en negro.
+const seek = (v, time) => new Promise((ok) => {
+  if (Math.abs(v.currentTime - time) < 1 / 120 && v.dataset.painted) return ok();
+  let left = 2; const done = () => { if (--left === 0) { clearTimeout(timer); v.dataset.painted = '1'; ok(); } };
+  const timer = setTimeout(() => { left = 1; done(); }, 800);
+  v.requestVideoFrameCallback(() => done());
+  v.addEventListener('seeked', done, { once: true });
+  v.currentTime = Math.abs(v.currentTime - time) < 1 / 120 ? time + 1e-3 : time;
+});
+// Cada video se reproduce un instante al cargar: un video que nunca arrancó puede pintar negro.
+const ready = Promise.all([...document.querySelectorAll('video')].map(async (v) => {
+  if (v.readyState < 2) await new Promise((ok) => v.addEventListener('loadeddata', ok, { once: true }));
+  try { await v.play(); await new Promise((r) => v.requestVideoFrameCallback(r)); } catch {}
+  v.pause();
+}));
+
+async function renderAt(t) {
+  await ready;
+  const waits = [];
+  SC.forEach((s, i) => {
+    const el = document.getElementById(`s${i}`);
+    const vis = Math.min(i === 0 ? 1 : p(t, s.a - F / 2, s.a + F / 2), i === SC.length - 1 ? 1 : 1 - p(t, s.b - F / 2, s.b + F / 2));
+    el.style.opacity = vis; el.style.visibility = vis > 0 ? 'visible' : 'hidden';
+    if (vis <= 0) return;
+    const lt = t - s.a;
+    // titulares y textos: entran con un pequeño desplazamiento
+    el.querySelectorAll('.cap .k, .cap h2, .cap p, .big > *').forEach((n, j) => { const v = out3(p(lt, .1 + j * .12, .55 + j * .12)); n.style.opacity = v; n.style.transform = `translateY(${(1 - v) * 26}px)`; });
+    if (s.type === 'intro') {
+      const m = back(p(lt, .05, .45)); const mk = el.querySelector('.mark'); mk.style.transform = `scale(${m}) rotate(${(1 - cl(m)) * -18}deg)`; mk.style.opacity = cl(m * 2);
+    }
+    if (s.type === 'outro') { const u = back(p(lt, .85, 1.2)); const url = el.querySelector('.url'); url.style.transform = `scale(${.7 + .3 * u})`; url.style.opacity = cl(u * 2); }
+    if (s.type === 'cards') el.querySelectorAll('.card').forEach((c, j) => { const v = back(p(lt, .7 + j * .32, 1.1 + j * .32)); c.style.opacity = cl(v * 1.6); c.style.transform = `translateY(${(1 - v) * 40}px) scale(${.96 + .04 * v})`; });
+    if (s.type === 'compare') {
+      el.querySelectorAll('.cmp > div').forEach((c, j) => { const v = back(p(lt, .8 + j * .8, 1.25 + j * .8)); c.style.opacity = cl(v * 1.6); c.style.transform = `translateY(${(1 - v) * 40}px)`;
+        c.querySelectorAll('li').forEach((li, k) => { const w = out3(p(lt, 1.4 + j * .8 + k * .2, 1.75 + j * .8 + k * .2)); li.style.opacity = w; }); });
+      const fine = el.querySelector('.fine'); fine.style.opacity = out3(p(lt, 3.0, 3.5));
+    }
+    if (s.type === 'diagram') {
+      el.querySelectorAll('.nd').forEach((nd) => { const n = s.nodes[+nd.dataset.n]; const v = back(p(lt, n.at, n.at + .4)); nd.style.opacity = cl(v * 1.6); nd.style.transform = `scale(${.7 + .3 * v})`;
+        nd.querySelectorAll('.row').forEach((r, j) => { const w = out3(p(lt, (n.rowAt ?? n.at) + .25 * j, (n.rowAt ?? n.at) + .25 * j + .35)); r.style.opacity = w; r.style.transform = `translateX(${(1 - w) * 30}px)`; }); });
+      s.links.forEach(([a, b, at], j) => {
+        const path = el.querySelector(`[data-l="${j}"]`), dot = el.querySelector(`[data-d="${j}"]`); const len = path.getTotalLength();
+        path.style.strokeDasharray = len; path.style.strokeDashoffset = len * (1 - out3(p(lt, at, at + .5)));
+        const loop = lt > at + .5 ? ((lt - at - .5) % 1.4) / 1.4 : -1; const pt = path.getPointAtLength(Math.max(0, loop) * len);
+        dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); dot.style.opacity = loop >= 0 ? Math.sin(loop * Math.PI) : 0;
+      });
+    }
+    if (s.type === 'clip') {
+      const fr = el.querySelector('.frame'); const v = out3(p(lt, 0, .5)); fr.style.transform = `translateY(${(1 - v) * 40}px) scale(${.97 + .03 * v})`;
+      const [a, b] = s.clip[FMT]; const vt = Math.min(b, a + Math.max(0, lt) * (s.rate ?? 1));
+      waits.push(seek(el.querySelector('video'), vt));
+      const z = s.zoom?.[FMT]; const zm = el.querySelector('.zoom');
+      if (z) { const k = io3(p(lt, 1.6, 2.6)); zm.style.transformOrigin = `${z.x * 100}% ${z.y * 100}%`; zm.style.transform = `scale(${1 + (z.s - 1) * k})`; }
+    }
+  });
+  // progreso
+  [...stepsEl.children].forEach((b, i) => { b.firstChild.style.width = `${p(t, story[i].a, story[i].b) * 100}%`; });
+  stepsEl.style.opacity = Math.min(p(t, SC[1].a, SC[1].a + .4), 1 - p(t, SC.at(-1).a, SC.at(-1).a + .4));
+  document.getElementById('glow').style.transform = `translate(${Math.sin(t * .25) * 40}px, ${Math.cos(t * .2) * 30}px)`;
+  document.getElementById('black').style.opacity = p(t, DURATION - .3, DURATION);
+  await Promise.all(waits);
+  await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+}
+// el póster: la primera grabación ya enmarcada, con su texto completo
+const POSTER = (SC.find((s) => s.type === 'clip' || s.type === 'diagram')?.a ?? 0) + (SC.some((s) => s.type === 'clip') ? 2.4 : 4.6);
+window.DURATION = DURATION; window.REEL = { DURATION, CUES, POSTER, W, H }; window.renderAt = renderAt;
+</script>
+</body>
+</html>

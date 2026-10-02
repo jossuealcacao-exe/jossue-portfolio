@@ -60,8 +60,8 @@ const secondary = live
 const chapters = [
 	{ id: 'challenge', label: es ? 'El reto' : 'The challenge' },
 	...(publishableAmbience && !cover ? [{ id: 'context-scene', label: es ? 'Contexto visual' : 'Visual context' }] : []),
-	{ id: 'approach', label: es ? 'El enfoque' : 'The approach' },
-	{ id: 'delivery', label: es ? 'Entregables' : 'Deliverables' },
+	{ id: 'approach', label: es ? 'Cómo lo resolví' : 'How I solved it' },
+	{ id: 'delivery', label: es ? 'Lo que hice' : 'What I made' },
 	...(publishableDiagrams ? [{ id: 'signals', label: es ? 'Gráficos' : 'Charts' }] : []),
 	...(publishableMedia ? [{ id: 'gallery', label: es ? 'El producto' : 'The product' }] : []),
 	{ id: 'outcome', label: es ? 'Cómo quedó' : 'How it turned out' },
@@ -76,18 +76,18 @@ const next = () => (tone++ % 2 === 0 ? 'jx-bots__section' : 'jx-band');
 
 const linkKindCopy = {
 	repo: es ? 'Repositorio' : 'Repository',
-	live: es ? 'Proyecto vivo' : 'Live project',
-	reference: es ? 'Consulta' : 'Reference',
+	live: es ? 'Sitio en línea' : 'Live site',
+	reference: es ? 'Referencia' : 'Reference',
 } as const;
 const linkKindIcon: Record<'repo' | 'live' | 'reference', IconName> = { repo: 'code', live: 'globe', reference: 'compass' };
 
 const stackNumeric = (value: string) => /^\d+$/.test(value);
 const facts: Array<{ value: string; label: string }> = [
 	{ value: positioningLabel[data.positioning ?? 'client-work'][locale], label: es ? 'tipo de proyecto' : 'type of project' },
-	{ value: data.stack.slice(0, 2).join(' · '), label: es ? 'especialidad' : 'focus' },
+	{ value: data.stack.slice(0, 2).join(' · '), label: es ? 'herramientas principales' : 'main tools' },
 	publishableMedia?.length
 		? { value: String(publishableMedia.length), label: es ? 'capturas reales del proyecto' : 'real screenshots of the project' }
-		: { value: String(data.stack.length), label: es ? 'tecnologías en el stack' : 'technologies in the stack' },
+		: { value: String(data.stack.length), label: es ? 'herramientas que usé' : 'tools I used' },
 ];
 ---
 
@@ -106,7 +106,7 @@ const facts: Array<{ value: string; label: string }> = [
 			{presentation.category}
 		</Fragment>
 		<div class="jx-actions jx-actions--center">
-			<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact">{es ? 'Iniciar conversación' : 'Start a conversation'}<Icon name="arrow-right" /></a>
+			<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 			<a class="jx-btn jx-btn--ghost" href={secondary.href} {...(secondary.external ? { target: '_blank', rel: 'noopener' } : {})}>{secondary.label}<Icon name={secondary.external ? 'arrow-up-right' : 'arrow-right'} /></a>
 		</div>
 		<div class="case-cover">
@@ -225,10 +225,10 @@ const facts: Array<{ value: string; label: string }> = [
 		<section id="command-atlas" class={next()} aria-labelledby="case-atlas">
 			<div class="jx-wrap">
 				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{chapterLabel('command-atlas')}</p>
-				<h2 id="case-atlas" class="jx-h2"><span>{es ? 'Instala y opera AHP+' : 'Install and operate AHP+'}</span>{' '}<span class="jx-soft">{es ? 'en cualquier plataforma' : 'on any platform'}</span></h2>
+				<h2 id="case-atlas" class="jx-h2"><span>{es ? 'Cómo instalar y usar AHP+' : 'How to install and use AHP+'}</span>{' '}<span class="jx-soft">{es ? 'en tu herramienta' : 'in your tool'}</span></h2>
 				<div class="case-callout">
 					<Icon name="terminal" size="md" />
-					<p>{es ? 'Una guía para entender AHP+ 1.4.1, ver una ejecución real, instalarlo con un comando y encontrar después la instrucción exacta para terminal o chat.' : 'A guide to understanding AHP+ 1.4.1, seeing a real run, installing it with one command, and then finding the exact terminal or chat instruction.'}</p>
+					<p>{es ? 'La guía explica qué hace AHP+ 1.4.1, muestra una ejecución real y te dice cómo instalarlo con un comando. También tiene cada instrucción lista para usar en la terminal o en el chat.' : 'The guide explains what AHP+ 1.4.1 does, shows a real run and tells you how to install it with one command. It also has every instruction ready to use in the terminal or in the chat.'}</p>
 					<a class="jx-btn jx-btn--primary" href={routes[locale].ahpAtlas} data-analytics-event="view_ahp_command_atlas">{es ? 'Abrir Command Atlas' : 'Open Command Atlas'}<Icon name="arrow-right" /></a>
 				</div>
 			</div>
@@ -278,10 +278,10 @@ const facts: Array<{ value: string; label: string }> = [
 
 	<section class="jx-close" aria-labelledby="case-close">
 		<div class="jx-close__card">
-			<h2 id="case-close" class="jx-close__title"><span>{es ? 'Hablemos de' : 'Let’s talk about'}</span>{' '}<span class="jx-soft">{es ? 'tu proyecto' : 'your project'}</span></h2>
+			<h2 id="case-close" class="jx-close__title"><span>{es ? '¿Quieres algo así' : 'Want something like this'}</span>{' '}<span class="jx-soft">{es ? 'para tu negocio?' : 'for your business?'}</span></h2>
 			<p>{presentation.cta}</p>
 			<div class="jx-actions jx-actions--center">
-				<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact_bottom">{es ? 'Iniciar conversación' : 'Start a conversation'}<Icon name="arrow-right" /></a>
+				<a class="jx-btn jx-btn--primary" href={contactHref} data-analytics-event="click_contact_bottom">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 				<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? `Quiero algo parecido a ${data.title}, ¿por dónde empezamos?` : `I want something like ${data.title}, where do we start?`}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
 			</div>
 		</div>

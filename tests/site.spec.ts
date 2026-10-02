@@ -113,7 +113,7 @@ test('AHP+ Command Atlas is bilingual, searchable, filterable, and copy-ready', 
 test('MADRE is bilingual, explicit about evidence, and connected to contact and AHP+', async ({ page }) => {
 	await page.goto('/es/madre/');
 	await expect(page.locator('[data-madre-page]')).toBeVisible();
-	await expect(page.locator('main h1')).toContainText('Tus agentes de código');
+	await expect(page.locator('main h1')).toContainText('Programa con MADRE');
 	await expect(page.locator('[data-madre-explanatory]')).toContainText('la propia sala');
 	await expect(page.locator('.madre-install__command')).toContainText('npx @jossuealcala/madre start');
 	await expect(page.locator('[data-madre-os-tab]')).toHaveCount(2);
@@ -131,7 +131,7 @@ test('MADRE is bilingual, explicit about evidence, and connected to contact and 
 	await expect(page.locator('.global-nav__links a')).toHaveCount(4);
 	await switchLanguage(page);
 	await expect(page).toHaveURL(/\/en\/madre\/$/);
-	await expect(page.locator('main h1')).toContainText('Your coding agents');
+	await expect(page.locator('main h1')).toContainText('Code with MADRE');
 	await expect(page.locator('[data-madre-explanatory]')).toContainText('the room itself');
 });
 
@@ -142,9 +142,9 @@ test('commercial catalog presents MADRE as a product and keeps Apex access bound
 	await expect(page.locator('.catalog__item')).toHaveCount(9);
 	// MADRE va primero con una imagen real; el resto lleva su ícono, no un hueco pendiente.
 	await expect(page.locator('.catalog__item').first()).toContainText('MADRE');
-	// MADRE, AHP+ y Daniela llevan su video de demostración, con póster; el resto, su ícono.
-	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(6);
-	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(3);
+	// Siete productos llevan su video de demostración, con póster; los otros dos, su ícono.
+	await expect(page.locator('.catalog__item [data-jx-demo] video')).toHaveCount(7);
+	await expect(page.locator('.jx-catalog__card > .icon')).toHaveCount(2);
 	await expect(page.locator('.catalog__item [data-media-slot]')).toHaveCount(0);
 });
 
@@ -363,7 +363,7 @@ test('Chatbots page sells with real demos, security, costs and a working calcula
 	const faq = await page.locator('script[type="application/ld+json"]').evaluateAll((nodes) => nodes.map((node) => node.textContent ?? '').find((text) => text.includes('FAQPage')));
 	expect(faq).toBeTruthy();
 	await page.goto('/es/contacto/?producto=chatbots');
-	await expect(page.locator('#cf-project')).toHaveValue('Chatbot con IA para mi negocio');
+	await expect(page.locator('#cf-project')).toHaveValue('Un asistente con IA que conteste a mis clientes');
 });
 
 test('Portfolio connects to the independent blog only from the footer', async ({ page }) => {
@@ -386,7 +386,7 @@ test('contact page prioritizes direct working channels', async ({ page }) => {
 test('Home leads with a commercial proposition and selected products', async ({ page }) => {
 	await page.goto('/es/');
 	await expect(page.locator('[data-storefront-home]')).toBeVisible();
-	await expect(page.locator('main h1')).toHaveText('Ecommerce e IAque venden y se pueden mantener.');
+	await expect(page.locator('main h1')).toHaveText('Tiendas en línea y chatbotsque venden y que tu equipo puede manejar.');
 	// MADRE, producto estrella: marca, video que se puede pausar, instalación y showcase.
 	await expect(page.locator('[data-home="madre-wordmark"]')).toHaveAccessibleName('MADRE');
 	await expect(page.locator('[data-home="madre"] [data-jx-demo] video')).toHaveJSProperty('muted', true);
@@ -539,7 +539,7 @@ for (const project of [
 			await expect(page.locator('.jx-close__title')).toHaveCSS('color', 'rgb(238, 241, 234)');
 			await expect(page.locator('.jx-close .jx-btn--primary')).toHaveCSS('color', 'rgb(18, 17, 14)');
 			await expect(page.locator('.site-footer__wordmark')).toHaveCSS('color', 'rgb(238, 241, 234)');
-			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(124, 132, 121)');
+			await expect(page.locator('.site-footer__group h2').first()).toHaveCSS('color', 'rgb(143, 151, 140)');
 		}
 		// Mismo sistema que las fichas de producto: bucle abstracto, índice del caso, entregables con
 		// ícono, otros tres casos y cierre; nada de la plantilla editorial anterior.
@@ -627,4 +627,74 @@ test('every former image slot now shows a real, described image', async ({ page 
 			await expect.poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0)).toBe(true);
 		}
 	}
+});
+
+test('the call scheduler shows free times, books a call and lets the visitor cancel it', async ({ page }) => {
+	const tuesday = Date.parse('2026-10-06T16:00:00Z'); // martes 10:00 en Guadalajara
+	const slots = { ok: true, timezone: 'America/Mexico_City', callMinutes: 10, days: [{ date: '2026-10-06', slots: [tuesday, tuesday + 15 * 60_000] }, { date: '2026-10-10', slots: [Date.parse('2026-10-10T15:00:00Z')] }] };
+	let booked: Record<string, unknown> | null = null;
+	await page.route('**/api/booking/slots', (route) => route.fulfill({ json: slots }));
+	await page.route('**/api/booking', async (route) => {
+		booked = route.request().postDataJSON();
+		await route.fulfill({ status: 201, json: { ok: true, booking: { id: 'CALL-0123456789abcdef', token: 'tok', slot: tuesday + 15 * 60_000, end: tuesday + 25 * 60_000, when: 'martes 6 de octubre a las 10:15', phone: '+52 33 1234 5678' } } });
+	});
+	await page.route('**/api/booking/cancel', (route) => route.fulfill({ json: { ok: true, status: 'cancelled' } }));
+	await page.goto('/es/agenda/?origen=auditoria');
+	await page.evaluate(() => localStorage.removeItem('jossue-booking'));
+	await expect(page.locator('main h1')).toContainText('Agenda una llamada conmigo.');
+	await expect(page.locator('.jx-booking__day')).toHaveCount(2);
+	await expect(page.locator('.jx-booking__time')).toHaveCount(2);
+	await page.locator('.jx-booking__time').nth(1).click();
+	await expect(page.locator('[data-booking-chosen]')).toHaveText('martes 6 de octubre a las 10:15');
+	await page.fill('#bk-name', 'Ana López');
+	await page.fill('#bk-email', 'ana@tienda.mx');
+	await page.fill('#bk-phone', '33 1234 5678');
+	await page.locator('[data-booking-form] input[name=consent]').check();
+	await page.locator('[data-booking-submit]').click();
+	await expect(page.locator('[data-booking-done]')).toBeVisible();
+	await expect(page.locator('[data-booking-done-text]')).toContainText('martes 6 de octubre a las 10:15');
+	await expect(page.locator('[data-booking-ics]')).toHaveAttribute('href', '/api/booking/CALL-0123456789abcdef.ics?t=tok');
+	expect(booked).toMatchObject({ slot: tuesday + 15 * 60_000, name: 'Ana López', phone: '33 1234 5678', consent: true, source: 'auditoria', locale: 'es' });
+	// La cita se queda en el navegador y se puede cancelar.
+	await page.reload();
+	await expect(page.locator('[data-booking-done]')).toBeVisible();
+	page.once('dialog', (dialog) => dialog.accept());
+	await page.locator('[data-booking-cancel]').click();
+	await expect(page.locator('[data-booking-flow]')).toBeVisible();
+	await expect(page.locator('[data-booking-status]')).toContainText('Cancelé tu llamada');
+	const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+	expect(overflow).toBe(false);
+});
+
+test('the home hero is a three-slide carousel: ecommerce and AI, the express audit and MADRE', async ({ page }) => {
+	await page.goto('/es/');
+	const hero = page.locator('[data-hero-slides]');
+	await expect(hero.locator('[data-slide]')).toHaveCount(3);
+	await expect(page.locator('main h1')).toHaveCount(1);
+	await expect(hero.locator('[data-slide="0"]')).toHaveClass(/is-active/);
+	await expect(hero.locator('[data-slide="1"]')).toHaveAttribute('aria-hidden', 'true');
+	await expect(hero.locator('[data-slide-bg] video')).toHaveCount(3);
+	await hero.locator('[data-slide-dot="1"]').click();
+	await expect(hero.locator('[data-slide="1"]')).toHaveClass(/is-active/);
+	await expect(hero.locator('[data-slide="0"]')).toHaveJSProperty('inert', true);
+	await expect(hero.locator('[data-slide="1"] h2')).toContainText('¿Tu sitio pierde ventas?');
+	await expect(hero.locator('[data-slide="1"] [data-ai-audit]')).toBeVisible();
+	await expect(hero.locator('[data-slide="1"] a[href="/es/agenda/?origen=inicio"]')).toBeVisible();
+	await expect(hero.locator('[data-slide-bg="1"]')).toHaveClass(/is-active/);
+	await hero.locator('[data-slide-dot="2"]').click();
+	await expect(hero.locator('[data-slide="2"] h2')).toContainText('Programa con MADRE.');
+	await expect(hero.locator('[data-slide="2"] a[href="https://madre.run/#instalar"]')).toBeVisible();
+	await hero.locator('[data-campaign-open]').click();
+	await expect(page.locator('[data-campaign-dialog]')).toBeVisible();
+	await expect(page.locator('[data-campaign-video] source').first()).toHaveAttribute('src', '/videos/madre/madre-campaign-es-mobile.webm');
+	await page.locator('[data-campaign-close]').click();
+	await expect(page.locator('[data-campaign-dialog]')).toBeHidden();
+	const pause = hero.locator('[data-slide-pause]');
+	await pause.click();
+	await expect(pause).toHaveAttribute('aria-pressed', 'true');
+	await expect(hero).toHaveClass(/is-paused/);
+	// Las cifras y las marcas quedan fuera de las diapositivas.
+	await expect(hero.locator('.jx-hero--foot .jx-facts')).toBeVisible();
+	const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+	expect(overflow).toBe(false);
 });

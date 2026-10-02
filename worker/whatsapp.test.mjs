@@ -154,7 +154,7 @@ test('hands off to Jossué: tells the person, emails him and goes quiet in that 
 		await post(env, incoming('¿Cuánto me cobra Jossué por un chatbot para mi tienda?'));
 		assert.deepEqual(apis.texts(), ['Esto se lo paso a Jossué; te contesta por aquí en cuanto pueda.']);
 		assert.equal(env.emails.length, 1);
-		assert.match(env.emails[0].subject, /WhatsApp · Ana necesita tu respuesta · Quiere cotizar/);
+		assert.match(env.emails[0].subject, /^WhatsApp · Ana necesita tu respuesta · Quiere cotizar/);
 		assert.match(env.emails[0].text, new RegExp(`https://wa.me/${CUSTOMER}`));
 		assert.match(env.emails[0].text, /Quiere cotizar o contratar/);
 		await post(env, incoming('¿Sigues ahí?'));

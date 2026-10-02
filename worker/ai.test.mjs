@@ -154,7 +154,7 @@ test('turns a volunteered contact into a lead and an email for Jossué', async (
 		assert.equal(env.emails[0].replyTo.email, 'ana@example.com');
 		assert.match(env.emails[0].text, /Rediseñar su tienda Shopify/);
 		assert.match(env.emails[0].text, /Mensaje:\nMi tienda se ve vieja/);
-		assert.match(env.emails[0].subject, /mensaje de Ana/);
+		assert.match(env.emails[0].subject, /^Nuevo cliente · Ana · desde el chat/);
 		assert.equal(env.DB.leads[0].message, 'Mi tienda se ve vieja y en celular casi nadie compra.');
 		assert.doesNotMatch(env.emails[0].text.split('Conversación')[1], /ana@example\.com/);
 	} finally {

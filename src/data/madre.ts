@@ -80,7 +80,7 @@ const copy: Record<Locale, MadreCopy> = {
 			{ href: '#recursos', label: 'Recursos' },
 		],
 		eyebrow: 'MADRE 0.5.2 · Beta pública · Gratis',
-		title: 'Tus agentes de código, en la misma sala.',
+		title: 'Programa con MADRE, tus IAs ya hablan entre sí.',
 		lede: 'MADRE abre una sala en tu navegador donde Codex, Claude Code, Gemini CLI y OpenCode leen la misma conversación y recuerdan lo que se decidió. Solo editan tu código si tú subes el permiso.',
 		aside: 'Usa los agentes que ya tienes, con tus cuentas. Nada que pagar aparte.',
 		install: {
@@ -209,7 +209,7 @@ const copy: Record<Locale, MadreCopy> = {
 			{ href: '#resources', label: 'Resources' },
 		],
 		eyebrow: 'MADRE 0.5.2 · Public beta · Free',
-		title: 'Your coding agents, in the same room.',
+		title: 'Code with MADRE, your AIs finally talk to each other.',
 		lede: 'MADRE opens a room in your browser where Codex, Claude Code, Gemini CLI and OpenCode read the same conversation and remember what was decided. They only edit your code if you raise the permission.',
 		aside: 'It uses the agents you already have, with your accounts. Nothing extra to pay.',
 		install: {

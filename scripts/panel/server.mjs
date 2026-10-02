@@ -1,5 +1,5 @@
-// Panel local de Jossue AI: conversaciones en tiempo real, dashboard, auditorías express, recados y
-// alertas de abuso. Réplica del visor de Daniela (~/jarvis/scripts/daniela_viewer.py).
+// Panel local de Jossue AI: conversaciones en tiempo real, dashboard, auditorías express, llamadas
+// agendadas, recados y alertas de abuso. Réplica del visor de Daniela (~/jarvis/scripts/daniela_viewer.py).
 //
 //   npm run panel                         # 30 días, refresca cada 30 s, abre el navegador
 //   npm run panel -- --dias 7 --intervalo 20 --qa --sin-auto --puerto 4466 --modelo-ia sonnet
@@ -66,6 +66,9 @@ const state = {
 	blocks: [],
 	audits: [],
 	auditsAvailable: false,
+	calls: [],
+	callBlocks: [],
+	callsAvailable: false,
 };
 
 const since = () => Date.now() - DAYS * 864e5;
@@ -109,6 +112,21 @@ async function refresh() {
 			state.auditsAvailable = true;
 		} catch {
 			state.auditsAvailable = false;
+		}
+		// Llamadas agendadas (tabla bookings): de hace 7 días en adelante, y los días bloqueados.
+		try {
+			const [calls, callBlocks] = await d1(
+				[
+					`SELECT id, created_at, slot_start, slot_end, status, name, email, phone, topic, source, page, cancelled_by, notified_at FROM bookings WHERE slot_start > ${Date.now() - 7 * 864e5} ORDER BY slot_start LIMIT 500`,
+					`SELECT day, reason, created_at FROM booking_blocks WHERE day >= '${new Date(Date.now() - 6 * 3600e3).toISOString().slice(0, 10)}' ORDER BY day`,
+				].join('; '),
+			);
+			if (JSON.stringify([calls, callBlocks]) !== JSON.stringify([state.calls, state.callBlocks])) changed = true;
+			state.calls = calls;
+			state.callBlocks = callBlocks;
+			state.callsAvailable = true;
+		} catch {
+			state.callsAvailable = false;
 		}
 		// Purga en memoria lo que salió de la ventana.
 		const cutoff = since();
@@ -182,6 +200,9 @@ function dataset() {
 		blocks: state.blocks,
 		audits: state.audits,
 		auditsAvailable: state.auditsAvailable,
+		calls: state.calls,
+		callBlocks: state.callBlocks,
+		callsAvailable: state.callsAvailable,
 	};
 }
 
@@ -288,6 +309,25 @@ const server = createServer(async (req, res) => {
 			await refresh();
 			return json(res, { ok: true, version: state.version });
 		}
+		// Agenda: bloquear o liberar un día y cancelar una llamada. Escribe en producción con tu sesión de wrangler.
+		if (req.method === 'POST' && url.pathname.startsWith('/llamadas/')) {
+			const input = await body(req);
+			const day = String(input.day ?? '');
+			const id = String(input.id ?? '');
+			if (url.pathname === '/llamadas/bloquear') {
+				if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return json(res, { error: 'Fecha inválida.' }, 400);
+				const reason = String(input.reason ?? '').replace(/[^\p{L}\p{N} .,:()-]/gu, '').slice(0, 80);
+				await d1(`INSERT INTO booking_blocks (day, reason, created_at) VALUES ('${day}', '${reason}', ${Date.now()}) ON CONFLICT (day) DO UPDATE SET reason = excluded.reason`);
+			} else if (url.pathname === '/llamadas/liberar') {
+				if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return json(res, { error: 'Fecha inválida.' }, 400);
+				await d1(`DELETE FROM booking_blocks WHERE day = '${day}'`);
+			} else if (url.pathname === '/llamadas/cancelar') {
+				if (!/^CALL-[a-f0-9]{16}$/.test(id)) return json(res, { error: 'Llamada inválida.' }, 400);
+				await d1(`UPDATE bookings SET status = 'cancelled', cancelled_at = ${Date.now()}, cancelled_by = 'jossue' WHERE id = '${id}' AND status = 'confirmed'`);
+			} else return send(res, 404, 'not found', 'text/plain');
+			await refresh();
+			return json(res, { ok: true, version: state.version });
+		}
 		if (req.method === 'POST' && url.pathname === '/resumir') {
 			const { sids, scope } = await body(req);
 			const list = pick(Array.isArray(sids) ? sids : []);
@@ -304,7 +344,7 @@ server.listen(PORT, '127.0.0.1', async () => {
 	const address = `http://127.0.0.1:${PORT}`;
 	console.log(`Panel de Jossue AI en ${address} · ${DAYS} días · ${AUTO ? `refresco cada ${INTERVAL_S} s` : 'refresco manual'}${INCLUDE_QA ? ' · con pruebas QA' : ''} · IA: claude/${AI_MODEL} · Ctrl-C para cerrarlo`);
 	await refresh();
-	console.log(state.error ? `⚠ ${state.error}` : `${state.messages.size} conversaciones, ${state.leads.length} recados, ${state.audits.length} auditorías`);
+	console.log(state.error ? `⚠ ${state.error}` : `${state.messages.size} conversaciones, ${state.leads.length} recados, ${state.audits.length} auditorías, ${state.calls.filter((call) => call.status === 'confirmed' && Number(call.slot_start) > Date.now()).length} llamadas próximas`);
 	if (AUTO) globalThis.setInterval(refresh, INTERVAL_S * 1000);
 	if (!flag('sin-navegador')) execFile('open', [address], () => {});
 });

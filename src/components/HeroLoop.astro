@@ -3,22 +3,29 @@
 // el titular. Carga solo cuando el héroe se ve y respeta «reducir movimiento» y ahorro de datos.
 interface Props {
 	name: string;
+	/** «aspect» (por defecto): elige la versión vertical u horizontal por la proporción del contenedor; «width», por el ancho de la pantalla. */
+	fit?: 'width' | 'aspect';
 }
 
-const { name } = Astro.props;
+const { name, fit = 'aspect' } = Astro.props;
 const base = `/videos/hero/${name}`;
 ---
 
 <div class="jx-loop" aria-hidden="true">
-	<video muted loop playsinline preload="none" poster={`${base}.webp`} data-jx-loop data-wide={base} data-tall={`${base}-tall`} disablepictureinpicture></video>
+	<video muted loop playsinline preload="none" poster={`${base}.webp`} data-jx-loop data-wide={base} data-tall={`${base}-tall`} data-fit={fit} disablepictureinpicture></video>
 </div>
 
 <script>
 	const loops = [...document.querySelectorAll<HTMLVideoElement>('[data-jx-loop]')];
 	const calm = matchMedia('(prefers-reduced-motion: reduce)').matches || (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
 	const narrow = matchMedia('(max-width: 47.99rem)');
+	const tall = (video: HTMLVideoElement) => {
+		if (video.dataset.fit !== 'aspect') return narrow.matches;
+		const box = video.parentElement?.getBoundingClientRect();
+		return Boolean(box && box.height && box.width / box.height < 0.85);
+	};
 	const source = (video: HTMLVideoElement) => {
-		const base = narrow.matches ? video.dataset.tall! : video.dataset.wide!;
+		const base = tall(video) ? video.dataset.tall! : video.dataset.wide!;
 		video.poster = `${base}.webp`;
 		if (calm) return;
 		const type = video.canPlayType('video/webm; codecs="vp9"') ? 'webm' : 'mp4';
@@ -29,21 +36,35 @@ const base = `/videos/hero/${name}`;
 		}
 	};
 	loops.forEach((video) => {
-		video.poster = `${(narrow.matches ? video.dataset.tall : video.dataset.wide) ?? ''}.webp`;
+		video.poster = `${(tall(video) ? video.dataset.tall : video.dataset.wide) ?? ''}.webp`;
 	});
+	// En el slider del inicio solo corre el loop de la diapositiva visible ([data-slide-bg].is-active).
+	const hidden = (video: HTMLVideoElement) => Boolean(video.closest('[data-slide-bg]:not(.is-active)'));
+	const visible = new Set<HTMLVideoElement>();
+	const update = (video: HTMLVideoElement) => {
+		if (visible.has(video) && !hidden(video)) {
+			if (!video.src) source(video);
+			video.play().then(() => video.closest('.jx-loop')?.classList.add('is-playing')).catch(() => {});
+		} else video.pause();
+	};
 	if (!calm && 'IntersectionObserver' in window) {
 		const observer = new IntersectionObserver(
 			(entries) =>
 				entries.forEach((entry) => {
 					const video = entry.target as HTMLVideoElement;
-					if (entry.isIntersecting) {
-						if (!video.src) source(video);
-						video.play().then(() => video.closest('.jx-loop')?.classList.add('is-playing')).catch(() => {});
-					} else video.pause();
+					if (entry.isIntersecting) visible.add(video);
+					else visible.delete(video);
+					update(video);
 				}),
 			{ threshold: 0.05 },
 		);
 		loops.forEach((video) => observer.observe(video));
 		narrow.addEventListener('change', () => loops.forEach((video) => video.src && source(video)));
+		let resized = 0;
+		window.addEventListener('resize', () => {
+			window.clearTimeout(resized);
+			resized = window.setTimeout(() => loops.forEach((video) => video.dataset.fit === 'aspect' && video.src && source(video)), 250);
+		});
+		document.addEventListener('jx-loops-refresh', () => loops.forEach(update));
 	}
 </script>

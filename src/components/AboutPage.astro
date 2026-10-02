@@ -23,16 +23,16 @@ const built = featuredProducts.map((product) => ({ product, demo: productDemo(pr
 
 const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			{ title: 'Shopify y ecommerce', text: 'Levanto tiendas que venden y que tu equipo puede mover solo: storefront, temas y apps a la medida del negocio.', icon: 'basket' },
-			{ title: 'UX y conversión', text: 'Encuentro dónde se te va la venta y rediseño la experiencia para que más visitas terminen en compra. Mido antes y después.', icon: 'trend-up' },
-			{ title: 'IA en la operación', text: 'Asistentes y agentes con tus datos y tus permisos, con una persona que revisa. Daniela y MADRE salieron de aquí.', icon: 'sparkles-ai' },
-			{ title: 'Producto completo', text: 'De la idea a producción: front, back, integraciones, pruebas y documentación que otro puede retomar.', icon: 'code' },
+			{ title: 'Tiendas en Shopify', text: 'Armo tiendas en Shopify que tu equipo puede actualizar sin ayuda. Hago el diseño, las secciones y, si hace falta, apps propias.', icon: 'basket' },
+			{ title: 'Que más visitas compren', text: 'Encuentro en qué paso se va la gente sin comprar y cambio esa parte de la tienda. Mido cómo estaba antes y cómo quedó después.', icon: 'trend-up' },
+			{ title: 'IA en el día a día', text: 'Asistentes que trabajan con tus datos reales y solo hacen lo que les permites. Lo importante lo revisa una persona. Así hice Daniela y MADRE.', icon: 'sparkles-ai' },
+			{ title: 'De la idea a algo que funciona', text: 'Programo lo que ve el cliente y lo que corre por detrás, lo conecto con los sistemas que ya usas, lo pruebo y lo dejo documentado para que otra persona lo pueda retomar.', icon: 'code' },
 		]
 	: [
-			{ title: 'Shopify and ecommerce', text: 'I build stores that sell and that your team can run on its own: storefront, themes and apps shaped around the business.', icon: 'basket' },
-			{ title: 'UX and conversion', text: 'I find where sales leak and redesign the experience so more visits end in a purchase. I measure before and after.', icon: 'trend-up' },
-			{ title: 'AI in operations', text: 'Assistants and agents with your data and permissions, with a person who reviews. Daniela and MADRE came from here.', icon: 'sparkles-ai' },
-			{ title: 'The whole product', text: 'From idea to production: front end, back end, integrations, tests and docs someone else can pick up.', icon: 'code' },
+			{ title: 'Shopify stores', text: 'I build Shopify stores your team can update without help. I do the design, the sections and, when needed, custom apps.', icon: 'basket' },
+			{ title: 'More visits that buy', text: 'I find the step where people leave without buying and change that part of the store. I measure how it was before and how it ended up.', icon: 'trend-up' },
+			{ title: 'AI in day-to-day work', text: 'Assistants that work with your real data and only do what you allow. A person reviews what matters. That is how I built Daniela and MADRE.', icon: 'sparkles-ai' },
+			{ title: 'From idea to something that works', text: 'I code what the customer sees and what runs behind it, connect it to the systems you already use, test it and document it so someone else can pick it up.', icon: 'code' },
 		];
 ---
 
@@ -44,7 +44,7 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Sobre mí · Guadalajara, México' : 'About me · Guadalajara, Mexico'}</p>
 			<h1 id="about-title" class="jx-about__name">{profile.name}</h1>
 			<p class="jx-about__role profile-headline">{about.headline}</p>
-			<p class="jx-about__spec"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Experiencia destacada · IA aplicada y AI Dev' : 'Featured experience · Applied AI and AI Dev'}</p>
+			<p class="jx-about__spec"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'También hago asistentes y herramientas con IA' : 'I also build AI assistants and tools'}</p>
 			<p class="jx-about__lede">{about.summary}</p>
 			<div class="jx-actions">
 				{cvHref && <a class="jx-btn jx-btn--primary" href={cvHref} download data-analytics-event="download_cv"><Icon name="download" />{es ? 'Descargar mi CV' : 'Download my CV'}</a>}
@@ -60,8 +60,8 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 
 	<section class="jx-band" aria-labelledby="about-numbers">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cifras' : 'Figures'}</p>
-			<h2 id="about-numbers" class="jx-h2"><span>{es ? 'Lo que he movido,' : 'What I have moved,'}</span> <span class="jx-soft">{es ? 'con su fecha y su fuente.' : 'with its date and source.'}</span></h2>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'En números' : 'In numbers'}</p>
+			<h2 id="about-numbers" class="jx-h2"><span>{es ? 'Resultados de mi trayectoria,' : 'Results from my career,'}</span> <span class="jx-soft">{es ? 'tomados de mi CV y de mis casos.' : 'taken from my CV and my cases.'}</span></h2>
 			<ul class="jx-kpis">
 				{about.kpis.map((kpi) => (
 					<li>
@@ -77,7 +77,7 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 	<section class="jx-built" aria-labelledby="about-built">
 		<div class="jx-wrap">
 			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Lo que construí' : 'What I built'}</p>
-			<h2 id="about-built" class="jx-h2"><span>{es ? 'Cinco productos míos,' : 'Five products of mine,'}</span> <span class="jx-soft">{es ? 'funcionando.' : 'running.'}</span></h2>
+			<h2 id="about-built" class="jx-h2"><span>{es ? 'Cinco productos que hice' : 'Five products I made'}</span> <span class="jx-soft">{es ? 'y que ya funcionan.' : 'that are already running.'}</span></h2>
 			<div class="jx-built__grid">
 				{built.map(({ product, demo }) => (
 					<article class="jx-feature" data-about-product={product.slug}>
@@ -116,7 +116,7 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 	<section class="jx-caps" aria-labelledby="about-caps">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué sé hacer' : 'What I do'}</p>
-			<h2 id="about-caps" class="jx-h2"><span>{es ? 'Decido el rumbo' : 'I set the direction'}</span> <span class="jx-soft">{es ? 'y también lo programo.' : 'and I also write the code.'}</span></h2>
+			<h2 id="about-caps" class="jx-h2"><span>{es ? 'Decido qué conviene hacer' : 'I decide what is worth doing'}</span> <span class="jx-soft">{es ? 'y también lo programo.' : 'and I also code it.'}</span></h2>
 			<ul class="jx-points jx-caps__grid">
 				{capabilities.map((item) => (
 					<li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>
@@ -124,15 +124,15 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 			</ul>
 			<div class="jx-caps__lists">
 				<div>
-					<p class="jx-mono">{es ? 'Plataformas y técnica' : 'Platforms and technical'}</p>
+					<p class="jx-mono">{es ? 'Herramientas que uso' : 'Tools I use'}</p>
 					<ul>{about.skills.map((item) => <li>{item}</li>)}</ul>
 				</div>
 				<div>
-					<p class="jx-mono">{es ? 'IA aplicada' : 'Applied AI'}</p>
+					<p class="jx-mono">{es ? 'Lo que hago con IA' : 'What I do with AI'}</p>
 					<ul>{about.aiCapabilities.map((item) => <li>{item}</li>)}</ul>
 				</div>
 				<div>
-					<p class="jx-mono">{es ? 'Formación' : 'Education'}</p>
+					<p class="jx-mono">{es ? 'Estudios' : 'Education'}</p>
 					<ul>{about.education.map((item) => <li>{item}</li>)}</ul>
 					<p class="jx-mono jx-caps__sub">{es ? 'Idiomas' : 'Languages'}</p>
 					<ul>{about.languages.map((item) => <li>{item}</li>)}</ul>
@@ -145,8 +145,8 @@ const capabilities: Array<{ title: string; text: string; icon: IconName }> = es
 
 	<section class="jx-close" aria-labelledby="about-close">
 		<div class="jx-close__card">
-			<h2 id="about-close" class="jx-close__title"><span>{es ? '¿Buscas a alguien que decida' : 'Looking for someone who decides'}</span> <span class="jx-soft">{es ? 'y también construya?' : 'and also builds?'}</span></h2>
-			<p>{es ? 'Para un puesto, un proyecto o una segunda opinión sobre tu tienda. Te contesto en menos de un día hábil.' : 'For a role, a project or a second opinion on your store. I reply within one business day.'}</p>
+			<h2 id="about-close" class="jx-close__title"><span>{es ? 'Si buscas a alguien que decida' : 'If you need someone who decides'}</span> <span class="jx-soft">{es ? 'y también lo construya, escríbeme.' : 'and also builds it, write to me.'}</span></h2>
+			<p>{es ? 'Puede ser para un puesto de trabajo, para un proyecto o para que le eche un ojo a tu tienda. Te contesto en menos de un día hábil.' : 'It can be for a job, for a project or for me to take a look at your store. I reply within one business day.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 				<a class="jx-btn jx-btn--ghost" href={routes[locale].products}>{es ? 'Ver mis productos' : 'See my products'}</a>

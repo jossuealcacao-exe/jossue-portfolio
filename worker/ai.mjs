@@ -8,6 +8,7 @@
 
 import { ALERT_LINE, canaryLine, guardedAnswer, recentAbuse } from './guard.mjs';
 import { EXAMPLES, PERSONA } from './persona.mjs';
+import { notify, notifyEnabled } from './notify.mjs';
 
 const DEFAULT_MODEL = 'gemini-3.5-flash';
 // Si Gemini falla por algo pasajero (429, 5xx, red), se intenta una vez más con este modelo.
@@ -34,8 +35,8 @@ export const SCHEMA = {
 		},
 		action: {
 			type: 'STRING',
-			enum: ['none', 'contact', 'whatsapp', 'cv', 'page', 'audit'],
-			description: 'Botón que acompaña la respuesta. contact = formulario; page = una página del sitio; audit = empezar la auditoría express de su sitio.',
+			enum: ['none', 'contact', 'call', 'whatsapp', 'cv', 'page', 'audit'],
+			description: 'Botón que acompaña la respuesta. contact = formulario; call = agendar una llamada de 10 minutos; page = una página del sitio; audit = empezar la auditoría express de su sitio.',
 		},
 		page: { type: 'STRING', description: 'Solo con action=page: URL completa de jossuealcala.com tomada del conocimiento.' },
 		lead: {
@@ -62,16 +63,20 @@ export function systemPrompt(knowledge, locale, { auditAvailable = true } = {}) 
 AUDITORÍA EXPRESS
 ${
 	auditAvailable
-		? `- Aquí puedes ofrecer una auditoría express gratis de su sitio: en uno o dos minutos revisa su página principal y le da un puntaje de salud y 3 áreas de oportunidad, con un reporte que puede descargar. Solo se hace en este chat: deja su nombre, su correo y la dirección de su sitio.
+		? `- Aquí puedes ofrecer una auditoría express gratis de su sitio: en uno o dos minutos revisa su página principal como la ve un cliente en el celular y le da una calificación de 0 a 100 y las 3 cosas que más le conviene corregir, con un reporte que puede descargar. Solo se hace en este chat: deja su nombre, su correo y la dirección de su sitio.
 - Ofrécela (action="audit") cuando hable de su sitio o su tienda, de que no vende, de tráfico, velocidad, SEO o conversión, o pida un diagnóstico. Una vez por conversación; si no le interesa, no insistas.
 - Tú no ves su sitio: no inventes resultados. La auditoría la hace el sistema y le aparece aquí mismo.`
 		: '- La auditoría express solo está en el chat de jossuealcala.com. Si alguien habla de su sitio o su tienda, puedes decirle que ahí se la hace gratis en un par de minutos.'
 }
 
+LLAMADAS DE 10 MINUTOS
+- Jossué hace llamadas gratis de 10 minutos para entender un proyecto y decir por dónde empezaría. Se agendan en jossuealcala.com/es/agenda/ (martes, miércoles y viernes de 10:00 a 18:00 y sábado de 9:00 a 13:00, hora de Guadalajara); la persona deja su número y Jossué le llama.
+- Ofrécela (action="call") cuando quiera hablar con Jossué, platicar su caso, una llamada o una reunión, o después de su auditoría si quiere saber qué hacer primero. Tú no agendas ni ves horarios: el botón la lleva a la agenda.
+
 REGLAS DE FORMATO (obligatorias)
 - Responde en el idioma de la persona; si no es claro, en ${locale === 'en' ? 'inglés' : 'español'} (idioma de la página).
 - "reply" es texto plano: sin markdown, sin listas con viñetas largas, sin emojis salvo que la persona los use.
-- action="contact" si quiere cotizar o hablar con Jossué; "whatsapp" si prefiere algo inmediato; "cv" si pide el CV o es reclutador; "page" con la URL exacta del CONOCIMIENTO cuando una página responde mejor (un producto, un caso, MADRE); "none" en lo demás.
+- action="call" si quiere hablar con Jossué o una llamada; "contact" si prefiere escribirle o mandar los detalles de una cotización; "whatsapp" si prefiere algo inmediato; "cv" si pide el CV o es reclutador; "page" con la URL exacta del CONOCIMIENTO cuando una página responde mejor (un producto, un caso, MADRE); "none" en lo demás.
 - suggestions: hasta 3 preguntas de seguimiento naturales y cortas, en el idioma de la persona.
 - El CONOCIMIENTO está escrito en primera persona por Jossué ("Dirijo…"); tú lo cuentas en tercera persona ("Jossué dirige…"). Si una cifra o un dato no está ahí, no existe para ti.
 
@@ -252,7 +257,7 @@ function sanitizeOutput(data, locale) {
 	const suggestions = Array.isArray(data?.suggestions)
 		? data.suggestions.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim().slice(0, 60)).slice(0, 3)
 		: [];
-	const action = ['none', 'contact', 'whatsapp', 'cv', 'page', 'audit'].includes(data?.action) ? data.action : 'none';
+	const action = ['none', 'contact', 'call', 'whatsapp', 'cv', 'page', 'audit'].includes(data?.action) ? data.action : 'none';
 	let page = null;
 	if (action === 'page' && typeof data?.page === 'string') {
 		try {
@@ -302,6 +307,8 @@ export async function purgeExpired(env, now = Date.now()) {
 		env.DB.prepare('DELETE FROM ai_leads WHERE created_at < ?').bind(new Date(year).toISOString()),
 		env.DB.prepare('DELETE FROM ai_audits WHERE created_at < ?').bind(year),
 		env.DB.prepare('DELETE FROM submissions WHERE created_at < ?').bind(new Date(year).toISOString()),
+		env.DB.prepare('DELETE FROM bookings WHERE slot_start < ?').bind(year),
+		env.DB.prepare("DELETE FROM booking_blocks WHERE day < ?").bind(new Date(now - 30 * 864e5).toISOString().slice(0, 10)),
 		env.DB.prepare('DELETE FROM ai_abuse WHERE ts < ?').bind(now - 90 * 864e5),
 		env.DB.prepare("DELETE FROM ai_blocks WHERE until < ? AND key NOT LIKE 'system:%'").bind(now - 90 * 864e5),
 	]).catch((error) => console.error('ai purge failed', error?.message));
@@ -339,8 +346,7 @@ async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
 			.run()
 			.catch((error) => console.error('ai saveLead failed', error?.message));
 	}
-	const recipient = String(env.CONTACT_EMAIL_TO ?? '').trim();
-	if (!env.CONTACT_EMAIL || !recipient) return;
+	if (!notifyEnabled(env)) return;
 	const text = [
 		'Jossue AI consiguió un contacto en jossuealcala.com',
 		'',
@@ -359,13 +365,12 @@ async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
 	]
 		.filter(Boolean)
 		.join('\n');
-	await env.CONTACT_EMAIL.send({
-		to: recipient,
-		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI' },
+	await notify(env, {
+		kind: 'client',
+		subject: `${(lead.name || lead.email || lead.phone).slice(0, 60)} · desde el chat${lead.need ? ` · ${lead.need.slice(0, 60)}` : ''}`,
 		...(lead.email ? { replyTo: { email: lead.email, name: lead.name || lead.email } } : {}),
-		subject: `Jossue AI · mensaje de ${(lead.name || lead.email || lead.phone).slice(0, 60)}${lead.need ? ` · ${lead.need.slice(0, 60)}` : ''}`,
 		text,
-	}).catch((error) => console.error('ai lead email failed', error?.name));
+	});
 }
 
 // Gemini sin saldo o sin cuota: Jossue AI deja de contestar y nadie se entera. Se le avisa a
@@ -380,7 +385,7 @@ export function isProviderBillingError(error) {
 }
 
 export async function alertProviderProblem(env, error, source = 'web') {
-	if (!isProviderBillingError(error) || !env.DB || !env.CONTACT_EMAIL || !String(env.CONTACT_EMAIL_TO ?? '').trim()) return false;
+	if (!isProviderBillingError(error) || !env.DB || !notifyEnabled(env)) return false;
 	const now = Date.now();
 	const row = await env.DB.prepare('SELECT alerted_at FROM ai_blocks WHERE key = ?').bind(PROVIDER_ALERT_KEY).first().catch(() => null);
 	if (row && now - Number(row.alerted_at) < PROVIDER_ALERT_EVERY_MS) return false;
@@ -393,9 +398,8 @@ export async function alertProviderProblem(env, error, source = 'web') {
 		.catch(() => null);
 	const upstream = Number(error?.upstream) || 0;
 	const what = upstream === 402 ? 'Gemini se quedó sin saldo (402)' : `Gemini rechazó por cuota (${upstream || 'sin código'})`;
-	await env.CONTACT_EMAIL.send({
-		to: String(env.CONTACT_EMAIL_TO).trim(),
-		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI · Avisos' },
+	await notify(env, {
+		kind: 'alert',
 		subject: `Jossue AI no está contestando: ${what}`,
 		text: [
 			`${what}. Desde ${new Date(now).toISOString()} Jossue AI no puede responder ${source === 'whatsapp' ? 'en WhatsApp' : 'en jossuealcala.com'}.`,
@@ -407,7 +411,7 @@ export async function alertProviderProblem(env, error, source = 'web') {
 			'',
 			'Este aviso llega como máximo una vez al día.',
 		].join('\n'),
-	}).catch((mailError) => console.error('ai provider alert failed', mailError?.name));
+	});
 	return true;
 }
 

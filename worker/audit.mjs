@@ -11,6 +11,7 @@
 //   GET  /api/audit/:id?sid=…   estado; solo lo ve la sesión que la pidió
 
 import { blockedUntil } from './guard.mjs';
+import { notify, notifyEnabled } from './notify.mjs';
 
 const APEX_DEFAULT = 'https://apex.jossuealcala.com';
 const PER_IP_DAY = 3; // auditorías por IP al día
@@ -132,8 +133,7 @@ function cleanFindings(list) {
 // ---------- aviso a Jossué ----------
 
 async function notifyOwner(env, row) {
-	const recipient = String(env.CONTACT_EMAIL_TO ?? '').trim();
-	if (!env.CONTACT_EMAIL || !recipient) return;
+	if (!notifyEnabled(env)) return false;
 	const audit = publicAudit(row);
 	const done = audit.status === 'done';
 	const lines = [
@@ -148,7 +148,7 @@ async function notifyOwner(env, row) {
 			? [
 					`Salud: ${audit.score ?? '—'} / 100`,
 					'',
-					audit.findings.length === 1 ? 'El área de oportunidad:' : `Las ${audit.findings.length} áreas de oportunidad:`,
+					audit.findings.length === 1 ? 'Lo que conviene corregir:' : `Las ${audit.findings.length} cosas que conviene corregir:`,
 					...audit.findings.map((item, index) => `${index + 1}. ${item.title} (${item.severity})\n   Por qué importa: ${item.business_effect}${item.recommendation ? `\n   Qué haría: ${item.recommendation}` : ''}`),
 					'',
 					audit.report_url && `Informe: ${audit.report_url}`,
@@ -158,13 +158,12 @@ async function notifyOwner(env, row) {
 		'',
 		'Siguiente paso sugerido: escríbele hoy mismo y ofrécele revisar juntos la primera mejora.',
 	].filter((line) => line !== null && line !== undefined && line !== false);
-	await env.CONTACT_EMAIL.send({
-		to: recipient,
-		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI · Auditorías' },
+	return notify(env, {
+		kind: 'audit',
+		subject: `${clip(row.name, 40)} · ${audit.domain}${done && audit.score != null ? ` · ${audit.score}/100` : ' · sin terminar'}`,
 		replyTo: { email: row.email, name: row.name },
-		subject: `Auditoría express · ${clip(row.name, 40)} · ${audit.domain}${done && audit.score != null ? ` · ${audit.score}/100` : ''}`,
 		text: lines.join('\n'),
-	}).catch((error) => console.error('audit owner email failed', error?.name));
+	});
 }
 
 async function save(env, row) {
@@ -176,10 +175,8 @@ async function save(env, row) {
 }
 
 async function finish(env, row) {
-	if (!row.notified_at) {
-		await notifyOwner(env, row);
-		row.notified_at = Date.now();
-	}
+	// notified_at solo se marca si el correo salió: el panel no puede decir «avisado» si no llegó.
+	if (!row.notified_at && (await notifyOwner(env, row))) row.notified_at = Date.now();
 	await save(env, row);
 }
 

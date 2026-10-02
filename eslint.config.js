@@ -4,7 +4,7 @@ import tseslint from 'typescript-eslint';
 
 export default [
 	{
-		ignores: ['dist/**', '.astro/**', 'blog/dist/**', 'blog/.astro/**', 'blog/.wrangler/**', '.wrangler-dry-run/**', 'node_modules/**', 'test-results/**', 'docs/**', '_inputs/**'],
+		ignores: ['dist/**', '.astro/**', 'blog/dist/**', 'blog/.astro/**', 'blog/.wrangler/**', '.wrangler/**', '.wrangler-dry-run/**', 'node_modules/**', 'test-results/**', 'tmp/**', 'docs/**', '_inputs/**'],
 	},
 	eslint.configs.recommended,
 	...tseslint.configs.recommended,

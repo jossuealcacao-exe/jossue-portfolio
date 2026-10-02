@@ -20,7 +20,7 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const OUT = join(HERE, '../../public/videos/hero');
 const TMP = process.env.LOOP_TMP ?? join(HERE, '../../tmp/hero-loops');
 const FPS = 24;
-const SCENES = ['daniela', 'ahp', 'bloqio', 'miawseo', 'consultoria', 'web'];
+const SCENES = ['daniela', 'ahp', 'bloqio', 'miawseo', 'consultoria', 'web', 'home', 'audit', 'contact', 'ai', 'chatbots', 'products', 'services', 'work', 'about', 'madre'];
 
 const arg = (name) => { const i = process.argv.indexOf(name); return i > -1 ? process.argv[i + 1] : null; };
 const only = arg('--only');

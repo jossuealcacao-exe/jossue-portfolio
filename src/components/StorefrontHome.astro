@@ -11,6 +11,7 @@ import { commercialProducts, featuredProducts, otherProducts, productDemo, produ
 import AiDevSpotlight from './AiDevSpotlight.astro';
 import AuditCta from './AuditCta.astro';
 import { AUDIT_ENABLED } from '../data/features';
+import { madreFacts } from '../data/madre';
 import AiInvite from './AiInvite.astro';
 import BrandLogos from './BrandLogos.astro';
 import ConsultingSection from './ConsultingSection.astro';
@@ -46,92 +47,158 @@ const MADRE_RUN = 'https://madre.run/';
 const V = '/videos/madre';
 
 const facts = es
-	? [['+8 años', 'en ecommerce, growth y producto digital'], ['5', 'productos míos, entre ellos MADRE y AHP+'], ['9', 'proyectos documentados, con lo que salió bien y lo que no']]
-	: [['8+ years', 'in ecommerce, growth and digital product'], ['5', 'products of my own, MADRE and AHP+ among them'], ['9', 'documented projects, with what worked and what did not']];
+	? [['+8 años', 'en ventas en línea, publicidad digital y desarrollo web'], ['5', 'productos míos, entre ellos MADRE y AHP+'], ['9', 'proyectos contados con detalle, incluido lo que no salió bien']]
+	: [['8+ years', 'in online sales, digital ads and web development'], ['5', 'products of my own, MADRE and AHP+ among them'], ['9', 'projects told in detail, including what did not go well']];
 
 const madrePoints: [IconName, string, string][] = es
 	? [
-			['chats', 'Una sala, cuatro agentes.', 'Codex, Claude Code, Gemini CLI y OpenCode leen la misma conversación.'],
-			['layers', 'No se pierde el hilo.', 'Cada agente recibe lo que se dijo antes y la sala recuerda lo que se decidió.'],
-			['shield', 'Nada cambia sin tu permiso.', 'Para editar, escribes el nombre del proyecto. Cada cambio se puede deshacer.'],
-			['bolt', 'Gasta menos tokens.', 'En una sala de prueba ahorró 496,894 tokens en siete turnos.'],
+			['chats', 'Trabajan en la misma conversación.', 'Codex, Claude Code, Gemini CLI y OpenCode leen los mismos mensajes.'],
+			['layers', 'Ninguno empieza de cero.', 'Cada asistente recibe lo que se dijo antes, y MADRE guarda lo que ya se decidió.'],
+			['shield', 'Nada cambia sin tu permiso.', 'Para que editen archivos tienes que escribir el nombre del proyecto. Cada cambio se puede deshacer.'],
+			['bolt', 'Gastas menos en IA.', 'En una prueba ahorró 496,894 tokens (la unidad con la que cobran los servicios de IA) en siete turnos.'],
 		]
 	: [
-			['chats', 'One room, four agents.', 'Codex, Claude Code, Gemini CLI and OpenCode read the same conversation.'],
-			['layers', 'Nothing gets lost.', 'Each agent receives what was said before, and the room remembers what was decided.'],
-			['shield', 'Nothing changes without your say.', 'To edit, you type the project name. Every change can be undone.'],
-			['bolt', 'Fewer tokens spent.', 'In a test room it saved 496,894 tokens over seven turns.'],
+			['chats', 'They work in the same conversation.', 'Codex, Claude Code, Gemini CLI and OpenCode read the same messages.'],
+			['layers', 'None of them starts from scratch.', 'Each assistant gets what was said before, and MADRE keeps what was already decided.'],
+			['shield', 'Nothing changes without your say.', 'Before they can edit files, you have to type the project name. Every change can be undone.'],
+			['bolt', 'You spend less on AI.', 'In a test it saved 496,894 tokens (the unit AI services charge by) over seven turns.'],
 		];
 
 const showcase = es
 	? [
-			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Anuncio · 30 s', title: 'Lo más destacado, en medio minuto.' },
-			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'Contexto propio, seguridad y memoria.' },
-			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Cuatro agentes construyen una app y un módulo.' },
+			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Anuncio · 30 s', title: 'Lo principal de MADRE en 30 segundos.' },
+			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'Cómo recuerda cada proyecto y cómo protege tus archivos.' },
+			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Cuatro asistentes hacen una app y un módulo.' },
 		]
 	: [
-			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Ad · 30 s', title: 'The highlights, in half a minute.' },
-			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'Own context, security and memory.' },
-			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Four agents build an app and a module.' },
+			{ key: 'anuncio', src: `${V}/madre-anuncio.mp4`, poster: `${V}/madre-anuncio.webp`, ratio: '16:9', label: 'Ad · 30 s', title: 'The main points of MADRE in 30 seconds.' },
+			{ key: 'vertical', src: `${V}/madre-vertical.mp4`, poster: `${V}/madre-vertical.webp`, ratio: '9:16', label: 'Vertical · 45 s', title: 'How it remembers each project and protects your files.' },
+			{ key: 'showcase', src: `${V}/madre-showcase.mp4`, poster: `${V}/madre-showcase.webp`, ratio: '16:9', label: 'Demo · 1 min', title: 'Four assistants build an app and a module.' },
 		];
 
 const method = es
 	? [
-			['01', 'Entender', 'Qué quieres lograr y qué te está frenando.'],
-			['02', 'Diseñar', 'Una dirección clara antes de hacer pantallas.'],
-			['03', 'Construir', 'La tienda, el sitio o la herramienta, funcionando.'],
-			['04', 'Comprobar', 'Pruebas y evidencia antes de darlo por terminado.'],
+			['01', 'Entender', 'Platicamos qué quieres lograr, qué tienes hoy y qué te está frenando.'],
+			['02', 'Proponer', 'Te digo qué haría y cómo se va a ver antes de construir nada.'],
+			['03', 'Construir', 'Hago la tienda, la página o la herramienta y la dejo funcionando.'],
+			['04', 'Comprobar', 'La pruebo y te enseño cómo quedó antes de darla por terminada.'],
 		]
 	: [
-			['01', 'Understand', 'What you want to achieve and what is holding you back.'],
-			['02', 'Design', 'A clear direction before making screens.'],
-			['03', 'Build', 'The store, the site or the tool, working.'],
-			['04', 'Verify', 'Tests and evidence before calling it done.'],
+			['01', 'Understand', 'We talk about what you want, what you have today and what is holding you back.'],
+			['02', 'Propose', 'I tell you what I would do and how it will look before building anything.'],
+			['03', 'Build', 'I make the store, the page or the tool and leave it working.'],
+			['04', 'Check', 'I test it and show you how it turned out before calling it done.'],
 		];
+const madreSlide = AUDIT_ENABLED ? 2 : 1;
+const campaign = `/videos/madre/madre-campaign-${locale}`;
 ---
 
 <article class="jx-home" data-storefront-home>
-	<div class="jx-page-hero" data-hero="home">
-		<HeroLoop name="home" />
-		<section class="jx-hero" aria-labelledby="jx-hero-title">
-		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>Jossue Alcalá · {es ? 'Guadalajara, México' : 'Guadalajara, Mexico'}</p>
-		<h1 id="jx-hero-title" class="jx-hero__title">
-			<span>{es ? 'Ecommerce e IA' : 'Ecommerce and AI'}</span>
-			<span class="jx-soft">{es ? 'que venden y se pueden mantener.' : 'that sell and stay maintainable.'}</span>
-		</h1>
-		<p class="jx-hero__lede">
-			{es
-				? 'Dirijo el ecommerce de WU Nutrition y Come Verde, y construyo lo que vende: tiendas en Shopify, chatbots que atienden con tus datos y herramientas con IA. Lo que te entrego lo opera tu equipo sin depender de mí.'
-				: 'I lead ecommerce at WU Nutrition and Come Verde, and I build what sells: Shopify stores, chatbots that serve with your data and AI tools. What I deliver, your team runs without depending on me.'}
-		</p>
-		<div class="jx-actions">
-			<a class="jx-btn jx-btn--primary" href={routes[locale].work}>{es ? 'Ver casos reales' : 'See real cases'}<Icon name="arrow-right" /></a>
-			<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}chatbots/`}>{es ? 'Chatbots con IA' : 'AI chatbots'}</a>
+	<div class="jx-page-hero jx-slides" data-hero="home" data-hero-slides>
+		<div class="jx-slides__stage">
+		<div class="jx-slides__bg is-active" data-slide-bg="0"><HeroLoop name="home" fit="aspect" /></div>
+		{AUDIT_ENABLED && <div class="jx-slides__bg" data-slide-bg="1"><HeroLoop name="audit" fit="aspect" /></div>}
+		<div class="jx-slides__bg" data-slide-bg={madreSlide}><HeroLoop name="madre" fit="aspect" /></div>
+		<div class="jx-slides__track">
+			<section class="jx-hero jx-slide is-active" data-slide="0" aria-labelledby="jx-hero-title" aria-roledescription={AUDIT_ENABLED ? (es ? 'diapositiva' : 'slide') : undefined}>
+				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>Jossue Alcalá · {es ? 'Guadalajara, México' : 'Guadalajara, Mexico'}</p>
+				<h1 id="jx-hero-title" class="jx-hero__title">
+					<span>{es ? 'Tiendas en línea y chatbots' : 'Online stores and chatbots'}</span>
+					<span class="jx-soft">{es ? 'que venden y que tu equipo puede manejar.' : 'that sell, and that your team can run.'}</span>
+				</h1>
+				<p class="jx-hero__lede">
+					{es
+						? 'Dirijo las ventas en línea de WU Nutrition y Come Verde. Para otros negocios hago tiendas en Shopify, chatbots que contestan en tu sitio o en WhatsApp con la información real de tu negocio, y herramientas con IA. Te lo dejo listo para que tu equipo lo use sin depender de mí ni de una agencia.'
+						: 'I lead online sales at WU Nutrition and Come Verde. For other businesses I build Shopify stores, chatbots that answer on your site or on WhatsApp with your real business information, and AI tools. I hand it over ready for your team to use without depending on me or an agency.'}
+				</p>
+				<div class="jx-actions">
+					<a class="jx-btn jx-btn--primary" href={routes[locale].work}>{es ? 'Ver mis proyectos' : 'See my projects'}<Icon name="arrow-right" /></a>
+					<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}chatbots/`}>{es ? 'Chatbots con IA' : 'AI chatbots'}</a>
+				</div>
+			</section>
+			{AUDIT_ENABLED && (
+				<section class="jx-hero jx-slide" data-slide="1" aria-labelledby="jx-hero-audit-title" aria-roledescription={es ? 'diapositiva' : 'slide'} aria-hidden="true" inert>
+					<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Auditoría express · gratis' : 'Express audit · free'}</p>
+					<h2 id="jx-hero-audit-title" class="jx-hero__title">
+						<span>{es ? '¿Tu sitio pierde ventas?' : 'Is your site losing sales?'}</span>
+						<span class="jx-soft">{es ? 'Revísalo gratis en 2 minutos.' : 'Check it for free in 2 minutes.'}</span>
+					</h2>
+					<p class="jx-hero__lede">
+						{es
+							? 'Mi asistente Jossue AI revisa la página principal de tu sitio como la ve un cliente desde su celular. Te da un puntaje de salud y las 3 cosas que más te conviene corregir, en un reporte que puedes descargar. Es gratis y se hace aquí en el chat.'
+							: 'My assistant Jossue AI reviews your site’s home page the way a customer sees it on their phone. You get a health score and the 3 things most worth fixing, in a report you can download. It is free and happens right here in the chat.'}
+					</p>
+					<div class="jx-actions">
+						<button class="jx-btn jx-btn--primary" type="button" data-ai-audit data-analytics-event="click_hero_audit">{es ? 'Revisar mi sitio gratis' : 'Check my site for free'}<Icon name="arrow-right" /></button>
+						<a class="jx-btn jx-btn--ghost" href={`${routes[locale].booking}?origen=inicio`} data-analytics-event="click_hero_booking">{es ? 'Agendar una llamada de 10 min' : 'Book a 10-min call'}</a>
+					</div>
+				</section>
+			)}
+			<section class="jx-hero jx-slide jx-slide--madre" data-slide={madreSlide} aria-labelledby="jx-hero-madre-title" aria-roledescription={es ? 'diapositiva' : 'slide'} aria-hidden="true" inert>
+				<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'MADRE · gratis y de código abierto' : 'MADRE · free and open source'}</p>
+				<h2 id="jx-hero-madre-title" class="jx-hero__title">
+					<span>{es ? 'Programa con MADRE.' : 'Code with MADRE.'}</span>
+					<span class="jx-soft">{es ? 'Tus IAs ya hablan entre sí.' : 'Your AIs finally talk to each other.'}</span>
+				</h2>
+				<p class="jx-hero__lede">
+					{es
+						? 'Codex, Claude Code, Gemini CLI y OpenCode en la misma conversación, con la memoria de tu proyecto. Ya no les pasas el contexto a mano. Corre gratis en tu computadora, en macOS y Linux, y Windows viene en camino.'
+						: 'Codex, Claude Code, Gemini CLI and OpenCode in the same conversation, with your project’s memory. No more passing context around by hand. It runs free on your computer, on macOS and Linux, and Windows is on the way.'}
+				</p>
+				<div class="jx-actions">
+					<a class="jx-btn jx-btn--primary" href={`${madreFacts.site}${es ? '' : 'en/'}#instalar`} rel="noopener" data-analytics-event="click_hero_madre_install">{es ? 'Instalar MADRE gratis' : 'Install MADRE for free'}<Icon name="arrow-up-right" /></a>
+					<button class="jx-btn jx-btn--ghost" type="button" data-campaign-open data-analytics-event="click_hero_madre_video"><Icon name="play" />{es ? 'Ver el video · 40 s' : 'Watch the video · 40 s'}</button>
+				</div>
+			</section>
 		</div>
-		<dl class="jx-facts">
-			{facts.map(([value, text]) => (
-				<div><dt>{value}</dt><dd>{text}</dd></div>
-			))}
-		</dl>
-		<div class="jx-hero__brands" data-home="brands">
-			<p class="jx-mono">{es ? 'Marcas con las que he trabajado' : 'Brands I have worked with'}</p>
-			<BrandLogos locale={locale} variant="marquee" />
+		{(
+			<div class="jx-slides__nav" role="group" aria-label={es ? 'Elegir diapositiva' : 'Choose slide'}>
+				<button type="button" class="jx-slides__dot" data-slide-dot="0" aria-current="true" aria-label={es ? 'Tiendas en línea y chatbots' : 'Online stores and chatbots'}></button>
+				{AUDIT_ENABLED && <button type="button" class="jx-slides__dot" data-slide-dot="1" aria-current="false" aria-label={es ? 'Auditoría express' : 'Express audit'}></button>}
+				<button type="button" class="jx-slides__dot" data-slide-dot={madreSlide} aria-current="false" aria-label={es ? 'Programa con MADRE' : 'Code with MADRE'}></button>
+				<button type="button" class="jx-slides__pause" data-slide-pause aria-pressed="false" aria-label={es ? 'Pausar el cambio automático' : 'Pause autoplay'} data-label-pause={es ? 'Pausar el cambio automático' : 'Pause autoplay'} data-label-play={es ? 'Reanudar el cambio automático' : 'Resume autoplay'}>
+					<svg class="jx-slides__icon-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5v9M11 3.5v9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+					<svg class="jx-slides__icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.5 12.5 8 5 12.5Z" fill="currentColor" /></svg>
+				</button>
+			</div>
+		)}
 		</div>
-	</section>
+		<div class="jx-hero jx-hero--foot">
+			<dl class="jx-facts">
+				{facts.map(([value, text]) => (
+					<div><dt>{value}</dt><dd>{text}</dd></div>
+				))}
+			</dl>
+			<div class="jx-hero__brands" data-home="brands">
+				<p class="jx-mono">{es ? 'Marcas con las que he trabajado' : 'Brands I have worked with'}</p>
+				<BrandLogos locale={locale} variant="marquee" />
+			</div>
+		</div>
 	</div>
+
+	<dialog class="jx-campaign" data-campaign-dialog aria-label={es ? 'Video: Programa con MADRE' : 'Video: Code with MADRE'}>
+		<button class="jx-campaign__close" type="button" data-campaign-close aria-label={es ? 'Cerrar el video' : 'Close the video'}>×</button>
+		<video controls playsinline preload="none" poster={`${campaign}-poster.jpg`} data-campaign-video>
+			<source src={`${campaign}-mobile.webm`} type="video/webm" media="(max-width: 40em)" />
+			<source src={`${campaign}-mobile.mp4`} type="video/mp4" media="(max-width: 40em)" />
+			<source src={`${campaign}.webm`} type="video/webm" />
+			<source src={`${campaign}.mp4`} type="video/mp4" />
+		</video>
+		<p class="jx-campaign__note">{es ? 'Con música. Las pantallas son de MADRE 0.6.0 real; las escenas de vida son de Pexels.' : 'With music. The screens are from the real MADRE 0.6.0; the lifestyle shots are from Pexels.'}</p>
+	</dialog>
 
 	<AiDevSpotlight locale={locale} />
 
 	<section id="madre" class="jx-star" data-home="madre" aria-labelledby="jx-madre-title">
 		<div class="jx-wrap">
-			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Producto estrella · Gratis' : 'Flagship product · Free'}</p>
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Mi producto principal · Gratis' : 'My main product · Free'}</p>
 			<h2 class="jx-wordmark" data-home="madre-wordmark" aria-label="MADRE">
 				<svg class="jx-pulse" viewBox="0 0 48 16" aria-hidden="true" focusable="false"><path d="M1 8h10l3-6 5 12 4-9 2 3h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round" /><circle cx="43.5" cy="8" r="2.6" fill="currentColor" /></svg>
 				<span aria-hidden="true">MADRE</span>
 			</h2>
 			<p id="jx-madre-title" class="jx-star__title">
-				<span>{es ? 'Tus agentes de código,' : 'Your coding agents,'}</span>
-				<span class="jx-soft">{es ? 'en la misma sala.' : 'in the same room.'}</span>
+				<span>{es ? 'Tus IAs ya hablan entre sí' : 'Your AIs finally talk to each other'}</span>
+				<span class="jx-soft">{es ? 'y todas recuerdan tu proyecto.' : 'and all of them remember your project.'}</span>
 			</p>
 			<p class="jx-star__lede">{madre.summary[locale]}</p>
 
@@ -156,7 +223,7 @@ const method = es
 
 	<section id="destacados" class="jx-featured" data-home="featured" aria-labelledby="jx-featured-title">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Productos destacados' : 'Featured products'}</p>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Otros productos míos' : 'More of my products'}</p>
 			<h2 id="jx-featured-title" class="jx-h2"><span>{es ? 'También construí' : 'I also built'}</span> <span class="jx-soft">{es ? 'AHP+, Bloqio Builder, Daniela y Miawseo.' : 'AHP+, Bloqio Builder, Daniela and Miawseo.'}</span></h2>
 			<div class="jx-featured__grid">
 				{alsoFeatured.map((product) => {
@@ -183,8 +250,8 @@ const method = es
 
 	<section id="showcase" class="jx-showcase" data-home="showcase" aria-labelledby="jx-showcase-title">
 		<div class="jx-wrap">
-			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>Showcase</p>
-			<h2 id="jx-showcase-title" class="jx-h2"><span>{es ? 'Mira a MADRE trabajando.' : 'Watch MADRE at work.'}</span> <span class="jx-soft">{es ? 'Grabado en una instalación real.' : 'Recorded on a real install.'}</span></h2>
+			<p class="jx-label jx-label--madre"><span class="jx-dot" aria-hidden="true"></span>Videos</p>
+			<h2 id="jx-showcase-title" class="jx-h2"><span>{es ? 'Mira a MADRE trabajando.' : 'Watch MADRE at work.'}</span> <span class="jx-soft">{es ? 'Grabado en una computadora con MADRE instalada.' : 'Recorded on a computer with MADRE installed.'}</span></h2>
 			<div class="jx-showcase__grid">
 				{showcase.map((item) => (
 					<article class:list={['jx-clip', `jx-clip--${item.key}`]}>
@@ -209,7 +276,7 @@ const method = es
 			<div class="jx-head">
 				<div>
 					<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Servicios y otros productos' : 'Services and other products'}</p>
-					<h2 id="jx-products-title" class="jx-h2"><span>{es ? 'También hago tiendas, sitios' : 'I also make stores, websites'}</span> <span class="jx-soft">{es ? 'y herramientas a la medida.' : 'and tools built to fit.'}</span></h2>
+					<h2 id="jx-products-title" class="jx-h2"><span>{es ? 'También hago tiendas en línea, páginas web' : 'I also make online stores, websites'}</span> <span class="jx-soft">{es ? 'y herramientas para tu negocio.' : 'and tools for your business.'}</span></h2>
 				</div>
 				<a class="jx-link" href={routes[locale].products}>{es ? 'Ver todos' : 'See all'}<Icon name="arrow-right" /></a>
 			</div>
@@ -277,8 +344,8 @@ const method = es
 
 	<section class="jx-close" data-home="close" aria-labelledby="jx-close-title">
 		<div class="jx-close__card">
-			<h2 id="jx-close-title" class="jx-close__title"><span>{es ? '¿Tu ecommerce podría vender más?' : 'Could your ecommerce sell more?'}</span> <span class="jx-soft">{es ? 'Te digo por dónde empezar.' : 'I will tell you where to start.'}</span></h2>
-			<p>{es ? 'Cuéntame qué vendes y dónde se atora. En menos de un día hábil te respondo con lo primero que haría: una tienda, un chatbot o un ajuste que no cuesta construir.' : 'Tell me what you sell and where it gets stuck. Within one business day I reply with the first thing I would do: a store, a chatbot or a fix that costs nothing to build.'}</p>
+			<h2 id="jx-close-title" class="jx-close__title"><span>{es ? '¿Tu negocio podría vender más en línea?' : 'Could your business sell more online?'}</span> <span class="jx-soft">{es ? 'Te digo por dónde empezaría.' : 'I will tell you where I would start.'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes y en qué parte se te van los clientes. En menos de un día hábil te contesto con lo primero que yo haría. A veces es una tienda nueva o un chatbot, y a veces es un cambio pequeño que no cuesta nada construir.' : 'Tell me what you sell and where customers drop off. Within one business day I reply with the first thing I would do. Sometimes that is a new store or a chatbot, and sometimes it is a small change that costs nothing to build.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={routes[locale].contact} data-analytics-event="click_contact">{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 				<a class="jx-btn jx-btn--ghost" href={routes[locale].about}>{es ? 'Mi trayectoria' : 'My track record'}</a>
@@ -301,4 +368,104 @@ const method = es
 			}
 		});
 	});
+</script>
+
+<script>
+	// Slider del héroe: dos diapositivas (ecommerce e IA, auditoría express) que se turnan solas cada
+	// 9 s, en bucle. Se detiene con el botón de pausa (WCAG 2.2.2), al navegar con teclado dentro, en una
+	// pestaña oculta y con «reducir movimiento». En el teléfono también se desliza con el dedo.
+	const root = document.querySelector<HTMLElement>('[data-hero-slides]');
+	const slides = root ? [...root.querySelectorAll<HTMLElement>('[data-slide]')] : [];
+	if (root && slides.length > 1) {
+		const backgrounds = [...root.querySelectorAll<HTMLElement>('[data-slide-bg]')];
+		const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-slide-dot]')];
+		const pause = root.querySelector<HTMLButtonElement>('[data-slide-pause]');
+		const EVERY = 9000;
+		let index = 0;
+		let timer = 0;
+		let stopped = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		let hold = false;
+		root.style.setProperty('--slide-ms', `${EVERY}ms`);
+
+		const schedule = () => {
+			window.clearTimeout(timer);
+			const running = !stopped && !hold && !document.hidden;
+			root.classList.toggle('is-paused', !running);
+			// Reinicia la barra de progreso del punto activo.
+			root.classList.remove('is-running');
+			void root.offsetWidth;
+			if (running) {
+				root.classList.add('is-running');
+				timer = window.setTimeout(() => show(index + 1), EVERY);
+			}
+		};
+		const show = (next: number) => {
+			index = (next + slides.length) % slides.length;
+			slides.forEach((slide, i) => {
+				const on = i === index;
+				slide.classList.toggle('is-active', on);
+				slide.toggleAttribute('inert', !on);
+				slide.setAttribute('aria-hidden', String(!on));
+			});
+			backgrounds.forEach((bg, i) => bg.classList.toggle('is-active', i === index));
+			dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+			document.dispatchEvent(new CustomEvent('jx-loops-refresh'));
+			schedule();
+		};
+
+		dots.forEach((dot, i) => dot.addEventListener('click', () => show(i)));
+		pause?.addEventListener('click', () => {
+			stopped = !stopped;
+			pause.setAttribute('aria-pressed', String(stopped));
+			pause.setAttribute('aria-label', (stopped ? pause.dataset.labelPlay : pause.dataset.labelPause) ?? '');
+			schedule();
+		});
+		const track = root.querySelector<HTMLElement>('.jx-slides__track');
+		// Solo el teclado detiene el cambio: el cursor casi siempre está sobre un héroe así de grande.
+		root.addEventListener('focusin', (event) => {
+			if (!(event.target as HTMLElement).matches(':focus-visible')) return;
+			hold = true;
+			schedule();
+		});
+		root.addEventListener('focusout', (event) => {
+			if (root.contains(event.relatedTarget as Node | null) && (event.relatedTarget as HTMLElement).matches(':focus-visible')) return;
+			hold = false;
+			schedule();
+		});
+		document.addEventListener('visibilitychange', schedule);
+		let startX: number | null = null;
+		track?.addEventListener('pointerdown', (event) => {
+			if (event.pointerType !== 'mouse') startX = event.clientX;
+		});
+		track?.addEventListener('pointerup', (event) => {
+			if (startX === null) return;
+			const dx = event.clientX - startX;
+			startX = null;
+			if (Math.abs(dx) > 50) show(index + (dx < 0 ? 1 : -1));
+		});
+		schedule();
+	}
+</script>
+
+<script>
+	// Video de campaña de MADRE en una ventana: se descarga solo al abrirla y se pausa al cerrarla.
+	const dialog = document.querySelector<HTMLDialogElement>('[data-campaign-dialog]');
+	const video = dialog?.querySelector<HTMLVideoElement>('[data-campaign-video]');
+	if (dialog && video) {
+		document.querySelectorAll<HTMLElement>('[data-campaign-open]').forEach((button) =>
+			button.addEventListener('click', () => {
+				dialog.showModal();
+				video.play().catch(() => {});
+			}),
+		);
+		const shut = () => {
+			video.pause();
+			dialog.close();
+		};
+		dialog.querySelector('[data-campaign-close]')?.addEventListener('click', shut);
+		dialog.addEventListener('click', (event) => {
+			if (event.target === dialog) shut();
+		});
+		dialog.addEventListener('close', () => video.pause()); // también con Esc
+	}
 </script>

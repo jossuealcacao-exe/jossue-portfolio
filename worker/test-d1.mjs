@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
-export function d1(files = ['0001_contact_submissions.sql', '0002_jossue_ai.sql', '0003_whatsapp.sql', '0004_ai_guard.sql', '0005_ai_audits.sql']) {
+export function d1(files = ['0001_contact_submissions.sql', '0002_jossue_ai.sql', '0003_whatsapp.sql', '0004_ai_guard.sql', '0005_ai_audits.sql', '0006_bookings.sql']) {
 	const db = new DatabaseSync(':memory:');
 	for (const file of files) db.exec(readFileSync(new URL(`../migrations/${file}`, import.meta.url), 'utf8'));
 	const statement = (sql) => {

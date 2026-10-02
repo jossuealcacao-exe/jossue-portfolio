@@ -15,35 +15,35 @@ const copy = es
 			namePh: 'Cómo te llamas',
 			email: 'Correo',
 			emailPh: 'tucorreo@empresa.com',
-			organization: 'Empresa o marca',
+			organization: 'Nombre de tu negocio',
 			organizationPh: 'Opcional',
 			siteUrl: 'Sitio web',
 			siteUrlPh: 'Opcional · https://tutienda.com',
 			project: '¿Qué necesitas?',
 			options: [
-				'Chatbot con IA para mi negocio',
+				'Un asistente con IA que conteste a mis clientes',
 				'Consultoría o diagnóstico',
-				'Tienda Shopify o desarrollo web',
-				'Mejorar conversión (UX/CRO)',
-				'Producto digital a la medida',
-				'IA y automatización',
+				'Una tienda en Shopify o una página web',
+				'Que mi tienda venda más (conversión)',
+				'Una herramienta o app hecha a la medida',
+				'Automatizar tareas con IA',
 				'Otra cosa',
 			],
 			budget: 'Presupuesto aproximado',
 			budgetOptions: [
-				'Aún no lo defino',
+				'Todavía no lo sé',
 				'Menos de $20,000 MXN',
 				'$20,000 – $50,000 MXN',
 				'$50,000 – $120,000 MXN',
 				'$120,000 – $300,000 MXN',
 				'$300,000 – $600,000 MXN',
 				'Más de $600,000 MXN',
-				'Retainer mensual · equipo dedicado',
+				'Pago mensual por trabajo continuo',
 			],
-			message: 'Cuéntame el contexto',
-			messagePh: 'Qué vendes, qué está pasando hoy y qué te gustaría lograr.',
-			consent: 'Acepto que uses estos datos únicamente para responder a esta solicitud.',
-			send: 'Enviar solicitud',
+			message: 'Cuéntame de tu negocio',
+			messagePh: 'Qué vendes y qué te está pasando. Por ejemplo: «Vendo por Instagram y WhatsApp, y mi página casi no genera pedidos».',
+			consent: 'Acepto que uses estos datos solo para responderme.',
+			send: 'Enviar mensaje',
 			sending: 'Enviando…',
 			required: 'Obligatorio',
 			errName: 'Escribe tu nombre.',
@@ -51,13 +51,13 @@ const copy = es
 			errProject: 'Elige una opción.',
 			errMessage: 'Cuéntame un poco más (mínimo 20 caracteres).',
 			errConsent: 'Necesito tu autorización para responderte.',
-			errThrottle: 'Acabas de enviar una solicitud. Espera un minuto.',
-			errNetwork: 'No se pudo enviar. Tus datos siguen aquí: intenta de nuevo o escríbeme directo.',
-			okTitle: 'Solicitud enviada.',
-			okText: 'Te respondo por correo en menos de 24 horas hábiles con preguntas concretas y un siguiente paso.',
-			mailTitle: 'Abrí tu correo con todo listo.',
+			errThrottle: 'Acabas de enviarme un mensaje. Espera un minuto para mandar otro.',
+			errNetwork: 'No se pudo enviar. Lo que escribiste sigue aquí; inténtalo otra vez o escríbeme directo al correo.',
+			okTitle: 'Recibí tu mensaje.',
+			okText: 'Te contesto por correo en menos de 24 horas hábiles. Si me falta algún dato te lo pregunto, y te propongo por dónde empezar.',
+			mailTitle: 'Se abrió tu correo con el mensaje listo.',
 			mailText: 'Solo dale enviar en tu aplicación de correo. Si no se abrió, escríbeme a',
-			again: 'Enviar otra solicitud',
+			again: 'Enviar otro mensaje',
 			counter: 'caracteres',
 		}
 	: {
@@ -65,35 +65,35 @@ const copy = es
 			namePh: 'Your name',
 			email: 'Email',
 			emailPh: 'you@company.com',
-			organization: 'Company or brand',
+			organization: 'Business name',
 			organizationPh: 'Optional',
 			siteUrl: 'Website',
 			siteUrlPh: 'Optional · https://yourstore.com',
 			project: 'What do you need?',
 			options: [
-				'AI chatbot for my business',
+				'An AI assistant that answers my customers',
 				'Consulting or diagnosis',
-				'Shopify store or web development',
-				'Improve conversion (UX/CRO)',
-				'Custom digital product',
-				'AI and automation',
+				'A Shopify store or a website',
+				'Get my store to sell more (conversion)',
+				'A custom-built tool or app',
+				'Automate tasks with AI',
 				'Something else',
 			],
 			budget: 'Approximate budget',
 			budgetOptions: [
-				'Not defined yet',
+				'I do not know yet',
 				'Under US$1,000',
 				'US$1,000 – US$2,500',
 				'US$2,500 – US$6,000',
 				'US$6,000 – US$15,000',
 				'US$15,000 – US$30,000',
 				'Over US$30,000',
-				'Monthly retainer · dedicated team',
+				'Monthly fee for ongoing work',
 			],
-			message: 'Tell me the context',
-			messagePh: 'What you sell, what is happening today, and what you want to achieve.',
-			consent: 'I agree that this data is used only to answer this request.',
-			send: 'Send request',
+			message: 'Tell me about your business',
+			messagePh: 'What you sell and what is going on. For example: “I sell on Instagram and WhatsApp, and my website barely gets any orders.”',
+			consent: 'I agree that you use this data only to reply to me.',
+			send: 'Send message',
 			sending: 'Sending…',
 			required: 'Required',
 			errName: 'Please write your name.',
@@ -101,13 +101,13 @@ const copy = es
 			errProject: 'Pick one option.',
 			errMessage: 'Tell me a bit more (20 characters minimum).',
 			errConsent: 'I need your permission to reply.',
-			errThrottle: 'You just sent a request. Please wait a minute.',
-			errNetwork: 'Could not send. Your data is still here: try again or email me directly.',
-			okTitle: 'Request sent.',
-			okText: 'I reply by email within 24 business hours with concrete questions and a next step.',
-			mailTitle: 'Your email app is open with everything ready.',
+			errThrottle: 'You just sent me a message. Please wait a minute before sending another.',
+			errNetwork: 'Could not send. What you wrote is still here; try again or email me directly.',
+			okTitle: 'I got your message.',
+			okText: 'I reply by email within 24 business hours. If something is missing I will ask, and I will suggest where to start.',
+			mailTitle: 'Your email app opened with the message ready.',
 			mailText: 'Just hit send in your mail app. If it did not open, write to',
-			again: 'Send another request',
+			again: 'Send another message',
 			counter: 'characters',
 		};
 ---
@@ -192,7 +192,7 @@ const copy = es
 </div>
 
 <script>
-	import { track } from '../scripts/analytics';
+	import { track, trackLead } from '../scripts/analytics';
 
 	const root = document.querySelector<HTMLElement>('[data-contact-form]');
 	const form = root?.querySelector<HTMLFormElement>('form');
@@ -216,15 +216,15 @@ const copy = es
 		const message = form.querySelector<HTMLTextAreaElement>('#cf-message');
 		const copy = {
 			sending: es ? 'Enviando…' : 'Sending…',
-			throttle: es ? 'Acabas de enviar una solicitud. Espera un minuto.' : 'You just sent a request. Please wait a minute.',
+			throttle: es ? 'Acabas de enviarme un mensaje. Espera un minuto para mandar otro.' : 'You just sent me a message. Please wait a minute before sending another.',
 			network: es
-				? 'No se pudo enviar. Tus datos siguen aquí: intenta de nuevo o escríbeme directo.'
-				: 'Could not send. Your data is still here: try again or email me directly.',
-			okTitle: es ? 'Solicitud enviada.' : 'Request sent.',
+				? 'No se pudo enviar. Lo que escribiste sigue aquí; inténtalo otra vez o escríbeme directo al correo.'
+				: 'Could not send. What you wrote is still here; try again or email me directly.',
+			okTitle: es ? 'Recibí tu mensaje.' : 'I got your message.',
 			okText: es
-				? 'Te respondo por correo en menos de 24 horas hábiles con preguntas concretas y un siguiente paso.'
-				: 'I reply by email within 24 business hours with concrete questions and a next step.',
-			mailTitle: es ? 'Abrí tu correo con todo listo.' : 'Your email app is open with everything ready.',
+				? 'Te contesto por correo en menos de 24 horas hábiles. Si me falta algún dato te lo pregunto, y te propongo por dónde empezar.'
+				: 'I reply by email within 24 business hours. If something is missing I will ask, and I will suggest where to start.',
+			mailTitle: es ? 'Se abrió tu correo con el mensaje listo.' : 'Your email app opened with the message ready.',
 			mailText: es
 				? `Solo dale enviar en tu aplicación de correo. Si no se abrió, escríbeme a ${mailto}.`
 				: `Just hit send in your mail app. If it did not open, write to ${mailto}.`,
@@ -358,6 +358,7 @@ const copy = es
 				if (!response.ok) throw new Error(`Contact endpoint responded ${response.status}`);
 				localStorage.setItem('contact-last-submission', String(Date.now()));
 				track({ event: 'submit_contact_form', path: window.location.pathname });
+				trackLead('contact_form');
 				form.reset();
 				if (counter) counter.textContent = '0';
 				showSuccess(copy.okTitle, copy.okText);

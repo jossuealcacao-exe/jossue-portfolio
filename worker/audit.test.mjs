@@ -130,7 +130,7 @@ test('the full path: request, progress, the 3 areas, the report link and one ema
 		assert.equal(done.report_url, `${APEX}/informe/tienda/abc123`);
 		assert.equal(done.pdf_url, `${APEX}/informe/tienda/abc123.pdf`);
 		assert.equal(env.emails.length, 1);
-		assert.match(env.emails[0].subject, /Auditoría express · Ana López · tienda\.mx · 62\/100/);
+		assert.match(env.emails[0].subject, /^Auditoría · Ana López · tienda\.mx · 62\/100$/);
 		assert.equal(env.emails[0].replyTo.email, 'ana@tienda.mx');
 		assert.match(env.emails[0].text, /La portada tarda 4\.1 s/);
 		assert.match(env.emails[0].text, /Informe: https:\/\/apex\.jossuealcala\.com\/informe\/tienda\/abc123/);
@@ -220,7 +220,7 @@ test('if APEX refuses or takes too long, the visitor is told and Jossué gets th
 		assert.equal(failed.status, 'failed');
 		assert.match(failed.error, /Jossué ya tiene tus datos/);
 		assert.equal(env.emails.length, 1);
-		assert.match(env.emails[0].subject, /Auditoría express · Ana López · tienda\.mx$/);
+		assert.match(env.emails[0].subject, /^Auditoría · Ana López · tienda\.mx · sin terminar$/);
 	} finally {
 		down.restore();
 	}
@@ -235,6 +235,18 @@ test('if APEX refuses or takes too long, the visitor is told and Jossué gets th
 		assert.equal(env.emails.length, 1);
 	} finally {
 		slow.restore();
+	}
+});
+
+test('an email that does not go out is not recorded as sent', async () => {
+	const down = mockApex({ create: () => ({ status: 503, body: { error: { code: 'unavailable' } } }) });
+	try {
+		const env = environment({ CONTACT_EMAIL: { send: async () => { throw new Error('destination address not verified'); } } });
+		const failed = await (await create(env)).json();
+		assert.equal(failed.status, 'failed', 'the visitor still gets an answer');
+		assert.equal(env.DB.raw.prepare('SELECT notified_at FROM ai_audits').get().notified_at, null);
+	} finally {
+		down.restore();
 	}
 });
 

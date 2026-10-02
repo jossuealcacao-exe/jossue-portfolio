@@ -6,6 +6,8 @@ import HeroLoop from './HeroLoop.astro';
 
 interface Props {
 	loop?: string;
+	/** Cómo elige el loop su versión vertical u horizontal (ver HeroLoop). */
+	loopFit?: 'width' | 'aspect';
 	label?: string;
 	title: [string, string?];
 	/** Texto que solo leen los lectores de pantalla entre las dos partes del titular (por ejemplo « — »). */
@@ -15,11 +17,11 @@ interface Props {
 	class?: string;
 }
 
-const { loop, label, title, joiner, lede, id = 'page-hero-title', class: className } = Astro.props;
+const { loop, loopFit, label, title, joiner, lede, id = 'page-hero-title', class: className } = Astro.props;
 ---
 
 <section class:list={['jx-page-hero', className]} data-hero={loop} aria-labelledby={id}>
-	{loop && <HeroLoop name={loop} />}
+	{loop && <HeroLoop name={loop} fit={loopFit} />}
 	<div class="jx-hero">
 		<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{Astro.slots.has('label') ? <slot name="label" /> : label}</p>
 		<h1 id={id} class="jx-hero__title"><span>{title[0]}</span>{joiner && title[1] && <span class="sr-only">{joiner}</span>}{title[1] && <span class="jx-soft">{title[1]}</span>}</h1>

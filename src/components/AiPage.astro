@@ -18,34 +18,34 @@ const heroDemo = {
 	wide: '/videos/ia/ia-hero',
 	tall: '/videos/ia/ia-hero-tall',
 	alt: es ? 'Animación abstracta: tarjetas de trabajo que se procesan en una constelación y terminan en una aprobación con palomita.' : 'Abstract animation: work cards processed through a constellation, ending in an approval check mark.',
-	label: es ? 'Tu tarea, resuelta y aprobada' : 'Your task, handled and approved',
+	label: es ? 'Una tarea resuelta y revisada por una persona' : 'A task handled and checked by a person',
 };
 type Use = { icon: IconName; title: string; text: string; proof?: { label: string; href: string } };
 const uses: Use[] = es
 	? [
-			{ icon: 'chat', title: 'En tu tienda', text: 'Un asistente que atiende a tus clientes con tu catálogo y tus pedidos reales: recomienda, arma el carrito y consulta envíos a cualquier hora.', proof: { label: 'Así trabaja Daniela', href: `${routes.es.products}chatbots/` } },
-			{ icon: 'layers', title: 'Para tu equipo', text: 'Asistentes conectados a Shopify, Odoo, el CRM y la publicidad que contestan en segundos lo que hoy toma media hora en cinco pestañas.', proof: { label: 'Cómo lo implemento', href: `${routes.es.products}ia-aplicada/` } },
-			{ icon: 'sparkles-ai', title: 'Para decidir', text: 'Junta los números que viven regados en varias herramientas y te dice qué mirar primero esta semana, con la fuente de cada dato.' },
-			{ icon: 'terminal', title: 'Para programar', text: 'Uso agentes de código con un proceso encima: se define el alcance, se revisa lo que hicieron y queda documentado.', proof: { label: 'Lo hago con MADRE', href: routes.es.madre } },
+			{ icon: 'chat', title: 'En tu tienda', text: 'Un asistente que contesta a tus clientes con tu catálogo y tus pedidos reales. Recomienda productos, arma el carrito y revisa envíos a cualquier hora.', proof: { label: 'Así trabaja Daniela', href: `${routes.es.products}chatbots/` } },
+			{ icon: 'layers', title: 'Para tu equipo', text: 'Asistentes conectados a Shopify, Odoo, tu lista de clientes (CRM) y tus anuncios. Contestan en segundos lo que hoy te toma media hora buscando en cinco pestañas.', proof: { label: 'Cómo lo hago en tu negocio', href: `${routes.es.products}ia-aplicada/` } },
+			{ icon: 'sparkles-ai', title: 'Para decidir', text: 'Junta los números que tienes regados en varias herramientas y te dice qué revisar primero esta semana, y de dónde salió cada dato.' },
+			{ icon: 'terminal', title: 'Para programar', text: 'Uso asistentes que escriben código por su cuenta (agentes de código), pero con reglas. Primero defino qué deben hacer, después reviso lo que hicieron y todo queda documentado.', proof: { label: 'Lo hago con MADRE', href: routes.es.madre } },
 		]
 	: [
-			{ icon: 'chat', title: 'In your store', text: 'An assistant that serves your customers with your real catalog and orders: it recommends, builds the cart and checks shipping at any hour.', proof: { label: 'How Daniela works', href: `${routes.en.products}chatbots/` } },
-			{ icon: 'layers', title: 'For your team', text: 'Assistants wired into Shopify, Odoo, the CRM and advertising that answer in seconds what today takes half an hour across five tabs.', proof: { label: 'How I implement it', href: `${routes.en.products}ia-aplicada/` } },
-			{ icon: 'sparkles-ai', title: 'To decide', text: 'It gathers the numbers scattered across several tools and tells you what to look at first this week, with the source of each figure.' },
-			{ icon: 'terminal', title: 'To build software', text: 'I use coding agents with a process around them: scope is defined, their work is reviewed and it gets documented.', proof: { label: 'I do it with MADRE', href: routes.en.madre } },
+			{ icon: 'chat', title: 'In your store', text: 'An assistant that answers your customers with your real catalog and orders. It recommends products, builds the cart and checks shipping at any hour.', proof: { label: 'How Daniela works', href: `${routes.en.products}chatbots/` } },
+			{ icon: 'layers', title: 'For your team', text: 'Assistants connected to Shopify, Odoo, your customer list (CRM) and your ads. They answer in seconds what today takes you half an hour searching across five tabs.', proof: { label: 'How I do it in your business', href: `${routes.en.products}ia-aplicada/` } },
+			{ icon: 'sparkles-ai', title: 'To decide', text: 'It gathers the numbers you have scattered across several tools and tells you what to check first this week, and where each figure came from.' },
+			{ icon: 'terminal', title: 'To build software', text: 'I use assistants that write code on their own (coding agents), but with rules. First I define what they should do, then I review what they did and everything gets documented.', proof: { label: 'I do it with MADRE', href: routes.en.madre } },
 		];
 const rules = es
 	? [
-			['01', 'Empieza por algo que duele', 'Una tarea que alguien hace a mano todos los días y odia hacer, o una venta que se pierde por no contestar a tiempo.'],
-			['02', 'Usa tus datos reales', 'Tu catálogo, tus pedidos, tu CRM. Si no los conoce, inventa, y una IA que inventa se abandona en una semana.'],
-			['03', 'Se entiende y se deshace', 'Cada acción queda registrada y se puede revertir. Nada pasa a tus espaldas.'],
-			['04', 'Lo importante lo decides tú', 'Respeta quién puede ver qué. Lo delicado lo sigue decidiendo una persona de tu equipo.'],
+			['01', 'Empiezo por lo que más te pesa', 'Una tarea que alguien hace a mano todos los días y odia hacer, o una venta que se pierde por no contestar a tiempo.'],
+			['02', 'Trabaja con tu información real', 'Tu catálogo, tus pedidos, tu lista de clientes. Si la IA no los conoce, se inventa las respuestas, y una IA que inventa se deja de usar en una semana.'],
+			['03', 'Todo se puede revisar y deshacer', 'Cada cosa que hace queda registrada y se puede revertir. No pasa nada sin que te enteres.'],
+			['04', 'Lo importante lo decides tú', 'Cada persona ve solo lo que le toca ver. Las decisiones delicadas las sigue tomando alguien de tu equipo.'],
 		]
 	: [
-			['01', 'Start with what hurts', 'A task somebody does by hand every day and hates, or a sale lost because nobody answered in time.'],
-			['02', 'Use your real data', 'Your catalog, your orders, your CRM. If it does not know them it makes things up, and AI that makes things up is abandoned within a week.'],
-			['03', 'Understandable and undoable', 'Every action is logged and can be reverted. Nothing happens behind your back.'],
-			['04', 'You make the calls that matter', 'It respects who can see what. Sensitive decisions stay with a person on your team.'],
+			['01', 'I start with what weighs on you most', 'A task somebody does by hand every day and hates, or a sale lost because nobody answered in time.'],
+			['02', 'It works with your real information', 'Your catalog, your orders, your customer list. If the AI does not know them it makes up answers, and AI that makes things up stops being used within a week.'],
+			['03', 'Everything can be checked and undone', 'Everything it does is logged and can be reverted. Nothing happens without you knowing.'],
+			['04', 'You make the calls that matter', 'Each person sees only what they should see. Sensitive decisions are still made by someone on your team.'],
 		];
 ---
 
@@ -53,22 +53,22 @@ const rules = es
 	<PageHero
 		loop="ai"
 		id="ai-hero-title"
-		label={es ? 'IA aplicada · AI Dev' : 'Applied AI · AI Dev'}
+		label={es ? 'IA aplicada · Cómo la uso en negocios' : 'Applied AI · How I use it in business'}
 		title={es ? ['IA que tu equipo sigue usando', 'después de la primera semana.'] : ['AI your team keeps using', 'after the first week.']}
 		lede={es
-			? 'Casi toda la IA que se instala en las empresas termina abandonada: no conoce los datos reales, no tiene permisos claros y nadie sabe qué hizo. Yo la construyo al revés: conectada a tus sistemas, con límites y con registro de todo.'
-			: 'Most AI installed at companies ends up abandoned: it does not know the real data, its permissions are unclear and nobody can tell what it did. I build it the other way around: wired into your systems, with limits and a log of everything.'}
+			? 'Mucha de la IA que se instala en los negocios se deja de usar pronto, porque no conoce la información real, nadie tiene claro qué puede hacer y nadie sabe qué hizo. Yo la conecto a los sistemas que ya usas, le pongo límites y dejo registro de cada cosa que hace.'
+			: 'A lot of the AI installed in businesses stops being used soon, because it does not know the real information, nobody is clear on what it can do and nobody knows what it did. I connect it to the systems you already use, give it limits and keep a log of everything it does.'}
 	>
 		<div class="jx-actions jx-actions--center">
 			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_ai_contact">{es ? 'Cuéntame qué quieres resolver' : 'Tell me what you want to solve'}<Icon name="arrow-right" /></a>
-			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Cómo usa Jossué la IA en una empresa?' : 'How does Jossué use AI in a company?'}>{es ? 'Pruébalo con Jossue AI' : 'Try it with Jossue AI'}</button>
+			<button class="jx-btn jx-btn--ghost" type="button" data-ai-open data-ai-ask={es ? '¿Cómo usa Jossué la IA en una empresa?' : 'How does Jossué use AI in a company?'}>{es ? 'Pregúntale a Jossue AI' : 'Ask Jossue AI'}</button>
 		</div>
 		<DemoVideo demo={heroDemo} locale={locale} class="jx-bots__stage" />
 	</PageHero>
 
 	<section class="jx-bots__section" aria-labelledby="ai-uses">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Dónde la pongo' : 'Where I put it'}</p>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Dónde la uso' : 'Where I use it'}</p>
 			<h2 id="ai-uses" class="jx-h2"><span>{es ? 'Pongo IA donde hoy alguien' : 'I put AI where someone today'}</span>{' '}<span class="jx-soft">{es ? 'pierde tiempo o ventas.' : 'loses time or sales.'}</span></h2>
 			<ul class="jx-points jx-aip__uses">
 				{uses.map((use) => (
@@ -88,7 +88,7 @@ const rules = es
 	<section class="jx-bots__section" aria-labelledby="ai-rules">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Mis reglas' : 'My rules'}</p>
-			<h2 id="ai-rules" class="jx-h2"><span>{es ? 'Cuatro reglas para que' : 'Four rules so that'}</span>{' '}<span class="jx-soft">{es ? 'la IA no se abandone.' : 'the AI does not get abandoned.'}</span></h2>
+			<h2 id="ai-rules" class="jx-h2"><span>{es ? 'Cuatro reglas para que' : 'Four rules so that'}</span>{' '}<span class="jx-soft">{es ? 'la IA se siga usando.' : 'the AI keeps being used.'}</span></h2>
 			<ol class="jx-steps">{rules.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 		</div>
 	</section>

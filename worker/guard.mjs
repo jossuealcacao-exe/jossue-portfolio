@@ -16,6 +16,7 @@
 // ligera: no dan información, no discuten y regresan al tema.
 
 import { PERSONA } from './persona.mjs';
+import { notify, notifyEnabled } from './notify.mjs';
 
 const GUARD_MODEL = 'gemini-3.1-flash-lite';
 // Respaldo cuando el principal está saturado (429/5xx).
@@ -353,8 +354,7 @@ export async function recordAbuse(env, { keys, source, kind, layer, excerpt, ale
 }
 
 async function sendAlert(env, { source, kind, until, keys, alert, reason }) {
-	const recipient = String(env.CONTACT_EMAIL_TO ?? '').trim();
-	if (!env.CONTACT_EMAIL || !recipient) return;
+	if (!notifyEnabled(env)) return;
 	const since = Date.now() - 24 * 60 * 60_000;
 	const { results } = await env.DB.prepare(`SELECT DISTINCT ts, kind, layer, excerpt FROM ai_abuse WHERE key IN (${keys.map(() => '?').join(',')}) AND ts >= ? ORDER BY ts DESC LIMIT 12`)
 		.bind(...keys, since)
@@ -373,12 +373,7 @@ async function sendAlert(env, { source, kind, until, keys, alert, reason }) {
 		'',
 		'No tienes que hacer nada: Jossue AI contestó con respuestas genéricas y no dio información.',
 	].filter((line) => line !== undefined && line !== null && line !== false);
-	await env.CONTACT_EMAIL.send({
-		to: recipient,
-		from: { email: 'hola@jossuealcala.com', name: 'Jossue AI · Seguridad' },
-		subject: `Jossue AI · alerta: ${reason.toLowerCase()} (${kind})`,
-		text: lines.join('\n'),
-	}).catch((error) => console.error('ai alert email failed', error?.name));
+	await notify(env, { kind: 'alert', subject: `${reason} (${kind})`, text: lines.join('\n') });
 }
 
 /** Para el panel de chats: intentos y bloqueos recientes. */

@@ -241,7 +241,7 @@ test('if the model leaks its canary, the reply is thrown away and Jossué is ale
 		assert.doesNotMatch(body.reply, /JX-/);
 		assert.match(body.reply, /Casi me haces hablar de más/);
 		assert.equal(env.emails.length, 1);
-		assert.match(env.emails[0].subject, /alerta: jossue ai casi filtra/i);
+		assert.match(env.emails[0].subject, /^Alerta · Jossue AI casi filtra/);
 		assert.equal(env.DB.raw.prepare("SELECT DISTINCT layer FROM ai_abuse WHERE kind = 'leak'").get().layer, 'output');
 	} finally {
 		models.restore();
@@ -360,7 +360,7 @@ test('when Gemini runs out of credits, Jossué gets one email a day, not one per
 		await ask(env, '¿Y MADRE?', { sid: 'otra', ip: '198.51.100.9' });
 		await ask(env, '¿Y Daniela?', { sid: 'otra-mas', ip: '198.51.100.10' });
 		assert.equal(env.emails.length, 1);
-		assert.match(env.emails[0].subject, /Jossue AI no está contestando: Gemini se quedó sin saldo \(402\)/);
+		assert.match(env.emails[0].subject, /^Alerta · Jossue AI no está contestando: Gemini se quedó sin saldo \(402\)/);
 		assert.match(env.emails[0].text, /ai\.studio\/projects/);
 		// La marca del aviso no aparece como bloqueo de nadie.
 		const panel = await (await handleRequest(new Request(`${ORIGIN}/api/ai/chats`, { headers: { Origin: ORIGIN, Authorization: 'Bearer admin-token' } }), env)).json();

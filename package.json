@@ -7,9 +7,10 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "dev:api": "astro build && CI=true npx --yes wrangler@4.119.0 d1 migrations apply jossue-portfolio-contact --local && npx --yes wrangler@4.119.0 dev --local --port 8799",
     "api": "node --env-file=.env.api api/server.mjs",
     "test:api": "node --test api/server.test.mjs",
-    "test:worker": "node --test worker/index.test.mjs worker/ai.test.mjs worker/whatsapp.test.mjs worker/guard.test.mjs worker/audit.test.mjs",
+    "test:worker": "node --test worker/index.test.mjs worker/ai.test.mjs worker/whatsapp.test.mjs worker/guard.test.mjs worker/audit.test.mjs worker/digest.test.mjs worker/booking.test.mjs",
     "social:campaign": "node scripts/social/generate-campaign.mjs",
     "test:social": "node --test scripts/social/generate-campaign.test.mjs",
     "blog:validate": "node scripts/blog/validate-content.mjs",

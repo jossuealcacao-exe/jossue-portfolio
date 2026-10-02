@@ -22,8 +22,8 @@ const madreDemo = productDemo(madre, locale);
 const icons: Record<string, IconName> = { 'bloqio-builder': 'layers', daniela: 'chat', chatbots: 'chats', consultoria: 'compass', 'desarrollo-web': 'code', 'ia-aplicada': 'sparkles-ai' };
 
 const method = es
-	? [['01', 'Contexto', 'Qué quieres lograr y con qué cuentas hoy.'], ['02', 'Prioridad', 'Lo que más mueve el negocio va primero.'], ['03', 'Construcción', 'Lo hago funcionar, por partes que puedes revisar.'], ['04', 'Evidencia', 'Pruebas y resultados antes de darlo por hecho.']]
-	: [['01', 'Context', 'What you want to achieve and what you have today.'], ['02', 'Priority', 'What moves the business most goes first.'], ['03', 'Build', 'I make it work, in parts you can review.'], ['04', 'Evidence', 'Tests and results before calling it done.']];
+	? [['01', 'Escucho', 'Me cuentas qué quieres lograr y con qué cuentas hoy.'], ['02', 'Priorizo', 'Empiezo por lo que más te está costando ahora.'], ['03', 'Construyo', 'Lo hago por partes y tú revisas cada una antes de que siga.'], ['04', 'Pruebo', 'Te enseño que funciona antes de darlo por terminado.']]
+	: [['01', 'Listen', 'You tell me what you want to achieve and what you have today.'], ['02', 'Prioritize', 'I start with what is costing you the most right now.'], ['03', 'Build', 'I do it in parts and you review each one before I go on.'], ['04', 'Test', 'I show you it works before calling it done.']];
 ---
 
 <article class="jx-home jx-catalog" data-product-catalog>
@@ -37,8 +37,8 @@ const method = es
 		</h1>
 		<p class="jx-hero__lede">
 			{es
-				? 'Arriba están mis productos, con su demo. Abajo, lo que construyo para tu negocio: chatbots con IA, tiendas y consultoría. No publico precios porque cada proyecto cambia; te los doy después de una llamada corta.'
-				: 'My own products come first, each with its demo. Below is what I build for your business: AI chatbots, stores and consulting. I do not publish prices because every project changes; I share them after a short call.'}
+				? 'Primero están las herramientas que hice yo, cada una con su demo. Después viene lo que puedo hacer para tu negocio, como chatbots con IA, tiendas en línea, tareas automatizadas y consultoría. No publico precios porque cada proyecto es distinto. Te doy uno después de una llamada corta.'
+				: 'First come the tools I made myself, each with its demo. After that is what I can do for your business, like AI chatbots, online stores, automated tasks and consulting. I do not publish prices because every project is different. I give you one after a short call.'}
 		</p>
 	</section>
 	</div>
@@ -70,7 +70,7 @@ const method = es
 						<p class="jm-muted">{product.summary[locale]}</p>
 						<div class="jx-actions">
 							<a class="jx-btn jx-btn--primary" href={productHref(product, locale)}>{es ? 'Ver detalle' : 'View detail'}<Icon name="arrow-right" /></a>
-							<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Hablar de esto' : 'Talk about this'}</a>
+							<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Preguntarme por esto' : 'Ask me about this'}</a>
 						</div>
 					</article>
 				);
@@ -85,7 +85,7 @@ const method = es
 					{product.status && <p class="jx-mono jx-catalog__status">{product.status[locale]}</p>}
 					<div class="jx-actions">
 						<a class="jx-btn jx-btn--primary" href={productHref(product, locale)}>{es ? 'Ver detalle' : 'View detail'}<Icon name="arrow-right" /></a>
-						<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Hablar de esto' : 'Talk about this'}</a>
+						<a class="jx-btn jx-btn--ghost" href={`${routes[locale].contact}?producto=${product.slug}`}>{es ? 'Preguntarme por esto' : 'Ask me about this'}</a>
 					</div>
 				</article>
 			))}
@@ -107,7 +107,7 @@ const method = es
 	<section class="jx-close" aria-labelledby="catalog-close-title">
 		<div class="jx-close__card">
 			<h2 id="catalog-close-title" class="jx-close__title"><span>{es ? '¿No sabes con cuál empezar?' : 'Not sure where to start?'}</span></h2>
-			<p>{es ? 'Cuéntame el problema y te digo por dónde empezaría yo, aunque no sea ninguno de estos.' : 'Tell me the problem and I will say where I would start, even if it is none of these.'}</p>
+			<p>{es ? 'Cuéntame qué problema tienes en tu negocio y te digo por dónde empezaría yo, aunque no sea con nada de esta lista.' : 'Tell me what problem your business has and I will tell you where I would start, even if it is nothing on this list.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={routes[locale].contact}>{es ? 'Escríbeme' : 'Write to me'}<Icon name="arrow-right" /></a>
 			</div>

@@ -15,17 +15,17 @@ type Item = { icon: IconName; title: string; tag: string; text: string; href: st
 const groups: Array<{ title: string; items: Item[] }> = es
 	? [
 			{
-				title: 'Atienden clientes',
+				title: 'Atienden a clientes',
 				items: [
-					{ icon: 'chat', title: 'Daniela', tag: 'En wunutrition.com', text: 'Atiende a los clientes de la tienda con el catálogo real: recomienda, arma el carrito y consulta pedidos.', href: `${routes.es.products}daniela/` },
-					{ icon: 'sparkles-ai', title: 'Jossue AI', tag: 'En este sitio', text: 'Contesta por mí lo que quieras saber de mi trabajo y me deja tu mensaje. Pruébalo.', href: '#' },
+					{ icon: 'chat', title: 'Daniela', tag: 'En wunutrition.com', text: 'Atiende a los clientes de la tienda en línea de WU Nutrition. Recomienda productos del catálogo real, arma el carrito y revisa cómo va un pedido.', href: `${routes.es.products}daniela/` },
+					{ icon: 'sparkles-ai', title: 'Jossue AI', tag: 'En este sitio', text: 'Te contesta lo que quieras saber de mi trabajo y me pasa tu mensaje. Puedes probarlo ahora.', href: '#' },
 				],
 			},
 			{
 				title: 'Me ayudan a programar',
 				items: [
-					{ icon: 'terminal', title: 'MADRE', tag: 'Versión 0.5.2', text: 'Una app donde cuatro asistentes de código trabajan en el mismo proyecto sin pisarse, con permisos y memoria compartida.', href: routes.es.madre },
-					{ icon: 'layers', title: 'AHP+', tag: 'Versión 1.4.1', text: 'Un protocolo abierto para que un asistente retome el trabajo donde otro lo dejó, en cualquier computadora.', href: routes.es.ahpAtlas },
+					{ icon: 'terminal', title: 'MADRE', tag: 'Versión 0.5.2', text: 'Una app donde cuatro asistentes de IA programan en el mismo proyecto sin estorbarse. Recuerda lo que se decidió y no cambia nada sin tu permiso.', href: routes.es.madre },
+					{ icon: 'layers', title: 'AHP+', tag: 'Versión 1.4.1', text: 'Unas reglas abiertas (un protocolo) para que un asistente de IA siga el trabajo donde otro lo dejó, en cualquier computadora.', href: routes.es.ahpAtlas },
 				],
 			},
 		]
@@ -33,15 +33,15 @@ const groups: Array<{ title: string; items: Item[] }> = es
 			{
 				title: 'They serve customers',
 				items: [
-					{ icon: 'chat', title: 'Daniela', tag: 'On wunutrition.com', text: 'Serves the store’s customers with the real catalog: recommends, builds the cart and checks orders.', href: `${routes.en.products}daniela/` },
-					{ icon: 'sparkles-ai', title: 'Jossue AI', tag: 'On this site', text: 'Answers for me whatever you want to know about my work and passes your message on. Try it.', href: '#' },
+					{ icon: 'chat', title: 'Daniela', tag: 'On wunutrition.com', text: 'Serves customers in the WU Nutrition online store. It recommends products from the real catalog, builds the cart and checks how an order is going.', href: `${routes.en.products}daniela/` },
+					{ icon: 'sparkles-ai', title: 'Jossue AI', tag: 'On this site', text: 'Answers whatever you want to know about my work and passes your message on to me. You can try it now.', href: '#' },
 				],
 			},
 			{
 				title: 'They help me build',
 				items: [
-					{ icon: 'terminal', title: 'MADRE', tag: 'Version 0.5.2', text: 'An app where four coding assistants work on the same project without stepping on each other, with permissions and shared memory.', href: routes.en.madre },
-					{ icon: 'layers', title: 'AHP+', tag: 'Version 1.4.1', text: 'An open protocol so one assistant picks up the work where another left it, on any computer.', href: routes.en.ahpAtlas },
+					{ icon: 'terminal', title: 'MADRE', tag: 'Version 0.5.2', text: 'An app where four AI assistants code on the same project without getting in each other’s way. It remembers what was decided and changes nothing without your permission.', href: routes.en.madre },
+					{ icon: 'layers', title: 'AHP+', tag: 'Version 1.4.1', text: 'A set of open rules (a protocol) so one AI assistant can pick up the work where another left it, on any computer.', href: routes.en.ahpAtlas },
 				],
 			},
 		];
@@ -51,18 +51,18 @@ const headingId = `ai-dev-${showPageLink ? 'home' : 'page'}`;
 <section class="jx-spot" data-home="ai-dev" aria-labelledby={headingId}>
 	<div class="jx-wrap jx-spot__inner">
 		<div class="jx-spot__copy">
-			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'IA aplicada · en uso hoy' : 'Applied AI · live today'}</p>
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Inteligencia artificial · ya en uso' : 'Artificial intelligence · already in use'}</p>
 			<h2 id={headingId} class="jx-h2">
-				<span>{es ? 'Construyo productos con IA,' : 'I build AI products,'}</span>{' '}
-				<span class="jx-soft">{es ? 'y cuatro ya están funcionando.' : 'and four are already running.'}</span>
+				<span>{es ? 'Hago herramientas con IA' : 'I build AI tools,'}</span>{' '}
+				<span class="jx-soft">{es ? 'y cuatro ya están en uso.' : 'and four are already in use.'}</span>
 			</h2>
 			<p class="jx-spot__lede">
 				{es
-					? 'Además de dirigir ecommerce, diseño y programo IA de principio a fin: qué sabe, qué puede hacer, cómo se ve y cómo se prueba. Dos atienden clientes; dos me ayudan a programar más rápido y con orden.'
-					: 'Besides leading ecommerce, I design and build AI end to end: what it knows, what it can do, how it looks and how it is tested. Two serve customers; two help me build faster and with order.'}
+					? 'Además de llevar ventas en línea, programo herramientas con IA. Yo decido qué información usan, qué pueden hacer y cómo se ven, y las pruebo antes de ponerlas a trabajar. Dos atienden a clientes y dos me ayudan a programar más rápido.'
+					: 'Besides running online sales, I build AI tools. I decide what information they use, what they can do and how they look, and I test them before putting them to work. Two serve customers and two help me code faster.'}
 			</p>
 			<div class="jx-actions">
-				{showPageLink && <a class="jx-btn jx-btn--primary" href={routes[locale].ai}>{es ? 'Ver IA aplicada' : 'See applied AI'}<Icon name="arrow-right" /></a>}
+				{showPageLink && <a class="jx-btn jx-btn--primary" href={routes[locale].ai}>{es ? 'Ver mis herramientas con IA' : 'See my AI tools'}<Icon name="arrow-right" /></a>}
 				<a class:list={['jx-btn', showPageLink ? 'jx-btn--ghost' : 'jx-btn--primary']} href={`${routes[locale].products}chatbots/`}>{es ? 'Chatbots para tu negocio' : 'Chatbots for your business'}{!showPageLink && <Icon name="arrow-right" />}</a>
 			</div>
 		</div>

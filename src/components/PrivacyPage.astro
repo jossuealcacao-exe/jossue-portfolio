@@ -21,15 +21,15 @@ const email = contact.email;
 		<h1 class="jx-legal__title">{es ? 'Qué hago con tus datos' : 'What I do with your data'}</h1>
 		<p class="jx-legal__lede">
 			{es
-				? `Este es mi aviso de privacidad integral para jossuealcala.com, su chat Jossue AI (también cuando aparece en madre.run), la auditoría express, el formulario de contacto y mi WhatsApp Business. Última actualización: ${updated}.`
-				: `This is my full privacy notice for jossuealcala.com, its Jossue AI chat (also when it appears on madre.run), the express audit, the contact form and my WhatsApp Business. Last updated: ${updated}.`}
+				? `Este es mi aviso de privacidad integral para jossuealcala.com, su chat Jossue AI (también cuando aparece en madre.run), la auditoría express, la agenda de llamadas, el formulario de contacto y mi WhatsApp Business. Última actualización: ${updated}.`
+				: `This is my full privacy notice for jossuealcala.com, its Jossue AI chat (also when it appears on madre.run), the express audit, the call scheduler, the contact form and my WhatsApp Business. Last updated: ${updated}.`}
 		</p>
 
 		{es ? (
 			<>
 				<section>
 					<h2>1. Quién es el responsable</h2>
-					<p>Soy Jossué Alcalá, persona física, con domicilio en Guadalajara, Jalisco, México. Soy el responsable de tus datos personales. Para cualquier tema de privacidad escríbeme a <a href={`mailto:${email}`}>{email}</a>.</p>
+					<p>Soy Jossué Alcalá, persona física, con domicilio en Cerámica 442, Tonalá, Jalisco, México. Soy el responsable de tus datos personales. Para cualquier tema de privacidad escríbeme a <a href={`mailto:${email}`}>{email}</a>.</p>
 				</section>
 				<section>
 					<h2>2. Qué datos recabo y dónde</h2>
@@ -37,8 +37,9 @@ const email = contact.email;
 						<li><strong>Formulario de contacto:</strong> nombre, correo, empresa, sitio web, tipo de proyecto, presupuesto aproximado y tu mensaje.</li>
 						<li><strong>Chat Jossue AI:</strong> lo que escribes. Al guardarlo, el sistema quita automáticamente correos y teléfonos. Si decides dejarme un recado, guardo tu nombre, el correo o teléfono que me des, tu empresa si la mencionas y lo que necesitas.</li>
 						<li><strong>Auditoría express:</strong> tu nombre, tu correo, la dirección de tu sitio y el resultado de revisar la página principal de ese sitio (información pública).</li>
+						<li><strong>Agenda de llamadas:</strong> tu nombre, tu correo, el teléfono al que te llamo, el horario que elegiste y, si lo escribes, de qué quieres hablar.</li>
 						<li><strong>WhatsApp Business:</strong> tu número, tu nombre de perfil y los mensajes. En la base del asistente el número no se guarda tal cual, solo una huella cifrada.</li>
-						<li><strong>Datos técnicos:</strong> tu dirección IP convertida en una huella cifrada (no guardo la IP), para poner límites de uso y frenar abusos, y si diste permiso, datos de navegación de Google Analytics.</li>
+						<li><strong>Datos técnicos:</strong> tu dirección IP convertida en una huella cifrada (no guardo la IP), para poner límites de uso y frenar abusos, y, solo si lo aceptas en el aviso de cookies, datos de navegación de Google Analytics y de las cookies de publicidad de Meta y Google (qué páginas visitas, desde qué anuncio llegaste y si pediste una auditoría o me escribiste).</li>
 					</ul>
 					<p>No te pido datos sensibles (salud, creencias, datos financieros, etc.). Por favor no los compartas en el chat ni en el formulario.</p>
 				</section>
@@ -48,15 +49,17 @@ const email = contact.email;
 					<ul>
 						<li>Responder lo que me preguntas o pides, por correo, WhatsApp o el chat.</li>
 						<li>Hacer tu auditoría express, mostrártela y mandarte el reporte.</li>
+						<li>Llamarte en el horario que agendaste y avisarte si algo cambia.</li>
 						<li>Darte seguimiento sobre lo que me pediste, por ejemplo escribirte para revisar contigo la primera mejora de tu auditoría.</li>
 						<li>Proteger el chat y el sitio contra abusos (límites de uso y bloqueos temporales).</li>
 					</ul>
 					<p><strong>Finalidades secundarias</strong> (puedes negarte y te sigo atendiendo):</p>
 					<ul>
 						<li>Leer conversaciones del chat, ya sin correos ni teléfonos, para mejorar las respuestas del asistente.</li>
-						<li>Medir de forma agregada cómo se usa el sitio con Google Analytics, solo si lo aceptas en el aviso de analítica.</li>
+						<li>Medir de forma agregada cómo se usa el sitio con Google Analytics, solo si aceptas la analítica en el aviso de cookies.</li>
+						<li>Medir qué anuncios míos en Meta (Facebook e Instagram) y Google funcionan, y mostrarte anuncios míos en esas plataformas, solo si aceptas las cookies de publicidad.</li>
 					</ul>
-					<p>Para negarte a las finalidades secundarias, escríbeme a <a href={`mailto:${email}`}>{email}</a>, o rechaza la analítica en el aviso que aparece en el sitio.</p>
+					<p>Para negarte a las finalidades secundarias, escríbeme a <a href={`mailto:${email}`}>{email}</a>, o rechaza la analítica y la publicidad en el aviso de cookies. Puedes cambiar tu elección cuando quieras en «Preferencias de cookies», al pie de cada página.</p>
 				</section>
 				<section>
 					<h2>4. Con quién se comparten</h2>
@@ -64,23 +67,30 @@ const email = contact.email;
 					<ul>
 						<li><strong>Cloudflare:</strong> aloja el sitio y la base de datos, y envía los correos de aviso que me llegan.</li>
 						<li><strong>Google:</strong> el modelo Gemini procesa tus mensajes del chat para generar las respuestas, y Google Analytics mide el uso del sitio si lo aceptas.</li>
+						<li><strong>Meta y Google, para publicidad:</strong> si aceptas las cookies de publicidad, el pixel de Meta y la etiqueta de Google Ads les envían qué páginas visitas y si pediste una auditoría o me escribiste. Nunca les envío tu nombre, tu correo ni lo que escribes. Ellos usan esos datos también conforme a sus propios avisos de privacidad.</li>
 						<li><strong>Railway y Anthropic</strong>, a través de mi sistema de auditorías APEX: Railway aloja el sistema que revisa tu sitio, y Anthropic redacta textos del reporte a partir del contenido público de tu sitio.</li>
 						<li><strong>Meta y su proveedor de conexión</strong>, solo si me escribes por WhatsApp.</li>
 					</ul>
-					<p>Algunos de estos proveedores tienen servidores fuera de México, principalmente en Estados Unidos. No comparto tus datos con terceros para otros fines.</p>
+					<p>Algunos de estos proveedores tienen servidores fuera de México, principalmente en Estados Unidos. Fuera de la publicidad que aceptes, no comparto tus datos con terceros para otros fines.</p>
 				</section>
 				<section>
 					<h2>5. Cuánto tiempo los guardo</h2>
 					<ul>
 						<li>Conversaciones del chat y de WhatsApp: 30 días.</li>
 						<li>Recados, auditorías express y mensajes del formulario: 12 meses.</li>
+						<li>Llamadas agendadas: 12 meses después de la fecha de la llamada.</li>
 						<li>Registros de seguridad (intentos de abuso y bloqueos): 90 días.</li>
 					</ul>
 					<p>Después se borran solos. Si me pides antes que los borre, lo hago.</p>
 				</section>
 				<section>
 					<h2>6. Cookies y almacenamiento en tu navegador</h2>
-					<p>Google Analytics usa cookies solo si aceptas la analítica; si la rechazas, no se carga. Tu elección se guarda en tu navegador para no volver a preguntarte. El chat guarda la conversación en tu navegador mientras tengas la pestaña abierta, para que no la pierdas al cambiar de página.</p>
+					<ul>
+						<li><strong>Necesarias:</strong> el chat guarda la conversación en tu navegador mientras tengas la pestaña abierta, para que no la pierdas al cambiar de página, tu elección de cookies se guarda para no volver a preguntarte y, si agendaste una llamada, tu navegador guarda la cita para que puedas cancelarla. No se pueden apagar porque sin ellas el sitio no funciona bien.</li>
+						<li><strong>Analítica (Google Analytics):</strong> mide de forma agregada qué páginas se visitan. Solo se carga si la aceptas.</li>
+						<li><strong>Publicidad (pixel de Meta y Google Ads):</strong> mide qué anuncios funcionan y permite mostrarte anuncios míos en Facebook, Instagram y Google. Solo se carga si la aceptas.</li>
+					</ul>
+					<p>Si rechazas la analítica o la publicidad, esos servicios no se cargan. Puedes cambiar tu elección cuando quieras en «Preferencias de cookies», al pie de cada página.</p>
 				</section>
 				<section>
 					<h2>7. Tus derechos (ARCO) y cómo ejercerlos</h2>
@@ -109,7 +119,7 @@ const email = contact.email;
 			<>
 				<section>
 					<h2>1. Who is responsible</h2>
-					<p>I am Jossué Alcalá, an individual, based in Guadalajara, Jalisco, Mexico. I am responsible for your personal data. For any privacy matter, write to <a href={`mailto:${email}`}>{email}</a>.</p>
+					<p>I am Jossué Alcalá, an individual, with address at Cerámica 442, Tonalá, Jalisco, Mexico. I am responsible for your personal data. For any privacy matter, write to <a href={`mailto:${email}`}>{email}</a>.</p>
 				</section>
 				<section>
 					<h2>2. What data I collect and where</h2>
@@ -117,8 +127,9 @@ const email = contact.email;
 						<li><strong>Contact form:</strong> name, email, company, website, project type, approximate budget and your message.</li>
 						<li><strong>Jossue AI chat:</strong> what you write. When it is stored, emails and phone numbers are removed automatically. If you choose to leave me a message, I keep your name, the email or phone you give me, your company if you mention it, and what you need.</li>
 						<li><strong>Express audit:</strong> your name, your email, your site’s address and the result of reviewing that site’s home page (public information).</li>
+						<li><strong>Call scheduler:</strong> your name, your email, the phone I call you on, the time you picked and, if you write it, what you want to talk about.</li>
 						<li><strong>WhatsApp Business:</strong> your number, your profile name and the messages. The assistant’s database does not store the number as is, only an encrypted fingerprint.</li>
-						<li><strong>Technical data:</strong> your IP address turned into an encrypted fingerprint (I do not store the IP), to set usage limits and stop abuse, and, if you allowed it, Google Analytics browsing data.</li>
+						<li><strong>Technical data:</strong> your IP address turned into an encrypted fingerprint (I do not store the IP), to set usage limits and stop abuse, and, only if you accept them in the cookie notice, browsing data from Google Analytics and from Meta and Google advertising cookies (which pages you visit, which ad brought you and whether you requested an audit or wrote to me).</li>
 					</ul>
 					<p>I do not ask for sensitive data (health, beliefs, financial data, etc.). Please do not share it in the chat or the form.</p>
 				</section>
@@ -128,15 +139,17 @@ const email = contact.email;
 					<ul>
 						<li>Answering what you ask or request, by email, WhatsApp or the chat.</li>
 						<li>Running your express audit, showing it to you and sending you the report.</li>
+						<li>Calling you at the time you booked and letting you know if something changes.</li>
 						<li>Following up on what you asked for, for example writing to you to go over the first improvement from your audit.</li>
 						<li>Protecting the chat and the site against abuse (usage limits and temporary blocks).</li>
 					</ul>
 					<p><strong>Secondary purposes</strong> (you can opt out and I will still help you):</p>
 					<ul>
 						<li>Reading chat conversations, already without emails or phone numbers, to improve the assistant’s answers.</li>
-						<li>Measuring site usage in aggregate with Google Analytics, only if you accept it in the analytics notice.</li>
+						<li>Measuring site usage in aggregate with Google Analytics, only if you accept analytics in the cookie notice.</li>
+						<li>Measuring which of my ads on Meta (Facebook and Instagram) and Google work, and showing you my ads on those platforms, only if you accept advertising cookies.</li>
 					</ul>
-					<p>To opt out of secondary purposes, write to <a href={`mailto:${email}`}>{email}</a>, or reject analytics in the notice shown on the site.</p>
+					<p>To opt out of secondary purposes, write to <a href={`mailto:${email}`}>{email}</a>, or reject analytics and advertising in the cookie notice. You can change your choice at any time under “Cookie preferences”, at the bottom of every page.</p>
 				</section>
 				<section>
 					<h2>4. Who it is shared with</h2>
@@ -144,23 +157,30 @@ const email = contact.email;
 					<ul>
 						<li><strong>Cloudflare:</strong> hosts the site and the database, and sends the notification emails I receive.</li>
 						<li><strong>Google:</strong> the Gemini model processes your chat messages to generate answers, and Google Analytics measures site usage if you accept it.</li>
+						<li><strong>Meta and Google, for advertising:</strong> if you accept advertising cookies, the Meta pixel and the Google Ads tag send them which pages you visit and whether you requested an audit or wrote to me. I never send them your name, your email or what you write. They also use that data under their own privacy notices.</li>
 						<li><strong>Railway and Anthropic</strong>, through my APEX audit system: Railway hosts the system that reviews your site, and Anthropic writes parts of the report from your site’s public content.</li>
 						<li><strong>Meta and its connection provider</strong>, only if you write to me on WhatsApp.</li>
 					</ul>
-					<p>Some of these providers have servers outside Mexico, mainly in the United States. I do not share your data with third parties for other purposes.</p>
+					<p>Some of these providers have servers outside Mexico, mainly in the United States. Apart from the advertising you accept, I do not share your data with third parties for other purposes.</p>
 				</section>
 				<section>
 					<h2>5. How long I keep it</h2>
 					<ul>
 						<li>Chat and WhatsApp conversations: 30 days.</li>
 						<li>Messages left for me, express audits and form messages: 12 months.</li>
+						<li>Booked calls: 12 months after the date of the call.</li>
 						<li>Security records (abuse attempts and blocks): 90 days.</li>
 					</ul>
 					<p>After that they are deleted automatically. If you ask me to delete them sooner, I will.</p>
 				</section>
 				<section>
 					<h2>6. Cookies and storage in your browser</h2>
-					<p>Google Analytics uses cookies only if you accept analytics; if you reject it, it does not load. Your choice is saved in your browser so you are not asked again. The chat keeps the conversation in your browser while the tab is open, so you do not lose it when you change pages.</p>
+					<ul>
+						<li><strong>Necessary:</strong> the chat keeps the conversation in your browser while the tab is open, so you do not lose it when you change pages, your cookie choice is saved so you are not asked again and, if you booked a call, your browser keeps it so you can cancel it. They cannot be turned off because the site does not work well without them.</li>
+						<li><strong>Analytics (Google Analytics):</strong> measures in aggregate which pages are visited. It only loads if you accept it.</li>
+						<li><strong>Advertising (Meta pixel and Google Ads):</strong> measures which ads work and lets me show you my ads on Facebook, Instagram and Google. It only loads if you accept it.</li>
+					</ul>
+					<p>If you reject analytics or advertising, those services do not load. You can change your choice at any time under “Cookie preferences”, at the bottom of every page.</p>
 				</section>
 				<section>
 					<h2>7. Your rights (ARCO) and how to exercise them</h2>

@@ -27,68 +27,68 @@ const phone = workImage('lcv-home-hero');
 type Card = { icon: IconName; title: string; text: string };
 const signals: Card[] = es
 	? [
-			{ icon: 'trend-up', title: 'Llega tráfico pero no vende', text: 'Pagas por visitas que entran, miran y se van, sobre todo en celular.' },
-			{ icon: 'dollar-down', title: 'Gastas en pauta a ciegas', text: 'No sabes qué campaña trae ventas y cuál solo trae clics.' },
-			{ icon: 'bolt', title: 'La tienda está lenta', text: 'Tarda en cargar en el teléfono y no sabes qué la frena.' },
-			{ icon: 'filter', title: 'Vas a rediseñar', text: 'Y no tienes claro qué cambiar, qué conservar y qué no tocar.' },
-			{ icon: 'check-list', title: 'Los números no cuadran', text: 'Shopify, GA4 y Meta dicen cosas distintas sobre las mismas ventas.' },
-			{ icon: 'sparkles-ai', title: 'Quieres meter IA', text: 'Y no sabes dónde te ahorraría tiempo de verdad y dónde sería gasto.' },
+			{ icon: 'trend-up', title: 'Te visitan, pero no te compran', text: 'Pagas por visitas que entran, miran y se van, sobre todo desde el celular.' },
+			{ icon: 'dollar-down', title: 'Pagas anuncios sin saber cuáles venden', text: 'No sabes qué campaña te trae ventas y cuál solo te trae clics.' },
+			{ icon: 'bolt', title: 'Tu página tarda en abrir', text: 'En el teléfono se tarda en cargar y nadie te ha dicho por qué.' },
+			{ icon: 'filter', title: 'Quieres rehacer tu página', text: 'Pero no tienes claro qué cambiar y qué conviene dejar como está.' },
+			{ icon: 'check-list', title: 'Los números no cuadran', text: 'Shopify, Google Analytics y Meta te dan cifras distintas de las mismas ventas.' },
+			{ icon: 'sparkles-ai', title: 'Quieres usar inteligencia artificial', text: 'Pero no sabes dónde te ahorraría tiempo de verdad y dónde solo sería un gasto más.' },
 		]
 	: [
-			{ icon: 'trend-up', title: 'Traffic arrives but does not buy', text: 'You pay for visits that come in, look and leave, mostly on mobile.' },
-			{ icon: 'dollar-down', title: 'You spend on ads blind', text: 'You do not know which campaign brings sales and which only brings clicks.' },
-			{ icon: 'bolt', title: 'The store is slow', text: 'It takes long to load on a phone and you do not know what holds it back.' },
-			{ icon: 'filter', title: 'You are about to redesign', text: 'And it is not clear what to change, what to keep and what not to touch.' },
-			{ icon: 'check-list', title: 'The numbers do not match', text: 'Shopify, GA4 and Meta say different things about the same sales.' },
-			{ icon: 'sparkles-ai', title: 'You want to add AI', text: 'And you do not know where it would really save time and where it would be spend.' },
+			{ icon: 'trend-up', title: 'People visit, but they do not buy', text: 'You pay for visits that come in, look around and leave, mostly from a phone.' },
+			{ icon: 'dollar-down', title: 'You pay for ads without knowing which ones sell', text: 'You do not know which campaign brings you sales and which only brings clicks.' },
+			{ icon: 'bolt', title: 'Your site is slow to open', text: 'It takes a while to load on a phone and nobody has told you why.' },
+			{ icon: 'filter', title: 'You want to rebuild your site', text: 'But you are not sure what to change and what is better left as it is.' },
+			{ icon: 'check-list', title: 'The numbers do not match', text: 'Shopify, Google Analytics and Meta give you different figures for the same sales.' },
+			{ icon: 'sparkles-ai', title: 'You want to use AI', text: 'But you do not know where it would really save you time and where it would just be another expense.' },
 		];
 
 const formats: Array<Card & { tag: string }> = es
 	? [
-			{ icon: 'chats', tag: '01 · Sesión', title: 'Diagnóstico', text: 'Una llamada para revisar tu caso con tus números en la mano. Sales con lo que más te conviene cambiar primero y lo que puede esperar.' },
-			{ icon: 'check-list', tag: '02 · Entregable', title: 'Auditoría con plan', text: 'Reviso tienda, pauta, medición y velocidad. Te entrego un plan ordenado por impacto: qué primero, qué después y qué no hace falta hacer.' },
-			{ icon: 'compass', tag: '03 · Continuo', title: 'Acompañamiento', text: 'Me siento con tu equipo de forma periódica para decidir, revisar resultados y destrabar lo que se atore, sin que contrates a alguien de planta.' },
+			{ icon: 'chats', tag: '01 · Sesión', title: 'Diagnóstico', text: 'Platicamos en una llamada con tus números a la mano. Terminas sabiendo qué te conviene cambiar primero y qué puede esperar.' },
+			{ icon: 'check-list', tag: '02 · Entregable', title: 'Auditoría con plan', text: 'Reviso tu tienda, tus anuncios, cómo mides tus ventas y qué tan rápido abre tu página. Te entrego por escrito qué hacer primero, qué después y en qué no vale la pena gastar.' },
+			{ icon: 'compass', tag: '03 · Continuo', title: 'Acompañamiento', text: 'Nos reunimos cada cierto tiempo, contigo o con tu equipo, para revisar resultados, decidir lo que sigue y destrabar lo que se atore. No tienes que contratar a alguien de planta.' },
 		]
 	: [
-			{ icon: 'chats', tag: '01 · Session', title: 'Diagnosis', text: 'A call to review your case with your numbers at hand. You leave knowing what to change first and what can wait.' },
-			{ icon: 'check-list', tag: '02 · Deliverable', title: 'Audit with a plan', text: 'I review store, ads, measurement and speed, and hand you a plan ordered by impact: what first, what later and what you do not need.' },
-			{ icon: 'compass', tag: '03 · Ongoing', title: 'Guidance', text: 'I sit with your team on a regular basis to decide, review results and unblock what gets stuck, without you hiring someone full time.' },
+			{ icon: 'chats', tag: '01 · Session', title: 'Diagnosis', text: 'We talk on a call with your numbers at hand. You finish knowing what to change first and what can wait.' },
+			{ icon: 'check-list', tag: '02 · Deliverable', title: 'Audit with a plan', text: 'I review your store, your ads, how you track sales and how fast your site opens. I hand you, in writing, what to do first, what later and what is not worth spending on.' },
+			{ icon: 'compass', tag: '03 · Ongoing', title: 'Guidance', text: 'We meet every so often, with you or your team, to review results, decide what comes next and unblock what gets stuck. You do not need to hire someone full time.' },
 		];
 
 const areas = es
 	? [
-			['Tienda', 'Home, colecciones, ficha de producto y carrito: dónde se frena la compra.'],
-			['Velocidad', 'Datos reales de campo y de laboratorio, no una sola prueba de Lighthouse.'],
-			['Medición', 'GA4, GTM y píxeles: qué se mide mal y qué ni siquiera se mide.'],
-			['Pauta', 'Meta y Google Ads: qué campañas sostienen las ventas y cuáles no.'],
-			['SEO', 'Lo técnico que Google ve primero: estructura, datos y contenido.'],
-			['Canales e IA', 'Amazon, Mercado Libre y dónde la IA le quita trabajo a tu equipo.'],
+			['Tienda', 'Página de inicio, categorías, ficha de producto y carrito. Busco el punto donde la gente deja de comprar.'],
+			['Velocidad', 'Mido cuánto tarda en abrir con datos de visitantes reales y con pruebas controladas, no con una sola prueba automática.'],
+			['Medición', 'Google Analytics, Tag Manager y los píxeles de tus anuncios. Reviso qué se está contando mal y qué ni siquiera se cuenta.'],
+			['Publicidad', 'Tus campañas en Meta (Facebook e Instagram) y Google Ads. Veo cuáles sí te traen ventas y cuáles solo gastan.'],
+			['Google (SEO)', 'Lo que Google revisa para mostrarte cuando alguien busca lo que vendes: cómo está armada tu página, sus datos y sus textos.'],
+			['Otros canales e IA', 'Cómo vendes en Amazon y Mercado Libre, y qué tareas de tu equipo podría hacer la inteligencia artificial.'],
 		]
 	: [
-			['Store', 'Home, collections, product page and cart: where the purchase stalls.'],
-			['Speed', 'Real field and lab data, not a single Lighthouse run.'],
-			['Measurement', 'GA4, GTM and pixels: what is measured wrong and what is not measured at all.'],
-			['Ads', 'Meta and Google Ads: which campaigns hold up sales and which do not.'],
-			['SEO', 'The technical side Google sees first: structure, data and content.'],
-			['Channels and AI', 'Amazon, Mercado Libre and where AI takes work off your team.'],
+			['Store', 'Home page, categories, product page and cart. I look for the point where people stop buying.'],
+			['Speed', 'I measure how long it takes to open with data from real visitors and controlled tests, not a single automated test.'],
+			['Measurement', 'Google Analytics, Tag Manager and your ad pixels. I check what is being counted wrong and what is not counted at all.'],
+			['Ads', 'Your campaigns on Meta (Facebook and Instagram) and Google Ads. I see which ones bring you sales and which ones only spend.'],
+			['Google (SEO)', 'What Google checks before showing you when someone searches for what you sell: how your site is built, its data and its text.'],
+			['Other channels and AI', 'How you sell on Amazon and Mercado Libre, and which of your team’s tasks AI could take on.'],
 		];
 
 const findings = es
-	? ['La home cargaba 272 imágenes y 74 scripts; en celular tardaba 3.6 s en mostrar el contenido principal (LCP).', 'Una colección mostraba 82 productos sin filtros y con un banner que retrasaba el catálogo.', 'El resultado: un plan a 30, 60 y 90 días que separa lo confirmado de lo que hay que validar.']
-	: ['The home loaded 272 images and 74 scripts; on mobile it took 3.6 s to show the main content (LCP).', 'A collection showed 82 products with no filters and a banner that delayed the catalog.', 'The result: a 30, 60 and 90 day plan that separates what is confirmed from what still needs validation.'];
+	? ['La página de inicio cargaba 272 imágenes y 74 scripts (pedazos de código). En celular tardaba 3.6 s en mostrar lo principal (LCP).', 'Una categoría mostraba 82 productos sin filtros, y un banner hacía que los productos tardaran más en aparecer.', 'Les entregué un plan a 30, 60 y 90 días que separa lo que ya está comprobado de lo que todavía hay que probar.']
+	: ['The home page loaded 272 images and 74 scripts (pieces of code). On mobile it took 3.6 s to show the main content (LCP).', 'A category showed 82 products with no filters, and a banner made the products take longer to appear.', 'I handed them a 30, 60 and 90 day plan that separates what is already proven from what still needs testing.'];
 
 const steps = es
 	? [
-			['01', 'Llamada', 'Me cuentas qué te preocupa, qué vendes y qué números tienes a la mano.'],
-			['02', 'Diagnóstico', 'Reviso tu tienda, tu pauta y tu medición con evidencia, no con opiniones.'],
-			['03', 'Plan', 'Te entrego qué hacer primero, qué después y qué no hace falta, con su porqué.'],
-			['04', 'Acompañamiento', 'Si quieres, lo ejecutamos con tu equipo y revisamos juntos los resultados.'],
+			['01', 'Llamada', 'Me cuentas qué vendes, qué te preocupa y qué números tienes a la mano.'],
+			['02', 'Diagnóstico', 'Reviso tu tienda, tus anuncios y tus números. Cada cosa que te señalo va con el dato que la respalda.'],
+			['03', 'Plan', 'Te entrego la lista de cambios en orden, con la razón de cada uno.'],
+			['04', 'Acompañamiento', 'Si quieres, te ayudo a hacer los cambios con tu equipo y revisamos juntos cómo van.'],
 		]
 	: [
-			['01', 'Call', 'You tell me what worries you, what you sell and which numbers you have at hand.'],
-			['02', 'Diagnosis', 'I review your store, ads and measurement with evidence, not opinions.'],
-			['03', 'Plan', 'I hand you what to do first, what later and what you do not need, with the reason why.'],
-			['04', 'Guidance', 'If you want, we carry it out with your team and review the results together.'],
+			['01', 'Call', 'You tell me what you sell, what worries you and which numbers you have at hand.'],
+			['02', 'Diagnosis', 'I review your store, your ads and your numbers. Everything I point out comes with the data behind it.'],
+			['03', 'Plan', 'I hand you the list of changes in order, with the reason for each one.'],
+			['04', 'Guidance', 'If you want, I help you make the changes with your team and we review together how they go.'],
 		];
 ---
 
@@ -103,11 +103,11 @@ const steps = es
 	<PageHero
 		loop="consultoria"
 		id="consult-title"
-		label={es ? 'Consultoría · Ecommerce y growth' : 'Consulting · Ecommerce and growth'}
-		title={es ? ['Te digo qué te está costando ventas', 'antes de que gastes en construir.'] : ['I tell you what is costing you sales', 'before you spend on building.']}
+		label={es ? 'Consultoría · Tiendas en línea y ventas' : 'Consulting · Online stores and sales'}
+		title={es ? ['Te digo dónde estás perdiendo ventas', 'antes de que gastes en rehacer tu página.'] : ['I tell you where you are losing sales', 'before you spend on rebuilding your site.']}
 		lede={es
-			? 'Reviso tu tienda, tu publicidad y tus números desde el lado de negocio, de marketing y de código. Te digo qué arreglar primero, qué puede esperar y qué no hace falta hacer.'
-			: 'I review your store, your ads and your numbers through business, marketing and code. I tell you what to fix first, what can wait and what you do not need to do.'}
+			? 'Reviso tu tienda en línea, tus anuncios y tus números. He trabajado del lado del negocio, del marketing y de la programación, así que puedo decirte qué arreglar primero y qué puede esperar.'
+			: 'I review your online store, your ads and your numbers. I have worked on the business side, in marketing and in programming, so I can tell you what to fix first and what can wait.'}
 	>
 		<div class="jx-actions jx-actions--center">
 			<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_consulting">{es ? 'Agendar un diagnóstico' : 'Book a diagnosis'}<Icon name="arrow-right" /></a>
@@ -124,8 +124,8 @@ const steps = es
 
 	<section class="jx-bots__section" aria-labelledby="consult-signals">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cuándo conviene' : 'When it makes sense'}</p>
-			<h2 id="consult-signals" class="jx-h2"><span>{es ? 'Situaciones en las que' : 'Situations where'}</span>{' '}<span class="jx-soft">{es ? 'conviene una revisión' : 'a review makes sense'}</span></h2>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cuándo te sirve' : 'When it helps'}</p>
+			<h2 id="consult-signals" class="jx-h2"><span>{es ? 'Si te pasa alguna de estas cosas,' : 'If any of this sounds familiar,'}</span>{' '}<span class="jx-soft">{es ? 'te conviene una revisión' : 'a review is worth it'}</span></h2>
 			<ul class="jx-points jx-svc__grid3">
 				{signals.map((item) => <li><Icon name={item.icon} size="md" /><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -136,8 +136,8 @@ const steps = es
 
 	<section class="jx-bots__section" aria-labelledby="consult-formats">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Formas de trabajar' : 'Ways to work'}</p>
-			<h2 id="consult-formats" class="jx-h2"><span>{es ? 'Tres formas de trabajar:' : 'Three ways to work:'}</span>{' '}<span class="jx-soft">{es ? 'sesión, auditoría o acompañamiento' : 'a session, an audit or ongoing guidance'}</span></h2>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo podemos trabajar' : 'How we can work'}</p>
+			<h2 id="consult-formats" class="jx-h2"><span>{es ? 'Puedes empezar con una llamada,' : 'You can start with a call,'}</span>{' '}<span class="jx-soft">{es ? 'una auditoría o acompañamiento' : 'an audit or ongoing guidance'}</span></h2>
 			<ul class="jx-points jx-svc__grid3 jx-svc__formats">
 				{formats.map((item) => <li><Icon name={item.icon} size="md" /><span class="jx-mono">{item.tag}</span><strong>{item.title}</strong><span>{item.text}</span></li>)}
 			</ul>
@@ -147,7 +147,7 @@ const steps = es
 	<section class="jx-bots__section" aria-labelledby="consult-areas">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Qué reviso' : 'What I review'}</p>
-			<h2 id="consult-areas" class="jx-h2"><span>{es ? 'Las áreas que influyen' : 'The areas that affect'}</span>{' '}<span class="jx-soft">{es ? 'en tus ventas' : 'your sales'}</span></h2>
+			<h2 id="consult-areas" class="jx-h2"><span>{es ? 'Todo lo que influye' : 'Everything that affects'}</span>{' '}<span class="jx-soft">{es ? 'en que te compren' : 'whether people buy'}</span></h2>
 			<dl class="jx-svc__areas">
 				{areas.map(([title, text]) => <div><dt>{title}</dt><dd>{text}</dd></div>)}
 			</dl>
@@ -156,11 +156,11 @@ const steps = es
 
 	<section class="jx-bots__section" aria-labelledby="consult-case">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Un diagnóstico real' : 'A real diagnosis'}</p>
-			<h2 id="consult-case" class="jx-h2"><span>{es ? 'La Carnicería Virtual:' : 'La Carnicería Virtual:'}</span>{' '}<span class="jx-soft">{es ? 'qué encontré y qué propuse.' : 'what I found and what I proposed.'}</span></h2>
+			<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Un caso real' : 'A real case'}</p>
+			<h2 id="consult-case" class="jx-h2"><span>{es ? 'Lo que encontré en La Carnicería Virtual' : 'What I found at La Carnicería Virtual'}</span>{' '}<span class="jx-soft">{es ? 'y lo que les propuse' : 'and what I proposed'}</span></h2>
 			<div class="jx-svc__case">
 				<ol>{findings.map((line, index) => <li><span class="jx-mono">{String(index + 1).padStart(2, '0')}</span><p>{line}</p></li>)}</ol>
-				<p class="jx-bots__note">{es ? 'Sin rediseñar la tienda: primero velocidad en celular, descubrimiento y confianza. Sin cifras de ventas del cliente.' : 'Without redesigning the store: mobile speed, discovery and trust first. No client sales figures.'}</p>
+				<p class="jx-bots__note">{es ? 'El plan no pedía rehacer la tienda. Empezaba por la velocidad en celular, por hacer más fácil encontrar los productos y por dar más confianza al comprar. Aquí no publico cifras de ventas del cliente.' : 'The plan did not call for rebuilding the store. It started with mobile speed, making products easier to find and giving shoppers more confidence. I do not publish the client’s sales figures here.'}</p>
 				<a class="jx-btn jx-btn--ghost" href={caseUrl}>{es ? 'Leer el caso completo' : 'Read the full case'}<Icon name="arrow-right" /></a>
 			</div>
 		</div>
@@ -168,7 +168,7 @@ const steps = es
 
 	<section class="jx-bots__section" aria-labelledby="consult-steps">
 		<div class="jx-wrap">
-			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Cómo avanzamos' : 'How we move'}</p>
+			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Los pasos' : 'The steps'}</p>
 			<h2 id="consult-steps" class="jx-h2"><span>{es ? 'De la llamada' : 'From the call'}</span>{' '}<span class="jx-soft">{es ? 'al plan de trabajo' : 'to a work plan'}</span></h2>
 			<ol class="jx-steps">{steps.map(([number, title, text]) => <li><span class="jx-mono">{number}</span><strong>{title}</strong><p>{text}</p></li>)}</ol>
 		</div>
@@ -177,18 +177,18 @@ const steps = es
 	<section class="jx-bots__section" aria-labelledby="consult-proof">
 		<div class="jx-wrap">
 			<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Proyectos' : 'Projects'}</p>
-			<h2 id="consult-proof" class="jx-h2"><span>{es ? 'Donde lo he aplicado.' : 'Where I have applied it.'}</span></h2>
+			<h2 id="consult-proof" class="jx-h2"><span>{es ? 'Negocios donde ya lo hice' : 'Businesses where I have done it'}</span></h2>
 			<JxProofCards locale={locale} slugs={['la-carniceria-virtual', 'come-verde', 'wu-nutrition']} cases={cases} />
 		</div>
 	</section>
 
 	<section class="jx-close" aria-labelledby="consult-close">
 		<div class="jx-close__card">
-			<h2 id="consult-close" class="jx-close__title"><span>{es ? '¿Qué te está costando' : 'What is costing you'}</span>{' '}<span class="jx-soft">{es ? 'más ventas hoy?' : 'the most sales today?'}</span></h2>
-			<p>{es ? 'Cuéntame qué vendes, en qué canales y qué te preocupa. Te respondo en menos de un día hábil con por dónde empezaría.' : 'Tell me what you sell, on which channels and what worries you. I reply within one business day with where I would start.'}</p>
+			<h2 id="consult-close" class="jx-close__title"><span>{es ? '¿Dónde crees que' : 'Where do you think'}</span>{' '}<span class="jx-soft">{es ? 'se te están yendo las ventas?' : 'your sales are slipping away?'}</span></h2>
+			<p>{es ? 'Cuéntame qué vendes, dónde lo vendes y qué te preocupa. En menos de un día hábil te respondo con por dónde empezaría yo.' : 'Tell me what you sell, where you sell it and what worries you. Within one business day I reply with where I would start.'}</p>
 			<div class="jx-actions jx-actions--center">
 				<a class="jx-btn jx-btn--primary" href={contactUrl} data-analytics-event="click_consulting_bottom">{es ? 'Agendar un diagnóstico' : 'Book a diagnosis'}<Icon name="arrow-right" /></a>
-				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}desarrollo-web/`}>{es ? 'Si ya sabes qué construir' : 'If you already know what to build'}</a>
+				<a class="jx-btn jx-btn--ghost" href={`${routes[locale].products}desarrollo-web/`}>{es ? 'Si ya sabes qué necesitas construir' : 'If you already know what you need built'}</a>
 			</div>
 		</div>
 	</section>

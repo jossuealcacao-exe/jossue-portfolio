@@ -14,7 +14,7 @@ const phrases = es
 	? ['te contesta al momento.', 'te cuenta qué ha construido Jossué.', 'te dice si te puede ayudar.', 'le deja tu mensaje a Jossué.']
 	: ['answers right away.', 'tells you what Jossué has built.', 'tells you if he can help.', 'leaves your message for Jossué.'];
 const questions = {
-	home: es ? ['¿Qué ha construido Jossué?', '¿Me puede ayudar con mi tienda Shopify?', '¿Cómo usa la IA en su trabajo?'] : ['What has Jossué built?', 'Can he help with my Shopify store?', 'How does he use AI in his work?'],
+	home: es ? ['¿Qué ha construido Jossué?', '¿Me puede ayudar con mi tienda Shopify?', '¿Me puede hacer un chatbot para mi negocio?'] : ['What has Jossué built?', 'Can he help with my Shopify store?', 'Can he build a chatbot for my business?'],
 	about: es ? ['Resúmeme su experiencia', '¿Qué resultados ha tenido?', '¿Con qué herramientas trabaja?'] : ['Summarize his experience', 'What results has he had?', 'What tools does he work with?'],
 	contact: es ? ['¿Cómo trabaja un proyecto?', '¿Cuánto tarda una tienda?', 'Quiero dejarle mis datos'] : ['How does he run a project?', 'How long does a store take?', 'I want to leave my details'],
 }[context];
@@ -29,7 +29,7 @@ const questions = {
 				<span class="sr-only">{es ? 'Mi asistente te contesta al momento.' : 'My assistant answers right away.'}</span>
 				<span aria-hidden="true">{es ? 'Mi asistente ' : 'My assistant '}<span class="jx-typer" data-typer={JSON.stringify(phrases)}>{phrases[0]}</span><span class="jx-typer__caret"></span></span>
 			</p>
-			<p class="jx-ai-invite__lede">{es ? 'Conoce mis productos, mis casos y cómo trabajo. Si quieres, le dejas tus datos y yo te escribo.' : 'It knows my products, my cases and how I work. If you want, leave your details with it and I will write to you.'}</p>
+			<p class="jx-ai-invite__lede">{es ? 'Sabe de mis productos, mis proyectos y cómo trabajo. Si quieres, le dejas tus datos y yo te escribo.' : 'It knows my products, my projects and how I work. If you like, leave your details with it and I will write to you.'}</p>
 		</div>
 		<ul class="jx-ai-invite__questions">
 			{questions.map((question) => (

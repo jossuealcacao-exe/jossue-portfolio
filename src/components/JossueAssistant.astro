@@ -19,93 +19,93 @@ const starters = es
 	: ['What has Jossué built?', 'What results has he had?', 'I need help with my store'];
 const copy = es
 	? {
-			greeting: 'Hola, soy Jossue AI, la versión con IA de Jossué. Pregúntame qué construye y cómo piensa, o cuéntame tu problema y vemos si te puede ayudar. Si algo no lo sé, te lo digo.',
+			greeting: 'Hola, soy Jossue AI, el asistente de Jossué. Te puedo contar qué ha construido y cómo trabaja. También puedes contarme qué pasa en tu negocio y te digo si él te puede ayudar. Si no sé algo, te lo digo.',
 			placeholder: 'Escribe tu pregunta…',
 			send: 'Enviar',
 			typing: 'Jossue AI está escribiendo',
-			disclosure: 'Soy una IA y respondo con lo que Jossué publica. Guardo el chat 30 días, sin correos ni teléfonos, para mejorar. No compartas datos sensibles.',
+			disclosure: 'Soy una IA y respondo con lo que Jossué publica. Guardo la conversación 30 días para mejorar mis respuestas, sin correos ni teléfonos. No compartas datos sensibles.',
 			error: 'Ahorita no puedo contestar. Escríbele a Jossué por WhatsApp o con el formulario y te responde en menos de un día hábil.',
 			limit: 'Llegaste al límite de mensajes por ahora. Si quieres seguir, escríbele directo a Jossué.',
 			lead: 'Listo, le pasé tus datos a Jossué.',
-			actions: { contact: 'Escribirle a Jossué', whatsapp: 'WhatsApp', cv: 'Descargar su CV', page: 'Ver la página' },
+			actions: { contact: 'Escribirle a Jossué', call: 'Agendar llamada de 10 min', whatsapp: 'WhatsApp', cv: 'Descargar su CV', page: 'Ver la página' },
 			reset: 'Nueva conversación',
 			leave: 'Dejarle un mensaje a Jossué',
 			leaveAsk: 'Quiero dejarle un mensaje a Jossué',
 			role: 'IA · responde al momento',
 			audit: {
-				invite: 'Te regalo una auditoría express de tu sitio: 3 áreas de oportunidad en 2 minutos.',
+				invite: 'Te hago una auditoría express gratis. En unos 2 minutos te digo 3 cosas de tu sitio que puedes mejorar.',
 				start: 'Hacer mi auditoría express',
-				intro: 'Va. Reviso la página principal de tu sitio y te doy tu puntaje de salud y 3 áreas de oportunidad, con un reporte que puedes descargar. Es gratis y tarda uno o dos minutos. ¿A nombre de quién y a qué correo te mando el reporte?',
+				intro: 'Va. Reviso la página principal de tu sitio, le pongo una calificación general y te señalo 3 cosas que puedes mejorar. Al final te queda un reporte para descargar. Es gratis y tarda uno o dos minutos. ¿A nombre de quién y a qué correo te lo mando?',
 				name: 'Tu nombre',
 				email: 'Tu correo',
-				consent: 'Acepto que Jossué me escriba sobre esta auditoría. Mis datos solo se usan para eso; puedo pedir que se borren en hola@jossuealcala.com.',
+				consent: 'Acepto que Jossué me escriba sobre esta auditoría. Mis datos solo se usan para eso y puedo pedir que los borren escribiendo a hola@jossuealcala.com.',
 				next: 'Siguiente',
 				askUrl: 'Gracias, {name}. ¿Cuál es la dirección de tu sitio?',
 				url: 'tusitio.com',
-				run: 'Hacer mi auditoría',
-				steps: ['Abriendo tu sitio', 'Midiendo la velocidad en celular', 'Revisando lo que ve tu cliente', 'Buscando qué te cuesta ventas', 'Escribiendo tus áreas de oportunidad'],
-				waiting: 'Auditando {domain}…',
+				run: 'Revisar mi sitio',
+				steps: ['Abriendo tu sitio', 'Midiendo la velocidad en celular', 'Revisando lo que ve tu cliente', 'Buscando qué te cuesta ventas', 'Escribiendo qué puedes mejorar'],
+				waiting: 'Revisando {domain}…',
 				doneTitle: 'Tu auditoría express de {domain}',
-				health: 'Salud',
-				areas: 'Tus {n} áreas de oportunidad',
-				areaOne: 'Tu área de oportunidad',
+				health: 'Calificación',
+				areas: '{n} cosas que puedes mejorar',
+				areaOne: 'Lo que puedes mejorar',
 				why: 'Por qué importa',
 				fix: 'Por dónde empezaría',
 				severity: { high: 'Alta', medium: 'Media', low: 'Baja' },
 				pdf: 'Descargar el reporte (PDF)',
 				report: 'Ver el reporte completo',
-				talk: 'Revisarlo con Jossué',
-				doneNote: 'Jossué ya recibió tu auditoría y te escribe para revisar contigo la primera mejora.',
+				talk: 'Agendar 10 min con Jossué',
+				doneNote: 'Jossué ya tiene tu reporte y te va a escribir para ver contigo el primer arreglo.',
 				errors: {
 					invalid_name: 'Escribe tu nombre, por favor.',
 					invalid_email: 'Revisa tu correo, parece que le falta algo.',
 					consent_required: 'Para mandarte el reporte necesito tu permiso.',
 					invalid_url: 'Esa dirección no la puedo revisar. Escribe la de tu sitio público, por ejemplo tutienda.com.',
-					limit_ip: 'Por hoy ya hiciste varias auditorías desde aquí. Si quieres revisar otro sitio, escríbele a Jossué.',
-					limit_domain: 'Ese sitio ya se revisó hoy. Jossué te puede mandar el reporte si se lo pides.',
+					limit_ip: 'Hoy ya revisaste varios sitios desde aquí. Si quieres revisar otro, escríbele a Jossué.',
+					limit_domain: 'Ese sitio ya se revisó hoy. Si quieres el reporte, pídeselo a Jossué y te lo manda.',
 					blocked: 'Por ahora no puedo hacer la auditoría desde este chat.',
-					unavailable: 'Ahorita no puedo correr la auditoría. Déjale tus datos a Jossué y te la manda por correo.',
+					unavailable: 'Ahorita no puedo hacer la revisión. Déjale tus datos a Jossué y te la manda por correo.',
 				},
 			},
 		}
 	: {
-			greeting: 'Hi, I am Jossue AI, the AI version of Jossué. Ask me what he builds and how he thinks, or tell me your problem and we will see if he can help. If I do not know something, I will say so.',
+			greeting: 'Hi, I am Jossue AI, Jossué’s assistant. I can tell you what he has built and how he works. You can also tell me what is going on in your business and I will tell you whether he can help. If I do not know something, I will say so.',
 			placeholder: 'Type your question…',
 			send: 'Send',
 			typing: 'Jossue AI is typing',
-			disclosure: 'I am an AI and I answer with what Jossué publishes. I keep the chat for 30 days, without emails or phone numbers, to improve. Do not share sensitive data.',
+			disclosure: 'I am an AI and I answer with what Jossué publishes. I keep the conversation for 30 days to improve my answers, without emails or phone numbers. Do not share sensitive data.',
 			error: 'I cannot answer right now. Message Jossué on WhatsApp or through the form and he will reply within one business day.',
 			limit: 'You reached the message limit for now. If you want to keep going, write to Jossué directly.',
 			lead: 'Done, I passed your details to Jossué.',
-			actions: { contact: 'Write to Jossué', whatsapp: 'WhatsApp', cv: 'Download his CV', page: 'See the page' },
+			actions: { contact: 'Write to Jossué', call: 'Book a 10-min call', whatsapp: 'WhatsApp', cv: 'Download his CV', page: 'See the page' },
 			reset: 'New conversation',
 			leave: 'Leave Jossué a message',
 			leaveAsk: 'I want to leave Jossué a message',
 			role: 'AI · answers right away',
 			audit: {
-				invite: 'A free express audit of your site: 3 opportunity areas in 2 minutes.',
+				invite: 'I can run a free express audit. In about 2 minutes I tell you 3 things on your site you can improve.',
 				start: 'Run my express audit',
-				intro: 'Sure. I review your site’s home page and give you a health score and 3 opportunity areas, with a report you can download. It is free and takes a minute or two. Who should I send the report to, and at what email?',
+				intro: 'Sure. I review your site’s home page, give it an overall score and point out 3 things you can improve. At the end you get a report to download. It is free and takes a minute or two. Who should I send it to, and at what email?',
 				name: 'Your name',
 				email: 'Your email',
 				consent: 'I agree that Jossué may write to me about this audit. My details are only used for that; I can ask for them to be deleted at hola@jossuealcala.com.',
 				next: 'Next',
 				askUrl: 'Thanks, {name}. What is your site’s address?',
 				url: 'yoursite.com',
-				run: 'Run my audit',
-				steps: ['Opening your site', 'Measuring mobile speed', 'Checking what your customer sees', 'Looking for what costs you sales', 'Writing your opportunity areas'],
-				waiting: 'Auditing {domain}…',
+				run: 'Review my site',
+				steps: ['Opening your site', 'Measuring mobile speed', 'Checking what your customer sees', 'Looking for what costs you sales', 'Writing what you can improve'],
+				waiting: 'Reviewing {domain}…',
 				doneTitle: 'Your express audit of {domain}',
-				health: 'Health',
-				areas: 'Your {n} opportunity areas',
-				areaOne: 'Your opportunity area',
+				health: 'Score',
+				areas: '{n} things you can improve',
+				areaOne: 'What you can improve',
 				why: 'Why it matters',
 				fix: 'Where I would start',
 				severity: { high: 'High', medium: 'Medium', low: 'Low' },
 				pdf: 'Download the report (PDF)',
 				report: 'See the full report',
-				talk: 'Review it with Jossué',
-				doneNote: 'Jossué already has your audit and will write to you to go over the first improvement together.',
+				talk: 'Book 10 min with Jossué',
+				doneNote: 'Jossué already has your report and will write to you to go over the first fix together.',
 				errors: {
 					invalid_name: 'Please type your name.',
 					invalid_email: 'Check your email, something seems to be missing.',
@@ -114,14 +114,14 @@ const copy = es
 					limit_ip: 'You already ran several audits from here today. To review another site, write to Jossué.',
 					limit_domain: 'That site was already reviewed today. Jossué can send you the report if you ask.',
 					blocked: 'I cannot run the audit from this chat right now.',
-					unavailable: 'I cannot run the audit right now. Leave Jossué your details and he will email it to you.',
+					unavailable: 'I cannot run the review right now. Leave Jossué your details and he will email it to you.',
 				},
 			},
 		};
 const invites = es
 	? {
 			audit: copy.audit.invite,
-			home: '¿Quieres saber si Jossué te puede ayudar? Pregúntame.',
+			home: '¿Algo no funciona en tu tienda o tu página? Cuéntame y te digo si Jossué te puede ayudar.',
 			products: '¿No sabes qué producto necesitas? Te ayudo a elegir.',
 			about: '¿Eres reclutador? Pregúntame por su experiencia.',
 			work: '¿Quieres el resumen de un caso? Pregúntame.',
@@ -130,7 +130,7 @@ const invites = es
 		}
 	: {
 			audit: copy.audit.invite,
-			home: 'Want to know if Jossué can help you? Ask me.',
+			home: 'Something not working on your store or website? Tell me and I will say whether Jossué can help.',
 			products: 'Not sure which product fits? I can help you pick.',
 			about: 'Recruiting? Ask me about his experience.',
 			work: 'Want the short version of a case? Ask me.',
@@ -141,7 +141,7 @@ const config = {
 	locale,
 	auditEnabled: AUDIT_ENABLED,
 	copy,
-	links: { contact: routes[locale].contact, whatsapp: contact.whatsapp, cv: cvHref },
+	links: { contact: routes[locale].contact, call: `${routes[locale].booking}?origen=chat`, whatsapp: contact.whatsapp, cv: cvHref },
 	invites,
 	routes: routes[locale],
 };
@@ -186,6 +186,8 @@ const config = {
 </aside>
 
 <script>
+	import { trackLead } from '../scripts/analytics';
+
 	type Message = { role: 'user' | 'assistant'; content: string; sig?: string; action?: string; page?: string | null };
 	type AuditCopy = {
 		invite: string; start: string; intro: string; name: string; email: string; consent: string; next: string; askUrl: string; url: string; run: string;
@@ -203,7 +205,7 @@ const config = {
 		locale: 'es' | 'en';
 		auditEnabled: boolean;
 		copy: Copy;
-		links: { contact: string; whatsapp: string | null; cv: string | null };
+		links: { contact: string; call: string; whatsapp: string | null; cv: string | null };
 		invites: Record<string, string>;
 		routes: Record<string, string>;
 	};
@@ -252,6 +254,7 @@ const config = {
 
 		function actionHref(message: Message) {
 			if (message.action === 'contact') return config.links.contact;
+			if (message.action === 'call') return config.links.call;
 			if (message.action === 'whatsapp') return config.links.whatsapp;
 			if (message.action === 'cv') return config.links.cv;
 			if (message.action === 'page') return message.page ?? null;
@@ -408,8 +411,12 @@ const config = {
 				});
 				card.append(formNode);
 				log.append(card);
-				scrollDown();
-				window.requestAnimationFrame(() => formNode.querySelector<HTMLInputElement>('input:not([type=checkbox])')?.focus());
+				// Hasta el final del formulario, sin animación: el permiso y el botón tienen que verse.
+				// El foco va sin mover el scroll; antes cortaba la bajada y dejaba la casilla tapada.
+				window.requestAnimationFrame(() => {
+					log.scrollTo({ top: log.scrollHeight, behavior: 'instant' });
+					if (matchMedia('(pointer: fine)').matches) formNode.querySelector<HTMLInputElement>('input:not([type=checkbox])')?.focus({ preventScroll: true });
+				});
 				return;
 			}
 			const audit = state.audit;
@@ -463,7 +470,7 @@ const config = {
 				};
 				link(audit.pdf_url, A.pdf, 'assistant_audit_pdf', true);
 				link(audit.report_url, A.report, 'assistant_audit_report');
-				link(`${config.links.contact}?producto=consultoria`, A.talk, 'assistant_audit_talk');
+				link(`${config.routes.booking}?origen=auditoria`, A.talk, 'assistant_audit_talk');
 				card.append(actions, make('p', 'jai__audit-note', A.doneNote));
 				log.append(card);
 				// Que se vea desde el anillo de salud, no desde los botones.
@@ -493,6 +500,7 @@ const config = {
 				}
 				if (response.status === 429) return setAudit({ ...state, step: 'url', error: A.errors[data.error] ?? A.errors.limit_ip });
 				if (!response.ok || !data.ok) return setAudit({ ...state, step: 'failed', error: A.errors.unavailable });
+				trackLead('audit');
 				applyAudit({ ...state, startedAt: Date.now() }, data as AuditResult);
 			} catch {
 				setAudit({ ...state, step: 'url', error: A.errors.unavailable });

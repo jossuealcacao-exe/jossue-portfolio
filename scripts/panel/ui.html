@@ -112,6 +112,7 @@ td a{color:var(--accent)}
       <button data-v="chats" aria-pressed="true">Conversaciones</button>
       <button data-v="dash" aria-pressed="false">Dashboard</button>
       <button data-v="audits" aria-pressed="false">Auditorías</button>
+      <button data-v="calls" aria-pressed="false">Llamadas</button>
       <button data-v="leads" aria-pressed="false">Recados</button>
       <button data-v="alerts" aria-pressed="false">Alertas</button>
     </div>
@@ -248,6 +249,37 @@ function paintAudits() {
   $('main').innerHTML = `<div class="wrap"><div class="card w12"><h3>Auditorías express</h3><div class="hint">pedidas en el chat · ${D.audits.length} en la ventana</div><table><thead><tr><th>Fecha</th><th>Quién</th><th>Sitio</th><th>Estado</th><th>Puntaje</th><th>Resumen</th><th>Reporte</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="8">Todavía no hay auditorías.</td></tr>'}</tbody></table></div></div>`;
 }
 
+const gdl = (ms, opts) => new Intl.DateTimeFormat('es-MX', { timeZone: 'America/Mexico_City', ...opts }).format(new Date(Number(ms)));
+const callWhen = (ms) => gdl(ms, { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
+
+function paintCalls() {
+  if (!D.callsAvailable) { $('main').innerHTML = '<div class="empty">La agenda todavía no está activa en la base (falta la migración 0006).</div>'; return; }
+  const now = Date.now();
+  const row = (c) => {
+    const digits = String(c.phone).replace(/\D/g, '');
+    const live = c.status === 'confirmed';
+    const state = live ? (Number(c.slot_end) < now ? '<span class="st">pasó</span>' : '<span class="st done">confirmada</span>') : `<span class="st failed">cancelada${c.cancelled_by === 'jossue' ? ' por ti' : ''}</span>`;
+    return `<tr><td><b>${esc(callWhen(c.slot_start))}</b></td><td>${esc(c.name)}<br><span style="color:var(--label-2)">${esc(c.email)}</span></td><td><a href="tel:${esc(c.phone)}">${esc(c.phone)}</a><br><a href="https://wa.me/${esc(digits)}" target="_blank" rel="noopener">WhatsApp</a></td><td>${esc(c.topic || '')}</td><td>${esc(c.source)}</td><td>${state}</td><td>${live && Number(c.slot_start) > now ? `<a href="#" data-cancel="${esc(c.id)}">cancelar</a>` : ''}</td></tr>`;
+  };
+  const upcoming = D.calls.filter((c) => Number(c.slot_end) >= now);
+  const past = D.calls.filter((c) => Number(c.slot_end) < now).reverse();
+  const head = '<thead><tr><th>Cuándo (Guadalajara)</th><th>Quién</th><th>Teléfono</th><th>Tema</th><th>Desde</th><th>Estado</th><th></th></tr></thead>';
+  const blocks = D.callBlocks.map((b) => `<tr><td>${esc(gdl(Date.parse(b.day + 'T18:00:00Z'), { weekday: 'long', day: 'numeric', month: 'long' }))}</td><td>${esc(b.reason || '')}</td><td><a href="#" data-unblock="${esc(b.day)}">liberar</a></td></tr>`).join('');
+  $('main').innerHTML = `<div class="wrap"><div class="grid">
+    <div class="card w12"><h3>Próximas llamadas</h3><div class="hint">10 minutos · tú les llamas · martes, miércoles y viernes 10–18 h, sábado 9–13 h · ${upcoming.filter((c) => c.status === 'confirmed').length} confirmadas</div><table>${head}<tbody>${upcoming.map(row).join('') || '<tr><td colspan="7">No hay llamadas agendadas.</td></tr>'}</tbody></table></div>
+    <div class="card w6"><h3>Bloquear un día</h3><div class="hint">ese día desaparece de la agenda; las llamadas ya agendadas se quedan</div><p><input type="date" id="blockDay"> <input id="blockReason" placeholder="motivo (opcional)" maxlength="80"> <button class="btn" id="bBlock">Bloquear</button></p><table><thead><tr><th>Día</th><th>Motivo</th><th></th></tr></thead><tbody>${blocks || '<tr><td colspan="3">Sin días bloqueados.</td></tr>'}</tbody></table></div>
+    <div class="card w6"><h3>Últimos 7 días</h3><div class="hint">llamadas que ya pasaron</div><table>${head}<tbody>${past.map(row).join('') || '<tr><td colspan="7">Nada todavía.</td></tr>'}</tbody></table></div>
+  </div></div>`;
+  $('bBlock').onclick = () => agenda('/llamadas/bloquear', { day: $('blockDay').value, reason: $('blockReason').value }, 'Día bloqueado');
+}
+
+async function agenda(path, payload, done) {
+  const r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Panel': '1' }, body: JSON.stringify(payload) });
+  const out = await r.json().catch(() => ({}));
+  if (!r.ok) return toast(out.error || 'No se pudo');
+  await load(); toast(done);
+}
+
 function paintLeads() {
   const rows = D.leads.map((l) => `<tr><td>${esc(String(l.created_at).replace('T', ' ').slice(0, 16))}</td><td>${esc(l.name || '—')}</td><td>${esc([l.email, l.phone].filter(Boolean).join(' · '))}</td><td>${esc(l.company || '')}</td><td>${esc(l.need || '')}</td><td>${esc(l.message || '')}</td><td>${esc(String(l.page || '').replace(/^https?:\/\//, ''))}</td><td>${l.sid ? `<a href="#" data-open="${esc(l.sid)}">chat</a>` : ''}</td></tr>`).join('');
   $('main').innerHTML = `<div class="wrap"><div class="card w12"><h3>Recados para Jossué</h3><div class="hint">los que dejaron nombre y contacto · ${D.leads.length}</div><table><thead><tr><th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Empresa</th><th>Necesita</th><th>Mensaje</th><th>Desde</th><th></th></tr></thead><tbody>${rows || '<tr><td colspan="8">Todavía no hay recados.</td></tr>'}</tbody></table></div></div>`;
@@ -265,7 +297,7 @@ function paintAlerts() {
 function paint() {
   chips(); paintList();
   document.querySelectorAll('#views button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.v === view));
-  ({ chats: paintThread, dash: paintDash, audits: paintAudits, leads: paintLeads, alerts: paintAlerts })[view]();
+  ({ chats: paintThread, dash: paintDash, audits: paintAudits, calls: paintCalls, leads: paintLeads, alerts: paintAlerts })[view]();
 }
 
 async function load() {
@@ -317,7 +349,11 @@ $('q').addEventListener('input', (e) => { F.q = e.target.value; paint(); });
 $('dFrom').addEventListener('change', (e) => { F.from = e.target.value; paint(); });
 $('dTo').addEventListener('change', (e) => { F.to = e.target.value; paint(); });
 $('list').addEventListener('click', (e) => { const r = e.target.closest('.row'); if (r) { active = r.dataset.sid; view = 'chats'; paint(); } });
-$('main').addEventListener('click', (e) => { const a = e.target.closest('[data-open]'); if (a) { e.preventDefault(); active = a.dataset.open; view = 'chats'; paint(); } });
+$('main').addEventListener('click', (e) => {
+  const a = e.target.closest('[data-open]'); if (a) { e.preventDefault(); active = a.dataset.open; view = 'chats'; paint(); return; }
+  const c = e.target.closest('[data-cancel]'); if (c) { e.preventDefault(); if (confirm('¿Cancelar esta llamada? A la persona no le llega aviso: escríbele tú por WhatsApp.')) agenda('/llamadas/cancelar', { id: c.dataset.cancel }, 'Llamada cancelada'); return; }
+  const u = e.target.closest('[data-unblock]'); if (u) { e.preventDefault(); agenda('/llamadas/liberar', { day: u.dataset.unblock }, 'Día liberado'); }
+});
 $('bRefresh').onclick = async () => { toast('Actualizando…'); await fetch('/refrescar', { method: 'POST', headers: { 'X-Panel': '1' } }); await load(); toast('Listo'); };
 $('bExport').onclick = (e) => menu(e.currentTarget, [['Filtro actual · Markdown', () => download('md', visible().map((c) => c.sid))], ['Filtro actual · CSV', () => download('csv', visible().map((c) => c.sid))], ['Filtro actual · JSON', () => download('json', visible().map((c) => c.sid))], ['Esta conversación · Markdown', () => download('md', [active])]]);
 $('bAI').onclick = (e) => menu(e.currentTarget, [['Resumir el filtro actual', () => summarize('set')], ['Resumir esta conversación', () => summarize('chat')]]);

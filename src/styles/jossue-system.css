@@ -9,14 +9,15 @@
 @layer tokens {
 	:root {
 		--bg: #050605;
-		--band: #0c0e0c;
-		--card: #161a16;
-		--card-2: #1f241f;
-		--hair: rgba(238, 241, 234, 0.08);
-		--hair-2: rgba(238, 241, 234, 0.14);
+		/* Contraste subido: las tarjetas y los bordes tienen que verse sobre el fondo casi negro. */
+		--band: #0f120f;
+		--card: #1a1f1a;
+		--card-2: #242a24;
+		--hair: rgba(238, 241, 234, 0.12);
+		--hair-2: rgba(238, 241, 234, 0.2);
 		--text: #eef1ea;
-		--text-2: #9aa197;
-		--text-3: #7c8479;
+		--text-2: #adb4aa;
+		--text-3: #8f978c;
 		--ivory: #ece6d8;
 		--ivory-ink: #12110e;
 		--phosphor: #9bff66;
@@ -6482,6 +6483,542 @@
 
 /* ===== Aviso de privacidad: columna de lectura ===== */
 @layer utilities {
+	/* Agenda de llamadas (/es/agenda/): días, horas y datos en una sola tarjeta. */
+	.jx-booking {
+		padding: calc(var(--header-h, 81px) + clamp(2rem, 1rem + 4vw, 4.5rem)) 0 var(--jx-sec);
+	}
+
+	.jx-booking__head {
+		max-width: 46rem;
+	}
+
+	.jx-booking__title {
+		margin: 0.9rem 0 0;
+		font-size: clamp(2.25rem, 1.4rem + 3vw, 3.5rem);
+		font-weight: 600;
+		line-height: 1.05;
+		letter-spacing: -0.028em;
+		color: var(--text);
+	}
+
+	.jx-booking__lede {
+		margin: 1.1rem 0 0;
+		font-size: var(--jx-lede);
+		line-height: 1.5;
+		color: var(--text-2);
+	}
+
+	.jx-booking__hours {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+		margin: 1.25rem 0 0;
+		font-size: 0.9375rem;
+		color: var(--text-2);
+	}
+
+	.jx-booking__hours svg {
+		flex: none;
+		width: 1.15rem;
+		height: 1.15rem;
+	}
+
+	.jx-booking__card,
+	.jx-booking__done,
+	.jx-booking__alt {
+		margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+		padding: clamp(1.5rem, 1rem + 2.5vw, 3rem);
+		border: 1px solid var(--hair);
+		border-radius: var(--radius-xl);
+		background: var(--card);
+	}
+
+	.jx-booking__card {
+		display: grid;
+		grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+		gap: clamp(1.75rem, 1rem + 3vw, 4rem);
+		background: radial-gradient(80% 120% at 0% 0%, rgba(236, 230, 216, 0.06), transparent 60%), var(--card);
+	}
+
+	.jx-booking__card[hidden],
+	.jx-booking__done[hidden] {
+		display: none;
+	}
+
+	/* Sin esto la fila de días (que se desplaza de lado) ensancha la columna y la saca de la tarjeta. */
+	.jx-booking__picker,
+	.jx-booking__form {
+		min-width: 0;
+	}
+
+	.jx-booking__step {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+		margin: 0 0 0.9rem;
+		font-size: 1.0625rem;
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.jx-booking__step span {
+		display: inline-grid;
+		place-items: center;
+		width: 1.6rem;
+		height: 1.6rem;
+		border-radius: var(--radius-pill);
+		background: var(--card-2);
+		font-family: var(--mono);
+		font-size: 0.75rem;
+		color: var(--text-2);
+	}
+
+	.jx-booking__picker .jx-booking__step:not(:first-child) {
+		margin-top: 1.75rem;
+	}
+
+	.jx-booking__days {
+		display: flex;
+		gap: 0.5rem;
+		overflow-x: auto;
+		padding-bottom: 0.35rem;
+		scrollbar-width: thin;
+	}
+
+	.jx-booking__day,
+	.jx-booking__time {
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-md);
+		background: var(--band);
+		color: var(--text);
+		font: inherit;
+		cursor: pointer;
+		transition: border-color 160ms var(--jx-ease), background-color 160ms var(--jx-ease);
+	}
+
+	.jx-booking__day {
+		display: grid;
+		flex: none;
+		gap: 0.15rem;
+		min-width: 4.6rem;
+		padding: 0.6rem 0.75rem;
+		text-align: center;
+	}
+
+	.jx-booking__day span {
+		font-size: 0.75rem;
+		text-transform: capitalize;
+		color: var(--text-2);
+	}
+
+	.jx-booking__day strong {
+		font-size: 0.9375rem;
+		font-weight: 600;
+	}
+
+	.jx-booking__times {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(5.25rem, 1fr));
+		gap: 0.5rem;
+		max-height: 17rem;
+		overflow-y: auto;
+	}
+
+	.jx-booking__time {
+		display: grid;
+		gap: 0.1rem;
+		min-height: 2.75rem;
+		padding: 0.5rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.jx-booking__time small {
+		font-size: 0.6875rem;
+		color: var(--text-3);
+	}
+
+	.jx-booking__day:hover,
+	.jx-booking__time:hover {
+		border-color: var(--line-strong);
+	}
+
+	.jx-booking__day[aria-pressed='true'],
+	.jx-booking__time[aria-pressed='true'] {
+		border-color: var(--ivory);
+		background: var(--ivory);
+		color: var(--ivory-ink);
+	}
+
+	.jx-booking__day[aria-pressed='true'] span,
+	.jx-booking__time[aria-pressed='true'] small {
+		color: inherit;
+		opacity: 0.7;
+	}
+
+	.jx-booking__note {
+		margin: 0;
+		color: var(--text-2);
+	}
+
+	.jx-booking__form {
+		display: grid;
+		align-content: start;
+		gap: 0.9rem;
+	}
+
+	.jx-booking__form .jx-booking__step {
+		margin-bottom: 0;
+	}
+
+	.jx-booking__chosen {
+		margin: 0;
+		padding: 0.75rem 0.9rem;
+		border: 1px dashed var(--hair-2);
+		border-radius: var(--radius-md);
+		color: var(--text-2);
+	}
+
+	.jx-booking__chosen.is-set {
+		border-style: solid;
+		border-color: var(--ivory);
+		color: var(--text);
+		font-weight: 600;
+		&::first-letter {
+			text-transform: uppercase;
+		}
+	}
+
+	.jx-booking__form .consent a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+	}
+
+	.jx-booking__done {
+		display: flex;
+		gap: 1.25rem;
+		align-items: flex-start;
+		border-color: rgba(155, 255, 102, 0.35);
+	}
+
+	.jx-booking__done h2,
+	.jx-booking__alt h2 {
+		margin: 0;
+		font-size: 1.375rem;
+		font-weight: 600;
+		color: var(--text);
+	}
+
+	.jx-booking__done p,
+	.jx-booking__alt p {
+		margin: 0.5rem 0 0;
+		line-height: 1.55;
+		color: var(--text-2);
+	}
+
+	.jx-booking__done .jx-actions {
+		margin-top: 1.25rem;
+	}
+
+	.jx-booking__mark {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: var(--radius-pill);
+		background: rgba(155, 255, 102, 0.14);
+		color: var(--phosphor);
+	}
+
+	.jx-booking__cancel {
+		border: 1px solid var(--hair-2);
+		background: transparent;
+		color: var(--text-2);
+	}
+
+	.jx-booking__alt {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1.25rem 2rem;
+		background: var(--band);
+	}
+
+	.jx-booking__alt > div:first-child {
+		max-width: 34rem;
+	}
+
+	@media (max-width: 52rem) {
+		.jx-booking__card {
+			grid-template-columns: 1fr;
+		}
+
+		.jx-booking__times {
+			max-height: none;
+		}
+	}
+
+	/* Campos de formulario: un solo estilo para contacto, agenda y chat, visible sobre el fondo oscuro.
+	   Antes había tres capas que se pisaban: inputs sin borde casi del color del fondo y selects
+	   con esquinas rectas. */
+	.field input,
+	.field textarea,
+	.field select {
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-md);
+		background-color: var(--card);
+		box-shadow: none;
+		color: var(--text);
+	}
+
+	.field input::placeholder,
+	.field textarea::placeholder {
+		color: var(--text-3);
+	}
+
+	.field input:hover,
+	.field textarea:hover,
+	.field select:hover {
+		border-color: var(--line-strong);
+	}
+
+	.field input:focus-visible,
+	.field textarea:focus-visible,
+	.field select:focus-visible {
+		border-color: var(--ivory);
+		box-shadow: 0 0 0 3px rgba(236, 230, 216, 0.18);
+	}
+
+	.field label {
+		color: var(--text-2);
+	}
+
+	.consent {
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-md);
+		background: var(--card);
+		color: var(--text-2);
+	}
+
+	/* Héroe del inicio en slider: las diapositivas se apilan en la misma celda y se cruzan. */
+	/* El fondo cubre solo las diapositivas (no las cifras ni las marcas): así el loop conserva su
+	   proporción y su centro despejado queda detrás del titular. */
+	.jx-slides__stage {
+		position: relative;
+		isolation: isolate;
+		padding-bottom: clamp(0.75rem, 0.5rem + 1vw, 1.5rem);
+	}
+
+	.jx-slides__bg {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		opacity: 0;
+		transition: opacity 900ms var(--jx-ease);
+	}
+
+	.jx-slides__bg.is-active {
+		opacity: 1;
+	}
+
+	.jx-slides__track {
+		position: relative;
+		z-index: 1;
+		display: grid;
+		touch-action: pan-y;
+	}
+
+	.jx-slides__track > .jx-slide {
+		grid-area: 1 / 1;
+		padding-bottom: clamp(1.25rem, 0.75rem + 2vw, 2.25rem);
+		transition: opacity 600ms var(--jx-ease), transform 600ms var(--jx-ease), visibility 0s;
+	}
+
+	.jx-slides__track > .jx-slide:not(.is-active) {
+		visibility: hidden;
+		opacity: 0;
+		transform: translateY(10px);
+		transition: opacity 350ms var(--jx-ease), transform 350ms var(--jx-ease), visibility 0s 350ms;
+	}
+
+	.jx-slides__nav {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 0.6rem;
+	}
+
+	.jx-slides__dot {
+		position: relative;
+		width: 2.75rem;
+		height: 1.75rem;
+		padding: 0;
+		border: 0;
+		background: none;
+		cursor: pointer;
+	}
+
+	.jx-slides__dot::before,
+	.jx-slides__dot::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		top: 50%;
+		height: 3px;
+		margin-top: -1.5px;
+		border-radius: var(--radius-pill);
+	}
+
+	.jx-slides__dot::before {
+		right: 0;
+		background: var(--hair-2);
+	}
+
+	.jx-slides__dot::after {
+		width: 0;
+		background: var(--ivory);
+	}
+
+	.jx-slides__dot[aria-current='true']::after {
+		width: 100%;
+	}
+
+	.jx-slides.is-running .jx-slides__dot[aria-current='true']::after {
+		animation: jx-slide-progress var(--slide-ms, 9s) linear both;
+	}
+
+	@keyframes jx-slide-progress {
+		from {
+			width: 0;
+		}
+		to {
+			width: 100%;
+		}
+	}
+
+	.jx-slides__pause {
+		display: inline-grid;
+		place-items: center;
+		width: 1.9rem;
+		height: 1.9rem;
+		margin-left: 0.25rem;
+		padding: 0;
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-pill);
+		background: transparent;
+		color: var(--text-2);
+		cursor: pointer;
+	}
+
+	.jx-slides__pause svg {
+		width: 0.8rem;
+		height: 0.8rem;
+	}
+
+	.jx-slides__pause .jx-slides__icon-play,
+	.jx-slides__pause[aria-pressed='true'] .jx-slides__icon-pause {
+		display: none;
+	}
+
+	.jx-slides__pause[aria-pressed='true'] .jx-slides__icon-play {
+		display: block;
+	}
+
+	.jx-slides__dot:focus-visible,
+	.jx-slides__pause:focus-visible {
+		outline: 2px solid var(--ivory);
+		outline-offset: 3px;
+	}
+
+	.jx-hero--foot {
+		position: relative;
+		z-index: 1;
+		padding-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+	}
+
+	.jx-hero--foot .jx-facts {
+		margin-top: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.jx-slides__bg,
+		.jx-slides__track > .jx-slide {
+			transition: none;
+		}
+	}
+
+	/* Ventana del video de campaña de MADRE (diapositiva 3 del inicio). */
+	.jx-campaign {
+		width: min(100% - 2rem, 72rem);
+		max-height: calc(100svh - 2rem);
+		padding: 0;
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-xl);
+		background: var(--band);
+		color: var(--text);
+		overflow: hidden;
+	}
+
+	.jx-campaign::backdrop {
+		background: rgba(0, 0, 0, 0.78);
+		backdrop-filter: blur(6px);
+	}
+
+	.jx-campaign video {
+		display: block;
+		width: 100%;
+		height: auto;
+		max-height: calc(100svh - 7rem);
+		background: #000;
+	}
+
+	.jx-campaign__close {
+		position: absolute;
+		top: 0.75rem;
+		right: 0.75rem;
+		z-index: 1;
+		width: 2.5rem;
+		height: 2.5rem;
+		border: 1px solid var(--hair-2);
+		border-radius: var(--radius-pill);
+		background: rgba(5, 6, 5, 0.7);
+		color: var(--text);
+		font-size: 1.4rem;
+		line-height: 1;
+		cursor: pointer;
+	}
+
+	.jx-campaign__note {
+		margin: 0;
+		padding: 0.85rem 1.25rem;
+		font-size: 0.8125rem;
+		color: var(--text-2);
+	}
+
+	.jx-slide--madre .jx-dot--live {
+		background: var(--phosphor);
+	}
+
+	/* «Preferencias de cookies» en el pie: un botón que se lee como los enlaces de al lado. */
+	.footer-consent {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.2em;
+		cursor: pointer;
+	}
+
+	.footer-consent[hidden] {
+		display: none;
+	}
+
 	.jx-legal {
 		padding: calc(var(--header-h, 81px) + clamp(2rem, 1rem + 4vw, 4.5rem)) 0 var(--jx-sec);
 	}
@@ -6558,5 +7095,13 @@
 		color: inherit;
 		text-decoration: underline;
 		text-underline-offset: 0.15em;
+	}
+}
+
+/* Demos de producto (public/videos/demos): traen sus textos arriba, así que en el teléfono se
+   ven completas, en 9:16. Sin esto, la regla 4:5 del héroe les cortaría el texto. */
+@layer utilities {
+	.jx-page-hero .jx-bots__stage.is-tall video[data-tall*='/videos/demos/'] {
+		aspect-ratio: 9 / 16;
 	}
 }

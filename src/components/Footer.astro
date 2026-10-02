@@ -15,8 +15,10 @@ const es = locale === 'es';
 // deja de competir con la pagina: es el lugar donde se encuentra algo, no
 // donde se vuelve a argumentar.
 const tags = es
-	? ['Shopify', 'UX/CRO', 'Ecommerce', 'IA aplicada', 'Growth', 'Producto digital']
-	: ['Shopify', 'UX/CRO', 'Ecommerce', 'Applied AI', 'Growth', 'Digital product'];
+	? ['Shopify', 'Tiendas en línea', 'Chatbots', 'IA aplicada', 'SEO', 'Publicidad digital']
+	: ['Shopify', 'Online stores', 'Chatbots', 'Applied AI', 'SEO', 'Digital ads'];
+import { analyticsConfig } from '../data/analytics';
+const consentAvailable = Boolean(analyticsConfig.ga4Id || analyticsConfig.metaPixelId || analyticsConfig.googleAdsId);
 ---
 
 <footer class="site-footer site-footer--quiet">
@@ -25,8 +27,8 @@ const tags = es
 			<p class="site-footer__wordmark">Jossue Alcalá</p>
 			<p class="site-footer__line">
 				{es
-					? 'Dirijo ecommerce y programo tiendas, sitios y herramientas con IA, desde Guadalajara.'
-					: 'I lead ecommerce and build stores, websites and AI tools, from Guadalajara.'}
+					? 'Dirijo las ventas en línea de dos marcas y hago tiendas, páginas web y herramientas con IA para otros negocios. Trabajo desde Guadalajara.'
+					: 'I lead online sales for two brands and build stores, websites and AI tools for other businesses. I work from Guadalajara.'}
 			</p>
 		</div>
 
@@ -39,7 +41,7 @@ const tags = es
 						<li><a href={routes[locale][item.key]}>{item.label}</a></li>
 					))}
 					<li><a href={routes[locale].services}>{es ? 'Servicios' : 'Services'}</a></li>
-					<li><a href={routes[locale].ai}>{es ? 'IA y sistemas' : 'AI and systems'}</a></li>
+					<li><a href={routes[locale].ai}>{es ? 'Herramientas con IA' : 'AI tools'}</a></li>
 				</ul>
 			</div>
 
@@ -83,11 +85,11 @@ const tags = es
 		<p class="site-footer__tags">{tags.join(' · ')}</p>
 
 		<div class="site-footer__legal">
-			<p>© {year} Jossue Alcalá · Guadalajara, México · <a href={routes[locale].privacy}>{es ? 'Aviso de privacidad' : 'Privacy notice'}</a></p>
+			<p>© {year} Jossue Alcalá · Guadalajara, México · <a href={routes[locale].privacy}>{es ? 'Aviso de privacidad' : 'Privacy notice'}</a>{consentAvailable && <> · <button type="button" class="footer-consent" data-consent-open>{es ? 'Preferencias de cookies' : 'Cookie preferences'}</button></>}</p>
 			<p>
 				{es
-					? 'Las cifras publicadas provienen de los proyectos citados y conservan su fecha y su método.'
-					: 'Published figures come from the cited projects and keep their date and method.'}
+					? 'Las cifras de este sitio salen de los proyectos que cito, con su fecha y la forma en que se midieron.'
+					: 'The figures on this site come from the projects I cite, with their date and how they were measured.'}
 			</p>
 		</div>
 	</div>

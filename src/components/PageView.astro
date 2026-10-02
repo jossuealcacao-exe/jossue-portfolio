@@ -73,20 +73,20 @@ const serviceShots = [
 ];
 const services: Array<{ title: string; text: string; icon: IconName }> = es
 	? [
-			{ title: 'Construir tu tienda', text: 'Armo la tienda completa en Shopify, o la parte que te falte. Queda hecha a la medida de cómo vendes tú, no de una plantilla.', icon: 'code' },
-			{ title: 'Encontrar dónde pierdes ventas', text: 'Reviso el recorrido de tu cliente y te digo en qué punto exacto se va, qué arreglar primero y qué puede esperar.', icon: 'filter' },
-			{ title: 'Hacer que cargue y funcione', text: 'Que abra rápido, sobre todo en el celular, y que tu equipo pueda mantenerla sin llamar a nadie.', icon: 'trend-up' },
-			{ title: 'Saber qué está funcionando', text: 'Dejo la medición bien puesta y conectada con la publicidad y los correos, para que sepas de dónde viene cada venta.', icon: 'badge-percent' },
-			{ title: 'Poner la IA a trabajar', text: 'Asistentes y automatizaciones con tus datos y tus permisos, en tareas donde ahorran tiempo.', icon: 'sparkles-ai' },
-			{ title: 'Construir lo que no existe', text: 'Cuando ninguna app del mercado hace lo que necesitas, la programo. Es lo que hice con Prometeo y Hermes.', icon: 'basket' },
+			{ title: 'Armar tu tienda en línea', text: 'Armo tu tienda en Shopify desde cero o termino la parte que te falta. La acomodo a lo que vendes y a cómo lo entregas.', icon: 'code' },
+			{ title: 'Encontrar dónde pierdes ventas', text: 'Recorro tu sitio como lo haría un cliente y te digo en qué paso se va sin comprar. Te entrego los arreglos en orden, empezando por el que más ventas te cuesta.', icon: 'filter' },
+			{ title: 'Que cargue rápido y la puedas mover tú', text: 'Muchos de tus clientes entran desde el celular. Hago que la página abra rápido ahí y que tu equipo pueda cambiar precios, fotos y promociones sin pedirle ayuda a nadie.', icon: 'trend-up' },
+			{ title: 'Saber de dónde llegan tus ventas', text: 'Dejo bien configurado Google Analytics junto con tus anuncios y tus correos. Así sabes de dónde llegó cada venta y en qué anuncio vale la pena seguir invirtiendo.', icon: 'badge-percent' },
+			{ title: 'Un asistente que conteste por ti', text: 'Un asistente con IA que responde a tus clientes en tu sitio o en WhatsApp con tus precios y tu catálogo reales, también fuera de horario. Lo que no sabe te lo pasa a ti.', icon: 'sparkles-ai' },
+			{ title: 'Programar lo que ninguna app hace', text: 'Si ninguna app de Shopify hace lo que necesitas, la programo yo. Así nacieron Prometeo y Hermes, mi barra de avisos y mi botón de compra fijo.', icon: 'basket' },
 		]
 	: [
-			{ title: 'Build your store', text: 'I build the whole Shopify store, or whichever part you are missing. Made to fit how you actually sell, not a template.', icon: 'code' },
-			{ title: 'Find where you lose sales', text: 'I walk your customer’s path and tell you the exact point where they leave, what to fix first, and what can wait.', icon: 'filter' },
-			{ title: 'Make it fast and workable', text: 'So it opens quickly, especially on a phone, and your team can maintain it without calling anyone.', icon: 'trend-up' },
-			{ title: 'Know what is working', text: 'I set up measurement properly and connect it to the advertising and the emails, so you know where each sale came from.', icon: 'badge-percent' },
-			{ title: 'Put AI to work', text: 'Assistants and automations using your real data and your permissions, where they genuinely save time. Not AI for its own sake.', icon: 'sparkles-ai' },
-			{ title: 'Build what does not exist', text: 'When no app on the market does what you need, I code it. That is how Prometeo and Hermes happened.', icon: 'basket' },
+			{ title: 'Build your online store', text: 'I build your Shopify store from scratch or finish the part you are missing. I set it up around what you sell and how you deliver it.', icon: 'code' },
+			{ title: 'Find where you lose sales', text: 'I go through your site the way a customer would and tell you at which step people leave without buying. You get the fixes in order, starting with the one that costs you the most sales.', icon: 'filter' },
+			{ title: 'Fast to load, easy for you to run', text: 'Many of your customers come in from their phone. I make the page open quickly there and set it up so your team can change prices, photos and promotions without asking anyone for help.', icon: 'trend-up' },
+			{ title: 'Know where your sales come from', text: 'I set up Google Analytics properly together with your ads and your emails. That way you know where each sale came from and which ad is worth more of your money.', icon: 'badge-percent' },
+			{ title: 'An assistant that answers for you', text: 'An AI assistant that answers your customers on your site or on WhatsApp with your real prices and catalog, also after hours. Whatever it does not know, it passes to you.', icon: 'sparkles-ai' },
+			{ title: 'Code what no app does', text: 'If no Shopify app does what you need, I code it myself. That is how Prometeo and Hermes started, my announcement bar and my sticky buy button.', icon: 'basket' },
 		];
 
 const painPoints: Array<{ title: string; text: string; icon: IconName }> = es
@@ -248,12 +248,12 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				id="work-hero-title"
 				label={es ? 'Proyectos seleccionados' : 'Selected projects'}
 				title={es ? ['Proyectos en los que', 'he trabajado.'] : ['Projects I have', 'worked on.']}
-				lede={es ? 'Tiendas que dirijo, productos que construí y algunos conceptos. Cada uno cuenta qué pasaba, qué hice y qué cambió.' : 'Stores I lead, products I built, and a few concepts. Each one says what was going on, what I did, and what changed.'}
+				lede={es ? 'Aquí están las tiendas que dirijo, los productos que programé por mi cuenta y algunos proyectos de muestra. En cada uno te cuento cuál era el problema y qué hice para resolverlo.' : 'Here are the stores I run, the products I built on my own and a few sample projects. Each one tells you what the problem was and what I did to solve it.'}
 			>
 				<dl class="jx-facts">
 					<div><dt>{String(clientWork.length).padStart(2, '0')}</dt><dd>{es ? 'marcas y tiendas' : 'brands and stores'}</dd></div>
 					<div><dt>{String(ownedProducts.length).padStart(2, '0')}</dt><dd>{es ? 'productos propios' : 'own products'}</dd></div>
-					<div><dt>{String(concepts.length).padStart(2, '0')}</dt><dd>{es ? 'conceptos' : 'concepts'}</dd></div>
+					<div><dt>{String(concepts.length).padStart(2, '0')}</dt><dd>{es ? 'proyectos de muestra' : 'sample projects'}</dd></div>
 				</dl>
 			</PageHero>
 			{clientWork.length > 0 && (
@@ -264,13 +264,13 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 			)}
 			{ownedProducts.length > 0 && (
 				<section class="work-chapter" aria-labelledby="owned-products-title" data-reveal>
-					<div class="work-chapter__head"><p>02 / {es ? 'Productos independientes' : 'Independent products'}</p><h2 id="owned-products-title">{es ? 'Productos que construí.' : 'Products I built.'}</h2></div>
+					<div class="work-chapter__head"><p>02 / {es ? 'Productos propios' : 'My own products'}</p><h2 id="owned-products-title">{es ? 'Productos que programé por mi cuenta.' : 'Products I built on my own.'}</h2></div>
 					<div class="work-gallery">{ownedProducts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
 				</section>
 			)}
 			{concepts.length > 0 && (
 				<section class="work-chapter" aria-labelledby="concepts-title" data-reveal>
-					<div class="work-chapter__head"><p>03 / {es ? 'Conceptos de producto' : 'Product concepts'}</p><h2 id="concepts-title">{es ? 'Conceptos y tiendas de ejemplo.' : 'Concepts and sample stores.'}</h2></div>
+					<div class="work-chapter__head"><p>03 / {es ? 'Proyectos de muestra' : 'Sample projects'}</p><h2 id="concepts-title">{es ? 'Ejemplos que armé para probar una idea.' : 'Examples I built to test an idea.'}</h2></div>
 					<div class="work-gallery">{concepts.map((entry, index) => <CaseCard entry={entry} index={index} locale={locale} />)}</div>
 				</section>
 			)}
@@ -286,7 +286,7 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 				id="services-hero-title"
 				label={es ? 'Servicios' : 'Services'}
 				title={es ? ['Te ayudo a vender', 'más por internet.'] : ['I help you sell', 'more online.']}
-				lede={es ? 'Averiguo qué es lo que más te está costando, lo diseño, y me quedo a construirlo contigo. No entrego un documento y me voy.' : 'I figure out what is costing you most, design it, and stay to build it with you. I do not hand over a document and leave.'}
+				lede={es ? 'Primero busco qué te está costando más ventas. Después lo diseño y lo programo yo mismo, así que no te quedas con un documento de recomendaciones que nadie ejecuta.' : 'First I find what is costing you the most sales. Then I design the fix and code it myself, so you are not left with a document of recommendations nobody carries out.'}
 			>
 				<div class="jx-actions jx-actions--center">
 					<a class="jx-btn jx-btn--primary" href={routes[locale].contact}>{es ? 'Cuéntame tu caso' : 'Tell me your case'}<Icon name="arrow-right" /></a>
@@ -298,11 +298,11 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 			</section>
 			<ConsultingSection locale={locale} id="consultoria-servicios" />
 			<section class="section process-section editorial-page__content">
-				<div class="section-heading"><p class="index">{es ? 'Cómo trabajo' : 'How I work'}</p><h2>{es ? 'Cómo es trabajar conmigo.' : 'What working with me looks like.'}</h2></div>
+				<div class="section-heading"><p class="index">{es ? 'Cómo trabajo' : 'How I work'}</p><h2>{es ? 'Los pasos para trabajar conmigo.' : 'The steps of working with me.'}</h2></div>
 				<ol class="process-list">
-					{(es ? ['Objetivo', 'Prioridad', 'Diseño', 'Implementación', 'Medición'] : ['Goal', 'Priority', 'Design', 'Implementation', 'Measurement']).map((item, index) => <li><span>0{index + 1}</span><strong>{item}</strong></li>)}
+					{(es ? ['Qué quieres lograr', 'Qué va primero', 'Cómo se va a ver', 'Lo programo', 'Reviso si funcionó'] : ['What you want to achieve', 'What goes first', 'How it will look', 'I build it', 'I check whether it worked']).map((item, index) => <li><span>0{index + 1}</span><strong>{item}</strong></li>)}
 				</ol>
-				<a class="button" href={routes[locale].contact}>{es ? 'Definir el siguiente paso' : 'Define the next step'}</a>
+				<a class="button" href={routes[locale].contact}>{es ? 'Platícame tu caso' : 'Tell me about your business'}</a>
 			</section>
 		</div>
 	)
@@ -317,21 +317,23 @@ const pillars: Array<{ title: string; text: string; icon: IconName }> = es
 		<div class="editorial-page contact-page">
 			<PageHero
 				loop="contact"
+				loopFit="aspect"
 				id="contact-hero-title"
 				label={es ? 'Contacto' : 'Contact'}
-				title={es ? ['Cuéntame qué', 'traes entre manos.'] : ['Tell me what you are', 'working on.']}
-				lede={es ? 'No hace falta que lo tengas todo claro. Escríbeme con lo que sea que te esté dando vueltas y te respondo con qué haría yo y por dónde empezaría.' : 'You do not need to have it all figured out. Write me with whatever is on your mind and I will reply with what I would do and where I would start.'}
+				title={es ? ['Cuéntame qué', 'necesita tu negocio.'] : ['Tell me what your', 'business needs.']}
+				lede={es ? 'No necesitas tenerlo todo claro. Escríbeme qué está pasando en tu negocio y te respondo con lo que yo haría primero.' : 'You do not need to have it all figured out. Tell me what is going on in your business and I will reply with what I would do first.'}
 			/>
 			<section class="section contact-layout editorial-page__content">
-				<div class="flow"><p class="index">{es ? 'Canales directos' : 'Direct channels'}</p><h2>{es ? 'Por donde prefieras. Contesto a todos.' : 'Whichever you prefer. I answer all of them.'}</h2></div>
+				<div class="flow"><p class="index">{es ? 'Cómo contactarme' : 'How to reach me'}</p><h2>{es ? 'Escríbeme por donde te quede más cómodo. Todos los mensajes los contesto yo.' : 'Write wherever is easiest for you. I answer every message myself.'}</h2></div>
 				<ul class="contact-channels">
+					<li><a href={`${routes[locale].booking}?origen=contacto`} data-analytics-event="click_booking"><Icon name="calendar" /><span><small>{es ? 'Llamada de 10 min' : '10-min call'}</small>{es ? 'Elige una hora y te llamo' : 'Pick a time and I call you'}</span><Icon name="arrow-right" /></a></li>
 					{contact.email && <li><a href={`mailto:${contact.email}`} data-analytics-event="click_email"><Icon name="envelope" /><span><small>Email</small>{contact.email}</span><Icon name="arrow-up-right" /></a></li>}
 					{contact.whatsapp && contact.phone && <li><a href={contact.whatsapp} rel="noreferrer" data-analytics-event="click_whatsapp"><Icon name="chat" /><span><small>WhatsApp</small>{contact.phone}</span><Icon name="arrow-up-right" /></a></li>}
 					{contact.linkedin && <li><a href={contact.linkedin} rel="noreferrer" data-analytics-event="click_linkedin"><Icon name="linkedin" size="md" /><span><small>LinkedIn</small>Jossue Alcalá</span><Icon name="arrow-up-right" /></a></li>}
 				</ul>
 			</section>
 			<AiInvite locale={locale} context="contact" />
-			<section class="section contact-form-section editorial-page__content"><div class="section-heading"><p class="index">{es ? 'Cuéntame sobre el proyecto' : 'Tell me about the project'}</p><h2>{es ? 'Con dos líneas me basta para empezar.' : 'Two lines are enough for me to get started.'}</h2></div><ContactForm locale={locale} /></section>
+			<section class="section contact-form-section editorial-page__content"><div class="section-heading"><p class="index">{es ? 'O déjame un mensaje' : 'Or leave me a message'}</p><h2>{es ? 'Con dos o tres líneas tengo para empezar.' : 'Two or three lines are enough for me to start.'}</h2></div><ContactForm locale={locale} /></section>
 		</div>
 	)
 }

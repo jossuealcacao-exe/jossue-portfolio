@@ -15,18 +15,18 @@ const productUrl = `${routes[locale].products}consultoria/`;
 const contactUrl = `${routes[locale].contact}?producto=consultoria`;
 const formats: Array<{ icon: IconName; title: string; text: string; tag: string }> = es
 	? [
-			{ icon: 'chats', tag: '01 · Sesión', title: 'Diagnóstico', text: 'Una llamada para revisar tu caso con tus números en la mano. Sales con lo que más te conviene cambiar primero y lo que puede esperar.' },
-			{ icon: 'check-list', tag: '02 · Entregable', title: 'Auditoría con plan', text: 'Reviso tienda, pauta, medición y velocidad. Te entrego un plan ordenado por impacto: qué primero, qué después y qué no hace falta hacer.' },
-			{ icon: 'compass', tag: '03 · Continuo', title: 'Acompañamiento', text: 'Me siento con tu equipo de forma periódica para decidir, revisar resultados y destrabar lo que se atore, sin que tengas que contratar a alguien de planta.' },
+			{ icon: 'chats', tag: '01 · Una llamada', title: 'Diagnóstico', text: 'Revisamos tu negocio en una llamada, con tus números a la mano. Al colgar sabes qué te conviene cambiar primero y qué puede esperar.' },
+			{ icon: 'check-list', tag: '02 · Por escrito', title: 'Revisión con plan', text: 'Reviso tu tienda, tus anuncios, lo que estás midiendo y qué tan rápido carga tu sitio. Te entrego por escrito qué hacer primero, qué después y qué no hace falta hacer.' },
+			{ icon: 'compass', tag: '03 · Seguimiento', title: 'Acompañamiento', text: 'Me reúno con tu equipo cada cierto tiempo para revisar resultados, tomar decisiones y resolver lo que esté atorado. Así no tienes que contratar a alguien de planta.' },
 		]
 	: [
-			{ icon: 'chats', tag: '01 · Session', title: 'Diagnosis', text: 'A call to review your case with your numbers at hand. You leave knowing what to change first and what can wait.' },
-			{ icon: 'check-list', tag: '02 · Deliverable', title: 'Audit with a plan', text: 'I review store, ads, measurement and speed, and hand you a plan ordered by impact: what first, what later and what you do not need.' },
-			{ icon: 'compass', tag: '03 · Ongoing', title: 'Guidance', text: 'I sit with your team on a regular basis to decide, review results and unblock what gets stuck, without you hiring someone full time.' },
+			{ icon: 'chats', tag: '01 · One call', title: 'Diagnosis', text: 'We go over your business on a call, with your numbers at hand. When we hang up you know what to change first and what can wait.' },
+			{ icon: 'check-list', tag: '02 · In writing', title: 'Review with a plan', text: 'I review your store, your ads, what you are measuring and how fast your site loads. You get in writing what to do first, what later and what you do not need to do.' },
+			{ icon: 'compass', tag: '03 · Follow-up', title: 'Ongoing support', text: 'I meet with your team every so often to review results, make decisions and sort out whatever is stuck. That way you do not need to hire someone full time.' },
 		];
 const topics = es
-	? ['Shopify y operación ecommerce', 'Conversión (CRO) y UX', 'Pauta y atribución', 'SEO', 'Marketplaces: Amazon y Mercado Libre', 'IA aplicada en tu equipo']
-	: ['Shopify and ecommerce operations', 'Conversion (CRO) and UX', 'Ads and attribution', 'SEO', 'Marketplaces: Amazon and Mercado Libre', 'Applied AI in your team'];
+	? ['Shopify y tu tienda en línea', 'Que más visitas terminen en compra (conversión)', 'Anuncios y cuáles sí te traen ventas', 'Que te encuentren en Google (SEO)', 'Vender en Amazon y Mercado Libre', 'Usar IA en tu equipo']
+	: ['Shopify and your online store', 'Turning more visits into sales (conversion)', 'Ads, and which ones actually bring sales', 'Getting found on Google (SEO)', 'Selling on Amazon and Mercado Libre', 'Using AI in your team'];
 ---
 
 <section id={id} class="jx-consult" data-home="consulting" aria-labelledby={`${id}-title`}>
@@ -36,13 +36,13 @@ const topics = es
 				<p class="jx-label"><span class="jx-dot" aria-hidden="true"></span>{es ? 'Consultoría' : 'Consulting'}</p>
 				<h2 id={`${id}-title`} class="jx-h2">
 					<span>{es ? 'Te ayudo a decidir' : 'I help you decide'}</span>{' '}
-					<span class="jx-soft">{es ? 'antes de gastar en construir.' : 'before you spend on building.'}</span>
+					<span class="jx-soft">{es ? 'antes de gastar en algo nuevo.' : 'before you spend on something new.'}</span>
 				</h2>
 			</div>
 			<p class="jx-consult__lede">
 				{es
-					? 'Antes de invertir en una tienda nueva o en más pauta conviene saber qué está fallando. Reviso tu ecommerce desde el lado de negocio, de marketing y de código, y te digo por dónde empezaría.'
-					: 'Before investing in a new store or more ads, it helps to know what is failing. I review your ecommerce from the business, marketing and code side, and tell you where I would start.'}
+					? 'Antes de pagar una tienda nueva o más anuncios, conviene saber qué está fallando. Reviso tus ventas en línea como dueño de negocio, como mercadólogo y como programador, y te digo por dónde empezaría.'
+					: 'Before paying for a new store or more ads, it helps to know what is failing. I look at your online sales as a business owner, a marketer and a developer, and tell you where I would start.'}
 			</p>
 		</div>
 

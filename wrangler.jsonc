@@ -26,13 +26,13 @@
 	},
 	"vars": {
 		"ALLOWED_ORIGINS": "https://jossuealcala.com,https://www.jossuealcala.com,https://jossue-portfolio.jossue-alcala-o.workers.dev,https://madre.run",
-		"CONTACT_EMAIL_TO": "jossue.alcala.o@gmail.com",
+		"CONTACT_EMAIL_TO": "hola@jossuealcala.com",
 		"JOSSUE_AI_MODEL": "gemini-3.8-flash"
 	},
 	"send_email": [
 		{
 			"name": "CONTACT_EMAIL",
-			"destination_address": "jossue.alcala.o@gmail.com"
+			"destination_address": "hola@jossuealcala.com"
 		}
 	],
 	"d1_databases": [
@@ -43,6 +43,10 @@
 			"migrations_dir": "migrations"
 		}
 	],
+	// Resumen diario a las 8:00 de Guadalajara (UTC-6 todo el año).
+	"triggers": {
+		"crons": ["0 14 * * *"]
+	},
 	"observability": {
 		"enabled": true
 	}
