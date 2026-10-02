@@ -5,4 +5,4 @@
  * producción y el Worker no tenga el secreto APEX_TOKEN, queda apagada: sin CTA en el sitio y sin el
  * aviso junto al botón del chat. Jossue AI tampoco la ofrece (eso lo decide el Worker con APEX_TOKEN).
  */
-export const AUDIT_ENABLED = false;
+export const AUDIT_ENABLED = true;
