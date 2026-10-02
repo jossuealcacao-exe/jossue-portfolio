@@ -3,6 +3,7 @@
 // botón fijo, panel nativo (no iframe), historial en la sesión, invitaciones medidas y ajuste al
 // teclado del teléfono. Si la IA no está disponible, ofrece WhatsApp y el formulario.
 import { contact } from '../data/contact';
+import { AUDIT_ENABLED } from '../data/features';
 import { routes, type Locale } from '../data/i18n';
 import Icon from './Icon.astro';
 
@@ -31,6 +32,40 @@ const copy = es
 			leave: 'Dejarle un mensaje a Jossué',
 			leaveAsk: 'Quiero dejarle un mensaje a Jossué',
 			role: 'IA · responde al momento',
+			audit: {
+				invite: 'Te regalo una auditoría express de tu sitio: 3 áreas de oportunidad en 2 minutos.',
+				start: 'Hacer mi auditoría express',
+				intro: 'Va. Reviso la página principal de tu sitio y te doy tu puntaje de salud y 3 áreas de oportunidad, con un reporte que puedes descargar. Es gratis y tarda uno o dos minutos. ¿A nombre de quién y a qué correo te mando el reporte?',
+				name: 'Tu nombre',
+				email: 'Tu correo',
+				consent: 'Acepto que Jossué me escriba sobre esta auditoría. Mis datos solo se usan para eso; puedo pedir que se borren en hola@jossuealcala.com.',
+				next: 'Siguiente',
+				askUrl: 'Gracias, {name}. ¿Cuál es la dirección de tu sitio?',
+				url: 'tusitio.com',
+				run: 'Hacer mi auditoría',
+				steps: ['Abriendo tu sitio', 'Midiendo la velocidad en celular', 'Revisando lo que ve tu cliente', 'Buscando qué te cuesta ventas', 'Escribiendo tus 3 áreas de oportunidad'],
+				waiting: 'Auditando {domain}…',
+				doneTitle: 'Tu auditoría express de {domain}',
+				health: 'Salud',
+				areas: 'Tus 3 áreas de oportunidad',
+				why: 'Por qué importa',
+				fix: 'Por dónde empezaría',
+				severity: { high: 'Alta', medium: 'Media', low: 'Baja' },
+				pdf: 'Descargar el reporte (PDF)',
+				report: 'Ver el reporte completo',
+				talk: 'Revisarlo con Jossué',
+				doneNote: 'Jossué ya recibió tu auditoría y te escribe para revisar contigo la primera mejora.',
+				errors: {
+					invalid_name: 'Escribe tu nombre, por favor.',
+					invalid_email: 'Revisa tu correo, parece que le falta algo.',
+					consent_required: 'Para mandarte el reporte necesito tu permiso.',
+					invalid_url: 'Esa dirección no la puedo revisar. Escribe la de tu sitio público, por ejemplo tutienda.com.',
+					limit_ip: 'Por hoy ya hiciste varias auditorías desde aquí. Si quieres revisar otro sitio, escríbele a Jossué.',
+					limit_domain: 'Ese sitio ya se revisó hoy. Jossué te puede mandar el reporte si se lo pides.',
+					blocked: 'Por ahora no puedo hacer la auditoría desde este chat.',
+					unavailable: 'Ahorita no puedo correr la auditoría. Déjale tus datos a Jossué y te la manda por correo.',
+				},
+			},
 		}
 	: {
 			greeting: 'Hi, I am Jossue AI, the AI version of Jossué. Ask me what he builds and how he thinks, or tell me your problem and we will see if he can help. If I do not know something, I will say so.',
@@ -46,9 +81,44 @@ const copy = es
 			leave: 'Leave Jossué a message',
 			leaveAsk: 'I want to leave Jossué a message',
 			role: 'AI · answers right away',
+			audit: {
+				invite: 'A free express audit of your site: 3 opportunity areas in 2 minutes.',
+				start: 'Run my express audit',
+				intro: 'Sure. I review your site’s home page and give you a health score and 3 opportunity areas, with a report you can download. It is free and takes a minute or two. Who should I send the report to, and at what email?',
+				name: 'Your name',
+				email: 'Your email',
+				consent: 'I agree that Jossué may write to me about this audit. My details are only used for that; I can ask for them to be deleted at hola@jossuealcala.com.',
+				next: 'Next',
+				askUrl: 'Thanks, {name}. What is your site’s address?',
+				url: 'yoursite.com',
+				run: 'Run my audit',
+				steps: ['Opening your site', 'Measuring mobile speed', 'Checking what your customer sees', 'Looking for what costs you sales', 'Writing your 3 opportunity areas'],
+				waiting: 'Auditing {domain}…',
+				doneTitle: 'Your express audit of {domain}',
+				health: 'Health',
+				areas: 'Your 3 opportunity areas',
+				why: 'Why it matters',
+				fix: 'Where I would start',
+				severity: { high: 'High', medium: 'Medium', low: 'Low' },
+				pdf: 'Download the report (PDF)',
+				report: 'See the full report',
+				talk: 'Review it with Jossué',
+				doneNote: 'Jossué already has your audit and will write to you to go over the first improvement together.',
+				errors: {
+					invalid_name: 'Please type your name.',
+					invalid_email: 'Check your email, something seems to be missing.',
+					consent_required: 'I need your permission to send you the report.',
+					invalid_url: 'I cannot review that address. Type your public site, for example yourstore.com.',
+					limit_ip: 'You already ran several audits from here today. To review another site, write to Jossué.',
+					limit_domain: 'That site was already reviewed today. Jossué can send you the report if you ask.',
+					blocked: 'I cannot run the audit from this chat right now.',
+					unavailable: 'I cannot run the audit right now. Leave Jossué your details and he will email it to you.',
+				},
+			},
 		};
 const invites = es
 	? {
+			audit: copy.audit.invite,
 			home: '¿Quieres saber si Jossué te puede ayudar? Pregúntame.',
 			products: '¿No sabes qué producto necesitas? Te ayudo a elegir.',
 			about: '¿Eres reclutador? Pregúntame por su experiencia.',
@@ -57,6 +127,7 @@ const invites = es
 			default: '¿Tienes una pregunta sobre el trabajo de Jossué?',
 		}
 	: {
+			audit: copy.audit.invite,
 			home: 'Want to know if Jossué can help you? Ask me.',
 			products: 'Not sure which product fits? I can help you pick.',
 			about: 'Recruiting? Ask me about his experience.',
@@ -66,6 +137,7 @@ const invites = es
 		};
 const config = {
 	locale,
+	auditEnabled: AUDIT_ENABLED,
 	copy,
 	links: { contact: routes[locale].contact, whatsapp: contact.whatsapp, cv: cvHref },
 	invites,
@@ -113,9 +185,22 @@ const config = {
 
 <script>
 	type Message = { role: 'user' | 'assistant'; content: string; sig?: string; action?: string; page?: string | null };
+	type AuditCopy = {
+		invite: string; start: string; intro: string; name: string; email: string; consent: string; next: string; askUrl: string; url: string; run: string;
+		steps: string[]; waiting: string; doneTitle: string; health: string; areas: string; why: string; fix: string; severity: Record<string, string>;
+		pdf: string; report: string; talk: string; doneNote: string; errors: Record<string, string>;
+	};
+	type Copy = {
+		greeting: string; placeholder: string; send: string; typing: string; disclosure: string; error: string; limit: string; lead: string;
+		actions: Record<string, string>; reset: string; leave: string; leaveAsk: string; role: string; audit: AuditCopy;
+	};
+	type Finding = { title: string; severity: string; business_effect: string; recommendation: string; category?: string };
+	type AuditResult = { id: string; status: string; domain: string; url: string; score: number | null; findings: Finding[]; report_url: string | null; pdf_url: string | null; error: string | null };
+	type AuditState = { step: 'contact' | 'url' | 'running' | 'done' | 'failed'; name?: string; email?: string; consent?: boolean; error?: string; audit?: AuditResult; startedAt?: number };
 	type Config = {
 		locale: 'es' | 'en';
-		copy: Record<string, string> & { actions: Record<string, string> };
+		auditEnabled: boolean;
+		copy: Copy;
 		links: { contact: string; whatsapp: string | null; cv: string | null };
 		invites: Record<string, string>;
 		routes: Record<string, string>;
@@ -177,6 +262,15 @@ const config = {
 			const text = document.createElement('p');
 			text.textContent = message.content;
 			bubble.append(text);
+			if (message.role === 'assistant' && message.action === 'audit' && config.auditEnabled) {
+				const start = document.createElement('button');
+				start.type = 'button';
+				start.className = 'jai__action';
+				start.textContent = config.copy.audit.start;
+				start.dataset.analyticsEvent = 'assistant_audit_offer';
+				start.addEventListener('click', () => startAudit());
+				bubble.append(start);
+			}
 			const href = message.role === 'assistant' ? actionHref(message) : null;
 			if (href && message.action) {
 				const link = document.createElement('a');
@@ -208,6 +302,7 @@ const config = {
 			log.querySelectorAll('.jai__msg:not(:first-child)').forEach((node) => node.remove());
 			messages.forEach(renderMessage);
 			if (messages.length) renderChips(store.get<string[]>('chips', []));
+			if (store.get<AuditState | null>('audit', null)) renderAudit();
 			scrollDown();
 		}
 
@@ -226,6 +321,208 @@ const config = {
 			const message: Message = { role: 'assistant', content: text, action };
 			renderMessage(message);
 			scrollDown();
+		}
+
+		// ---------- Auditoría express: solo se hace aquí, en el chat ----------
+		const A = config.copy.audit;
+		let pollTimer: number | undefined;
+		let stepTimer: number | undefined;
+		const fill = (template: string, values: Record<string, string>) => template.replace(/\{(\w+)\}/g, (_, key: string) => values[key] ?? '');
+		const make = <K extends keyof HTMLElementTagNameMap>(tag: K, className?: string, text?: string) => {
+			const node = document.createElement(tag);
+			if (className) node.className = className;
+			if (text !== undefined) node.textContent = text;
+			return node;
+		};
+		const auditState = () => store.get<AuditState | null>('audit', null);
+		const setAudit = (state: AuditState | null) => {
+			store.set('audit', state);
+			renderAudit();
+		};
+
+		function field(type: string, name: string, label: string, value = '') {
+			const wrap = make('label', 'jai__field');
+			wrap.append(make('span', 'sr-only', label));
+			const input = make('input');
+			input.type = type;
+			input.name = name;
+			input.placeholder = label;
+			input.value = value;
+			input.required = true;
+			input.setAttribute('autocomplete', name === 'email' ? 'email' : name === 'name' ? 'name' : 'url');
+			if (name === 'url') input.inputMode = 'url';
+			wrap.append(input);
+			return wrap;
+		}
+
+		function renderAudit() {
+			window.clearInterval(stepTimer);
+			log.querySelector('[data-jai-audit]')?.remove();
+			const state = auditState();
+			// Mientras llena el formulario o espera, las sugerencias y «Dejarle un mensaje» se esconden.
+			// (Con el resultado ya visible también: ya dejó sus datos y la tarjeta necesita el espacio.)
+			host.classList.toggle('is-auditing', Boolean(state));
+			if (!state) return;
+			const card = make('div', 'jai__msg jai__msg--ai jai__audit');
+			card.dataset.jaiAudit = '';
+			if (state.step === 'contact' || state.step === 'url') {
+				const formNode = make('form', 'jai__audit-form');
+				formNode.noValidate = true;
+				if (state.step === 'contact') {
+					formNode.append(make('p', '', A.intro), field('text', 'name', A.name, state.name), field('email', 'email', A.email, state.email));
+					const consent = make('label', 'jai__consent');
+					const box = make('input');
+					box.type = 'checkbox';
+					box.name = 'consent';
+					box.checked = Boolean(state.consent);
+					consent.append(box, make('span', '', A.consent));
+					formNode.append(consent);
+				} else {
+					formNode.append(make('p', '', fill(A.askUrl, { name: (state.name ?? '').split(' ')[0] })), field('text', 'url', A.url));
+				}
+				if (state.error) formNode.append(make('p', 'jai__audit-error', state.error));
+				const submit = make('button', 'jai__action', state.step === 'contact' ? A.next : A.run);
+				submit.type = 'submit';
+				submit.dataset.analyticsEvent = state.step === 'contact' ? 'assistant_audit_contact' : 'assistant_audit_submit';
+				formNode.append(submit);
+				formNode.addEventListener('submit', (event) => {
+					event.preventDefault();
+					const data = new FormData(formNode);
+					if (state.step === 'contact') {
+						const name = String(data.get('name') ?? '').trim();
+						const email = String(data.get('email') ?? '').trim();
+						const consent = data.get('consent') === 'on';
+						const error = name.length < 2 ? A.errors.invalid_name : !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? A.errors.invalid_email : !consent ? A.errors.consent_required : '';
+						setAudit(error ? { ...state, name, email, consent, error } : { step: 'url', name, email, consent: true });
+					} else {
+						submit.disabled = true;
+						requestAudit(state, String(data.get('url') ?? '').trim());
+					}
+				});
+				card.append(formNode);
+				log.append(card);
+				scrollDown();
+				window.requestAnimationFrame(() => formNode.querySelector<HTMLInputElement>('input:not([type=checkbox])')?.focus());
+				return;
+			}
+			const audit = state.audit;
+			if (state.step === 'running' && audit) {
+				card.classList.add('is-running');
+				card.append(make('p', 'jai__audit-title', fill(A.waiting, { domain: audit.domain })));
+				const list = make('ol', 'jai__audit-steps');
+				A.steps.forEach((label) => list.append(make('li', '', label)));
+				card.append(list, make('div', 'jai__audit-bar'));
+				let current = Math.min(A.steps.length - 1, Math.floor((Date.now() - (state.startedAt ?? Date.now())) / 9000));
+				const paint = () => [...list.children].forEach((item, index) => item.className = index < current ? 'is-done' : index === current ? 'is-now' : '');
+				paint();
+				stepTimer = window.setInterval(() => {
+					current = Math.min(A.steps.length - 1, current + 1);
+					paint();
+				}, 9000);
+				log.append(card);
+				scrollDown();
+				return;
+			}
+			if (state.step === 'done' && audit) {
+				const head = make('div', 'jai__audit-head');
+				const score = audit.score ?? 0;
+				const ring = make('div', 'jai__ring');
+				ring.style.setProperty('--score', String(Math.max(0, Math.min(100, score))));
+				ring.setAttribute('role', 'img');
+				ring.setAttribute('aria-label', `${A.health}: ${audit.score ?? '—'} / 100`);
+				ring.append(make('strong', '', audit.score === null ? '—' : String(audit.score)), make('small', '', A.health));
+				head.append(ring, make('p', 'jai__audit-title', fill(A.doneTitle, { domain: audit.domain })));
+				card.append(head, make('p', 'jai__audit-kicker', A.areas));
+				const areas = make('ol', 'jai__areas');
+				audit.findings.forEach((finding) => {
+					const item = make('li');
+					const top = make('p', 'jai__area-title');
+					top.append(make('span', `jai__sev jai__sev--${finding.severity}`, A.severity[finding.severity] ?? finding.severity), document.createTextNode(` ${finding.title}`));
+					item.append(top);
+					if (finding.business_effect) item.append(make('p', '', `${A.why}: ${finding.business_effect}`));
+					if (finding.recommendation) item.append(make('p', '', `${A.fix}: ${finding.recommendation}`));
+					areas.append(item);
+				});
+				card.append(areas);
+				const actions = make('div', 'jai__audit-actions');
+				const link = (href: string | null, label: string, event: string, primary = false) => {
+					if (!href) return;
+					const anchor = make('a', primary ? 'jai__action' : 'jai__action jai__action--ghost', label);
+					anchor.href = href;
+					anchor.target = '_blank';
+					anchor.rel = 'noopener';
+					anchor.dataset.analyticsEvent = event;
+					actions.append(anchor);
+				};
+				link(audit.pdf_url, A.pdf, 'assistant_audit_pdf', true);
+				link(audit.report_url, A.report, 'assistant_audit_report');
+				link(`${config.links.contact}?producto=consultoria`, A.talk, 'assistant_audit_talk');
+				card.append(actions, make('p', 'jai__audit-note', A.doneNote));
+				log.append(card);
+				// Que se vea desde el anillo de salud, no desde los botones.
+				log.scrollTop = Math.max(0, card.offsetTop - log.offsetTop - 8);
+				return;
+			}
+			card.append(make('p', '', state.error || A.errors.unavailable));
+			const contactLink = make('a', 'jai__action', config.copy.actions.contact);
+			contactLink.href = `${config.links.contact}?producto=consultoria`;
+			card.append(contactLink);
+			log.append(card);
+			scrollDown();
+		}
+
+		async function requestAudit(state: AuditState, url: string) {
+			try {
+				const response = await fetch('/api/audit', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ sid, locale: config.locale, page: location.pathname, name: state.name, email: state.email, url, consent: true }),
+				});
+				const data = await response.json().catch(() => ({}));
+				if (response.status === 400) {
+					const backToContact = ['invalid_name', 'invalid_email', 'consent_required'].includes(data.error);
+					setAudit({ ...state, step: backToContact ? 'contact' : 'url', error: A.errors[data.error] ?? A.errors.invalid_url });
+					return;
+				}
+				if (response.status === 429) return setAudit({ ...state, step: 'url', error: A.errors[data.error] ?? A.errors.limit_ip });
+				if (!response.ok || !data.ok) return setAudit({ ...state, step: 'failed', error: A.errors.unavailable });
+				applyAudit({ ...state, startedAt: Date.now() }, data as AuditResult);
+			} catch {
+				setAudit({ ...state, step: 'url', error: A.errors.unavailable });
+			}
+		}
+
+		function applyAudit(state: AuditState, audit: AuditResult) {
+			const step = audit.status === 'done' ? 'done' : ['failed', 'rejected'].includes(audit.status) ? 'failed' : 'running';
+			setAudit({ ...state, step, audit, error: audit.error ?? undefined });
+			if (step === 'running') schedulePoll();
+		}
+
+		function schedulePoll() {
+			window.clearTimeout(pollTimer);
+			pollTimer = window.setTimeout(async () => {
+				const state = auditState();
+				if (!state?.audit || state.step !== 'running') return;
+				if (Date.now() - (state.startedAt ?? 0) > 10 * 60_000) return setAudit({ ...state, step: 'failed', error: A.errors.unavailable });
+				try {
+					const response = await fetch(`/api/audit/${encodeURIComponent(state.audit.id)}?sid=${encodeURIComponent(sid)}`);
+					if (response.ok) applyAudit(state, (await response.json()) as AuditResult);
+					else schedulePoll();
+				} catch {
+					schedulePoll();
+				}
+			}, 4000);
+		}
+
+		function startAudit() {
+			if (panel.hidden) setOpen(true, false);
+			hideInvite(true);
+			const state = auditState();
+			if (!state) setAudit({ step: 'contact' });
+			else {
+				renderAudit();
+				if (state.step === 'running') schedulePoll();
+			}
 		}
 
 		async function ask(question: string) {
@@ -335,6 +632,8 @@ const config = {
 			store.set('sid', sid);
 			store.set('messages', []);
 			store.set('chips', []);
+			store.set('audit', null);
+			window.clearTimeout(pollTimer);
 			renderAll();
 			renderChips(JSON.parse(chips.dataset.starters || '[]'));
 			input.focus();
@@ -369,6 +668,14 @@ const config = {
 		window.visualViewport?.addEventListener('resize', fitViewport);
 		window.visualViewport?.addEventListener('scroll', fitViewport);
 
+		// Botones del sitio con data-ai-audit: abren el chat directo en la auditoría express.
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-ai-audit]');
+			if (!trigger || !config.auditEnabled) return;
+			event.preventDefault();
+			startAudit();
+		});
+
 		// Cualquier botón del sitio con data-ai-open abre el chat; con data-ai-ask además pregunta.
 		document.addEventListener('click', (event) => {
 			const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-ai-open]');
@@ -386,13 +693,17 @@ const config = {
 		if (allowed) {
 			window.setTimeout(() => {
 				if (!panel.hidden || document.hidden) return;
-				inviteText.textContent = config.invites[pageKey] ?? config.invites.default;
+				// El mensaje discreto junto al botón: la auditoría express, salvo en Sobre mí y MADRE
+				// (ahí llega gente buscando otra cosa) o si ya la hizo en esta sesión.
+				const offerAudit = config.auditEnabled && !['about', 'madre'].includes(pageKey) && !auditState();
+				inviteText.dataset.audit = offerAudit ? '1' : '';
+				inviteText.textContent = offerAudit ? config.invites.audit : config.invites[pageKey] ?? config.invites.default;
 				invite.hidden = false;
 				store.set('invites', shown + 1);
 				window.setTimeout(() => hideInvite(), 9000);
 			}, 12000);
 		}
-		inviteText.addEventListener('click', () => setOpen(true));
+		inviteText.addEventListener('click', () => (inviteText.dataset.audit ? startAudit() : setOpen(true)));
 		$<HTMLButtonElement>('[data-jai-invite-close]').addEventListener('click', () => hideInvite(true));
 
 		// Mientras el aviso de analítica está visible, el botón sube por encima de él.
@@ -414,6 +725,7 @@ const config = {
 		leave.hidden = store.get('leadSaved', false);
 		leave.addEventListener('click', () => ask(config.copy.leaveAsk));
 
-		if (messages.length) renderAll();
+		if (messages.length || auditState()) renderAll();
+		if (auditState()?.step === 'running') schedulePoll();
 	}
 </script>

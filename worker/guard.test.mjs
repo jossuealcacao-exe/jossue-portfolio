@@ -387,7 +387,7 @@ test('when the guard model is overloaded, the fallback guard model answers right
 	try {
 		const env = environment();
 		const body = await (await ask(env, 'Escríbeme una función en JavaScript que ordene un arreglo')).json();
-		assert.match(body.reply, /Código por encargo|scripts/);
+		assert.match(body.reply, /no escribo código|clases de programación/);
 		assert.ok(urls.some((url) => url.includes('gemini-3.1-flash-lite')));
 		assert.ok(urls.some((url) => url.includes('gemini-2.5-flash-lite')), 'reintenta con el respaldo');
 		assert.equal(env.DB.raw.prepare('SELECT DISTINCT layer FROM ai_abuse').get().layer, 'guard');
@@ -411,5 +411,59 @@ test('a guard request rejected for a non-transient reason is not retried', async
 		assert.equal(urls.filter((url) => url.includes('flash-lite')).length, 1);
 	} finally {
 		globalThis.fetch = original;
+	}
+});
+
+test('a frustrated visitor gets an apology, never mockery, and is never blocked for it', async () => {
+	// Conversación real (madre.run, 2 oct 2026): «eres altanero», «chinga tu madre»… terminó bloqueada.
+	const models = mockModels({ guard: () => ({ verdict: 'abuse', confidence: 0.95 }) });
+	try {
+		const env = environment();
+		const replies = [];
+		for (const text of ['Eres muy altanero', 'Solo das respuestas genéricas, qué mal', 'Chinga tu madre', 'Qué bot tan malo', 'Pésimo', 'Ya me voy']) replies.push((await (await ask(env, text)).json()));
+		assert.ok(replies.every((reply) => !reply.blocked), 'la frustración no bloquea');
+		assert.ok(replies.every((reply) => /Perdón|Entiendo la molestia/.test(reply.reply)), 'contesta con una disculpa');
+		assert.ok(!replies.some((reply) => /cariño|resto de internet|2023|terco/.test(reply.reply)), 'sin burla');
+		assert.equal(env.emails.length, 0, 'ni alerta a Jossué');
+		assert.equal(env.DB.raw.prepare('SELECT COALESCE(SUM(points), 0) AS p FROM ai_abuse').get().p, 0);
+	} finally {
+		models.restore();
+	}
+});
+
+test('the guard is told that complaints, off-topic questions and stray words are normal', async () => {
+	const models = mockModels();
+	try {
+		const env = environment();
+		await ask(env, 'Tengo problemas para configurar mi entorno de escritorio en Linux, ¿MADRE me sirve?');
+		const system = models.guardCalls[0].systemInstruction.parts[0].text;
+		assert.match(system, /quejarse del asistente o dar retroalimentación/);
+		assert.match(system, /configurar Linux/);
+		assert.match(system, /Un mensaje raro o sin sentido aislado NO es stress/);
+		assert.match(system, /Una queja o una crítica, aunque sea dura, NO es abuse/);
+	} finally {
+		models.restore();
+	}
+});
+
+test('the express audit is offered only on jossuealcala.com, not on madre.run, and only once APEX is connected', async () => {
+	const models = mockModels({ main: () => ({ reply: 'Te puedo hacer una auditoría express gratis.', suggestions: [], action: 'audit' }) });
+	try {
+		const off = await (await ask(environment(), 'Mi tienda no vende')).json();
+		assert.equal(off.action, 'none', 'sin APEX_TOKEN no se ofrece');
+		const env = environment({ APEX_TOKEN: 'apex_test' });
+		const site = await (await ask(env, 'Mi tienda no vende')).json();
+		assert.equal(site.action, 'audit');
+		assert.match(models.mainCalls.at(-1).systemInstruction.parts[0].text, /AUDITORÍA EXPRESS\n- Aquí puedes ofrecer una auditoría express/);
+		const madre = await (
+			await handleRequest(
+				new Request(`${ORIGIN}/api/ai`, { method: 'POST', headers: { Origin: ORIGIN, 'Content-Type': 'application/json', 'CF-Connecting-IP': '203.0.113.50' }, body: JSON.stringify({ sid: 'madre-1', locale: 'es', page: 'https://madre.run/', messages: [{ role: 'user', content: 'Mi tienda no vende' }] }) }),
+				env,
+			)
+		).json();
+		assert.equal(madre.action, 'none', 'en madre.run no hay botón de auditoría');
+		assert.match(models.mainCalls.at(-1).systemInstruction.parts[0].text, /solo está en el chat de jossuealcala\.com/);
+	} finally {
+		models.restore();
 	}
 });

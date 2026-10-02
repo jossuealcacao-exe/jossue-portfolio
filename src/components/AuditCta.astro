@@ -1,0 +1,51 @@
+---
+// Promoción de la auditoría express. La auditoría solo se hace en el chat de Jossue AI: este bloque
+// no tiene formulario, solo abre el chat directo en el flujo (data-ai-audit).
+import type { Locale } from '../data/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+	locale: Locale;
+	id?: string;
+}
+
+const { locale, id = 'auditoria-express' } = Astro.props;
+const es = locale === 'es';
+const sample = es
+	? [
+			['Alta', 'La portada tarda en mostrar lo principal en celular'],
+			['Media', 'El botón de compra no se ve sin bajar'],
+			['Baja', 'A Google le faltan datos de tus productos'],
+		]
+	: [
+			['High', 'The home page is slow to show its main content on mobile'],
+			['Medium', 'The buy button is not visible without scrolling'],
+			['Low', 'Google is missing data about your products'],
+		];
+---
+
+<section class="jx-audit-cta" id={id} aria-labelledby={`${id}-title`} data-home="audit">
+	<div class="jx-wrap">
+		<div class="jx-audit-cta__card">
+			<div class="jx-audit-cta__copy">
+				<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Gratis · en el chat' : 'Free · in the chat'}</p>
+				<h2 id={`${id}-title`} class="jx-h2"><span>{es ? '¿Tu sitio está perdiendo ventas?' : 'Is your site losing sales?'}</span>{' '}<span class="jx-soft">{es ? 'Te digo dónde en 2 minutos.' : 'I will tell you where in 2 minutes.'}</span></h2>
+				<p class="jx-audit-cta__lede">{es ? 'Una auditoría express de la página principal de tu sitio: tu puntaje de salud y 3 áreas de oportunidad, con un reporte que puedes descargar. La hace Jossue AI aquí mismo, en el chat.' : 'An express audit of your site’s home page: your health score and 3 opportunity areas, with a report you can download. Jossue AI runs it right here, in the chat.'}</p>
+				<div class="jx-actions">
+					<button class="jx-btn jx-btn--primary" type="button" data-ai-audit data-analytics-event="click_audit_cta">{es ? 'Hacer mi auditoría en el chat' : 'Run my audit in the chat'}<Icon name="arrow-right" /></button>
+				</div>
+				<p class="jx-audit-cta__note">{es ? 'Solo necesitas tu nombre, tu correo y la dirección de tu sitio.' : 'All you need is your name, your email and your site’s address.'}</p>
+			</div>
+			<div class="jx-audit-cta__sample" aria-hidden="true">
+				<div class="jx-audit-cta__head">
+					<span class="jx-audit-cta__ring"><strong>62</strong><small>{es ? 'Salud' : 'Health'}</small></span>
+					<span>{es ? 'Tu auditoría express de tutienda.com' : 'Your express audit of yourstore.com'}</span>
+				</div>
+				<ol>
+					{sample.map(([level, title], index) => <li><span class={`jx-audit-cta__sev jx-audit-cta__sev--${index}`}>{level}</span>{title}</li>)}
+				</ol>
+				<span class="jx-audit-cta__pdf"><Icon name="download" />{es ? 'Descargar el reporte (PDF)' : 'Download the report (PDF)'}</span>
+			</div>
+		</div>
+	</div>
+</section>

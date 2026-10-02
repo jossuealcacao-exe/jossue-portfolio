@@ -9,6 +9,8 @@ import { casePresentation } from '../data/casePresentation';
 import { routes, type Locale } from '../data/i18n';
 import { commercialProducts, featuredProducts, otherProducts, productDemo, productHref } from '../data/products';
 import AiDevSpotlight from './AiDevSpotlight.astro';
+import AuditCta from './AuditCta.astro';
+import { AUDIT_ENABLED } from '../data/features';
 import AiInvite from './AiInvite.astro';
 import BrandLogos from './BrandLogos.astro';
 import ConsultingSection from './ConsultingSection.astro';
@@ -227,6 +229,8 @@ const method = es
 	</section>
 
 	<ConsultingSection locale={locale} />
+
+	{AUDIT_ENABLED && <AuditCta locale={locale} />}
 
 	<section id="casos" class="jx-work" aria-labelledby="jx-work-title">
 		<div class="jx-wrap">

@@ -34,8 +34,8 @@ export const SCHEMA = {
 		},
 		action: {
 			type: 'STRING',
-			enum: ['none', 'contact', 'whatsapp', 'cv', 'page'],
-			description: 'Botón que acompaña la respuesta. contact = formulario; page = una página del sitio.',
+			enum: ['none', 'contact', 'whatsapp', 'cv', 'page', 'audit'],
+			description: 'Botón que acompaña la respuesta. contact = formulario; page = una página del sitio; audit = empezar la auditoría express de su sitio.',
 		},
 		page: { type: 'STRING', description: 'Solo con action=page: URL completa de jossuealcala.com tomada del conocimiento.' },
 		lead: {
@@ -56,8 +56,17 @@ export const SCHEMA = {
 	required: ['reply', 'suggestions', 'action'],
 };
 
-export function systemPrompt(knowledge, locale) {
+export function systemPrompt(knowledge, locale, { auditAvailable = true } = {}) {
 	return `${PERSONA}
+
+AUDITORÍA EXPRESS
+${
+	auditAvailable
+		? `- Aquí puedes ofrecer una auditoría express gratis de su sitio: en uno o dos minutos revisa su página principal y le da un puntaje de salud y 3 áreas de oportunidad, con un reporte que puede descargar. Solo se hace en este chat: deja su nombre, su correo y la dirección de su sitio.
+- Ofrécela (action="audit") cuando hable de su sitio o su tienda, de que no vende, de tráfico, velocidad, SEO o conversión, o pida un diagnóstico. Una vez por conversación; si no le interesa, no insistas.
+- Tú no ves su sitio: no inventes resultados. La auditoría la hace el sistema y le aparece aquí mismo.`
+		: '- La auditoría express solo está en el chat de jossuealcala.com. Si alguien habla de su sitio o su tienda, puedes decirle que ahí se la hace gratis en un par de minutos.'
+}
 
 REGLAS DE FORMATO (obligatorias)
 - Responde en el idioma de la persona; si no es claro, en ${locale === 'en' ? 'inglés' : 'español'} (idioma de la página).
@@ -243,7 +252,7 @@ function sanitizeOutput(data, locale) {
 	const suggestions = Array.isArray(data?.suggestions)
 		? data.suggestions.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim().slice(0, 60)).slice(0, 3)
 		: [];
-	const action = ['none', 'contact', 'whatsapp', 'cv', 'page'].includes(data?.action) ? data.action : 'none';
+	const action = ['none', 'contact', 'whatsapp', 'cv', 'page', 'audit'].includes(data?.action) ? data.action : 'none';
 	let page = null;
 	if (action === 'page' && typeof data?.page === 'string') {
 		try {
@@ -404,6 +413,8 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	if (await tooManyFromIp(env, ipHash)) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
 	const question = history.at(-1).content;
+	// El chat también vive en madre.run: ahí no hay auditoría (la página llega como URL completa).
+	const auditAvailable = page.startsWith('/') && Boolean(env.APEX_TOKEN);
 	let result;
 	let modelMs;
 	try {
@@ -417,7 +428,7 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 			seed: sid + question,
 			runMain: async (alertMode, canary) => {
 				const started = Date.now();
-				const system = `${systemPrompt(knowledge[locale] ?? knowledge.es, locale)}\n\n${canaryLine(canary)}${alertMode ? `\n${ALERT_LINE}` : ''}`;
+				const system = `${systemPrompt(knowledge[locale] ?? knowledge.es, locale, { auditAvailable })}\n\n${canaryLine(canary)}${alertMode ? `\n${ALERT_LINE}` : ''}`;
 				const data = await callGemini(env, system, history);
 				modelMs = Date.now() - started;
 				return data ? { ...sanitizeOutput(data, locale), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
@@ -431,6 +442,7 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 
 	// Abuso detectado (o persona bloqueada): respuesta genérica, sin botones, sin recado.
 	const output = result.output ?? { reply: result.reply, suggestions: [], action: 'none', page: null, lead: null };
+	if (output.action === 'audit' && !auditAvailable) output.action = 'none';
 	await saveTurn(env, { sid, ipHash, locale, page, question, answer: output.reply, firstTurn: history.filter((message) => message.role === 'user').length === 1 });
 	let leadSaved = false;
 	if (output.lead && !(await tooManyLeads(env, ipHash))) {

@@ -68,6 +68,7 @@ CANAL: WHATSAPP
 - handoff.summary: qué necesita y qué falta que conteste o decida Jossué, en 1 o 2 frases y en español.
 - lead.ready = true solo si además dejó un recado claro para Jossué.
 - Los mensajes marcados [Jossué] los escribió Jossué en persona desde su app: no te contradigas con ellos.
+- Si habla de su sitio o su tienda, puedes ofrecerle la auditoría express gratis del chat de jossuealcala.com (3 áreas de oportunidad en un par de minutos). Aquí no se hace: no uses action audit.
 
 CONOCIMIENTO
 ${knowledge}`;

@@ -5,6 +5,8 @@ import type { CollectionEntry } from 'astro:content';
 import { routes, type Locale } from '../data/i18n';
 import { workImage } from '../data/workImages';
 import Breadcrumbs from './Breadcrumbs.astro';
+import AuditCta from './AuditCta.astro';
+import { AUDIT_ENABLED } from '../data/features';
 import Icon, { type IconName } from './Icon.astro';
 import JxProofCards from './JxProofCards.astro';
 import PageHero from './PageHero.astro';
@@ -138,6 +140,8 @@ const stack = ['Shopify', 'Liquid', 'JavaScript', 'Astro', 'Cloudflare', 'GA4 ·
 			</ul>
 		</div>
 	</section>
+
+	{AUDIT_ENABLED && <AuditCta locale={locale} id="auditoria-express" />}
 
 	<section class="jx-close" aria-labelledby="dev-close">
 		<div class="jx-close__card">

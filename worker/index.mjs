@@ -1,4 +1,5 @@
 import { handleAi, handleAiChats } from './ai.mjs';
+import { handleAuditCreate, handleAuditStatus } from './audit.mjs';
 import { handleWhatsApp } from './whatsapp.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
@@ -270,6 +271,7 @@ export async function handleRequest(request, env, ctx) {
 				queryEnabled: Boolean(env.ADMIN_TOKEN),
 				notificationEnabled: Boolean(env.CONTACT_EMAIL && env.CONTACT_EMAIL_TO),
 				aiEnabled: Boolean(env.GEMINI_API_KEY),
+				auditEnabled: Boolean(env.APEX_TOKEN),
 				whatsappEnabled: Boolean(env.WHATSAPP_TOKEN && (env.WHATSAPP_APP_SECRET || env.WHATSAPP_WEBHOOK_KEY) && env.WHATSAPP_PHONE_NUMBER_ID),
 			},
 			origin,
@@ -281,6 +283,12 @@ export async function handleRequest(request, env, ctx) {
 		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
 		return handleAi(request, env, { json, origin, ipHash });
 	}
+	if (url.pathname === '/api/audit' && request.method === 'POST') {
+		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
+		return handleAuditCreate(request, env, { json, origin, ipHash });
+	}
+	const auditMatch = url.pathname.match(/^\/api\/audit\/(AE-[A-Za-z0-9]{8,40})$/);
+	if (auditMatch && request.method === 'GET') return handleAuditStatus(request, env, { json, origin }, auditMatch[1]);
 	if (url.pathname === '/api/ai/chats' && request.method === 'GET') {
 		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
 		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);
