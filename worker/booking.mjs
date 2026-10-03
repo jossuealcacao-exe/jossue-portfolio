@@ -1,7 +1,13 @@
 // Agenda de llamadas de 10 minutos con Jossué. La persona elige un horario libre en /es/agenda/, deja
-// su nombre, correo y teléfono, y Jossué le llama a esa hora. Disponibilidad fija (hora de Guadalajara,
-// UTC-6 todo el año): martes, miércoles y viernes de 10:00 a 18:00 y sábado de 9:00 a 13:00, con 5 min
-// de colchón entre llamadas. Los días que Jossué no puede se bloquean desde el panel (booking_blocks).
+// su nombre, correo y teléfono, y Jossué le llama a esa hora. Horario (Guadalajara, UTC-6 todo el año):
+// martes, miércoles y viernes de 10:00 a 12:00 y de 16:00 a 20:30, y sábado de 9:00 a 13:00, con 5 min
+// de colchón entre llamadas. Lunes y jueves no (oficina), domingo tampoco. Los días que Jossué no puede
+// se bloquean desde el panel (booking_blocks).
+//
+// Cupo limitado: cada día abre solo una parte de esos horarios, elegida al azar pero fija por fecha
+// (no cambia al recargar). Algunos días abren 1 o 2 espacios y otros ninguno. Lo que no se ofrece no
+// se puede agendar: la escasez es real, no un letrero. Nada de contadores inventados de «personas que
+// agendaron». BOOKING_SCARCITY=off la apaga (pruebas).
 //
 //   GET  /api/booking/slots                    horarios libres de los próximos 21 días
 //   POST /api/booking                          { slot, name, email, phone, topic, consent, locale, source, page }
@@ -16,9 +22,9 @@ import { notify } from './notify.mjs';
 
 export const OFFSET_MIN = -360; // Guadalajara: UTC-6, sin horario de verano desde 2022
 export const SCHEDULE = {
-	2: [[10 * 60, 18 * 60]], // martes
-	3: [[10 * 60, 18 * 60]], // miércoles
-	5: [[10 * 60, 18 * 60]], // viernes
+	2: [[10 * 60, 12 * 60], [16 * 60, 20 * 60 + 30]], // martes
+	3: [[10 * 60, 12 * 60], [16 * 60, 20 * 60 + 30]], // miércoles
+	5: [[10 * 60, 12 * 60], [16 * 60, 20 * 60 + 30]], // viernes
 	6: [[9 * 60, 13 * 60]], // sábado
 };
 export const CALL_MIN = 10;
@@ -83,9 +89,62 @@ async function takenAndBlocked(env, now) {
 	return { taken: new Set((taken.results ?? []).map((row) => Number(row.slot_start))), blocked: new Set((blocked.results ?? []).map((row) => row.day)) };
 }
 
-export async function freeSlots(env, now = Date.now()) {
+// Número estable a partir de un texto (FNV-1a): el mismo día da siempre el mismo cupo.
+function hash(text) {
+	let h = 0x811c9dc5;
+	for (let i = 0; i < text.length; i += 1) h = Math.imul(h ^ text.charCodeAt(i), 0x01000193) >>> 0;
+	return h / 4294967296;
+}
+
+/** Cuántos espacios abre un día y cuáles: lleno (≈20 %), pocos (1 o 2, ≈30 %) o normal (≈45 % de sus horarios). */
+export function offeredSlots(slots, day, seed = 'jossue') {
+	if (!slots.length) return slots;
+	const roll = hash(`${seed}|${day}`);
+	const ranked = [...slots].sort((a, b) => hash(`${seed}|${day}|${a}`) - hash(`${seed}|${day}|${b}`));
+	const count = roll < 0.2 ? 0 : roll < 0.5 ? 1 + Math.floor(hash(`${seed}|${day}|n`) * 2) : Math.max(3, Math.round(slots.length * 0.45));
+	return ranked.slice(0, count).sort((a, b) => a - b);
+}
+
+function byDay(slots) {
+	const days = new Map();
+	for (const start of slots) days.set(localDay(start), [...(days.get(localDay(start)) ?? []), start]);
+	return days;
+}
+
+/** Días abiertos con lo que ofrecen y lo que ya está tomado; un día sin espacios queda como «lleno». */
+export async function agenda(env, now = Date.now()) {
 	const { taken, blocked } = await takenAndBlocked(env, now);
-	return candidateSlots(now).filter((start) => !taken.has(start) && !blocked.has(localDay(start)));
+	const scarcity = String(env.BOOKING_SCARCITY ?? 'on') !== 'off';
+	const out = [];
+	for (const [day, slots] of byDay(candidateSlots(now))) {
+		if (blocked.has(day)) continue;
+		const offered = scarcity ? offeredSlots(slots, day, env.BOOKING_SEED || 'jossue') : slots;
+		out.push({ date: day, slots: offered.filter((start) => !taken.has(start)), all: slots });
+	}
+	// Cada semana tiene al menos un día lleno (el de menor sorteo), si esa semana abre dos días o más.
+	if (scarcity) {
+		const weeks = new Map();
+		for (const day of out) {
+			const date = new Date(`${day.date}T12:00:00Z`);
+			const monday = new Date(date.getTime() - ((date.getUTCDay() + 6) % 7) * DAY).toISOString().slice(0, 10);
+			weeks.set(monday, [...(weeks.get(monday) ?? []), day]);
+		}
+		for (const days of weeks.values()) {
+			if (days.length < 2 || days.some((day) => day.slots.length === 0)) continue;
+			const seed = env.BOOKING_SEED || 'jossue';
+			days.reduce((low, day) => (hash(`${seed}|${day.date}`) < hash(`${seed}|${low.date}`) ? day : low)).slots = [];
+		}
+	}
+	// Nunca tres días llenos seguidos al principio: el tercero abre dos espacios.
+	if (scarcity && out.length >= 3 && out.slice(0, 3).every((day) => day.slots.length === 0)) {
+		const third = out[2];
+		third.slots = third.all.filter((start) => !taken.has(start)).slice(0, 2);
+	}
+	return out.map(({ date, slots }) => ({ date, slots }));
+}
+
+export async function freeSlots(env, now = Date.now()) {
+	return (await agenda(env, now)).flatMap((day) => day.slots);
 }
 
 /** Teléfono con lada. 10 dígitos se toman como México (+52). */
@@ -188,15 +247,10 @@ const ERRORS = {
 
 export async function handleSlots(env, { json, origin }, now = Date.now()) {
 	if (!env.DB) return json(503, { ok: false, error: 'booking_unavailable' }, origin);
-	const slots = await freeSlots(env, now).catch(() => null);
-	if (!slots) return json(503, { ok: false, error: 'booking_unavailable' }, origin);
-	const days = [];
-	for (const start of slots) {
-		const day = localDay(start);
-		if (days.at(-1)?.date !== day) days.push({ date: day, slots: [] });
-		days.at(-1).slots.push(start);
-	}
-	return json(200, { ok: true, timezone: TZ, callMinutes: CALL_MIN, days }, origin);
+	const days = await agenda(env, now).catch(() => null);
+	if (!days) return json(503, { ok: false, error: 'booking_unavailable' }, origin);
+	// Los días llenos también van: la agenda los muestra como «Sin espacios».
+	return json(200, { ok: true, timezone: TZ, callMinutes: CALL_MIN, days: days.map((day) => ({ ...day, full: day.slots.length === 0 })) }, origin);
 }
 
 export async function handleBookingCreate(request, env, { json, origin, ipHash }, now = Date.now()) {

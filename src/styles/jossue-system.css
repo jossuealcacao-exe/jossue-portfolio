@@ -6642,6 +6642,30 @@
 		border-color: var(--line-strong);
 	}
 
+	.jx-booking__day em {
+		font: 500 0.625rem/1.2 var(--mono);
+		font-style: normal;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.jx-booking__day.is-few em {
+		color: #ffcf66;
+	}
+
+	.jx-booking__day.is-full {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+
+	.jx-booking__day.is-full strong {
+		text-decoration: line-through;
+	}
+
+	.jx-booking__day.is-full em {
+		color: var(--text-3);
+	}
+
 	.jx-booking__day[aria-pressed='true'],
 	.jx-booking__time[aria-pressed='true'] {
 		border-color: var(--ivory);
@@ -7001,6 +7025,106 @@
 
 	.jx-slide--madre .jx-dot--live {
 		background: var(--phosphor);
+	}
+
+	/* Chat: el saludo se oculta mientras corre la auditoría; el resultado es una tarjeta a la medida. */
+	.jai.is-auditing .jai__greeting {
+		display: none;
+	}
+
+	.jai__audit--done .jai__audit-head {
+		align-items: flex-start;
+	}
+
+	.jai__audit-head--good .jai__ring { background: conic-gradient(var(--phosphor) calc(var(--score) * 1%), var(--hair-2) 0); }
+	.jai__audit-head--mid .jai__ring { background: conic-gradient(#ffcf66 calc(var(--score) * 1%), var(--hair-2) 0); }
+	.jai__audit-head--bad .jai__ring { background: conic-gradient(#ff9a85 calc(var(--score) * 1%), var(--hair-2) 0); }
+
+	.jai__audit-words {
+		display: grid;
+		gap: 0.3rem;
+	}
+
+	.jai__audit-hello {
+		margin: 0;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		color: var(--text-2);
+	}
+
+	.jai__audit-verdict {
+		margin: 0;
+		font-size: 1.0625rem;
+		font-weight: 650;
+		line-height: 1.25;
+		letter-spacing: -0.01em;
+		color: var(--text);
+	}
+
+	.jai__pains {
+		display: grid;
+		gap: 0.55rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.jai__pain {
+		position: relative;
+		padding: 0.75rem 0.85rem 0.8rem 1rem;
+		border-radius: 0.85rem;
+		background: var(--band);
+		box-shadow: inset 3px 0 0 var(--hair-2);
+	}
+
+	.jai__pain--high { box-shadow: inset 3px 0 0 #ff9a85; }
+	.jai__pain--medium { box-shadow: inset 3px 0 0 #ffcf66; }
+	.jai__pain--low { box-shadow: inset 3px 0 0 var(--text-3); }
+
+	.jai__pain-top {
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+	}
+
+	.jai__pain-n {
+		display: inline-grid;
+		place-items: center;
+		width: 1.35rem;
+		height: 1.35rem;
+		border-radius: 50%;
+		background: var(--card-2);
+		font: 600 0.6875rem/1 var(--mono);
+		color: var(--text);
+	}
+
+	.jai__pain .jai__sev {
+		margin: 0;
+	}
+
+	.jai__pain-title {
+		margin: 0.45rem 0 0;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--text);
+	}
+
+	.jai__pain-cost {
+		margin: 0.3rem 0 0;
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		color: var(--text-2);
+	}
+
+	.jai__audit-teaser {
+		margin: 0.85rem 0 0;
+		padding: 0.7rem 0.85rem;
+		border-radius: 0.8rem;
+		background: rgba(155, 255, 102, 0.07);
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		color: var(--text);
 	}
 
 	/* «Preferencias de cookies» en el pie: un botón que se lee como los enlaces de al lado. */

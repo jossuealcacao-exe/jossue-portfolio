@@ -30,7 +30,7 @@ const sample = es
 			<div class="jx-audit-cta__copy">
 				<p class="jx-label"><span class="jx-dot jx-dot--live" aria-hidden="true"></span>{es ? 'Gratis · en el chat' : 'Free · in the chat'}</p>
 				<h2 id={`${id}-title`} class="jx-h2"><span>{es ? '¿Tu sitio está perdiendo ventas?' : 'Is your site losing sales?'}</span>{' '}<span class="jx-soft">{es ? 'Revísalo gratis en 2 minutos.' : 'Check it for free in 2 minutes.'}</span></h2>
-				<p class="jx-audit-cta__lede">{es ? 'Mi asistente Jossue AI revisa la página principal de tu sitio y te da un puntaje de salud. También te dice las 3 cosas que más te conviene corregir, ordenadas por prioridad, en un reporte que puedes descargar. Todo pasa aquí en el chat.' : 'My assistant Jossue AI reviews your site’s home page and gives you a health score. It also tells you the 3 things most worth fixing, ordered by priority, in a report you can download. It all happens right here in the chat.'}</p>
+				<p class="jx-audit-cta__lede">{es ? 'Mi asistente Jossue AI revisa la página principal de tu sitio y te da una calificación. También te dice las 3 cosas que más te están costando ventas, ordenadas por prioridad. Te lo entrega aquí en el chat.' : 'My assistant Jossue AI reviews your site’s home page and gives you a score. It also tells you the 3 things costing you the most sales, ordered by priority. It is delivered right here in the chat.'}</p>
 				<div class="jx-actions">
 					<button class="jx-btn jx-btn--primary" type="button" data-ai-audit data-analytics-event="click_audit_cta">{es ? 'Revisar mi sitio en el chat' : 'Check my site in the chat'}<Icon name="arrow-right" /></button>
 				</div>
@@ -44,7 +44,7 @@ const sample = es
 				<ol>
 					{sample.map(([level, title], index) => <li><span class={`jx-audit-cta__sev jx-audit-cta__sev--${index}`}>{level}</span>{title}</li>)}
 				</ol>
-				<span class="jx-audit-cta__pdf"><Icon name="download" />{es ? 'Descargar el reporte (PDF)' : 'Download the report (PDF)'}</span>
+				<span class="jx-audit-cta__pdf"><Icon name="calendar" />{es ? 'Cómo resolverlo: en una llamada de 10 min' : 'How to fix it: in a 10-min call'}</span>
 			</div>
 		</div>
 	</div>

@@ -77,6 +77,17 @@ function publicAudit(row) {
 	};
 }
 
+/**
+ * Lo que ve el visitante: la calificación y las áreas, sin los enlaces al informe completo ni al PDF.
+ * Esos se quedan en la base y en el correo a Jossué: el informe completo se ve en la llamada.
+ */
+function visitorAudit(row) {
+	const audit = publicAudit(row);
+	delete audit.report_url;
+	delete audit.pdf_url;
+	return audit;
+}
+
 const VISITOR_ERRORS = {
 	es: {
 		busy: 'Hoy ya se hicieron muchas auditorías. Jossué te la manda por correo en cuanto pueda.',
@@ -213,7 +224,7 @@ export async function handleAuditCreate(request, env, { json, origin, ipHash }) 
 			await env.DB.prepare('UPDATE ai_audits SET sid = ? WHERE id = ?').bind(sid, existing.id).run().catch(() => null);
 			existing.sid = sid;
 		}
-		return json(200, { ...publicAudit(existing), reused: true }, origin);
+		return json(200, { ...visitorAudit(existing), reused: true }, origin);
 	}
 	if ((await count(env, 'SELECT COUNT(*) AS total FROM ai_audits WHERE ip_hash = ? AND created_at >= ?', ipHash, now - DAY)) >= PER_IP_DAY) return json(429, { ok: false, error: 'limit_ip' }, origin);
 	if ((await count(env, 'SELECT COUNT(*) AS total FROM ai_audits WHERE domain = ? AND created_at >= ?', site.domain, now - DAY)) >= PER_DOMAIN_DAY) return json(429, { ok: false, error: 'limit_domain' }, origin);
@@ -249,7 +260,7 @@ export async function handleAuditCreate(request, env, { json, origin, ipHash }) 
 	if (busy) {
 		Object.assign(row, { status: 'rejected', error: copy.busy, summary: 'Tope diario: Jossué la manda a mano' });
 		await finish(env, row);
-		return json(200, publicAudit(row), origin);
+		return json(200, visitorAudit(row), origin);
 	}
 
 	const created = await apex(env, '/v1/chat-audits', {
@@ -262,11 +273,11 @@ export async function handleAuditCreate(request, env, { json, origin, ipHash }) 
 		console.error('audit apex create failed', created.status, code);
 		Object.assign(row, { status: 'failed', error: code === 'daily_limit' ? copy.busy : copy.failed, summary: `APEX no la aceptó (${created.status}${code ? ` ${code}` : ''})` });
 		await finish(env, row);
-		return json(200, publicAudit(row), origin);
+		return json(200, visitorAudit(row), origin);
 	}
 	Object.assign(row, { apex_id: created.data.audit.id, status: 'running' });
 	await save(env, row);
-	return json(202, publicAudit(row), origin);
+	return json(202, visitorAudit(row), origin);
 }
 
 /** GET /api/audit/:id?sid=… */
@@ -307,5 +318,5 @@ export async function handleAuditStatus(request, env, { json, origin }, id) {
 			}
 		}
 	}
-	return json(200, publicAudit(row), origin);
+	return json(200, visitorAudit(row), origin);
 }

@@ -698,3 +698,37 @@ test('the home hero is a three-slide carousel: ecommerce and AI, the express aud
 	const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
 	expect(overflow).toBe(false);
 });
+
+test('the express audit is delivered in the chat: personal, three pains, no full report, and the call as next step', async ({ page }) => {
+	const done = {
+		ok: true, id: 'AE-0123456789abcdef0123', status: 'done', domain: 'tienda.mx', url: 'https://tienda.mx/', score: 62, error: null,
+		findings: [
+			{ title: 'La portada tarda 4,1 s en celular', severity: 'high', business_effect: 'Quien llega desde un anuncio se va antes de ver un precio.', recommendation: 'Optimizar la imagen principal', category: 'Velocidad' },
+			{ title: '28 de 62 botones miden menos de 44 px', severity: 'medium', business_effect: 'Con el pulgar se toca el botón equivocado.', recommendation: '', category: 'Zonas táctiles' },
+			{ title: 'A Google le faltan datos de tus productos', severity: 'low', business_effect: 'Tus productos salen sin precio en Google.', recommendation: 'Agregar datos estructurados', category: 'Búsqueda' },
+		],
+	};
+	await page.route('**/api/audit', (route) => route.fulfill({ status: 202, json: { ...done, status: 'running', score: null, findings: [] } }));
+	await page.route(/\/api\/audit\/AE-[\w]+/, (route) => route.fulfill({ json: done }));
+	await page.goto('/es/');
+	await page.evaluate(() => sessionStorage.clear());
+	await page.reload();
+	await page.locator('[data-ai-audit]').first().click();
+	const panel = page.locator('.jai__panel');
+	await expect(panel.locator('[data-jai-greeting]')).toBeHidden();
+	await panel.locator('input[name="name"]').fill('Ana López');
+	await panel.locator('input[name="email"]').fill('ana@tienda.mx');
+	await panel.locator('input[name="consent"]').check();
+	await panel.locator('.jai__audit-form [type=submit]').click();
+	await panel.locator('input[name="url"]').fill('tienda.mx');
+	await panel.locator('input[name="url"]').press('Enter');
+	const card = panel.locator('.jai__audit--done');
+	await expect(card).toBeVisible({ timeout: 15000 });
+	await expect(card.locator('.jai__audit-hello')).toHaveText('Ana, revisé tienda.mx como lo ve un cliente desde su celular.');
+	await expect(card.locator('.jai__audit-verdict')).toHaveText('Se te están yendo ventas por aquí.');
+	await expect(card.locator('.jai__pain')).toHaveCount(3);
+	await expect(card).not.toContainText('Optimizar la imagen principal');
+	await expect(card.locator('a[href*="apex"], a[href$=".pdf"]')).toHaveCount(0);
+	await expect(card.locator('a[href="/es/agenda/?origen=auditoria"]')).toBeVisible();
+	await expect(panel.locator('[data-jai-greeting]')).toBeHidden();
+});

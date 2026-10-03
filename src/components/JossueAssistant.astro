@@ -20,6 +20,16 @@ const starters = es
 const copy = es
 	? {
 			greeting: 'Hola, soy Jossue AI, el asistente de Jossué. Te puedo contar qué ha construido y cómo trabaja. También puedes contarme qué pasa en tu negocio y te digo si él te puede ayudar. Si no sé algo, te lo digo.',
+			greetings: [
+				'¡Qué tal! Soy Jossue AI, el asistente de Jossué. Cuéntame qué traes con tu negocio y te digo si él te puede echar la mano.',
+				'Hola, soy Jossue AI. Me sé lo que Jossué ha construido y cómo trabaja. ¿Qué te trae por aquí?',
+				'¿Tu tienda no vende lo que debería? Soy Jossue AI, el asistente de Jossué. Platícame qué pasa y lo vemos.',
+				'Hola. Soy Jossue AI y contesto con lo que Jossué ha hecho de verdad, nada inventado. ¿En qué te ayudo?',
+				'Qué onda, soy Jossue AI. Pregúntame por tiendas en Shopify, chatbots o lo que Jossué hace con IA.',
+				'Hola, soy Jossue AI. Jossué anda construyendo algo; mientras, yo te atiendo. ¿Qué necesitas?',
+				'Bienvenido. Soy Jossue AI. Si algo no lo sé, te lo digo y te paso directo con Jossué. ¿Por dónde empezamos?',
+			],
+			greetingAudit: 'Hola, soy Jossue AI. Si tienes un sitio, te lo reviso gratis en un par de minutos y te digo qué te está costando ventas. O pregúntame lo que quieras de Jossué.',
 			placeholder: 'Escribe tu pregunta…',
 			send: 'Enviar',
 			typing: 'Jossue AI está escribiendo',
@@ -35,7 +45,7 @@ const copy = es
 			audit: {
 				invite: 'Te hago una auditoría express gratis. En unos 2 minutos te digo 3 cosas de tu sitio que puedes mejorar.',
 				start: 'Hacer mi auditoría express',
-				intro: 'Va. Reviso la página principal de tu sitio, le pongo una calificación general y te señalo 3 cosas que puedes mejorar. Al final te queda un reporte para descargar. Es gratis y tarda uno o dos minutos. ¿A nombre de quién y a qué correo te lo mando?',
+				intro: 'Va. Reviso la página principal de tu sitio como la ve un cliente en su celular, le pongo una calificación y te digo las 3 cosas que más te están costando ventas, aquí mismo en el chat. Es gratis y tarda uno o dos minutos. ¿Cómo te llamas y a qué correo te escribe Jossué?',
 				name: 'Tu nombre',
 				email: 'Tu correo',
 				consent: 'Acepto que Jossué me escriba sobre esta auditoría. Mis datos solo se usan para eso y puedo pedir que los borren escribiendo a hola@jossuealcala.com.',
@@ -52,17 +62,19 @@ const copy = es
 				why: 'Por qué importa',
 				fix: 'Por dónde empezaría',
 				severity: { high: 'Alta', medium: 'Media', low: 'Baja' },
-				pdf: 'Descargar el reporte (PDF)',
-				report: 'Ver el reporte completo',
-				talk: 'Agendar 10 min con Jossué',
-				doneNote: 'Jossué ya tiene tu reporte y te va a escribir para ver contigo el primer arreglo.',
+				hello: '{name}, revisé {domain} como lo ve un cliente desde su celular.',
+				verdict: { good: 'Va bien, pero hay detalles que te cuestan clientes.', mid: 'Se te están yendo ventas por aquí.', bad: 'Tu sitio te está costando clientes.' },
+				cost: 'Qué te está costando',
+				teaser: 'Cómo resolver cada punto, y en qué orden, te lo explico en una llamada de 10 minutos. Jossué ya tiene tu revisión completa.',
+				talk: 'Agendar 10 min para resolverlo',
+				whatsapp: 'Prefiero WhatsApp',
 				errors: {
 					invalid_name: 'Escribe tu nombre, por favor.',
 					invalid_email: 'Revisa tu correo, parece que le falta algo.',
-					consent_required: 'Para mandarte el reporte necesito tu permiso.',
+					consent_required: 'Para que Jossué te escriba sobre tu revisión necesito tu permiso.',
 					invalid_url: 'Esa dirección no la puedo revisar. Escribe la de tu sitio público, por ejemplo tutienda.com.',
 					limit_ip: 'Hoy ya revisaste varios sitios desde aquí. Si quieres revisar otro, escríbele a Jossué.',
-					limit_domain: 'Ese sitio ya se revisó hoy. Si quieres el reporte, pídeselo a Jossué y te lo manda.',
+					limit_domain: 'Ese sitio ya se revisó hoy. Si quieres saber qué salió, agenda 10 minutos con Jossué y te lo explica.',
 					blocked: 'Por ahora no puedo hacer la auditoría desde este chat.',
 					unavailable: 'Ahorita no puedo hacer la revisión. Déjale tus datos a Jossué y te la manda por correo.',
 				},
@@ -70,6 +82,15 @@ const copy = es
 		}
 	: {
 			greeting: 'Hi, I am Jossue AI, Jossué’s assistant. I can tell you what he has built and how he works. You can also tell me what is going on in your business and I will tell you whether he can help. If I do not know something, I will say so.',
+			greetings: [
+				'Hey! I am Jossue AI, Jossué’s assistant. Tell me what is going on with your business and I will tell you if he can help.',
+				'Hi, I am Jossue AI. I know what Jossué has built and how he works. What brings you here?',
+				'Is your store not selling like it should? I am Jossue AI, Jossué’s assistant. Tell me what is happening and we will look at it.',
+				'Hi. I am Jossue AI and I answer with what Jossué has actually done, nothing made up. How can I help?',
+				'Hi, I am Jossue AI. Ask me about Shopify stores, chatbots or what Jossué builds with AI.',
+				'Hi, I am Jossue AI. If I do not know something, I will say so and pass you straight to Jossué. Where do we start?',
+			],
+			greetingAudit: 'Hi, I am Jossue AI. If you have a site, I can review it for free in a couple of minutes and tell you what is costing you sales. Or ask me anything about Jossué.',
 			placeholder: 'Type your question…',
 			send: 'Send',
 			typing: 'Jossue AI is typing',
@@ -85,7 +106,7 @@ const copy = es
 			audit: {
 				invite: 'I can run a free express audit. In about 2 minutes I tell you 3 things on your site you can improve.',
 				start: 'Run my express audit',
-				intro: 'Sure. I review your site’s home page, give it an overall score and point out 3 things you can improve. At the end you get a report to download. It is free and takes a minute or two. Who should I send it to, and at what email?',
+				intro: 'Sure. I review your site’s home page the way a customer sees it on their phone, give it a score and tell you the 3 things costing you the most sales, right here in the chat. It is free and takes a minute or two. What is your name, and at what email can Jossué reach you?',
 				name: 'Your name',
 				email: 'Your email',
 				consent: 'I agree that Jossué may write to me about this audit. My details are only used for that; I can ask for them to be deleted at hola@jossuealcala.com.',
@@ -102,17 +123,19 @@ const copy = es
 				why: 'Why it matters',
 				fix: 'Where I would start',
 				severity: { high: 'High', medium: 'Medium', low: 'Low' },
-				pdf: 'Download the report (PDF)',
-				report: 'See the full report',
-				talk: 'Book 10 min with Jossué',
-				doneNote: 'Jossué already has your report and will write to you to go over the first fix together.',
+				hello: '{name}, I reviewed {domain} the way a customer sees it on their phone.',
+				verdict: { good: 'It is doing well, but some details cost you customers.', mid: 'You are losing sales here.', bad: 'Your site is costing you customers.' },
+				cost: 'What it is costing you',
+				teaser: 'How to fix each point, and in what order, I explain in a 10-minute call. Jossué already has your full review.',
+				talk: 'Book 10 min to fix it',
+				whatsapp: 'I prefer WhatsApp',
 				errors: {
 					invalid_name: 'Please type your name.',
 					invalid_email: 'Check your email, something seems to be missing.',
-					consent_required: 'I need your permission to send you the report.',
+					consent_required: 'I need your permission for Jossué to write to you about your review.',
 					invalid_url: 'I cannot review that address. Type your public site, for example yourstore.com.',
 					limit_ip: 'You already ran several audits from here today. To review another site, write to Jossué.',
-					limit_domain: 'That site was already reviewed today. Jossué can send you the report if you ask.',
+					limit_domain: 'That site was already reviewed today. Book 10 minutes with Jossué and he will walk you through it.',
 					blocked: 'I cannot run the audit from this chat right now.',
 					unavailable: 'I cannot run the review right now. Leave Jossué your details and he will email it to you.',
 				},
@@ -169,7 +192,7 @@ const config = {
 			<button class="jai__icon-btn" type="button" data-jai-close aria-label={es ? 'Cerrar Jossue AI' : 'Close Jossue AI'}><Icon name="close" /></button>
 		</header>
 		<div class="jai__log" data-jai-log aria-live="polite" aria-relevant="additions">
-			<div class="jai__msg jai__msg--ai"><p>{copy.greeting}</p></div>
+			<div class="jai__msg jai__msg--ai jai__greeting" data-jai-greeting><p>{copy.greeting}</p></div>
 		</div>
 		<div class="jai__chips" data-jai-chips>
 			{starters.map((text) => <button type="button" data-jai-chip>{text}</button>)}
@@ -192,14 +215,14 @@ const config = {
 	type AuditCopy = {
 		invite: string; start: string; intro: string; name: string; email: string; consent: string; next: string; askUrl: string; url: string; run: string;
 		steps: string[]; waiting: string; doneTitle: string; health: string; areas: string; areaOne: string; why: string; fix: string; severity: Record<string, string>;
-		pdf: string; report: string; talk: string; doneNote: string; errors: Record<string, string>;
+		hello: string; verdict: Record<'good' | 'mid' | 'bad', string>; cost: string; teaser: string; talk: string; whatsapp: string; errors: Record<string, string>;
 	};
 	type Copy = {
-		greeting: string; placeholder: string; send: string; typing: string; disclosure: string; error: string; limit: string; lead: string;
+		greeting: string; greetings: string[]; greetingAudit: string; placeholder: string; send: string; typing: string; disclosure: string; error: string; limit: string; lead: string;
 		actions: Record<string, string>; reset: string; leave: string; leaveAsk: string; role: string; audit: AuditCopy;
 	};
 	type Finding = { title: string; severity: string; business_effect: string; recommendation: string; category?: string };
-	type AuditResult = { id: string; status: string; domain: string; url: string; score: number | null; findings: Finding[]; report_url: string | null; pdf_url: string | null; error: string | null };
+	type AuditResult = { id: string; status: string; domain: string; url: string; score: number | null; findings: Finding[]; error: string | null };
 	type AuditState = { step: 'contact' | 'url' | 'running' | 'done' | 'failed'; name?: string; email?: string; consent?: boolean; error?: string; audit?: AuditResult; startedAt?: number };
 	type Config = {
 		locale: 'es' | 'en';
@@ -248,6 +271,18 @@ const config = {
 		let sid = store.get('sid', '') || newSid();
 		store.set('sid', sid);
 		let messages = store.get<Message[]>('messages', []);
+		// Saludo al azar entre los de Jossué, fijo durante la conversación; uno nuevo al reiniciarla.
+		const greetingNode = root.querySelector<HTMLElement>('[data-jai-greeting] p');
+		function pickGreeting() {
+			const pool = [...config.copy.greetings, ...(config.auditEnabled ? [config.copy.greetingAudit] : [])];
+			let index = store.get<number>('greeting', -1);
+			if (index < 0 || index >= pool.length) {
+				index = Math.floor(Math.random() * pool.length);
+				store.set('greeting', index);
+			}
+			if (greetingNode) greetingNode.textContent = pool[index];
+		}
+		pickGreeting();
 		let busy = false;
 
 		const scrollDown = () => (log.scrollTop = log.scrollHeight);
@@ -438,42 +473,49 @@ const config = {
 				return;
 			}
 			if (state.step === 'done' && audit) {
-				const head = make('div', 'jai__audit-head');
+				// Resultado en el chat, a la medida de quien lo pidió: su nombre, su sitio, su calificación y lo
+				// que le está costando. Sin informe ni PDF: cómo resolverlo es la llamada de 10 minutos.
+				card.classList.add('jai__audit--done');
 				const score = audit.score ?? 0;
+				const tone = score >= 80 ? 'good' : score >= 55 ? 'mid' : 'bad';
+				const first = (state.name ?? '').trim().split(/\s+/)[0] || (config.locale === 'es' ? 'Listo' : 'Done');
+				const head = make('div', `jai__audit-head jai__audit-head--${tone}`);
 				const ring = make('div', 'jai__ring');
 				ring.style.setProperty('--score', String(Math.max(0, Math.min(100, score))));
 				ring.setAttribute('role', 'img');
 				ring.setAttribute('aria-label', `${A.health}: ${audit.score ?? '—'} / 100`);
-				ring.append(make('strong', '', audit.score === null ? '—' : String(audit.score)), make('small', '', A.health));
-				head.append(ring, make('p', 'jai__audit-title', fill(A.doneTitle, { domain: audit.domain })));
+				ring.append(make('strong', '', audit.score === null ? '—' : String(audit.score)), make('small', '', '/100'));
+				const words = make('div', 'jai__audit-words');
+				words.append(make('p', 'jai__audit-hello', fill(A.hello, { name: first, domain: audit.domain })), make('p', 'jai__audit-verdict', A.verdict[tone]));
+				head.append(ring, words);
 				card.append(head, make('p', 'jai__audit-kicker', audit.findings.length === 1 ? A.areaOne : fill(A.areas, { n: String(audit.findings.length) })));
-				const areas = make('ol', 'jai__areas');
-				audit.findings.forEach((finding) => {
-					const item = make('li');
-					const top = make('p', 'jai__area-title');
-					top.append(make('span', `jai__sev jai__sev--${finding.severity}`, A.severity[finding.severity] ?? finding.severity), document.createTextNode(` ${finding.title}`));
-					item.append(top);
-					if (finding.business_effect) item.append(make('p', '', `${A.why}: ${finding.business_effect}`));
-					if (finding.recommendation) item.append(make('p', '', `${A.fix}: ${finding.recommendation}`));
+				const areas = make('ol', 'jai__pains');
+				audit.findings.slice(0, 3).forEach((finding, index) => {
+					const item = make('li', `jai__pain jai__pain--${finding.severity}`);
+					const top = make('div', 'jai__pain-top');
+					top.append(make('span', 'jai__pain-n', String(index + 1)), make('span', `jai__sev jai__sev--${finding.severity}`, A.severity[finding.severity] ?? finding.severity));
+					item.append(top, make('p', 'jai__pain-title', finding.title));
+					if (finding.business_effect) item.append(make('p', 'jai__pain-cost', finding.business_effect));
 					areas.append(item);
 				});
-				card.append(areas);
+				card.append(areas, make('p', 'jai__audit-teaser', A.teaser));
 				const actions = make('div', 'jai__audit-actions');
-				const link = (href: string | null, label: string, event: string, primary = false) => {
+				const go = (href: string | null, label: string, event: string, primary: boolean) => {
 					if (!href) return;
 					const anchor = make('a', primary ? 'jai__action' : 'jai__action jai__action--ghost', label);
 					anchor.href = href;
-					anchor.target = '_blank';
-					anchor.rel = 'noopener';
+					if (!href.startsWith('/')) {
+						anchor.target = '_blank';
+						anchor.rel = 'noopener';
+					}
 					anchor.dataset.analyticsEvent = event;
 					actions.append(anchor);
 				};
-				link(audit.pdf_url, A.pdf, 'assistant_audit_pdf', true);
-				link(audit.report_url, A.report, 'assistant_audit_report');
-				link(`${config.routes.booking}?origen=auditoria`, A.talk, 'assistant_audit_talk');
-				card.append(actions, make('p', 'jai__audit-note', A.doneNote));
+				go(`${config.routes.booking}?origen=auditoria`, A.talk, 'assistant_audit_talk', true);
+				go(config.links.whatsapp, A.whatsapp, 'assistant_audit_whatsapp', false);
+				card.append(actions);
 				log.append(card);
-				// Que se vea desde el anillo de salud, no desde los botones.
+				// Que se vea desde el saludo y la calificación, no desde los botones.
 				log.scrollTop = Math.max(0, card.offsetTop - log.offsetTop - 8);
 				return;
 			}
@@ -648,6 +690,8 @@ const config = {
 			store.set('messages', []);
 			store.set('chips', []);
 			store.set('audit', null);
+			store.set('greeting', -1);
+			pickGreeting();
 			window.clearTimeout(pollTimer);
 			renderAll();
 			renderChips(JSON.parse(chips.dataset.starters || '[]'));

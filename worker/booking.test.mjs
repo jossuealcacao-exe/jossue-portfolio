@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { candidateSlots, localDay, normalizePhone } from './booking.mjs';
+import { agenda, candidateSlots, localDay, normalizePhone, offeredSlots } from './booking.mjs';
 import { handleRequest } from './index.mjs';
 import { d1 } from './test-d1.mjs';
 
@@ -19,6 +19,7 @@ function environment(overrides = {}) {
 		CONTACT_EMAIL_TO: 'owner@example.com',
 		CONTACT_EMAIL: { send: async (message) => emails.push(message) },
 		CALENDAR_FEED_KEY: 'llave-del-feed-de-prueba',
+		BOOKING_SCARCITY: 'off',
 		ASSETS: { fetch: async () => new Response('asset') },
 		...overrides,
 	};
@@ -36,22 +37,25 @@ function at(ms, fn) {
 	return Promise.resolve(fn()).finally(() => (Date.now = real));
 }
 
-test('availability is Tuesday, Wednesday and Friday 10–18 and Saturday 9–13, Guadalajara time', () => {
+test('availability is Tuesday, Wednesday and Friday 10–12 and 16–20:30, and Saturday 9–13, Guadalajara time', () => {
 	const slots = candidateSlots(MONDAY_8AM);
 	const byDay = new Map();
 	for (const start of slots) byDay.set(localDay(start), [...(byDay.get(localDay(start)) ?? []), start]);
 	const firstWeek = [...byDay.keys()].slice(0, 4);
-	assert.deepEqual(firstWeek, ['2026-10-06', '2026-10-07', '2026-10-09', '2026-10-10'], 'no Monday, Thursday or Sunday');
+	assert.deepEqual(firstWeek, ['2026-10-06', '2026-10-07', '2026-10-09', '2026-10-10'], 'no Monday or Thursday (office) and no Sunday');
 	const tuesday = byDay.get('2026-10-06');
 	assert.equal(tuesday[0], TUESDAY_10AM, 'first call at 10:00 local');
-	assert.equal(tuesday.at(-1), Date.parse('2026-10-06T23:45:00Z'), 'last call at 17:45, ends 17:55');
-	assert.equal(tuesday.length, 32, 'every 15 minutes: 10 of call, 5 of margin');
+	assert.ok(tuesday.includes(Date.parse('2026-10-06T17:45:00Z')), 'last morning call at 11:45, ends 11:55');
+	assert.ok(!tuesday.includes(Date.parse('2026-10-06T18:00:00Z')), 'nothing between 12:00 and 16:00');
+	assert.equal(tuesday.find((start) => start > Date.parse('2026-10-06T18:00:00Z')), Date.parse('2026-10-06T22:00:00Z'), 'afternoon starts at 16:00');
+	assert.equal(tuesday.at(-1), Date.parse('2026-10-07T02:15:00Z'), 'last call at 20:15, ends 20:25');
+	assert.equal(tuesday.length, 8 + 18, 'every 15 minutes: 10 of call, 5 of margin');
 	const saturday = byDay.get('2026-10-10');
 	assert.equal(saturday[0], Date.parse('2026-10-10T15:00:00Z'), 'Saturday from 9:00');
 	assert.equal(saturday.at(-1), Date.parse('2026-10-10T18:45:00Z'), 'last Saturday call at 12:45');
 	// Con menos de 2 horas no se agenda.
-	const tuesdayNoon = Date.parse('2026-10-06T18:00:00Z');
-	assert.equal(candidateSlots(tuesdayNoon)[0], Date.parse('2026-10-06T20:00:00Z'));
+	const tuesdayAt11 = Date.parse('2026-10-06T17:00:00Z');
+	assert.equal(candidateSlots(tuesdayAt11)[0], Date.parse('2026-10-06T22:00:00Z'), 'at 11:00 the next call is 16:00');
 });
 
 test('phones are stored with their country code', () => {
@@ -156,5 +160,33 @@ test('booking caps per connection protect the agenda', async () => {
 		const capped = await post(env, '/api/booking', { ...person, email: 'p9@x.mx', slot: TUESDAY_10AM + 5 * 15 * 60_000 });
 		assert.equal(capped.status, 429);
 		assert.equal((await capped.json()).error, 'limit_ip');
+	});
+});
+
+test('limited capacity: each day opens a stable share of its times, some days none, and only those can be booked', async () => {
+	const slots = candidateSlots(MONDAY_8AM);
+	// Sobre un año de fechas: el reparto se parece al buscado y la misma fecha da siempre lo mismo.
+	const sample = Array.from({ length: 26 }, (_, i) => 1000 + i);
+	const dates = Array.from({ length: 365 }, (_, i) => new Date(Date.UTC(2026, 9, 1) + i * 864e5).toISOString().slice(0, 10));
+	const counts = dates.map((day) => offeredSlots(sample, day).length);
+	assert.deepEqual(counts, dates.map((day) => offeredSlots(sample, day).length), 'the same date always opens the same times');
+	const share = (test) => counts.filter(test).length / counts.length;
+	assert.ok(share((n) => n === 0) > 0.12 && share((n) => n === 0) < 0.3, 'about one day in five is full');
+	assert.ok(share((n) => n > 0 && n <= 2) > 0.2 && share((n) => n > 0 && n <= 2) < 0.4, 'about three in ten have one or two');
+	assert.ok(share((n) => n >= 3) > 0.35, 'the rest are open');
+	const env = environment({ BOOKING_SCARCITY: 'on' });
+	await at(MONDAY_8AM, async () => {
+		const list = await agenda(env, MONDAY_8AM);
+		assert.ok(list.slice(0, 3).some((day) => day.slots.length > 0), 'never three full days in a row at the start');
+		const weeks = new Map();
+		for (const day of list) { const d = new Date(`${day.date}T12:00:00Z`); const key = new Date(d.getTime() - ((d.getUTCDay() + 6) % 7) * 864e5).toISOString().slice(0, 10); weeks.set(key, [...(weeks.get(key) ?? []), day]); }
+		for (const days of weeks.values()) if (days.length >= 2) assert.ok(days.some((day) => day.slots.length === 0) || days.slice(0, 3).length < 3, `every week with two or more days has a full one (${days.map((day) => day.date).join(', ')})`);
+		const body = await (await get(env, '/api/booking/slots')).json();
+		assert.ok(body.days.every((day) => day.full === (day.slots.length === 0)), 'a day with no times is marked full');
+		const hidden = slots.find((start) => !body.days.flatMap((day) => day.slots).includes(start));
+		const refused = await (await post(env, '/api/booking', { ...person, slot: hidden })).json();
+		assert.equal(refused.error, 'slot_invalid', 'a time that is not offered cannot be booked');
+		const open = body.days.find((day) => day.slots.length)?.slots[0];
+		assert.equal((await post(env, '/api/booking', { ...person, email: 'abierto@x.mx', slot: open })).status, 201);
 	});
 });

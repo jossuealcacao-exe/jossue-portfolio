@@ -127,8 +127,9 @@ test('the full path: request, progress, the 3 areas, the report link and one ema
 		assert.equal(done.score, 62);
 		assert.equal(done.findings.length, 3, 'solo 3 áreas');
 		assert.equal(done.findings[0].severity, 'high');
-		assert.equal(done.report_url, `${APEX}/informe/tienda/abc123`);
-		assert.equal(done.pdf_url, `${APEX}/informe/tienda/abc123.pdf`);
+		assert.equal(done.report_url, undefined, 'the visitor does not get the full report');
+		assert.equal(done.pdf_url, undefined, 'nor the PDF');
+		assert.equal(env.DB.raw.prepare('SELECT report_url FROM ai_audits').get().report_url, `${APEX}/informe/tienda/abc123`, 'the link stays for Jossué');
 		assert.equal(env.emails.length, 1);
 		assert.match(env.emails[0].subject, /^Auditoría · Ana López · tienda\.mx · 62\/100$/);
 		assert.equal(env.emails[0].replyTo.email, 'ana@tienda.mx');
@@ -165,8 +166,8 @@ test('links that do not come from APEX are dropped', async () => {
 		age(env);
 		const done = await (await status(env, audit.id)).json();
 		assert.equal(done.status, 'done');
-		assert.equal(done.report_url, null);
-		assert.equal(done.pdf_url, null);
+		assert.equal(env.DB.raw.prepare('SELECT report_url, pdf_url FROM ai_audits').get().report_url, null);
+		assert.equal(env.DB.raw.prepare('SELECT report_url, pdf_url FROM ai_audits').get().pdf_url, null);
 	} finally {
 		apex.restore();
 	}

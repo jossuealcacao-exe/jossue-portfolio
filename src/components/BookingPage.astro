@@ -1,6 +1,7 @@
 ---
 // Agenda de llamadas de 10 minutos. Los horarios salen de /api/booking/slots (worker/booking.mjs):
-// martes, miércoles y viernes de 10:00 a 18:00 y sábado de 9:00 a 13:00, hora de Guadalajara.
+// martes, miércoles y viernes de 10:00 a 12:00 y de 16:00 a 20:30, y sábado de 9:00 a 13:00 (Guadalajara),
+// con cupo limitado por día (worker/booking.mjs).
 // Jossué le llama a la persona a la hora. La cita queda en este navegador para poder cancelarla.
 import { contact } from '../data/contact';
 import { routes, type Locale } from '../data/i18n';
@@ -18,7 +19,10 @@ const copy = es
 		title: 'Agenda una llamada conmigo.',
 		soft: 'Yo te llamo.',
 		lede: 'Elige un horario y déjame tu número. A esa hora te marco y en 10 minutos platicamos qué necesitas y por dónde empezaría yo. No tienes que contratar nada.',
-		hours: 'Martes, miércoles y viernes de 10:00 a 18:00 · sábado de 9:00 a 13:00 · hora de Guadalajara',
+		hours: 'Martes, miércoles y viernes de 10:00 a 12:00 y de 16:00 a 20:30 · sábado de 9:00 a 13:00 · hora de Guadalajara · cupo limitado',
+		full: 'Sin espacios',
+		left: 'Quedan {n}',
+		leftOne: 'Queda 1',
 		day: 'Elige el día',
 		time: 'Elige la hora',
 		you: 'Tus datos',
@@ -61,7 +65,10 @@ const copy = es
 		title: 'Book a call with me.',
 		soft: 'I will call you.',
 		lede: 'Pick a time and leave me your number. I call you at that time, and in 10 minutes we talk about what you need and where I would start. You do not have to hire anything.',
-		hours: 'Tuesday, Wednesday and Friday 10:00–18:00 · Saturday 9:00–13:00 · Guadalajara time',
+		hours: 'Tuesday, Wednesday and Friday 10:00–12:00 and 16:00–20:30 · Saturday 9:00–13:00 · Guadalajara time · limited spots',
+		full: 'Full',
+		left: '{n} left',
+		leftOne: '1 left',
 		day: 'Pick the day',
 		time: 'Pick the time',
 		you: 'Your details',
@@ -209,7 +216,7 @@ const config = { locale, copy };
 		const origin = params.get('origen') ?? params.get('from') ?? '';
 		const source = ['chat', 'auditoria', 'whatsapp', 'contacto', 'inicio'].includes(origin) ? origin : 'web';
 		let selected: number | null = null;
-		let days: { date: string; slots: number[] }[] = [];
+		let days: { date: string; slots: number[]; full?: boolean }[] = [];
 
 		const fmt = (options: Intl.DateTimeFormatOptions, tz?: string) => new Intl.DateTimeFormat(lang, { ...options, ...(tz ? { timeZone: tz } : {}) });
 		const dayFmt = fmt({ weekday: 'short', day: 'numeric', month: 'short' }, TZ);
@@ -274,12 +281,28 @@ const config = { locale, copy };
 				daysNode.append(make('p', 'jx-booking__note', copy.empty));
 				return;
 			}
-			const current = active && days.some((item) => item.date === active) ? active : days[0].date;
+			const open = days.filter((item) => item.slots.length);
+			if (!open.length) {
+				daysNode.append(make('p', 'jx-booking__note', copy.empty));
+				timesNode.replaceChildren();
+				return;
+			}
+			const current = active && open.some((item) => item.date === active) ? active : open[0].date;
 			for (const day of days.slice(0, 14)) {
 				const button = make('button', 'jx-booking__day') as HTMLButtonElement;
 				button.type = 'button';
 				const [weekday, ...rest] = dayFmt.format(Date.parse(`${day.date}T18:00:00Z`)).replace(',', '').split(' ');
 				button.append(make('span', '', weekday), make('strong', '', rest.join(' ')));
+				// Lo que se dice es lo que hay: «Sin espacios» o los espacios que de verdad quedan.
+				const n = day.slots.length;
+				if (!n) {
+					button.disabled = true;
+					button.classList.add('is-full');
+					button.append(make('em', '', copy.full));
+				} else if (n <= 2) {
+					button.classList.add('is-few');
+					button.append(make('em', '', n === 1 ? copy.leftOne : copy.left.replace('{n}', String(n))));
+				}
 				button.setAttribute('aria-pressed', String(day.date === current));
 				button.addEventListener('click', () => {
 					daysNode.querySelectorAll('button').forEach((node) => node.setAttribute('aria-pressed', 'false'));
