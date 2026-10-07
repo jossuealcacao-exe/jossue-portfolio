@@ -10,6 +10,8 @@
 // mismo no duplica nada. Se intenta al momento (sin hacer esperar a la persona) y el cron diario
 // reintenta lo que quedó pendiente. Sin token, no se manda nada y el sitio funciona igual.
 
+import { notify } from './notify.mjs';
+
 const APEX_DEFAULT = 'https://apex.jossuealcala.com';
 const TIMEOUT_MS = 8000;
 const RETRY_DAYS = 14;
@@ -85,6 +87,7 @@ export async function syncRow(env, kind, row) {
 	if (!crmEnabled(env)) return false;
 	const { table, column, entry } = KINDS[kind];
 	let status;
+	let detail = '';
 	try {
 		const response = await fetch(`${apexBase(env)}/v1/portfolio-leads`, {
 			method: 'POST',
@@ -93,18 +96,43 @@ export async function syncRow(env, kind, row) {
 			signal: globalThis.AbortSignal.timeout(TIMEOUT_MS),
 		});
 		status = response.status;
+		// El código de error de APEX (unauthenticated, insufficient_scope…) dice qué arreglar.
+		if (status !== 200 && status !== 201) detail = String((await response.json().catch(() => ({})))?.error?.code ?? '').slice(0, 80);
 	} catch (error) {
-		console.error('crm sync failed', kind, String(error?.name ?? error).slice(0, 80));
+		await logFailure(env, kind, row.id, 0, String(error?.name ?? error).slice(0, 80));
 		return false;
 	}
 	const delivered = status === 200 || status === 201;
-	if (!delivered && status !== 400) {
-		console.error('crm sync rejected', kind, status);
-		return false;
-	}
-	if (status === 400) console.error('crm sync refused data', kind, row.id);
+	if (!delivered) await logFailure(env, kind, row.id, status, detail);
+	if (!delivered && status !== 400) return false;
 	await env.DB.prepare(`UPDATE ${table} SET ${column} = ? WHERE id = ?`).bind(Date.now(), row.id).run().catch(() => null);
 	return delivered;
+}
+
+/**
+ * Anota el intento fallido. Si APEX rechazó el token (401/403), además avisa a Jossué una vez al día:
+ * hasta que se arregle, nada llega a la cartera, y eso no puede quedar en silencio.
+ */
+async function logFailure(env, kind, rowId, status, detail) {
+	console.error('crm sync failed', kind, status, detail);
+	const tokenProblem = status === 401 || status === 403;
+	const alreadyWarned = tokenProblem
+		? await env.DB.prepare('SELECT 1 FROM crm_sync_log WHERE status IN (401, 403) AND ts >= ? LIMIT 1').bind(Date.now() - 864e5).first().catch(() => null)
+		: true;
+	await env.DB.prepare('INSERT INTO crm_sync_log (ts, kind, row_id, status, detail) VALUES (?, ?, ?, ?, ?)').bind(Date.now(), kind, String(rowId), status, detail).run().catch(() => null);
+	if (!alreadyWarned) {
+		await notify(env, {
+			kind: 'alert',
+			subject: `La cartera de APEX rechazó el token del portafolio (${status}${detail ? ` · ${detail}` : ''})`,
+			text: [
+				`APEX respondió ${status}${detail ? ` (${detail})` : ''} al registrar una entrada del portafolio. Hasta que se arregle, las llamadas, recados y formularios no llegan a la cartera; se guardan y se reintentan solos cada día.`,
+				'',
+				'Qué revisar: que APEX_CRM_TOKEN (wrangler secret put APEX_CRM_TOKEN) sea el token completo, sin comillas, con el alcance portfolio:write y sin revocar. Se acuña desde la consola de apex.jossuealcala.com (ver docs/PORTAFOLIO.md en APEX).',
+				'',
+				'Este aviso llega como máximo una vez al día.',
+			].join('\n'),
+		}).catch(() => null);
+	}
 }
 
 /** Lo manda sin hacer esperar a nadie: el Worker sigue vivo hasta que termine. */
@@ -136,6 +164,7 @@ export async function syncPending(env, now = Date.now()) {
 		['aiLead', 'SELECT * FROM ai_leads WHERE crm_synced_at IS NULL AND created_at >= ? ORDER BY created_at LIMIT ?', sinceIso],
 		['submission', 'SELECT * FROM submissions WHERE crm_synced_at IS NULL AND created_at >= ? ORDER BY created_at LIMIT ?', sinceIso],
 	];
+	await env.DB.prepare('DELETE FROM crm_sync_log WHERE ts < ?').bind(now - 30 * 864e5).run().catch(() => null);
 	let sent = 0;
 	for (const [kind, sql, from] of queries) {
 		const { results } = await env.DB.prepare(sql).bind(from, RETRY_BATCH).all().catch(() => ({ results: [] }));

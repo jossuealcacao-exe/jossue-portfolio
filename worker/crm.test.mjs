@@ -36,7 +36,7 @@ function mockApex(status = 201) {
 		if (!String(url).startsWith('https://apex.test/')) return original(url, init);
 		calls.push({ url: String(url), auth: init.headers.Authorization, body: JSON.parse(init.body) });
 		const current = typeof status === 'function' ? status(calls.length) : status;
-		return Response.json({ ok: current < 300 }, { status: current });
+		return Response.json(current < 300 ? { ok: true } : { error: { code: current === 401 ? 'unauthenticated' : 'otro' } }, { status: current });
 	};
 	return { calls, restore: () => (globalThis.fetch = original) };
 }
@@ -150,4 +150,28 @@ test('recados and the contact form map to what the portfolio expects', () => {
 	assert.equal(form.sitio, 'tienda.mx');
 	assert.equal(form.tema, 'Shopify · presupuesto: 50k');
 	assert.equal(form.persona.empresa, null);
+});
+
+test('a rejected token is logged with APEX\'s reason and Jossué gets one alert a day, not one per row', async () => {
+	const emails = [];
+	const env = environment({ CONTACT_EMAIL_TO: 'owner@example.com', CONTACT_EMAIL: { send: async (message) => emails.push(message) } });
+	const apex = mockApex(401);
+	try {
+		await at(MONDAY_8AM, async () => {
+			const ctx = context();
+			await post(env, ctx, '/api/booking', { ...person, slot: TUESDAY_10AM });
+			await ctx.settle();
+			await env.DB.prepare("INSERT INTO ai_leads (id, created_at, sid, name, email) VALUES ('r2', ?, 's', 'Laura', 'laura@cafeolmo.mx')").bind(new Date(MONDAY_8AM).toISOString()).run();
+			assert.deepEqual(await syncPending(env, MONDAY_8AM), { sent: 0 });
+		});
+		const log = (await env.DB.prepare('SELECT kind, status, detail FROM crm_sync_log ORDER BY ts').all()).results;
+		assert.ok(log.length >= 3, 'every failed attempt is written down');
+		assert.ok(log.some((row) => row.kind === 'booking' && row.status === 401 && row.detail === 'unauthenticated'));
+		const alerts = emails.filter((mail) => /rechazó el token/.test(mail.subject));
+		assert.equal(alerts.length, 1);
+		assert.match(alerts[0].text, /APEX_CRM_TOKEN/);
+		assert.equal((await env.DB.prepare('SELECT count(*) AS n FROM bookings WHERE crm_synced_at IS NULL').first()).n, 1, 'still pending, to retry');
+	} finally {
+		apex.restore();
+	}
 });
