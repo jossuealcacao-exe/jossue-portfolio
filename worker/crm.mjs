@@ -152,10 +152,13 @@ export function syncCancellation(env, ctx, row) {
 	if (ctx?.waitUntil) ctx.waitUntil(pending);
 }
 
-/** Lo que no llegó en las últimas dos semanas, en lotes cortos. Lo llama el cron. */
-export async function syncPending(env, now = Date.now()) {
+/**
+ * Lo que no llegó en las últimas dos semanas, en lotes cortos. Lo llama el cron. Con `all`, lo pendiente
+ * de cualquier fecha (una sola vez, a mano: `npm run crm:sync -- --todo`).
+ */
+export async function syncPending(env, now = Date.now(), { all = false } = {}) {
 	if (!crmEnabled(env)) return { sent: 0 };
-	const since = now - RETRY_DAYS * 864e5;
+	const since = all ? 0 : now - RETRY_DAYS * 864e5;
 	const sinceIso = new Date(since).toISOString();
 	const queries = [
 		['booking', 'SELECT * FROM bookings WHERE crm_synced_at IS NULL AND created_at >= ? ORDER BY created_at LIMIT ?', since],

@@ -2,14 +2,15 @@
 // recados y formularios) —lo mismo que hace el cron de las 8:00— y dice cómo quedó.
 // Usa el token de administración de `npm run chats` (CONTACT_ADMIN_TOKEN en .env.api); no lo imprime.
 //
-//   npm run crm:sync
+//   npm run crm:sync              lo pendiente de las últimas dos semanas (lo mismo que el cron)
+//   npm run crm:sync -- --todo    lo pendiente de cualquier fecha
 const token = process.env.CONTACT_ADMIN_TOKEN?.trim();
 const base = process.env.CONTACT_SUBMISSIONS_ENDPOINT?.trim().replace(/\/api\/submissions$/, '') || 'https://jossuealcala.com';
 if (!token) {
 	console.error('Falta CONTACT_ADMIN_TOKEN. Agrégalo a .env.api.');
 	process.exit(1);
 }
-const response = await fetch(`${base}/api/crm/sync`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
+const response = await fetch(`${base}/api/crm/sync${process.argv.includes('--todo') ? '?todo=1' : ''}`, { method: 'POST', headers: { Authorization: `Bearer ${token}` } });
 const result = await response.json().catch(() => ({}));
 if (!response.ok) {
 	console.error(response.status === 401 ? '401: el token no coincide con el ADMIN_TOKEN del worker.' : `Error ${response.status}`);

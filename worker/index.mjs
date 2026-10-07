@@ -298,7 +298,7 @@ export async function handleRequest(request, env, ctx) {
 	if (url.pathname === '/api/crm/sync' && request.method === 'POST') {
 		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
 		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);
-		const result = await syncPending(env);
+		const result = await syncPending(env, Date.now(), { all: url.searchParams.get('todo') === '1' });
 		return json(200, { ok: true, ...result, ...(await crmStatus(env)) }, origin);
 	}
 	if (url.pathname === '/api/ai/chats' && request.method === 'GET') {

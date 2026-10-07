@@ -194,3 +194,19 @@ test('POST /api/crm/sync sends what is pending now, only with the admin token, a
 		apex.restore();
 	}
 });
+
+test('with ?todo=1 old pending entries are sent too; by default only the last two weeks', async () => {
+	const env = environment({ ADMIN_TOKEN: 'admin-de-prueba' });
+	const apex = mockApex(201);
+	try {
+		await env.DB.prepare("INSERT INTO submissions (id, created_at, name, email, project_type, message, consent, ip_hash) VALUES ('f-viejo', '2026-01-10T12:00:00.000Z', 'Pedro', 'pedro@tienda.mx', 'Shopify', 'Hola', 1, 'h')").run();
+		const call = (query) => handleRequest(new Request(`${ORIGIN}/api/crm/sync${query}`, { method: 'POST', headers: { Origin: ORIGIN, Authorization: 'Bearer admin-de-prueba' } }), env, context());
+		assert.equal((await (await call('')).json()).pending.formularios, 1, 'out of the window, still pending');
+		const body = await (await call('?todo=1')).json();
+		assert.equal(body.sent, 1);
+		assert.equal(body.pending.formularios, 0);
+		assert.equal(apex.calls.at(-1).body.externo_id, 'FORM-f-viejo');
+	} finally {
+		apex.restore();
+	}
+});
