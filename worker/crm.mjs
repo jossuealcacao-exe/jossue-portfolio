@@ -172,3 +172,19 @@ export async function syncPending(env, now = Date.now()) {
 	}
 	return { sent };
 }
+
+/** Cuánto falta por llegar a la cartera y los últimos tropiezos, para el comando `npm run crm:sync`. */
+export async function crmStatus(env) {
+	const count = async (sql) => Number((await env.DB.prepare(sql).first().catch(() => null))?.n ?? 0);
+	const { results } = await env.DB.prepare('SELECT ts, kind, row_id, status, detail FROM crm_sync_log ORDER BY ts DESC LIMIT 10').all().catch(() => ({ results: [] }));
+	return {
+		enabled: crmEnabled(env),
+		pending: {
+			llamadas: await count('SELECT count(*) AS n FROM bookings WHERE crm_synced_at IS NULL'),
+			cancelaciones: await count("SELECT count(*) AS n FROM bookings WHERE status = 'cancelled' AND crm_cancel_synced_at IS NULL"),
+			recados: await count('SELECT count(*) AS n FROM ai_leads WHERE crm_synced_at IS NULL'),
+			formularios: await count('SELECT count(*) AS n FROM submissions WHERE crm_synced_at IS NULL'),
+		},
+		recentFailures: results ?? [],
+	};
+}

@@ -3,7 +3,7 @@ import { handleAuditCreate, handleAuditStatus } from './audit.mjs';
 import { handleWhatsApp } from './whatsapp.mjs';
 import { notify } from './notify.mjs';
 import { sendDailySummary } from './digest.mjs';
-import { syncLater, syncPending } from './crm.mjs';
+import { crmStatus, syncLater, syncPending } from './crm.mjs';
 import { handleBookingCancel, handleBookingCreate, handleBookingIcs, handleCalendarFeed, handleSlots } from './booking.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
@@ -294,6 +294,13 @@ export async function handleRequest(request, env, ctx) {
 	if (url.pathname === '/api/booking/calendar.ics' && request.method === 'GET') return handleCalendarFeed(request, env);
 	const icsMatch = url.pathname.match(/^\/api\/booking\/(CALL-[a-f0-9]{16})\.ics$/);
 	if (icsMatch && request.method === 'GET') return handleBookingIcs(request, env, icsMatch[1]);
+	// Manda ya a la cartera de APEX lo pendiente (lo mismo que hace el cron) y dice cómo quedó.
+	if (url.pathname === '/api/crm/sync' && request.method === 'POST') {
+		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
+		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);
+		const result = await syncPending(env);
+		return json(200, { ok: true, ...result, ...(await crmStatus(env)) }, origin);
+	}
 	if (url.pathname === '/api/ai/chats' && request.method === 'GET') {
 		const providedToken = (request.headers.get('Authorization') ?? '').replace(/^Bearer\s+/i, '');
 		if (!env.ADMIN_TOKEN || !env.DB || !(await safeEqual(providedToken, env.ADMIN_TOKEN))) return json(401, { ok: false, error: 'Unauthorized' }, origin);

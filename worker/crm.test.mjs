@@ -175,3 +175,22 @@ test('a rejected token is logged with APEX\'s reason and Jossué gets one alert 
 		apex.restore();
 	}
 });
+
+test('POST /api/crm/sync sends what is pending now, only with the admin token, and says what is left', async () => {
+	const env = environment({ ADMIN_TOKEN: 'admin-de-prueba' });
+	const apex = mockApex(201);
+	try {
+		await env.DB.prepare("INSERT INTO ai_leads (id, created_at, sid, name, email) VALUES ('r3', ?, 's', 'Laura', 'laura@cafeolmo.mx')").bind(new Date().toISOString()).run();
+		const call = (token) => handleRequest(new Request(`${ORIGIN}/api/crm/sync`, { method: 'POST', headers: { Origin: ORIGIN, ...(token ? { Authorization: `Bearer ${token}` } : {}) } }), env, context());
+		assert.equal((await call()).status, 401);
+		assert.equal((await call('otro')).status, 401);
+		const body = await (await call('admin-de-prueba')).json();
+		assert.equal(body.ok, true);
+		assert.equal(body.sent, 1);
+		assert.equal(body.enabled, true);
+		assert.deepEqual(body.pending, { llamadas: 0, cancelaciones: 0, recados: 0, formularios: 0 });
+		assert.equal(apex.calls[0].body.externo_id, 'RECADO-r3');
+	} finally {
+		apex.restore();
+	}
+});

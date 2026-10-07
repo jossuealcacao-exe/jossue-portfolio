@@ -20,6 +20,7 @@
     "deploy": "npm run build:production && npx --yes wrangler@4.119.0 deploy",
     "submissions": "node --env-file=.env.api scripts/list-submissions.mjs",
     "chats": "node --env-file=.env.api scripts/list-ai-chats.mjs",
+    "crm:sync": "node --env-file=.env.api scripts/crm-sync.mjs",
     "panel": "node scripts/panel/server.mjs",
     "preview": "astro preview",
     "check": "astro check",
