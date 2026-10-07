@@ -19,6 +19,7 @@
 
 import { blockedUntil } from './guard.mjs';
 import { notify } from './notify.mjs';
+import { syncCancellation, syncLater } from './crm.mjs';
 
 export const OFFSET_MIN = -360; // Guadalajara: UTC-6, sin horario de verano desde 2022
 export const SCHEDULE = {
@@ -253,7 +254,7 @@ export async function handleSlots(env, { json, origin }, now = Date.now()) {
 	return json(200, { ok: true, timezone: TZ, callMinutes: CALL_MIN, days: days.map((day) => ({ ...day, full: day.slots.length === 0 })) }, origin);
 }
 
-export async function handleBookingCreate(request, env, { json, origin, ipHash }, now = Date.now()) {
+export async function handleBookingCreate(request, env, { json, origin, ipHash, ctx }, now = Date.now()) {
 	if (!env.DB) return json(503, { ok: false, error: 'booking_unavailable' }, origin);
 	let body;
 	try {
@@ -313,10 +314,12 @@ export async function handleBookingCreate(request, env, { json, origin, ipHash }
 	}
 
 	if (await notifyBooked(env, row)) await env.DB.prepare('UPDATE bookings SET notified_at = ? WHERE id = ?').bind(Date.now(), row.id).run().catch(() => null);
+	// A la cartera de APEX, sin hacer esperar a la persona.
+	syncLater(env, ctx, 'booking', row);
 	return json(201, { ok: true, booking: { id: row.id, token, slot: row.slot_start, end: row.slot_end, when: whenLabel(row.slot_start, locale), phone: phoneLabel(row.phone) } }, origin);
 }
 
-export async function handleBookingCancel(request, env, { json, origin }) {
+export async function handleBookingCancel(request, env, { json, origin, ctx }) {
 	if (!env.DB) return json(503, { ok: false, error: 'booking_unavailable' }, origin);
 	let body;
 	try {
@@ -329,6 +332,7 @@ export async function handleBookingCancel(request, env, { json, origin }) {
 	if (row.status === 'cancelled') return json(200, { ok: true, status: 'cancelled' }, origin);
 	const now = Date.now();
 	await env.DB.prepare("UPDATE bookings SET status = 'cancelled', cancelled_at = ?, cancelled_by = 'visitante' WHERE id = ?").bind(now, row.id).run();
+	syncCancellation(env, ctx, row);
 	await notify(env, {
 		kind: 'callCancelled',
 		subject: `${row.name} · ${whenLabel(Number(row.slot_start))}`,

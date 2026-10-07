@@ -7229,3 +7229,158 @@
 		aspect-ratio: 9 / 16;
 	}
 }
+
+/* ===== Jossue AI: la llamada de 10 minutos se agenda dentro del chat ===== */
+@layer utilities {
+	.jai__next {
+		display: flex;
+		gap: 0.5rem;
+		margin: 0 0.75rem 0.6rem;
+	}
+
+	.jai__next[hidden] {
+		display: none;
+	}
+
+	.jai__next .jai__leave {
+		flex: 1 1 0;
+		margin: 0;
+		min-width: 0;
+	}
+
+	.jai__leave--book {
+		border-style: solid;
+		border-color: rgba(236, 230, 216, 0.4);
+	}
+
+	.jai.is-booking .jai__chips,
+	.jai.is-booking .jai__next,
+	.jai.is-auditing .jai__next {
+		display: none;
+	}
+
+	.jai__days {
+		display: flex;
+		gap: 0.4rem;
+		margin: 0.75rem -1rem 0.6rem 0;
+		padding: 0 1rem 0.2rem 0;
+		overflow-x: auto;
+		scrollbar-width: none;
+	}
+
+	.jai__day,
+	.jai__time {
+		border: 1px solid var(--hair-2);
+		border-radius: 0.75rem;
+		background: var(--band);
+		color: var(--text);
+		font: inherit;
+		cursor: pointer;
+		transition: border-color 180ms var(--jx-ease), background 180ms var(--jx-ease);
+	}
+
+	.jai__day {
+		display: grid;
+		flex: none;
+		gap: 0.1rem;
+		min-width: 4.1rem;
+		padding: 0.5rem 0.55rem;
+		text-align: center;
+	}
+
+	.jai__day span {
+		font-size: 0.6875rem;
+		text-transform: capitalize;
+		color: var(--text-2);
+	}
+
+	.jai__day strong {
+		font-size: 0.875rem;
+		font-weight: 600;
+	}
+
+	.jai__day em {
+		font: 500 0.5625rem/1.2 var(--mono);
+		font-style: normal;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		color: #ffcf66;
+	}
+
+	.jai__day.is-full {
+		opacity: 0.45;
+		cursor: not-allowed;
+	}
+
+	.jai__day.is-full strong {
+		text-decoration: line-through;
+	}
+
+	.jai__day.is-full em {
+		color: var(--text-3);
+	}
+
+	.jai__day[aria-pressed='true'] {
+		border-color: var(--ivory);
+		background: var(--ivory);
+		color: var(--ivory-ink);
+	}
+
+	.jai__day[aria-pressed='true'] span,
+	.jai__day[aria-pressed='true'] em {
+		color: inherit;
+	}
+
+	.jai__times {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(4.6rem, 1fr));
+		gap: 0.4rem;
+	}
+
+	.jai__time {
+		display: grid;
+		gap: 0.05rem;
+		min-height: 2.6rem;
+		padding: 0.4rem;
+		font-size: 0.875rem;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.jai__time small {
+		font-size: 0.625rem;
+		color: var(--text-3);
+	}
+
+	.jai__day:not(:disabled):hover,
+	.jai__time:hover {
+		border-color: var(--line-strong);
+	}
+
+	.jai__day:focus-visible,
+	.jai__time:focus-visible,
+	.jai__link:focus-visible {
+		outline: 2px solid var(--ivory);
+		outline-offset: 2px;
+	}
+
+	.jai__book-picked {
+		color: var(--text);
+	}
+
+	.jai__link {
+		padding: 0;
+		border: 0;
+		background: none;
+		color: var(--ivory);
+		font: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+		cursor: pointer;
+	}
+
+	.jai__book .jai__audit-actions .jai__action--ghost {
+		background: none;
+		border: 1px solid var(--hair-2);
+		color: var(--text);
+	}
+}

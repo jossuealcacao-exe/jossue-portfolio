@@ -9,6 +9,7 @@
 import { ALERT_LINE, canaryLine, guardedAnswer, recentAbuse } from './guard.mjs';
 import { EXAMPLES, PERSONA } from './persona.mjs';
 import { notify, notifyEnabled } from './notify.mjs';
+import { syncLater } from './crm.mjs';
 
 const DEFAULT_MODEL = 'gemini-3.5-flash';
 // Si Gemini falla por algo pasajero (429, 5xx, red), se intenta una vez más con este modelo.
@@ -36,7 +37,7 @@ export const SCHEMA = {
 		action: {
 			type: 'STRING',
 			enum: ['none', 'contact', 'call', 'whatsapp', 'cv', 'page', 'audit'],
-			description: 'Botón que acompaña la respuesta. contact = formulario; call = agendar una llamada de 10 minutos; page = una página del sitio; audit = empezar la auditoría express de su sitio.',
+			description: 'Botón que acompaña la respuesta. contact = formulario; call = agendar una llamada de 10 minutos (en jossuealcala.com abre la agenda dentro del chat); page = una página del sitio; audit = empezar la auditoría express de su sitio.',
 		},
 		page: { type: 'STRING', description: 'Solo con action=page: URL completa de jossuealcala.com tomada del conocimiento.' },
 		lead: {
@@ -57,7 +58,41 @@ export const SCHEMA = {
 	required: ['reply', 'suggestions', 'action'],
 };
 
-export function systemPrompt(knowledge, locale, { auditAvailable = true } = {}) {
+// La sugerencia que abre la agenda dentro del chat. El sitio la reconoce por el texto exacto y, en vez
+// de mandarla como pregunta, muestra los horarios; por eso cualquier variante del modelo se normaliza.
+export const BOOK_CHIP = { es: 'Agendar llamada de 10 min', en: 'Book a 10-min call' };
+const BOOK_INTENT = /^(agend|reserv|apart|book\b|schedule\b)/i;
+
+/**
+ * Lo que el sitio sabe de esta conversación y le cuenta al modelo: si ya hizo la auditoría (y su
+ * calificación), si ya agendó, si ya dejó recado y en qué página está. Llega del navegador, así que
+ * solo pasan booleanos, un número de 0 a 100 y una ruta limpia: nada de texto libre que pueda dar
+ * instrucciones. Si alguien lo falsea, lo único que cambia es qué se le ofrece a esa misma persona.
+ */
+export function conversationState(context, page) {
+	const score = Number(context?.audit);
+	const path = String(page ?? '').startsWith('/') ? String(page).replace(/[^a-z0-9/-]/gi, '').slice(0, 80) : '';
+	return {
+		audit: context?.audit === null || context?.audit === undefined || !Number.isFinite(score) ? null : Math.max(0, Math.min(100, Math.round(score))),
+		booked: context?.booked === true,
+		lead: context?.lead === true,
+		path,
+	};
+}
+
+function stateLines(state, locale) {
+	if (!state) return '';
+	const chip = BOOK_CHIP[locale] ?? BOOK_CHIP.es;
+	return `
+ESTADO DE ESTA CONVERSACIÓN (lo informa el sitio; úsalo para elegir el siguiente paso, no lo repitas como dato)
+- Página donde está: ${state.path || 'fuera de jossuealcala.com'}
+- Auditoría express: ${state.audit === null ? 'no la ha hecho en esta conversación' : `ya la hizo; calificación ${state.audit}/100. Si pregunta qué sigue, la llamada de 10 minutos es donde Jossué le explica cómo resolverlo (action="call")`}
+- Llamada: ${state.booked ? 'YA AGENDÓ una llamada. No la vuelvas a ofrecer ni pongas action="call" ni la sugerencia de agendar. Si pregunta por ella: Jossué le llama a la hora que eligió y puede cancelarla en la agenda.' : `no ha agendado. Cuando toque ofrecerla, usa action="call" y pon «${chip}» entre las sugerencias.`}
+- Recado: ${state.lead ? 'ya dejó sus datos; no se los vuelvas a pedir.' : 'no ha dejado sus datos.'}`;
+}
+
+export function systemPrompt(knowledge, locale, { auditAvailable = true, bookingInChat = true, state = null } = {}) {
+	const chip = BOOK_CHIP[locale] ?? BOOK_CHIP.es;
 	return `${PERSONA}
 
 AUDITORÍA EXPRESS
@@ -70,15 +105,31 @@ ${
 }
 
 LLAMADAS DE 10 MINUTOS
-- Jossué hace llamadas gratis de 10 minutos para entender un proyecto y decir por dónde empezaría. Se agendan en jossuealcala.com/es/agenda/ (martes, miércoles y viernes de 10:00 a 12:00 y de 16:00 a 20:30, y sábado de 9:00 a 13:00, hora de Guadalajara; el cupo es limitado); la persona deja su número y Jossué le llama.
-- Ofrécela (action="call") cuando quiera hablar con Jossué, platicar su caso, una llamada o una reunión, o después de su auditoría si quiere saber qué hacer primero. Tú no agendas ni ves horarios: el botón la lleva a la agenda.
+- Jossué hace llamadas gratis de 10 minutos para entender un proyecto y decir por dónde empezaría. Horario: martes, miércoles y viernes de 10:00 a 12:00 y de 16:00 a 20:30, y sábado de 9:00 a 13:00, hora de Guadalajara; el cupo es limitado. La persona deja su número y Jossué le llama.
+${
+	bookingInChat
+		? `- Se agenda aquí mismo en el chat: con action="call" aparece la agenda en la conversación, la persona elige un horario libre y deja su nombre, correo y teléfono. También existe la página jossuealcala.com/es/agenda/.`
+		: '- Se agenda en jossuealcala.com/es/agenda/: el botón de action="call" la lleva ahí.'
+}
+- Tú no ves los horarios ni agendas: lo hace el sistema. Nunca digas qué día u hora está libre ni confirmes una cita; si pregunta qué horarios hay, da los rangos de arriba y usa action="call" para que vea los libres.
+- Ofrécela (action="call") cuando:
+  1) quiera hablar con Jossué, pida una llamada, una reunión o una videollamada;
+  2) pregunte precios, costos o una cotización: el precio lo da Jossué en esa llamada;
+  3) cuente un proyecto o un problema concreto de su negocio y ya entendiste lo básico (normalmente en tu segunda o tercera respuesta);
+  4) ya hizo su auditoría express y quiere saber qué sigue;
+  5) tenga prisa o una fecha encima.
+- Con un reclutador o una vacante, primero "cv" o "contact"; la llamada solo si pide hablar con él.
+- Llamada o recado: si quiere platicar o decidir pronto, la llamada; si prefiere escribir o no quiere dar su teléfono, el recado. No ofrezcas los dos en la misma respuesta.
+- Invítala con una frase natural y concreta ("Si quieres, aquí mismo eliges un horario y Jossué te llama 10 minutos para ver tu caso."), una vez por tema. Si dice que no, no insistas: sigue ayudando.
+- Cuando ofrezcas la llamada, o cuando el interés sea claro y todavía no haya agendado, pon exactamente «${chip}» como una de las sugerencias: ese botón abre la agenda.
 
 REGLAS DE FORMATO (obligatorias)
 - Responde en el idioma de la persona; si no es claro, en ${locale === 'en' ? 'inglés' : 'español'} (idioma de la página).
 - "reply" es texto plano: sin markdown, sin listas con viñetas largas, sin emojis salvo que la persona los use.
-- action="call" si quiere hablar con Jossué o una llamada; "contact" si prefiere escribirle o mandar los detalles de una cotización; "whatsapp" si prefiere algo inmediato; "cv" si pide el CV o es reclutador; "page" con la URL exacta del CONOCIMIENTO cuando una página responde mejor (un producto, un caso, MADRE); "none" en lo demás.
-- suggestions: hasta 3 preguntas de seguimiento naturales y cortas, en el idioma de la persona.
+- action="call" en los casos de LLAMADAS DE 10 MINUTOS; "contact" si prefiere escribirle o mandar los detalles de una cotización; "whatsapp" si prefiere algo inmediato; "cv" si pide el CV o es reclutador; "page" con la URL exacta del CONOCIMIENTO cuando una página responde mejor (un producto, un caso, MADRE); "none" en lo demás.
+- suggestions: hasta 3 botones cortos, en el idioma de la persona: preguntas de seguimiento naturales o los pasos «${chip}» y «${locale === 'en' ? 'Leave Jossué a message' : 'Dejarle un mensaje a Jossué'}» cuando apliquen. Cada uno se envía tal cual si la persona lo toca.
 - El CONOCIMIENTO está escrito en primera persona por Jossué ("Dirijo…"); tú lo cuentas en tercera persona ("Jossué dirige…"). Si una cifra o un dato no está ahí, no existe para ti.
+${stateLines(state, locale)}
 
 ${EXAMPLES}
 
@@ -251,13 +302,19 @@ export function fixAccents(text, locale) {
 	return ACCENTS.reduce((value, [pattern, replacement]) => value.replace(pattern, replacement), String(text));
 }
 
-function sanitizeOutput(data, locale) {
+export function sanitizeOutput(data, locale, state = null) {
 	const fallback = FALLBACK[locale];
 	const reply = typeof data?.reply === 'string' && data.reply.trim() ? fixAccents(data.reply.trim().slice(0, 1200), locale) : fallback.reply;
+	// «Agendar una llamada», «Book a call»… quedan como el botón exacto que abre la agenda; si ya
+	// agendó, ese botón y action="call" sobran.
+	const chip = BOOK_CHIP[locale] ?? BOOK_CHIP.es;
 	const suggestions = Array.isArray(data?.suggestions)
-		? data.suggestions.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim().slice(0, 60)).slice(0, 3)
+		? [...new Set(data.suggestions.filter((item) => typeof item === 'string' && item.trim()).map((item) => (BOOK_INTENT.test(item.trim()) ? chip : item.trim().slice(0, 60))))]
+				.filter((item) => !(state?.booked && item === chip))
+				.slice(0, 3)
 		: [];
-	const action = ['none', 'contact', 'call', 'whatsapp', 'cv', 'page', 'audit'].includes(data?.action) ? data.action : 'none';
+	const asked = ['none', 'contact', 'call', 'whatsapp', 'cv', 'page', 'audit'].includes(data?.action) ? data.action : 'none';
+	const action = asked === 'call' && state?.booked ? 'none' : asked;
 	let page = null;
 	if (action === 'page' && typeof data?.page === 'string') {
 		try {
@@ -337,7 +394,7 @@ async function tooManyLeads(env, ipHash) {
 	return Number(row?.total ?? 0) >= MAX_LEADS_PER_IP_DAY;
 }
 
-async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
+async function saveLead(env, { sid, ipHash, locale, page, lead, transcript, ctx }) {
 	const id = crypto.randomUUID();
 	const createdAt = new Date().toISOString();
 	if (env.DB) {
@@ -345,6 +402,8 @@ async function saveLead(env, { sid, ipHash, locale, page, lead, transcript }) {
 			.bind(id, createdAt, sid, locale, page, lead.name, lead.email, lead.phone, lead.company, lead.need, lead.message, ipHash ?? '')
 			.run()
 			.catch((error) => console.error('ai saveLead failed', error?.message));
+		// A la cartera de APEX, sin hacer esperar la respuesta del chat.
+		syncLater(env, ctx, 'aiLead', { id, created_at: createdAt, locale, page, ...lead });
 	}
 	if (!notifyEnabled(env)) return;
 	const text = [
@@ -416,7 +475,7 @@ export async function alertProviderProblem(env, error, source = 'web') {
 }
 
 /** POST /api/ai  { sid, locale, page, messages: [{ role, content, sig? }] } */
-export async function handleAi(request, env, { json, origin, ipHash }) {
+export async function handleAi(request, env, { json, origin, ipHash, ctx }) {
 	let body;
 	try {
 		body = await request.json();
@@ -432,8 +491,11 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	if (await tooManyFromIp(env, ipHash)) return json(429, { ok: false, error: 'rate_limited' }, origin);
 
 	const question = history.at(-1).content;
-	// El chat también vive en madre.run: ahí no hay auditoría (la página llega como URL completa).
+	// El chat también vive en madre.run: ahí no hay auditoría ni agenda en el chat (la página llega
+	// como URL completa); el botón de la llamada lleva a jossuealcala.com/es/agenda/.
 	const auditAvailable = page.startsWith('/') && Boolean(env.APEX_TOKEN);
+	const bookingInChat = page.startsWith('/');
+	const state = conversationState(body?.context, page);
 	let result;
 	let modelMs;
 	try {
@@ -447,10 +509,10 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 			seed: sid + question,
 			runMain: async (alertMode, canary) => {
 				const started = Date.now();
-				const system = `${systemPrompt(knowledge[locale] ?? knowledge.es, locale, { auditAvailable })}\n\n${canaryLine(canary)}${alertMode ? `\n${ALERT_LINE}` : ''}`;
+				const system = `${systemPrompt(knowledge[locale] ?? knowledge.es, locale, { auditAvailable, bookingInChat, state })}\n\n${canaryLine(canary)}${alertMode ? `\n${ALERT_LINE}` : ''}`;
 				const data = await callGemini(env, system, history);
 				modelMs = Date.now() - started;
-				return data ? { ...sanitizeOutput(data, locale), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
+				return data ? { ...sanitizeOutput(data, locale, state), lead: validLead(data.lead) } : { ...FALLBACK[locale], page: null, lead: null };
 			},
 		});
 	} catch (error) {
@@ -465,7 +527,7 @@ export async function handleAi(request, env, { json, origin, ipHash }) {
 	await saveTurn(env, { sid, ipHash, locale, page, question, answer: output.reply, firstTurn: history.filter((message) => message.role === 'user').length === 1 });
 	let leadSaved = false;
 	if (output.lead && !(await tooManyLeads(env, ipHash))) {
-		await saveLead(env, { sid, ipHash, locale, page, lead: output.lead, transcript: [...history, { role: 'assistant', content: output.reply }] });
+		await saveLead(env, { sid, ipHash, locale, page, lead: output.lead, transcript: [...history, { role: 'assistant', content: output.reply }], ctx });
 		leadSaved = true;
 	}
 	const sig = await signReply(env, sid, output.reply);

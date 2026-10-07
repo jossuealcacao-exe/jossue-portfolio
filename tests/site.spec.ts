@@ -182,6 +182,101 @@ test('Jossue AI answers through the Worker, offers a next step and falls back wh
 	await expect(page.locator('.jai__msg--ai').last().locator('.jai__action')).toHaveAttribute('href', /wa\.me/);
 });
 
+test('Jossue AI books the 10-minute call inside the chat and tells the bot it is done', async ({ page }) => {
+	const aiRequests: Array<Record<string, unknown>> = [];
+	const bookings: Array<Record<string, unknown>> = [];
+	// Un día lleno y otro con dos horarios (10:00 y 10:15 en Guadalajara).
+	const open = [Date.parse('2099-01-06T16:00:00Z'), Date.parse('2099-01-06T16:15:00Z')];
+	await page.route('**/api/ai', async (route) => {
+		aiRequests.push(route.request().postDataJSON());
+		await route.fulfill({ json: { ok: true, reply: 'El precio lo da Jossué en una llamada de 10 minutos. Si quieres, aquí mismo eliges un horario.', suggestions: ['Agendar llamada de 10 min', '¿Qué es MADRE?'], action: 'call', page: null, leadSaved: false } });
+	});
+	await page.route('**/api/booking/slots', (route) => route.fulfill({ json: { ok: true, timezone: 'America/Mexico_City', callMinutes: 10, days: [{ date: '2099-01-05', slots: [], full: true }, { date: '2099-01-06', slots: open, full: false }] } }));
+	await page.route('**/api/booking', async (route) => {
+		bookings.push(route.request().postDataJSON());
+		await route.fulfill({ status: 201, json: { ok: true, booking: { id: 'CALL-test123', token: 'tok', slot: open[1], end: open[1] + 600000, when: 'martes 6 de enero a las 10:15', phone: '+52 33 1234 5678' } } });
+	});
+	await page.goto('/es/servicios/');
+	await page.locator('.jai__launcher').click();
+	const panel = page.locator('.jai__panel');
+	await expect(panel.locator('[data-jai-book]')).toBeVisible();
+	await page.locator('[data-jai-input]').fill('¿Cuánto cuesta rediseñar mi tienda de café?');
+	await page.locator('[data-jai-input]').press('Enter');
+	await expect(panel.locator('.jai__msg--ai').last()).toContainText('llamada de 10 minutos');
+	expect(aiRequests[0]).toMatchObject({ context: { audit: null, booked: false, lead: false } });
+	// La agenda no se abre sola si no pidió agendar con sus palabras: aparece el botón.
+	await expect(panel.locator('[data-jai-book-card]')).toHaveCount(0);
+	await panel.locator('.jai__msg--ai .jai__action', { hasText: 'Agendar llamada de 10 min' }).click();
+
+	const card = panel.locator('[data-jai-book-card]');
+	await expect(card.locator('.jai__day')).toHaveCount(2);
+	await expect(card.locator('.jai__day').first()).toBeDisabled();
+	await expect(card.locator('.jai__day').first()).toContainText('Sin espacios');
+	await expect(panel.locator('.jai__chips')).toBeHidden();
+	await card.locator('.jai__time').nth(1).click();
+	await expect(card).toContainText('a las 10:15');
+	await expect(card.locator('input[name=topic]')).toHaveValue('¿Cuánto cuesta rediseñar mi tienda de café?');
+	await card.locator('input[name=name]').fill('Laura Olmo');
+	await card.locator('input[name=email]').fill('laura@cafeolmo.mx');
+	await card.locator('input[name=phone]').fill('33 1234 5678');
+	await card.locator('button[type=submit]').click();
+	await expect(card.locator('.jai__audit-error')).toContainText('permiso');
+	expect(bookings).toHaveLength(0);
+	await card.locator('input[name=consent]').check();
+	await card.locator('button[type=submit]').click();
+
+	await expect(card).toContainText('Listo, Laura. Tu llamada quedó agendada.');
+	await expect(card).toContainText('martes 6 de enero a las 10:15');
+	await expect(card.locator('a', { hasText: 'Agregar a mi calendario' })).toHaveAttribute('href', '/api/booking/CALL-test123.ics?t=tok');
+	expect(bookings[0]).toMatchObject({ slot: open[1], name: 'Laura Olmo', email: 'laura@cafeolmo.mx', phone: '33 1234 5678', consent: true, source: 'chat', locale: 'es', page: '/es/servicios/' });
+	// La cita queda donde /agenda/ la encuentra para verla o cancelarla.
+	expect(await page.evaluate(() => JSON.parse(localStorage.getItem('jossue-booking') ?? 'null')?.id)).toBe('CALL-test123');
+	await expect(panel.locator('[data-jai-book]')).toBeHidden();
+	await expect(panel.locator('[data-jai-chip]', { hasText: 'Agendar llamada de 10 min' })).toHaveCount(0);
+	await expect(panel.locator('.jai__msg--ai .jai__action', { hasText: 'Agendar llamada de 10 min' })).toHaveCount(0);
+
+	// El bot se entera: la siguiente pregunta lleva booked=true.
+	await page.locator('[data-jai-input]').fill('¿Qué es MADRE?');
+	await page.locator('[data-jai-input]').press('Enter');
+	await expect.poll(() => aiRequests.length).toBe(2);
+	expect(aiRequests[1]).toMatchObject({ context: { booked: true } });
+});
+
+test('the «Agendar llamada de 10 min» suggestion and data-ai-book open the agenda without asking the bot', async ({ page }) => {
+	let aiCalls = 0;
+	await page.route('**/api/ai', async (route) => {
+		aiCalls += 1;
+		await route.fulfill({ json: { ok: true, reply: 'Claro.', suggestions: ['Agendar llamada de 10 min'], action: 'none', page: null, leadSaved: false } });
+	});
+	await page.route('**/api/booking/slots', (route) => route.fulfill({ json: { ok: true, days: [] } }));
+	await page.goto('/es/');
+	await page.locator('.jai__launcher').click();
+	await page.locator('[data-jai-input]').fill('Hola');
+	await page.locator('[data-jai-input]').press('Enter');
+	await page.locator('[data-jai-chip]', { hasText: 'Agendar llamada de 10 min' }).click();
+	const card = page.locator('[data-jai-book-card]');
+	// Sin horarios libres: lo dice y ofrece WhatsApp, recado o la página de la agenda.
+	await expect(card).toContainText('no hay horarios libres');
+	await expect(card.locator('a[href^="/es/agenda/"]')).toBeVisible();
+	expect(aiCalls).toBe(1);
+	await card.getByRole('button', { name: 'Dejarle un mensaje' }).click();
+	await expect(card).toHaveCount(0);
+	await expect.poll(() => aiCalls).toBe(2);
+
+	// Cualquier botón del sitio con data-ai-book abre el chat en la agenda.
+	await page.keyboard.press('Escape');
+	await page.evaluate(() => {
+		const button = document.createElement('button');
+		button.dataset.aiBook = '';
+		button.textContent = 'Agendar';
+		button.id = 'book-trigger';
+		document.querySelector('main')?.prepend(button);
+	});
+	await page.locator('#book-trigger').click();
+	await expect(page.locator('.jai__panel')).toBeVisible();
+	await expect(page.locator('[data-jai-book-card]')).toContainText('no hay horarios libres');
+});
+
 test('product detail is bilingual and routes to a contact conversation', async ({ page }) => {
 	await page.goto('/es/productos/bloqio-builder/');
 	await expect(page.locator('[data-product-detail="bloqio-builder"]')).toBeVisible();
@@ -729,6 +824,13 @@ test('the express audit is delivered in the chat: personal, three pains, no full
 	await expect(card.locator('.jai__pain')).toHaveCount(3);
 	await expect(card).not.toContainText('Optimizar la imagen principal');
 	await expect(card.locator('a[href*="apex"], a[href$=".pdf"]')).toHaveCount(0);
-	await expect(card.locator('a[href="/es/agenda/?origen=auditoria"]')).toBeVisible();
 	await expect(panel.locator('[data-jai-greeting]')).toBeHidden();
+	// El siguiente paso se agenda aquí mismo, con sus datos y el tema de la auditoría ya puestos.
+	await page.route('**/api/booking/slots', (route) => route.fulfill({ json: { ok: true, days: [{ date: '2099-01-06', slots: [Date.parse('2099-01-06T16:00:00Z')] }] } }));
+	await card.getByRole('button', { name: 'Agendar 10 min para resolverlo' }).click();
+	const booking = panel.locator('[data-jai-book-card]');
+	await booking.locator('.jai__time').first().click();
+	await expect(booking.locator('input[name=name]')).toHaveValue('Ana López');
+	await expect(booking.locator('input[name=email]')).toHaveValue('ana@tienda.mx');
+	await expect(booking.locator('input[name=topic]')).toHaveValue('Revisar mi auditoría express de tienda.mx (62/100)');
 });

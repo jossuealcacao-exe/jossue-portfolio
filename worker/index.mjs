@@ -3,6 +3,7 @@ import { handleAuditCreate, handleAuditStatus } from './audit.mjs';
 import { handleWhatsApp } from './whatsapp.mjs';
 import { notify } from './notify.mjs';
 import { sendDailySummary } from './digest.mjs';
+import { syncLater, syncPending } from './crm.mjs';
 import { handleBookingCancel, handleBookingCreate, handleBookingIcs, handleCalendarFeed, handleSlots } from './booking.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
@@ -161,7 +162,7 @@ function clientIp(request) {
 	return request.headers.get('CF-Connecting-IP') ?? request.headers.get('X-Forwarded-For')?.split(',')[0]?.trim() ?? 'unknown';
 }
 
-async function handleContact(request, env, origin) {
+async function handleContact(request, env, origin, ctx) {
 	try {
 		const fields = await parseFields(request);
 		if (fields.faxNumber) return new Response(null, { status: 204 });
@@ -196,6 +197,10 @@ async function handleContact(request, env, origin) {
 			)
 			.run();
 		const notified = await sendContactNotification(env, submission, id, createdAt);
+		syncLater(env, ctx, 'submission', {
+			id, created_at: createdAt, name: submission.name, email: submission.email, organization: submission.organization,
+			site_url: submission.siteUrl, project_type: submission.projectType, budget: submission.budget, message: submission.message,
+		});
 		return json(201, { ok: true, id, notified }, origin);
 	} catch (error) {
 		const status = Number(error?.status) || 500;
@@ -268,11 +273,11 @@ export async function handleRequest(request, env, ctx) {
 			origin,
 		);
 	}
-	if (url.pathname === '/api/contact' && request.method === 'POST') return handleContact(request, env, origin);
+	if (url.pathname === '/api/contact' && request.method === 'POST') return handleContact(request, env, origin, ctx);
 	if (url.pathname === '/api/submissions' && request.method === 'GET') return handleSubmissions(request, env, origin);
 	if (url.pathname === '/api/ai' && request.method === 'POST') {
 		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
-		return handleAi(request, env, { json, origin, ipHash });
+		return handleAi(request, env, { json, origin, ipHash, ctx });
 	}
 	if (url.pathname === '/api/audit' && request.method === 'POST') {
 		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
@@ -283,9 +288,9 @@ export async function handleRequest(request, env, ctx) {
 	if (url.pathname === '/api/booking/slots' && request.method === 'GET') return handleSlots(env, { json, origin });
 	if (url.pathname === '/api/booking' && request.method === 'POST') {
 		const ipHash = await hmac(clientIp(request), env.RATE_LIMIT_SALT || 'local-development');
-		return handleBookingCreate(request, env, { json, origin, ipHash });
+		return handleBookingCreate(request, env, { json, origin, ipHash, ctx });
 	}
-	if (url.pathname === '/api/booking/cancel' && request.method === 'POST') return handleBookingCancel(request, env, { json, origin });
+	if (url.pathname === '/api/booking/cancel' && request.method === 'POST') return handleBookingCancel(request, env, { json, origin, ctx });
 	if (url.pathname === '/api/booking/calendar.ics' && request.method === 'GET') return handleCalendarFeed(request, env);
 	const icsMatch = url.pathname.match(/^\/api\/booking\/(CALL-[a-f0-9]{16})\.ics$/);
 	if (icsMatch && request.method === 'GET') return handleBookingIcs(request, env, icsMatch[1]);
@@ -300,6 +305,6 @@ export async function handleRequest(request, env, ctx) {
 
 export default {
 	fetch: handleRequest,
-	// Cron de wrangler.jsonc: el resumen diario a las 8:00 de Guadalajara.
-	scheduled: (controller, env, ctx) => ctx.waitUntil(sendDailySummary(env, controller.scheduledTime)),
+	// Cron de wrangler.jsonc: el resumen diario a las 8:00 de Guadalajara, y lo que no llegó a la cartera.
+	scheduled: (controller, env, ctx) => ctx.waitUntil(Promise.all([sendDailySummary(env, controller.scheduledTime), syncPending(env, controller.scheduledTime).catch(() => null)])),
 };

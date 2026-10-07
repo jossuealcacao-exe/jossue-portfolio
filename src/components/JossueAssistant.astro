@@ -42,6 +42,44 @@ const copy = es
 			leave: 'Dejarle un mensaje a Jossué',
 			leaveAsk: 'Quiero dejarle un mensaje a Jossué',
 			role: 'IA · responde al momento',
+			bookShort: 'Agendar llamada',
+			leaveShort: 'Dejar un mensaje',
+			booking: {
+				intro: 'Va. Elige un horario y Jossué te llama 10 minutos para entender tu caso y decirte por dónde empezaría. Es gratis y no tienes que contratar nada. Horarios en hora de Guadalajara.',
+				loading: 'Buscando horarios libres…',
+				full: 'Sin espacios',
+				left: 'Quedan {n}',
+				leftOne: 'Queda 1',
+				yourTime: 'tu hora',
+				empty: 'Ahorita no hay horarios libres en la agenda. Déjale un mensaje a Jossué o escríbele por WhatsApp y te busca un espacio.',
+				failed: 'No pude cargar la agenda desde aquí. Ábrela en su página o escríbele a Jossué por WhatsApp.',
+				picked: 'Elegiste el {when} (hora de Guadalajara).',
+				change: 'Cambiar horario',
+				later: 'Ahora no',
+				name: 'Tu nombre',
+				email: 'Tu correo',
+				phone: 'Tu teléfono (ahí te llama)',
+				topic: '¿De qué quieres hablar? (opcional)',
+				consent: 'Acepto que Jossué me llame y me escriba sobre esta llamada. Mis datos solo se usan para eso.',
+				submit: 'Confirmar llamada',
+				sending: 'Agendando…',
+				doneTitle: 'Listo, {name}. Tu llamada quedó agendada.',
+				doneText: 'Jossué te llama el {when} (hora de Guadalajara) al {phone}.',
+				ics: 'Agregar a mi calendario',
+				google: 'Google Calendar',
+				manage: 'Ver o cancelar',
+				page: 'Abrir la agenda',
+				leave: 'Dejarle un mensaje',
+				topicAudit: 'Revisar mi auditoría express de {domain} ({score}/100)',
+				errors: {
+					invalid_name: 'Escribe tu nombre, por favor.',
+					invalid_email: 'Revisa tu correo, parece que le falta algo.',
+					invalid_phone: 'Revisa tu teléfono: 10 dígitos, o con el código de país si no es de México.',
+					consent_required: 'Para que Jossué te llame necesito tu permiso.',
+					blocked: 'Por ahora no puedo agendar desde este chat. Escríbele a Jossué por WhatsApp.',
+					booking_unavailable: 'Ahorita no puedo agendar desde aquí. Abre la agenda o escríbele por WhatsApp.',
+				},
+			},
 			audit: {
 				invite: 'Te hago una auditoría express gratis. En unos 2 minutos te digo 3 cosas de tu sitio que puedes mejorar.',
 				start: 'Hacer mi auditoría express',
@@ -103,6 +141,44 @@ const copy = es
 			leave: 'Leave Jossué a message',
 			leaveAsk: 'I want to leave Jossué a message',
 			role: 'AI · answers right away',
+			bookShort: 'Book a call',
+			leaveShort: 'Leave a message',
+			booking: {
+				intro: 'Sure. Pick a time and Jossué will call you for 10 minutes to understand your case and tell you where he would start. It is free and you do not have to hire anything. Times are in Guadalajara time.',
+				loading: 'Looking for free times…',
+				full: 'Full',
+				left: '{n} left',
+				leftOne: '1 left',
+				yourTime: 'your time',
+				empty: 'There are no free times right now. Leave Jossué a message or write to him on WhatsApp and he will find you a slot.',
+				failed: 'I could not load the calendar from here. Open it on its page or message Jossué on WhatsApp.',
+				picked: 'You picked {when} (Guadalajara time).',
+				change: 'Change time',
+				later: 'Not now',
+				name: 'Your name',
+				email: 'Your email',
+				phone: 'Your phone (he calls you here)',
+				topic: 'What do you want to talk about? (optional)',
+				consent: 'I agree that Jossué may call me and write to me about this call. My data is only used for that.',
+				submit: 'Confirm the call',
+				sending: 'Booking…',
+				doneTitle: 'Done, {name}. Your call is booked.',
+				doneText: 'Jossué will call you on {when} (Guadalajara time) at {phone}.',
+				ics: 'Add to my calendar',
+				google: 'Google Calendar',
+				manage: 'See or cancel',
+				page: 'Open the calendar',
+				leave: 'Leave a message',
+				topicAudit: 'Go over my express audit of {domain} ({score}/100)',
+				errors: {
+					invalid_name: 'Please write your name.',
+					invalid_email: 'Check your email, something seems to be missing.',
+					invalid_phone: 'Check your phone: 10 digits, or with the country code if outside Mexico.',
+					consent_required: 'I need your permission for Jossué to call you.',
+					blocked: 'I cannot book from this chat right now. Message Jossué on WhatsApp.',
+					booking_unavailable: 'I cannot book from here right now. Open the calendar or message him on WhatsApp.',
+				},
+			},
 			audit: {
 				invite: 'I can run a free express audit. In about 2 minutes I tell you 3 things on your site you can improve.',
 				start: 'Run my express audit',
@@ -197,7 +273,10 @@ const config = {
 		<div class="jai__chips" data-jai-chips>
 			{starters.map((text) => <button type="button" data-jai-chip>{text}</button>)}
 		</div>
-		<button class="jai__leave" type="button" data-jai-leave data-analytics-event="assistant_leave_message"><Icon name="envelope" />{copy.leave}</button>
+		<div class="jai__next" data-jai-next>
+			<button class="jai__leave jai__leave--book" type="button" data-jai-book data-analytics-event="assistant_book_open" aria-label={copy.actions.call}><Icon name="calendar" />{copy.bookShort}</button>
+			<button class="jai__leave" type="button" data-jai-leave data-analytics-event="assistant_leave_message" aria-label={copy.leave}><Icon name="envelope" />{copy.leaveShort}</button>
+		</div>
 		<form class="jai__form" data-jai-form>
 			<label class="sr-only" for="jai-input">{copy.placeholder}</label>
 			<textarea id="jai-input" rows="1" maxlength="800" placeholder={copy.placeholder} data-jai-input enterkeyhint="send"></textarea>
@@ -217,9 +296,18 @@ const config = {
 		steps: string[]; waiting: string; doneTitle: string; health: string; areas: string; areaOne: string; why: string; fix: string; severity: Record<string, string>;
 		hello: string; verdict: Record<'good' | 'mid' | 'bad', string>; cost: string; teaser: string; talk: string; whatsapp: string; errors: Record<string, string>;
 	};
+	type BookingCopy = Record<'intro' | 'loading' | 'full' | 'left' | 'leftOne' | 'yourTime' | 'empty' | 'failed' | 'picked' | 'change' | 'later' | 'name' | 'email' | 'phone' | 'topic' | 'consent' | 'submit' | 'sending' | 'doneTitle' | 'doneText' | 'ics' | 'google' | 'manage' | 'page' | 'leave' | 'topicAudit', string> & { errors: Record<string, string> };
 	type Copy = {
 		greeting: string; greetings: string[]; greetingAudit: string; placeholder: string; send: string; typing: string; disclosure: string; error: string; limit: string; lead: string;
-		actions: Record<string, string>; reset: string; leave: string; leaveAsk: string; role: string; audit: AuditCopy;
+		actions: Record<string, string>; reset: string; leave: string; leaveAsk: string; role: string; audit: AuditCopy; booking: BookingCopy;
+	};
+	// La cita se guarda igual que en /agenda/ (jossue-booking) para poder verla o cancelarla ahí.
+	type Saved = { id: string; token: string; slot: number; end: number; when: string; phone: string };
+	type BookingDay = { date: string; slots: number[] };
+	type BookingState = {
+		step: 'slots' | 'contact' | 'done' | 'failed';
+		source: 'chat' | 'auditoria';
+		day?: string; slot?: number; name?: string; email?: string; phone?: string; topic?: string; consent?: boolean; error?: string; saved?: Saved;
 	};
 	type Finding = { title: string; severity: string; business_effect: string; recommendation: string; category?: string };
 	type AuditResult = { id: string; status: string; domain: string; url: string; score: number | null; findings: Finding[]; error: string | null };
@@ -249,6 +337,8 @@ const config = {
 		const invite = $<HTMLElement>('[data-jai-invite]');
 		const inviteText = $<HTMLButtonElement>('[data-jai-invite-open]');
 		const leave = $<HTMLButtonElement>('[data-jai-leave]');
+		const bookButton = $<HTMLButtonElement>('[data-jai-book]');
+		const next = $<HTMLElement>('[data-jai-next]');
 
 		const store = {
 			get<T>(key: string, fallback: T): T {
@@ -311,6 +401,22 @@ const config = {
 				start.addEventListener('click', () => startAudit());
 				bubble.append(start);
 			}
+			// La llamada se agenda aquí mismo: el botón abre los horarios en la conversación.
+			if (message.role === 'assistant' && message.action === 'call') {
+				if (isBooked()) {
+					log.append(bubble);
+					return;
+				}
+				const book = document.createElement('button');
+				book.type = 'button';
+				book.className = 'jai__action';
+				book.textContent = config.copy.actions.call;
+				book.dataset.analyticsEvent = 'assistant_call';
+				book.addEventListener('click', () => startBooking('chat'));
+				bubble.append(book);
+				log.append(bubble);
+				return;
+			}
 			const href = message.role === 'assistant' ? actionHref(message) : null;
 			if (href && message.action) {
 				const link = document.createElement('a');
@@ -325,7 +431,9 @@ const config = {
 			log.append(bubble);
 		}
 
-		function renderChips(list: string[]) {
+		function renderChips(all: string[]) {
+			// Con la llamada ya agendada, la sugerencia de agendar sobra.
+			const list = isBooked() ? all.filter((label) => label !== config.copy.actions.call) : all;
 			chips.replaceChildren(
 				...list.map((label) => {
 					const chip = document.createElement('button');
@@ -343,6 +451,7 @@ const config = {
 			messages.forEach(renderMessage);
 			if (messages.length) renderChips(store.get<string[]>('chips', []));
 			if (store.get<AuditState | null>('audit', null)) renderAudit();
+			if (bookingState()) renderBooking();
 			scrollDown();
 		}
 
@@ -380,7 +489,7 @@ const config = {
 			renderAudit();
 		};
 
-		function field(type: string, name: string, label: string, value = '') {
+		function field(type: string, name: string, label: string, value = '', required = true) {
 			const wrap = make('label', 'jai__field');
 			wrap.append(make('span', 'sr-only', label));
 			const input = make('input');
@@ -388,9 +497,10 @@ const config = {
 			input.name = name;
 			input.placeholder = label;
 			input.value = value;
-			input.required = true;
-			input.setAttribute('autocomplete', name === 'email' ? 'email' : name === 'name' ? 'name' : 'url');
+			input.required = required;
+			input.setAttribute('autocomplete', ({ email: 'email', name: 'name', phone: 'tel', topic: 'off' } as Record<string, string>)[name] ?? 'url');
 			if (name === 'url') input.inputMode = 'url';
+			if (name === 'phone') input.inputMode = 'tel';
 			wrap.append(input);
 			return wrap;
 		}
@@ -511,7 +621,14 @@ const config = {
 					anchor.dataset.analyticsEvent = event;
 					actions.append(anchor);
 				};
-				go(`${config.routes.booking}?origen=auditoria`, A.talk, 'assistant_audit_talk', true);
+				// La llamada se agenda aquí mismo, con su nombre, correo y el tema ya puestos.
+				if (!isBooked()) {
+					const talk = make('button', 'jai__action', A.talk);
+					talk.type = 'button';
+					talk.dataset.analyticsEvent = 'assistant_audit_talk';
+					talk.addEventListener('click', () => startBooking('auditoria'));
+					actions.append(talk);
+				}
 				go(config.links.whatsapp, A.whatsapp, 'assistant_audit_whatsapp', false);
 				card.append(actions);
 				log.append(card);
@@ -582,6 +699,320 @@ const config = {
 			}
 		}
 
+		// ---------- Llamada de 10 minutos: se agenda aquí, con la misma agenda de /agenda/ ----------
+		const B = config.copy.booking;
+		const SAVED_KEY = 'jossue-booking';
+		const TZ = 'America/Mexico_City';
+		const lang = config.locale === 'en' ? 'en-US' : 'es-MX';
+		const hour12 = config.locale === 'en';
+		const dayFmt = new Intl.DateTimeFormat(lang, { weekday: 'short', day: 'numeric', month: 'short', timeZone: TZ });
+		const hourFmt = new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', hour12, timeZone: TZ });
+		const localHourFmt = new Intl.DateTimeFormat(lang, { hour: '2-digit', minute: '2-digit', hour12 });
+		const longParts = new Intl.DateTimeFormat(lang, { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', hour12, timeZone: TZ });
+		// Igual que whenLabel del Worker: «martes 6 de octubre a las 10:15».
+		const whenLabel = (ms: number) => {
+			const p = Object.fromEntries(longParts.formatToParts(ms).map((part) => [part.type, part.value]));
+			return config.locale === 'en' ? `${p.weekday}, ${p.month} ${p.day} at ${p.hour}:${p.minute} ${p.dayPeriod ?? ''}`.trim() : `${p.weekday} ${p.day} de ${p.month} a las ${p.hour}:${p.minute}`;
+		};
+		let bookingDays: BookingDay[] | null = null;
+		let bookingLoad: Promise<void> | null = null;
+		let bookingFailed = false;
+
+		function bookingState() {
+			return store.get<BookingState | null>('booking', null);
+		}
+		function readSaved(): Saved | null {
+			try {
+				const value = JSON.parse(localStorage.getItem(SAVED_KEY) ?? 'null');
+				return value && value.slot > Date.now() ? value : null;
+			} catch {
+				return null;
+			}
+		}
+		function isBooked() {
+			return Boolean(readSaved()) || bookingState()?.step === 'done';
+		}
+		const setBooking = (state: BookingState | null) => {
+			store.set('booking', state);
+			renderBooking();
+			syncNext();
+		};
+		// «Agendar llamada» y «Dejar un mensaje» se esconden cuando ya no aplican.
+		function syncNext() {
+			bookButton.hidden = isBooked();
+			leave.hidden = store.get('leadSaved', false);
+			next.hidden = bookButton.hidden && leave.hidden;
+		}
+
+		function loadDays() {
+			bookingLoad ??= (async () => {
+				try {
+					const response = await fetch('/api/booking/slots', { headers: { Accept: 'application/json' } });
+					const data = await response.json();
+					if (!response.ok || !data.ok) throw new Error('slots');
+					bookingDays = (data.days ?? []) as BookingDay[];
+					bookingFailed = false;
+				} catch {
+					bookingFailed = true;
+				} finally {
+					bookingLoad = null;
+				}
+			})();
+			return bookingLoad;
+		}
+
+		// El tema de la llamada sale de la plática: la auditoría o lo último que la persona contó.
+		function topicFromConversation(source: BookingState['source']) {
+			const audit = auditState();
+			if (source === 'auditoria' && audit?.audit) return fill(B.topicAudit, { domain: audit.audit.domain, score: String(audit.audit.score ?? '—') });
+			const said = messages.filter((message) => message.role === 'user' && message.content.length > 12 && message.content !== config.copy.leaveAsk).at(-1)?.content ?? '';
+			return said.slice(0, 280);
+		}
+
+		function startBooking(source: BookingState['source'] = 'chat') {
+			// En la página de la agenda ya está todo a la vista: se cierra el chat y se va a los horarios.
+			if (location.pathname === config.routes.booking) {
+				setOpen(false);
+				document.querySelector('[data-booking]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				return;
+			}
+			if (panel.hidden) setOpen(true, false);
+			hideInvite(true);
+			const saved = readSaved();
+			if (saved) return setBooking({ step: 'done', source, saved, name: bookingState()?.name });
+			const current = bookingState();
+			if (current && current.step !== 'failed') return renderBooking();
+			const audit = auditState();
+			setBooking({ step: 'slots', source, name: audit?.name, email: audit?.email, topic: topicFromConversation(source) });
+		}
+
+		function bookingActions(...items: Array<[string | null, string, string, boolean] | HTMLElement>) {
+			const row = make('div', 'jai__audit-actions');
+			for (const item of items) {
+				if (item instanceof HTMLElement) {
+					row.append(item);
+					continue;
+				}
+				const [href, label, event, primary] = item;
+				if (!href) continue;
+				const anchor = make('a', primary ? 'jai__action' : 'jai__action jai__action--ghost', label);
+				anchor.href = href;
+				if (!href.startsWith('/')) {
+					anchor.target = '_blank';
+					anchor.rel = 'noopener';
+				}
+				anchor.dataset.analyticsEvent = event;
+				row.append(anchor);
+			}
+			return row;
+		}
+
+		function ghost(label: string, onClick: () => void) {
+			const button = make('button', 'jai__action jai__action--ghost', label);
+			button.type = 'button';
+			button.addEventListener('click', onClick);
+			return button;
+		}
+
+		function renderBooking() {
+			log.querySelector('[data-jai-book-card]')?.remove();
+			const state = bookingState();
+			host.classList.toggle('is-booking', Boolean(state) && state?.step !== 'done');
+			if (!state) return;
+			const card = make('div', 'jai__msg jai__msg--ai jai__audit jai__book');
+			card.dataset.jaiBookCard = '';
+			const pageLink = `${config.routes.booking}?origen=${state.source}`;
+
+			if (state.step === 'slots') {
+				card.append(make('p', '', B.intro));
+				if (!bookingDays && !bookingFailed) {
+					card.append(make('p', 'jai__audit-note', B.loading));
+					log.append(card);
+					scrollDown();
+					void loadDays().then(() => bookingState()?.step === 'slots' && renderBooking());
+					return;
+				}
+				const open = (bookingDays ?? []).filter((day) => day.slots.length);
+				if (bookingFailed || !open.length) {
+					card.append(make('p', '', bookingFailed ? B.failed : B.empty));
+					const leaveIt = ghost(B.leave, () => {
+						setBooking(null);
+						ask(config.copy.leaveAsk);
+					});
+					card.append(bookingActions([config.links.whatsapp, config.copy.actions.whatsapp, 'assistant_book_whatsapp', true], leaveIt, [pageLink, B.page, 'assistant_book_page', false]));
+					log.append(card);
+					scrollDown();
+					return;
+				}
+				const active = state.day && open.some((day) => day.date === state.day) ? state.day : open[0].date;
+				const days = make('div', 'jai__days');
+				days.setAttribute('role', 'group');
+				for (const day of (bookingDays ?? []).slice(0, 10)) {
+					const button = make('button', 'jai__day');
+					button.type = 'button';
+					const [weekday, ...rest] = dayFmt.format(Date.parse(`${day.date}T18:00:00Z`)).replace(',', '').split(' ');
+					button.append(make('span', '', weekday), make('strong', '', rest.join(' ')));
+					const n = day.slots.length;
+					if (!n) {
+						button.disabled = true;
+						button.classList.add('is-full');
+						button.append(make('em', '', B.full));
+					} else if (n <= 2) {
+						button.append(make('em', '', n === 1 ? B.leftOne : fill(B.left, { n: String(n) })));
+					}
+					button.setAttribute('aria-pressed', String(day.date === active));
+					button.addEventListener('click', () => setBooking({ ...state, day: day.date, error: undefined }));
+					days.append(button);
+				}
+				const times = make('div', 'jai__times');
+				for (const start of open.find((day) => day.date === active)?.slots ?? []) {
+					const label = hourFmt.format(start);
+					const theirs = localHourFmt.format(start);
+					const button = make('button', 'jai__time', label);
+					button.type = 'button';
+					button.dataset.slot = String(start);
+					button.dataset.analyticsEvent = 'assistant_book_time';
+					if (theirs !== label) button.append(make('small', '', `${B.yourTime} ${theirs}`));
+					button.addEventListener('click', () => setBooking({ ...state, step: 'contact', day: active, slot: start, error: undefined }));
+					times.append(button);
+				}
+				card.append(days, times);
+				if (state.error) card.append(make('p', 'jai__audit-error', state.error));
+				card.append(bookingActions(ghost(B.later, () => setBooking(null))));
+				log.append(card);
+				window.requestAnimationFrame(() => log.scrollTo({ top: log.scrollHeight, behavior: 'instant' }));
+				return;
+			}
+
+			if (state.step === 'contact' && state.slot) {
+				const formNode = make('form', 'jai__audit-form');
+				formNode.noValidate = true;
+				const picked = make('p', 'jai__book-picked', fill(B.picked, { when: whenLabel(state.slot) }));
+				const change = make('button', 'jai__link', B.change);
+				change.type = 'button';
+				change.addEventListener('click', () => setBooking({ ...state, step: 'slots', slot: undefined, error: undefined }));
+				picked.append(' ', change);
+				formNode.append(
+					picked,
+					field('text', 'name', B.name, state.name),
+					field('email', 'email', B.email, state.email),
+					field('tel', 'phone', B.phone, state.phone),
+					field('text', 'topic', B.topic, state.topic, false),
+				);
+				const consent = make('label', 'jai__consent');
+				const box = make('input');
+				box.type = 'checkbox';
+				box.name = 'consent';
+				box.checked = Boolean(state.consent);
+				const consentText = make('span', '', `${B.consent} `);
+				const privacy = make('a', '', config.locale === 'es' ? 'Aviso de privacidad' : 'Privacy notice');
+				privacy.href = config.routes.privacy;
+				privacy.target = '_blank';
+				consentText.append(privacy);
+				consent.append(box, consentText);
+				formNode.append(consent);
+				if (state.error) formNode.append(make('p', 'jai__audit-error', state.error));
+				const submit = make('button', 'jai__action', B.submit);
+				submit.type = 'submit';
+				submit.dataset.analyticsEvent = 'assistant_book_submit';
+				formNode.append(submit);
+				formNode.addEventListener('submit', (event) => {
+					event.preventDefault();
+					const data = new FormData(formNode);
+					const value = (key: string) => String(data.get(key) ?? '').trim();
+					const draft: BookingState = { ...state, name: value('name'), email: value('email'), phone: value('phone'), topic: value('topic').slice(0, 300), consent: data.get('consent') === 'on' };
+					const error =
+						draft.name!.length < 2 ? B.errors.invalid_name
+						: !/^[^\s@]+@[^\s@]+\.[a-z]{2,}$/i.test(draft.email!) ? B.errors.invalid_email
+						: draft.phone!.replace(/\D/g, '').length < 10 ? B.errors.invalid_phone
+						: !draft.consent ? B.errors.consent_required
+						: '';
+					if (error) return setBooking({ ...draft, error });
+					submit.disabled = true;
+					submit.textContent = B.sending;
+					void requestBooking(draft);
+				});
+				card.append(formNode);
+				log.append(card);
+				window.requestAnimationFrame(() => {
+					log.scrollTo({ top: log.scrollHeight, behavior: 'instant' });
+					if (matchMedia('(pointer: fine)').matches) formNode.querySelector<HTMLInputElement>('input[name=name]')?.focus({ preventScroll: true });
+				});
+				return;
+			}
+
+			if (state.step === 'done' && state.saved) {
+				const saved = state.saved;
+				card.classList.add('jai__book--done');
+				const first = (state.name ?? '').trim().split(/\s+/)[0];
+				card.append(make('p', 'jai__audit-title', first ? fill(B.doneTitle, { name: first }) : B.doneTitle.replace(/,? \{name\}/, '')));
+				card.append(make('p', '', fill(B.doneText, { when: saved.when, phone: saved.phone })));
+				const stamp = (ms: number) => new Date(ms).toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+				const google = new URL('https://calendar.google.com/calendar/render');
+				google.searchParams.set('action', 'TEMPLATE');
+				google.searchParams.set('text', config.locale === 'en' ? 'Call with Jossué Alcalá (10 min)' : 'Llamada con Jossué Alcalá (10 min)');
+				google.searchParams.set('dates', `${stamp(saved.slot)}/${stamp(saved.end)}`);
+				google.searchParams.set('details', config.locale === 'en' ? 'Jossué will call you at the number you left.' : 'Jossué te llama al número que dejaste.');
+				card.append(
+					bookingActions(
+						[`/api/booking/${encodeURIComponent(saved.id)}.ics?t=${encodeURIComponent(saved.token)}`, B.ics, 'assistant_book_ics', true],
+						[google.toString(), B.google, 'assistant_book_google', false],
+						[config.routes.booking, B.manage, 'assistant_book_manage', false],
+					),
+				);
+				log.append(card);
+				scrollDown();
+				return;
+			}
+
+			card.append(make('p', '', state.error || B.errors.booking_unavailable));
+			card.append(bookingActions([pageLink, B.page, 'assistant_book_page', true], [config.links.whatsapp, config.copy.actions.whatsapp, 'assistant_book_whatsapp', false]));
+			log.append(card);
+			scrollDown();
+		}
+
+		async function requestBooking(state: BookingState) {
+			try {
+				const response = await fetch('/api/booking', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+					body: JSON.stringify({ slot: state.slot, name: state.name, email: state.email, phone: state.phone, topic: state.topic, consent: true, locale: config.locale, source: state.source, page: location.pathname }),
+				});
+				const result = await response.json().catch(() => ({}));
+				if (response.ok && result.booking) {
+					const saved = result.booking as Saved;
+					try {
+						localStorage.setItem(SAVED_KEY, JSON.stringify(saved));
+					} catch {
+						/* sin almacenamiento la cita solo se ve en esta sesión */
+					}
+					trackLead('booking');
+					setBooking({ ...state, step: 'done', saved, error: undefined });
+					log.querySelectorAll('[data-analytics-event="assistant_call"], [data-analytics-event="assistant_audit_talk"]').forEach((node) => node.remove());
+					renderChips(store.get<string[]>('chips', []));
+					window.dispatchEvent(new CustomEvent('jai:booked'));
+					return;
+				}
+				const message = result.message ?? B.errors[result.error] ?? B.errors.booking_unavailable;
+				// Horario ganado por alguien más: de vuelta a los horarios, ya actualizados.
+				if (['slot_taken', 'slot_invalid'].includes(result.error)) {
+					bookingDays = null;
+					return setBooking({ ...state, step: 'slots', slot: undefined, error: message });
+				}
+				if (['invalid_name', 'invalid_email', 'invalid_phone', 'consent_required'].includes(result.error)) return setBooking({ ...state, error: message });
+				setBooking({ ...state, step: response.status === 409 || response.status === 429 ? 'contact' : 'failed', error: message });
+			} catch {
+				setBooking({ ...state, step: 'failed', error: B.errors.booking_unavailable });
+			}
+		}
+
+		// Lo que el bot necesita saber de esta conversación para elegir el siguiente paso.
+		function conversationContext() {
+			const audit = auditState();
+			return { audit: audit?.step === 'done' ? (audit.audit?.score ?? null) : null, booked: isBooked(), lead: store.get('leadSaved', false) };
+		}
+		const BOOK_INTENT = /\b(agend\w*|llamad\w*|reuni[oó]n\w*|cita|videollamada|call|book\w*|schedul\w*|meeting)\b/i;
+
 		async function ask(question: string) {
 			const content = question.trim().slice(0, 800);
 			if (!content || busy) return;
@@ -609,6 +1040,8 @@ const config = {
 						page: location.pathname,
 						// Las respuestas del asistente vuelven con su firma: el servidor solo confía en las que firmó él.
 						messages: messages.slice(-12).map(({ role, content, sig }) => ({ role, content, ...(sig ? { sig } : {}) })),
+						// Auditoría, llamada y recado: el bot ofrece el siguiente paso que falta, no uno repetido.
+						context: conversationContext(),
 					}),
 				});
 				window.clearTimeout(timer);
@@ -632,9 +1065,11 @@ const config = {
 				}
 				if (data.leadSaved) {
 					store.set('leadSaved', true);
-					leave.hidden = true;
+					syncNext();
 					window.dispatchEvent(new CustomEvent('jai:lead'));
 				}
+				// Si pidió agendar con sus palabras, la agenda se abre sola debajo de la respuesta.
+				if (data.action === 'call' && BOOK_INTENT.test(content) && !isBooked()) startBooking('chat');
 				scrollDown();
 			} catch {
 				typing(false);
@@ -690,6 +1125,8 @@ const config = {
 			store.set('messages', []);
 			store.set('chips', []);
 			store.set('audit', null);
+			store.set('booking', null);
+			host.classList.remove('is-booking');
 			store.set('greeting', -1);
 			pickGreeting();
 			window.clearTimeout(pollTimer);
@@ -705,7 +1142,10 @@ const config = {
 		}
 		chips.addEventListener('click', (event) => {
 			const chip = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-jai-chip]');
-			if (chip) ask(chip.textContent ?? '');
+			if (!chip) return;
+			// La sugerencia «Agendar llamada de 10 min» no va al bot: abre la agenda aquí mismo.
+			if (chip.textContent === config.copy.actions.call) return startBooking('chat');
+			ask(chip.textContent ?? '');
 		});
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
@@ -726,6 +1166,14 @@ const config = {
 		});
 		window.visualViewport?.addEventListener('resize', fitViewport);
 		window.visualViewport?.addEventListener('scroll', fitViewport);
+
+		// Botones del sitio con data-ai-book: abren el chat directo en la agenda de la llamada.
+		document.addEventListener('click', (event) => {
+			const trigger = (event.target as HTMLElement).closest<HTMLElement>('[data-ai-book]');
+			if (!trigger) return;
+			event.preventDefault();
+			startBooking(trigger.dataset.aiBook === 'auditoria' ? 'auditoria' : 'chat');
+		});
 
 		// Botones del sitio con data-ai-audit: abren el chat directo en la auditoría express.
 		document.addEventListener('click', (event) => {
@@ -781,8 +1229,9 @@ const config = {
 			window.requestAnimationFrame(clearConsent);
 		}
 
-		leave.hidden = store.get('leadSaved', false);
+		syncNext();
 		leave.addEventListener('click', () => ask(config.copy.leaveAsk));
+		bookButton.addEventListener('click', () => startBooking('chat'));
 
 		if (messages.length || auditState()) renderAll();
 		if (auditState()?.step === 'running') schedulePoll();
