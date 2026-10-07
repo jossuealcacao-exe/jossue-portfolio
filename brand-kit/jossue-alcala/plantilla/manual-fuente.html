@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="es">
+<head>
+<!-- Fuente editable del manual. Las rutas son relativas a brand-kit/jossue-alcala/.
+     No se abre directo: genera key-visual.html (autocontenido) con plantilla/manual.mjs. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Key Visual · Jossue Alcalá</title>
+<meta name="description" content="Manual del key visual de Jossue Alcalá: logotipo, color, tipografía, elementos, composición, formatos, voz y movimiento para anuncios.">
+<style>
+@font-face { font-family: "Inter Tight"; src: url(fuentes/InterTight-Variable.woff2) format("woff2"); font-weight: 100 900; }
+:root {
+	--noche: #050605; --banda: #0c0e0c; --tarjeta: #161a16; --tarjeta-2: #1f241f;
+	--indigo: #1a2142; --violeta: #2a1b3d; --polvo: #dfe6ff; --luz: #fffaf0;
+	--marfil: #ece6d8; --tinta-marfil: #12110e;
+	--texto: #eef1ea; --apoyo: #b9bfb5; --gris: #9aa197; --gris-3: #7c8479;
+	--linea: rgba(238, 241, 234, 0.1); --linea-2: rgba(238, 241, 234, 0.18);
+	--fosforo: #9bff66; --error: #ff8a7a;
+	--max: 1180px; --pad: clamp(16px, 4vw, 48px);
+}
+* { box-sizing: border-box; margin: 0; }
+html { scroll-behavior: smooth; }
+body { background: var(--noche); color: var(--texto); font-family: "Inter Tight", system-ui, sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 0.86em; background: rgba(238, 241, 234, 0.07); padding: 0.1em 0.4em; border-radius: 5px; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--pad); }
+
+/* Portada */
+.portada { position: relative; min-height: 100svh; display: flex; flex-direction: column; overflow: hidden;
+	background: radial-gradient(55% 60% at 72% 38%, var(--indigo) 0%, rgba(26,33,66,0) 70%), radial-gradient(45% 55% at 90% 98%, rgba(42,27,61,.7) 0%, rgba(42,27,61,0) 70%), var(--noche); }
+.portada .cielo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.portada header { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 28px var(--pad); }
+.portada header img { height: 40px; width: auto; }
+.portada header span { font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gris); }
+.portada .titulo { position: relative; margin-top: auto; padding: 0 var(--pad) clamp(40px, 8vh, 96px); max-width: var(--max); width: 100%; margin-inline: auto; }
+.etiqueta { font-size: 13px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gris); }
+.portada h1 { margin-top: 18px; font-size: clamp(56px, 11vw, 148px); line-height: 0.95; font-weight: 640; letter-spacing: -0.035em; }
+.portada p { margin-top: 24px; max-width: 34ch; font-size: clamp(18px, 2vw, 22px); color: var(--apoyo); }
+.portada .meta { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 10px 28px; font-size: 14px; color: var(--gris); }
+.portada .meta b { color: var(--texto); font-weight: 600; }
+
+/* Índice */
+.indice { border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); background: var(--banda); position: sticky; top: 0; z-index: 5; }
+.indice ol { list-style: none; padding: 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.indice a { display: block; padding: 14px 12px; font-size: 14px; color: var(--gris); text-decoration: none; white-space: nowrap; }
+.indice a:hover { color: var(--texto); }
+.indice a span { color: var(--gris-3); margin-right: 6px; font-variant-numeric: tabular-nums; }
+
+/* Secciones */
+section { padding: clamp(64px, 10vw, 120px) 0; border-bottom: 1px solid var(--linea); }
+.cabeza { display: grid; grid-template-columns: 120px 1fr; gap: 24px; margin-bottom: 48px; }
+.cabeza .num { font-size: 15px; color: var(--gris-3); font-variant-numeric: tabular-nums; padding-top: 10px; }
+.cabeza h2 { font-size: clamp(36px, 5.4vw, 64px); line-height: 1; font-weight: 620; letter-spacing: -0.03em; }
+.cabeza p { margin-top: 18px; max-width: 60ch; color: var(--apoyo); font-size: 18px; }
+h3 { font-size: 22px; font-weight: 600; letter-spacing: -0.01em; margin: 56px 0 18px; }
+h3:first-child { margin-top: 0; }
+.nota { color: var(--gris); font-size: 15px; margin-top: 14px; max-width: 70ch; }
+.grid { display: grid; gap: 16px; }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g4 { grid-template-columns: repeat(4, 1fr); }
+.tarjeta { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 18px; padding: 24px; }
+.tarjeta h4 { font-size: 17px; font-weight: 600; }
+.tarjeta p { color: var(--apoyo); font-size: 15px; margin-top: 8px; }
+.lienzo { border-radius: 18px; border: 1px solid var(--linea); display: grid; place-items: center; padding: 48px 24px; min-height: 260px; position: relative; overflow: hidden; }
+.lienzo.oscuro { background: radial-gradient(70% 80% at 70% 30%, var(--indigo) 0%, rgba(26,33,66,0) 70%), var(--noche); }
+.lienzo.claro { background: #fff; }
+.lienzo .pie { position: absolute; left: 16px; bottom: 12px; font-size: 13px; color: var(--gris); }
+.lienzo.claro .pie { color: #6b706a; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; padding: 12px 14px 12px 0; border-bottom: 1px solid var(--linea); vertical-align: top; }
+th { font-weight: 500; color: var(--gris); font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+.tabla { overflow-x: auto; }
+.ok { color: var(--fosforo); font-weight: 600; }
+
+/* Concepto */
+.concepto { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+.concepto blockquote { font-size: clamp(26px, 3.4vw, 40px); line-height: 1.15; font-weight: 560; letter-spacing: -0.02em; }
+.concepto blockquote em { font-style: normal; color: var(--marfil); }
+.estrellas-sueltas { aspect-ratio: 1; border-radius: 24px; border: 1px solid var(--linea); background: radial-gradient(70% 70% at 50% 40%, var(--indigo), rgba(26,33,66,0) 70%), var(--noche); }
+
+/* Logotipo */
+.proteccion { position: relative; padding: 40px; border: 1px dashed rgba(236,230,216,.45); }
+.proteccion img { height: 80px; width: auto; }
+.proteccion i { position: absolute; font-style: normal; font-size: 12px; color: var(--marfil); }
+.proteccion i.t { top: 12px; left: 50%; transform: translateX(-50%); }
+.proteccion i.l { left: 8px; top: 50%; transform: translateY(-50%); }
+.minimos { display: flex; align-items: flex-end; gap: 40px; flex-wrap: wrap; }
+.minimos figure { display: grid; gap: 10px; }
+.minimos figcaption { font-size: 13px; color: var(--gris); }
+.mal { position: relative; }
+.mal .lienzo { min-height: 180px; padding: 32px 16px; }
+.mal .lienzo img { height: 46px; width: auto; }
+.mal p { margin-top: 10px; font-size: 14px; color: var(--apoyo); display: flex; gap: 8px; align-items: baseline; }
+.mal p::before { content: "✕"; color: var(--error); font-weight: 700; }
+
+/* Color */
+.swatch { border-radius: 16px; overflow: hidden; border: 1px solid var(--linea); background: var(--tarjeta); }
+.swatch .c { height: 120px; }
+.swatch div:last-child { padding: 14px 16px; }
+.swatch b { display: block; font-weight: 600; }
+.swatch span { display: block; font-size: 13px; color: var(--gris); font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+.swatch small { display: block; margin-top: 6px; font-size: 13px; color: var(--apoyo); }
+.proporcion { display: flex; height: 64px; border-radius: 14px; overflow: hidden; border: 1px solid var(--linea); }
+.proporcion div { display: grid; place-items: center; font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; }
+
+/* Tipografía */
+.especimen { display: grid; grid-template-columns: 1fr 1.3fr; gap: 32px; align-items: end; }
+.especimen .aa { font-size: clamp(120px, 20vw, 260px); line-height: 0.8; font-weight: 620; letter-spacing: -0.04em; }
+.especimen .abc { font-size: 22px; color: var(--apoyo); line-height: 1.5; word-break: break-word; }
+.pesos { display: flex; flex-wrap: wrap; gap: 12px 32px; margin-top: 24px; font-size: 22px; }
+.escala .fila { display: grid; grid-template-columns: 160px 1fr; gap: 24px; align-items: baseline; padding: 20px 0; border-bottom: 1px solid var(--linea); }
+.escala .fila > span { font-size: 13px; color: var(--gris); }
+.k-demo { font-size: 15px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
+.t-demo { font-size: clamp(34px, 5vw, 56px); line-height: 1.02; font-weight: 620; letter-spacing: -0.022em; }
+.p-demo { font-size: 20px; color: var(--apoyo); line-height: 1.3; }
+
+/* Elementos */
+.capas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.capas figure { display: grid; gap: 10px; }
+.capas .c { aspect-ratio: 4 / 5; border-radius: 14px; border: 1px solid var(--linea); position: relative; overflow: hidden; }
+.capas figcaption { font-size: 14px; color: var(--apoyo); }
+.capas figcaption b { color: var(--texto); font-weight: 600; margin-right: 6px; }
+.diagrama { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+.diagrama svg { width: 100%; height: auto; border-radius: 18px; border: 1px solid var(--linea); background: radial-gradient(70% 70% at 55% 40%, var(--indigo), rgba(26,33,66,0) 70%), var(--noche); }
+.chip-demo { display: inline-flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gris); }
+.chip-demo i { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(238,241,234,.06); border: 1px solid rgba(238,241,234,.14); color: var(--marfil); }
+.chip-demo svg { width: 24px; height: 24px; }
+.cta-demo { display: inline-flex; align-items: center; gap: 10px; padding: 16px 26px; border-radius: 999px; background: var(--marfil); color: var(--tinta-marfil); font-weight: 600; font-size: 18px; }
+.cta-demo svg { width: 18px; height: 18px; }
+.iconos { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.iconos div { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 16px; padding: 20px; display: grid; gap: 14px; color: var(--marfil); }
+.iconos svg { width: 36px; height: 36px; }
+.iconos span { font-size: 13px; color: var(--apoyo); }
+.iconos code { font-size: 12px; }
+
+/* Foto */
+.foto-demo { display: grid; grid-template-columns: 320px 1fr; gap: 40px; align-items: center; }
+.foto-card { position: relative; border-radius: 22px; overflow: hidden; border: 1px solid rgba(236,230,216,.16); box-shadow: 0 24px 64px rgba(0,0,0,.55); aspect-ratio: 2 / 3; }
+.foto-card img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+.foto-card figcaption { position: absolute; inset: auto 0 0 0; padding: 64px 20px 18px; background: linear-gradient(to top, rgba(5,6,5,.92), rgba(5,6,5,0)); display: grid; gap: 2px; }
+.foto-card strong { font-size: 18px; font-weight: 600; }
+.foto-card span { font-size: 14px; color: var(--apoyo); }
+.lista { list-style: none; padding: 0; display: grid; gap: 12px; }
+.lista li { padding-left: 28px; position: relative; color: var(--apoyo); }
+.lista li::before { position: absolute; left: 0; font-weight: 700; }
+.lista.si li::before { content: "✓"; color: var(--fosforo); }
+.lista.no li::before { content: "✕"; color: var(--error); }
+.lista b { color: var(--texto); font-weight: 600; }
+
+/* Composición */
+.anatomia { display: grid; grid-template-columns: minmax(260px, 420px) 1fr; gap: 40px; align-items: center; }
+.esquema { aspect-ratio: 4 / 5; border-radius: 16px; border: 1px solid var(--linea); background: radial-gradient(60% 50% at 78% 24%, var(--indigo), rgba(26,33,66,0) 70%), var(--noche); position: relative; padding: 7.8%; display: flex; flex-direction: column; }
+.esquema .m { position: absolute; inset: 7.8%; border: 1px dashed rgba(236,230,216,.3); border-radius: 4px; pointer-events: none; }
+.esquema .b { border: 1px solid rgba(236,230,216,.35); border-radius: 6px; display: flex; align-items: center; gap: 8px; padding: 0 10px; font-size: 12px; color: var(--marfil); background: rgba(236,230,216,.04); }
+.esquema .n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--marfil); color: var(--tinta-marfil); font-size: 11px; font-weight: 700; flex: none; }
+.esquema .iso { height: 7%; width: 42%; }
+.esquema .con { height: 30%; width: 38%; margin: 4% 0 0 auto; justify-content: center; }
+.esquema .bl { margin-top: auto; display: grid; gap: 3%; }
+.esquema .k { height: 26px; width: 48%; }
+.esquema .t { height: 64px; }
+.esquema .p { height: 34px; width: 86%; }
+.esquema .f { height: 34px; width: 62%; }
+.pasos { list-style: none; padding: 0; display: grid; gap: 14px; counter-reset: p; }
+.pasos li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; color: var(--apoyo); }
+.pasos li::before { counter-increment: p; content: counter(p); display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--marfil); color: var(--tinta-marfil); font-size: 12px; font-weight: 700; }
+.pasos b { color: var(--texto); font-weight: 600; }
+.variantes figure, .galeria figure { display: grid; gap: 10px; }
+.variantes img, .galeria img { border-radius: 12px; border: 1px solid var(--linea); }
+.variantes figcaption, .galeria figcaption { font-size: 14px; color: var(--apoyo); }
+.variantes figcaption b, .galeria figcaption b { color: var(--texto); font-weight: 600; }
+.formatos { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; }
+.formatos figure { flex: none; display: grid; gap: 10px; }
+.formatos img { height: 240px; width: auto; max-width: none; border-radius: 10px; border: 1px solid var(--linea); }
+.formatos figcaption { font-size: 13px; color: var(--apoyo); }
+.formatos figcaption b { display: block; color: var(--texto); font-weight: 600; font-size: 15px; }
+
+/* Voz */
+.pilar { display: grid; grid-template-columns: 70px 1fr; gap: 16px; padding: 22px 0; border-bottom: 1px solid var(--linea); }
+.pilar .id { font-size: 13px; color: var(--gris-3); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.pilar .k-demo { font-size: 12px; }
+.pilar h4 { font-size: 24px; font-weight: 620; letter-spacing: -0.015em; margin-top: 6px; line-height: 1.15; }
+.pilar p { color: var(--apoyo); margin-top: 6px; }
+.cnt { font-variant-numeric: tabular-nums; color: var(--gris); }
+
+/* Movimiento */
+.movimiento { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center; }
+.escena { aspect-ratio: 16 / 9; border-radius: 18px; border: 1px solid var(--linea); overflow: hidden; background: radial-gradient(60% 70% at 60% 40%, var(--indigo), rgba(26,33,66,0) 70%), var(--noche); position: relative; }
+.escena svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.escena .linea { stroke-dasharray: 1; stroke-dashoffset: 1; animation: dibujar 4.8s ease-out infinite; }
+.escena .l2 { animation-delay: .6s; } .escena .l3 { animation-delay: 1.2s; } .escena .l4 { animation-delay: 1.2s; }
+.escena .est { opacity: 0; animation: aparecer 4.8s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+.escena .e1 { animation-delay: 0s; } .escena .e2 { animation-delay: .6s; } .escena .e3 { animation-delay: 1.2s; } .escena .e4, .escena .e5 { animation-delay: 1.8s; }
+.escena .tit { position: absolute; left: 7%; bottom: 12%; font-size: clamp(16px, 2.4vw, 28px); font-weight: 620; letter-spacing: -0.02em; opacity: 0; animation: subir 4.8s ease-out infinite; animation-delay: 2.2s; }
+.escena .polvo circle { animation: titilar 4s ease-in-out infinite alternate; }
+@keyframes dibujar { 0% { stroke-dashoffset: 1; } 12.5%, 88% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+@keyframes aparecer { 0% { opacity: 0; transform: scale(.4); } 6% { opacity: 1; transform: scale(1.25); } 12%, 88% { opacity: 1; transform: scale(1); } 100% { opacity: 0; } }
+@keyframes subir { 0% { opacity: 0; transform: translateY(14px); } 8%, 80% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; } }
+@keyframes titilar { from { opacity: .2; } to { opacity: .6; } }
+@media (prefers-reduced-motion: reduce) { .escena * { animation: none !important; opacity: 1 !important; stroke-dashoffset: 0 !important; } }
+
+/* Archivos */
+pre { background: var(--banda); border: 1px solid var(--linea); border-radius: 14px; padding: 20px; overflow-x: auto; font-size: 14px; line-height: 1.6; color: var(--apoyo); }
+pre code { background: none; padding: 0; }
+.botones { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.boton { display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; border-radius: 999px; border: 1px solid var(--linea-2); text-decoration: none; font-weight: 500; font-size: 15px; }
+.boton.prim { background: var(--marfil); color: var(--tinta-marfil); border-color: var(--marfil); }
+footer { padding: 48px 0 64px; color: var(--gris); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: center; }
+footer img { height: 32px; width: auto; }
+
+@media (max-width: 900px) {
+	.g3, .g4, .capas { grid-template-columns: repeat(2, 1fr); }
+	.concepto, .diagrama, .especimen, .foto-demo, .anatomia, .movimiento { grid-template-columns: 1fr; }
+	.foto-card { max-width: 320px; }
+	.cabeza { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 560px) {
+	.g2, .g3, .g4 { grid-template-columns: 1fr; }
+	.escala .fila { grid-template-columns: 1fr; gap: 6px; }
+	.formatos img { height: auto; max-height: 220px; max-width: 100%; }
+	.formatos figure { max-width: 100%; }
+	.portada header span { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="portada">
+	<svg class="cielo" viewBox="0 0 1600 1000" preserveAspectRatio="xMaxYMin slice" aria-hidden="true" id="cielo-portada"></svg>
+	<header>
+		<img src="logos/jossue-alcala-isologo-claro.svg" alt="Jossue Alcalá">
+		<span>Manual de key visual · v1.0</span>
+	</header>
+	<div class="titulo">
+		<p class="etiqueta">Sistema visual para anuncios</p>
+		<h1>Key Visual</h1>
+		<p>Cómo se ve, cómo se escribe y cómo se arma cada pieza de Jossue Alcalá, en cualquier formato y con cualquier herramienta.</p>
+		<div class="meta"><span><b>Versión</b> 1.0</span><span><b>Fecha</b> octubre 2026</span><span><b>Versión para IAs</b> <a href="KEY-VISUAL.md">KEY-VISUAL.md</a></span></div>
+	</div>
+</div>
+
+<nav class="indice" aria-label="Índice">
+	<div class="wrap">
+		<ol>
+			<li><a href="#idea"><span>01</span>Idea</a></li>
+			<li><a href="#logotipo"><span>02</span>Logotipo</a></li>
+			<li><a href="#color"><span>03</span>Color</a></li>
+			<li><a href="#tipografia"><span>04</span>Tipografía</a></li>
+			<li><a href="#elementos"><span>05</span>Elementos</a></li>
+			<li><a href="#fotografia"><span>06</span>Fotografía</a></li>
+			<li><a href="#composicion"><span>07</span>Composición</a></li>
+			<li><a href="#formatos"><span>08</span>Formatos</a></li>
+			<li><a href="#voz"><span>09</span>Voz</a></li>
+			<li><a href="#movimiento"><span>10</span>Movimiento</a></li>
+			<li><a href="#kit"><span>11</span>Kit</a></li>
+		</ol>
+	</div>
+</nav>
+
+<main>
+
+<section id="idea">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">01</span><div><h2>La constelación</h2><p>Cinco estrellas sueltas no dicen nada. Unidas por líneas, forman una figura que se reconoce.</p></div></div>
+		<div class="concepto">
+			<blockquote>Tomo las piezas que en un negocio suelen estar sueltas (la tienda, la publicidad, la medición, los datos y la IA) y <em>las uno en un sistema que vende.</em></blockquote>
+			<svg class="estrellas-sueltas" viewBox="0 0 64 64" id="concepto" aria-label="Cinco estrellas que se unen en la constelación del isotipo"></svg>
+		</div>
+		<h3>Atributos</h3>
+		<div class="grid g4">
+			<div class="tarjeta"><h4>Claro</h4><p>Se entiende a la primera. Una idea por pieza, mucho aire, palabras simples.</p></div>
+			<div class="tarjeta"><h4>Hecho</h4><p>Jossue construye; no entrega un documento y se va. Verbos de acción en primera persona.</p></div>
+			<div class="tarjeta"><h4>Con evidencia</h4><p>Decide con datos, no con opiniones. Sin superlativos ni promesas que no se puedan comprobar.</p></div>
+			<div class="tarjeta"><h4>Cercano</h4><p>Habla de tú a tú. Retrato real, sin pose corporativa, nombra el problema del cliente.</p></div>
+		</div>
+		<p class="nota">Lema interno: <b>Crear · Construir</b>. Guía las decisiones; no se usa como eslogan en anuncios.</p>
+	</div>
+</section>
+
+<section id="logotipo">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">02</span><div><h2>Logotipo</h2><p>Un isotipo con la constelación dentro de un cuadrado redondeado (squircle) y un isologo que le suma el nombre. Siempre se usan los archivos originales.</p></div></div>
+		<div class="grid g3">
+			<div class="lienzo oscuro"><img src="logos/jossue-alcala-isotipo.svg" alt="Isotipo" style="height:140px;width:auto"><span class="pie">Isotipo</span></div>
+			<div class="lienzo oscuro"><img src="logos/jossue-alcala-isologo-claro.svg" alt="Isologo claro" style="height:64px;width:auto"><span class="pie">Isologo claro · fondos oscuros (principal)</span></div>
+			<div class="lienzo claro"><img src="logos/jossue-alcala-isologo-oscuro.svg" alt="Isologo oscuro" style="height:64px;width:auto"><span class="pie">Isologo oscuro · fondos claros</span></div>
+		</div>
+		<p class="nota">El nombre está en Inter Tight SemiBold convertido a trazos. Isotipo de 64 u de alto, 18 u de separación y texto de 34 u. El isotipo conserva siempre su nebulosa; no hay versión de una sola tinta.</p>
+
+		<h3>Zona de protección y tamaño mínimo</h3>
+		<div class="grid g2">
+			<div class="lienzo oscuro">
+				<div class="proteccion"><i class="t">½ alto</i><i class="l">½</i><img src="logos/jossue-alcala-isologo-claro.svg" alt="Isologo con zona de protección"></div>
+				<span class="pie">Deja libre la mitad de la altura del isotipo alrededor</span>
+			</div>
+			<div class="lienzo oscuro">
+				<div class="minimos">
+					<figure><img src="logos/jossue-alcala-isotipo.svg" alt="" style="width:24px;height:24px"><figcaption>Isotipo · 24 px / 8 mm</figcaption></figure>
+					<figure><img src="logos/jossue-alcala-isologo-claro.svg" alt="" style="width:120px;height:auto"><figcaption>Isologo · 120 px / 35 mm</figcaption></figure>
+				</div>
+				<span class="pie">Por debajo de 24 px se usa el favicon del sitio</span>
+			</div>
+		</div>
+
+		<h3>Usos incorrectos</h3>
+		<div class="grid g3">
+			<div class="mal"><div class="lienzo oscuro"><img src="logos/jossue-alcala-isologo-claro.svg" alt="" style="transform:scaleX(1.45)"></div><p>No estirar ni deformar</p></div>
+			<div class="mal"><div class="lienzo oscuro"><img src="logos/jossue-alcala-isologo-claro.svg" alt="" style="transform:rotate(-12deg)"></div><p>No rotar ni inclinar</p></div>
+			<div class="mal"><div class="lienzo oscuro"><img src="logos/jossue-alcala-isologo-claro.svg" alt="" style="filter:hue-rotate(150deg) saturate(4)"></div><p>No cambiar los colores</p></div>
+			<div class="mal"><div class="lienzo" style="background:#eceae4"><img src="logos/jossue-alcala-isologo-claro.svg" alt=""></div><p>No usar el isologo claro sobre fondos claros</p></div>
+			<div class="mal"><div class="lienzo oscuro"><img src="logos/jossue-alcala-isologo-claro.svg" alt="" style="filter:drop-shadow(6px 6px 0 #9bff66) drop-shadow(0 0 14px #fff)"></div><p>No añadir sombras, brillos ni contornos</p></div>
+			<div class="mal"><div class="lienzo" style="background:url(fotos/jossue-alcala-retrato.jpg) 50% 30%/cover"><img src="logos/jossue-alcala-isologo-oscuro.svg" alt=""></div><p>No ponerlo sobre fotos con detalle sin una capa oscura debajo</p></div>
+		</div>
+	</div>
+</section>
+
+<section id="color">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">03</span><div><h2>Color</h2><p>Un cielo nocturno con una sola luz cálida. El marfil es el único acento y aparece una vez por pieza.</p></div></div>
+		<h3>Cielo</h3>
+		<div class="grid g4">
+			<div class="swatch"><div class="c" style="background:#050605"></div><div><b>Noche</b><span>#050605 · 5 6 5</span><small>Fondo base de todo</small></div></div>
+			<div class="swatch"><div class="c" style="background:#1a2142"></div><div><b>Nebulosa índigo</b><span>#1a2142 · 26 33 66</span><small>Resplandor principal</small></div></div>
+			<div class="swatch"><div class="c" style="background:#2a1b3d"></div><div><b>Nebulosa violeta</b><span>#2a1b3d · 42 27 61</span><small>Resplandor secundario, al 55–75 %</small></div></div>
+			<div class="swatch"><div class="c" style="background:#dfe6ff"></div><div><b>Polvo estelar</b><span>#dfe6ff · 223 230 255</span><small>Estrellas del fondo</small></div></div>
+		</div>
+		<h3>Luz y texto</h3>
+		<div class="grid g4">
+			<div class="swatch"><div class="c" style="background:#ece6d8"></div><div><b>Marfil</b><span>#ece6d8 · 236 230 216</span><small>Botón, líneas, íconos</small></div></div>
+			<div class="swatch"><div class="c" style="background:#fffaf0"></div><div><b>Luz de estrella</b><span>#fffaf0 · 255 250 240</span><small>Núcleo de las estrellas</small></div></div>
+			<div class="swatch"><div class="c" style="background:#eef1ea"></div><div><b>Texto</b><span>#eef1ea · 238 241 234</span><small>Titulares</small></div></div>
+			<div class="swatch"><div class="c" style="background:#b9bfb5"></div><div><b>Apoyo</b><span>#b9bfb5 · 185 191 181</span><small>Texto de apoyo</small></div></div>
+			<div class="swatch"><div class="c" style="background:#9aa197"></div><div><b>Gris luna</b><span>#9aa197 · 154 161 151</span><small>Kickers y URL</small></div></div>
+			<div class="swatch"><div class="c" style="background:#12110e"></div><div><b>Tinta marfil</b><span>#12110e · 18 17 14</span><small>Texto sobre Marfil</small></div></div>
+			<div class="swatch"><div class="c" style="background:#161a16"></div><div><b>Tarjeta</b><span>#161a16 · 22 26 22</span><small>Paneles y tarjetas</small></div></div>
+			<div class="swatch"><div class="c" style="background:#9bff66"></div><div><b>Fósforo</b><span>#9bff66 · 155 255 102</span><small>Solo MADRE. No en anuncios de servicios</small></div></div>
+		</div>
+		<h3>Proporción</h3>
+		<div class="proporcion">
+			<div style="flex:80;background:radial-gradient(80% 140% at 70% 30%,#1a2142,#050605 70%);color:var(--gris)">Noche + nebulosas · 80 %</div>
+			<div style="flex:14;background:#eef1ea;color:#12110e">14 %</div>
+			<div style="flex:5;background:#ece6d8;color:#12110e">5 %</div>
+			<div style="flex:1;background:#fffaf0"></div>
+		</div>
+		<h3>Contraste</h3>
+		<div class="tabla"><table>
+			<thead><tr><th>Combinación</th><th>Relación</th><th>WCAG 2.1</th></tr></thead>
+			<tbody>
+				<tr><td>Texto sobre Noche</td><td>17.8 : 1</td><td class="ok">AAA</td></tr>
+				<tr><td>Apoyo sobre Noche</td><td>10.8 : 1</td><td class="ok">AAA</td></tr>
+				<tr><td>Gris luna sobre Noche</td><td>7.7 : 1</td><td class="ok">AAA</td></tr>
+				<tr><td>Tinta marfil sobre Marfil (botón)</td><td>15.2 : 1</td><td class="ok">AAA</td></tr>
+				<tr><td>Texto sobre Nebulosa índigo</td><td>13.7 : 1</td><td class="ok">AAA</td></tr>
+				<tr><td>Gris luna sobre Nebulosa índigo</td><td>5.9 : 1</td><td class="ok">AA</td></tr>
+				<tr><td>Noche sobre blanco (isologo oscuro)</td><td>20.3 : 1</td><td class="ok">AAA</td></tr>
+			</tbody>
+		</table></div>
+	</div>
+</section>
+
+<section id="tipografia">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">04</span><div><h2>Tipografía</h2><p>Una sola familia, Inter Tight, con licencia libre para uso comercial (SIL OFL 1.1). Los archivos están en <code>fuentes/</code>.</p></div></div>
+		<div class="especimen">
+			<div class="aa">Aa</div>
+			<div>
+				<p class="abc">ABCDEFGHIJKLMNÑOPQRSTUVWXYZ<br>abcdefghijklmnñopqrstuvwxyz<br>0123456789 ¿? ¡! á é í ó ú ü · → @</p>
+				<div class="pesos"><span style="font-weight:420">Apoyo 420</span><span style="font-weight:500">Kicker 500</span><span style="font-weight:600">Botón 600</span><span style="font-weight:620">Titular 620</span></div>
+			</div>
+		</div>
+		<h3>Escala para anuncios</h3>
+		<p class="nota" style="margin:-6px 0 12px">u = lado corto del lienzo ÷ 1080 (en horizontales, alto ÷ 1080). En 1200×1200, u = 1.11; en 1200×628, u = 0.58.</p>
+		<div class="escala">
+			<div class="fila"><span>Kicker · 500 · 26–30 u<br>+0.06 em · mayúsculas</span><div class="chip-demo"><i><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 6.5h23l-9 11v8l-5 2.5v-10.5Z"/></g></svg></i>Conversión (CRO)</div></div>
+			<div class="fila"><span>Titular · 620 · 88–100 u<br>−0.022 em · interlínea 1.02</span><div class="t-demo">Te digo en qué punto pierdes la venta.</div></div>
+			<div class="fila"><span>Apoyo · 420 · 34–38 u<br>interlínea 1.3</span><div class="p-demo">Reviso el recorrido de tu cliente y te digo qué arreglar primero y qué puede esperar.</div></div>
+			<div class="fila"><span>Botón · 600 · 30–32 u</span><div><span class="cta-demo">Cuéntame tu caso <svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16h20M18 8l8 8-8 8"/></g></svg></span></div></div>
+		</div>
+		<div class="grid g3" style="margin-top:32px">
+			<div class="tarjeta"><h4>Titular</h4><p>De 3 a 8 palabras, 2 o 3 líneas, en oración y con punto final.</p></div>
+			<div class="tarjeta"><h4>Apoyo</h4><p>Una oración, máximo 2 líneas. Nunca más de tres niveles de texto más el botón.</p></div>
+			<div class="tarjeta"><h4>Saltos de línea</h4><p>Equilibrados, sin una palabra sola al final. Si no cabe, se acorta el texto, no la letra.</p></div>
+		</div>
+	</div>
+</section>
+
+<section id="elementos">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">05</span><div><h2>Elementos gráficos</h2><p>El cielo se arma siempre en el mismo orden, y la constelación es la misma figura del isotipo, ampliada.</p></div></div>
+		<h3>Cielo en capas</h3>
+		<div class="capas">
+			<figure><div class="c" style="background:#050605"></div><figcaption><b>1</b>Noche plano</figcaption></figure>
+			<figure><div class="c" style="background:radial-gradient(55% 60% at 78% 24%,#1a2142 0%,rgba(26,33,66,0) 70%),#050605"></div><figcaption><b>2</b>Resplandor índigo</figcaption></figure>
+			<figure><div class="c" style="background:radial-gradient(55% 60% at 78% 24%,#1a2142 0%,rgba(26,33,66,0) 70%),radial-gradient(45% 55% at 18% 96%,rgba(42,27,61,.7) 0%,rgba(42,27,61,0) 70%),#050605"></div><figcaption><b>3</b>Resplandor violeta</figcaption></figure>
+			<figure><div class="c capa-final" style="background:radial-gradient(55% 60% at 78% 24%,#1a2142 0%,rgba(26,33,66,0) 70%),radial-gradient(45% 55% at 18% 96%,rgba(42,27,61,.7) 0%,rgba(42,27,61,0) 70%),#050605"><svg viewBox="0 0 400 500" style="position:absolute;inset:0;width:100%;height:100%" id="capa-estrellas"></svg></div><figcaption><b>4</b>Estrellas y constelación</figcaption></figure>
+		</div>
+<pre><code>background:
+  radial-gradient(55% 60% at 74% 40%, #1a2142 0%, rgba(26,33,66,0) 70%),
+  radial-gradient(45% 55% at 88% 95%, rgba(42,27,61,.7) 0%, rgba(42,27,61,0) 70%),
+  #050605;   /* horizontales. En verticales: índigo en 78% 24%, violeta en 18% 96% */</code></pre>
+		<p class="nota">Campo de estrellas: unas 110 por cada 1080×1080 px, radio 0.6 a 2.2 px, Polvo estelar con opacidad de 0.15 a 0.65, repartidas al azar.</p>
+
+		<h3>Constelación</h3>
+		<div class="diagrama">
+			<svg viewBox="8 2 48 60" id="diagrama" aria-label="Diagrama de la constelación con sus cinco estrellas"></svg>
+			<div class="tabla"><table>
+				<thead><tr><th>Estrella</th><th>x</th><th>y</th><th>Núcleo</th></tr></thead>
+				<tbody>
+					<tr><td>A · arriba</td><td>27.30</td><td>12.00</td><td>1.30 ×</td></tr>
+					<tr><td>B</td><td>29.05</td><td>26.90</td><td>1.38 ×</td></tr>
+					<tr><td>C · centro</td><td>28.33</td><td>33.67</td><td>1.46 ×</td></tr>
+					<tr><td>D · izquierda</td><td>21.28</td><td>46.54</td><td>1.54 ×</td></tr>
+					<tr><td>E · derecha</td><td>42.72</td><td>52.00</td><td>1.62 ×</td></tr>
+				</tbody>
+			</table>
+			<p class="nota">Retícula de 64 × 64. Líneas A–B, B–C, C–D y C–E en Marfil al 28 %, grosor 0.45 × escala. Halo de 3.6 × escala. Una sola constelación por pieza; nunca se rota ni se refleja.</p></div>
+		</div>
+
+		<h3>Kicker, botón e íconos</h3>
+		<div class="grid g2">
+			<div class="lienzo oscuro" style="min-height:180px"><div class="chip-demo"><i><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 4.5c.9 5.4 3.1 7.6 8.5 8.5-5.4.9-7.6 3.1-8.5 8.5-.9-5.4-3.1-7.6-8.5-8.5 5.4-.9 7.6-3.1 8.5-8.5Z"/><path d="M23.5 19.5c.5 2.5 1.5 3.5 4 4-2.5.5-3.5 1.5-4 4-.5-2.5-1.5-3.5-4-4 2.5-.5 3.5-1.5 4-4Z"/></g></svg></i>IA aplicada</div><span class="pie">Chip: 2 × kicker, radio 16 u, borde al 14 %</span></div>
+			<div class="lienzo oscuro" style="min-height:180px"><div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:center"><span class="cta-demo">Cuéntame tu caso <svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16h20M18 8l8 8-8 8"/></g></svg></span><span style="color:var(--gris);font-weight:500">jossuealcala.com</span></div><span class="pie">Único bloque Marfil de la pieza</span></div>
+		</div>
+		<div class="iconos" style="margin-top:16px" id="iconos"></div>
+		<p class="nota">Íconos de línea del sitio: retícula 32, trazo 1.7, puntas redondas, sin relleno. No se mezclan con otros sets ni con emojis.</p>
+	</div>
+</section>
+
+<section id="fotografia">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">06</span><div><h2>Fotografía</h2><p>Un solo retrato aprobado, siempre dentro de una tarjeta que lo separa del cielo.</p></div></div>
+		<div class="foto-demo">
+			<figure class="foto-card"><img src="fotos/jossue-alcala-retrato.jpg" alt="Retrato de Jossue Alcalá"><figcaption><strong>Jossue Alcalá</strong><span>Ecommerce, Shopify e IA aplicada</span></figcaption></figure>
+			<div>
+				<ul class="lista si">
+					<li><b>Tarjeta:</b> radio 28 u, borde Marfil al 16 %, sombra suave.</li>
+					<li><b>Pie:</b> nombre (600) y especialidad (Apoyo) sobre un degradado de Noche.</li>
+					<li><b>Encuadre:</b> cara en el tercio superior en tarjetas verticales; de hombros hacia arriba en horizontales.</li>
+				</ul>
+				<h3 style="margin-top:32px">Prohibido</h3>
+				<ul class="lista no">
+					<li>Generar o alterar la cara o el cuerpo de Jossue con IA, o cambiarle la ropa.</li>
+					<li>Recortarle el fondo sin aprobación o aplicar filtros de color.</li>
+					<li>Usar fotos de bancos de imágenes como si fueran de él.</li>
+					<li>Mostrar nombres, logos o capturas de clientes sin su permiso por escrito.</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section id="composicion">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">07</span><div><h2>Composición</h2><p>El texto se apoya abajo a la izquierda; el cielo y la constelación ocupan el resto. Nunca se centra el bloque de texto.</p></div></div>
+		<div class="anatomia">
+			<div class="esquema">
+				<div class="m"></div>
+				<div class="b iso"><span class="n">1</span>Isologo</div>
+				<div class="b con"><span class="n">2</span>Constelación</div>
+				<div class="bl">
+					<div class="b k"><span class="n">3</span>Kicker</div>
+					<div class="b t"><span class="n">4</span>Titular</div>
+					<div class="b p"><span class="n">5</span>Apoyo</div>
+					<div class="b f"><span class="n">6</span>Botón + URL</div>
+				</div>
+			</div>
+			<div>
+				<ol class="pasos">
+					<li><span><b>Isologo claro</b>, alto 56 u, arriba a la izquierda.</span></li>
+					<li><span><b>Constelación</b> entre el isologo y el texto, a la derecha (en horizontales, la mitad derecha).</span></li>
+					<li><span><b>Kicker</b> con chip de ícono.</span></li>
+					<li><span><b>Titular</b>, 2 o 3 líneas.</span></li>
+					<li><span><b>Apoyo</b>, una oración.</span></li>
+					<li><span><b>Botón</b> Marfil y URL en Gris luna.</span></li>
+				</ol>
+				<div class="tabla" style="margin-top:28px"><table>
+					<thead><tr><th>Formato</th><th>Márgenes</th><th>Texto</th></tr></thead>
+					<tbody>
+						<tr><td>Cuadrado y verticales</td><td>84 u</td><td>Ancho completo</td></tr>
+						<tr><td>9:16</td><td>84 u + libre el 14 % de arriba y el 20 % de abajo</td><td>Ancho completo</td></tr>
+						<tr><td>16:9 y 1.91:1</td><td>112 u arriba y abajo, 120 u a los lados</td><td>53 % del ancho</td></tr>
+					</tbody>
+				</table></div>
+			</div>
+		</div>
+
+		<h3>Variantes</h3>
+		<div class="grid g3 variantes">
+			<figure><img src="anuncios/4x5/00-marca-4x5-1080x1350.png" alt="Variante estándar" loading="lazy"><figcaption><b>Estándar.</b> Por defecto, para todos los servicios.</figcaption></figure>
+			<figure><img src="anuncios/4x5/00-marca-retrato-4x5-1080x1350.png" alt="Variante con retrato" loading="lazy"><figcaption><b>Retrato.</b> Marca personal, remarketing y LinkedIn.</figcaption></figure>
+			<figure><img src="anuncios/4x5/00-marca-minimo-4x5-1080x1350.png" alt="Variante mínima" loading="lazy"><figcaption><b>Mínima.</b> Performance Max y espacios que penalizan el texto sobre la imagen.</figcaption></figure>
+		</div>
+	</div>
+</section>
+
+<section id="formatos">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">08</span><div><h2>Formatos</h2><p>La misma plantilla se adapta sola a cada proporción. Medidas de referencia: verifica las especificaciones vigentes en cada plataforma antes de lanzar.</p></div></div>
+		<div class="formatos">
+			<figure><img src="anuncios/9x16/00-marca-9x16-1080x1920.png" alt="9:16" loading="lazy"><figcaption><b>9:16</b>1080×1920</figcaption></figure>
+			<figure><img src="anuncios/4x5/00-marca-4x5-1080x1350.png" alt="4:5" loading="lazy"><figcaption><b>4:5</b>1080×1350</figcaption></figure>
+			<figure><img src="anuncios/1x1/00-marca-1x1-1200x1200.png" alt="1:1" loading="lazy"><figcaption><b>1:1</b>1200×1200</figcaption></figure>
+			<figure><img src="anuncios/16x9/00-marca-16x9-1920x1080.png" alt="16:9" loading="lazy"><figcaption><b>16:9</b>1920×1080</figcaption></figure>
+			<figure><img src="anuncios/1.91x1/00-marca-1.91x1-1200x628.png" alt="1.91:1" loading="lazy"><figcaption><b>1.91:1</b>1200×628</figcaption></figure>
+		</div>
+		<div class="tabla" style="margin-top:32px"><table>
+			<thead><tr><th>Formato</th><th>Google Ads</th><th>Meta</th><th>LinkedIn</th><th>YouTube</th></tr></thead>
+			<tbody>
+				<tr><td><b>1:1</b> 1200×1200</td><td>Imagen cuadrada</td><td>Feed</td><td>Imagen cuadrada</td><td>—</td></tr>
+				<tr><td><b>4:5</b> 1080×1350</td><td>Imagen vertical</td><td>Feed (recomendado)</td><td>—</td><td>—</td></tr>
+				<tr><td><b>9:16</b> 1080×1920</td><td>—</td><td>Historias y reels</td><td>—</td><td>Shorts</td></tr>
+				<tr><td><b>16:9</b> 1920×1080</td><td>—</td><td>—</td><td>—</td><td>Miniatura y cortinillas</td></tr>
+				<tr><td><b>1.91:1</b> 1200×628</td><td>Imagen horizontal</td><td>Enlaces</td><td>Imagen horizontal</td><td>—</td></tr>
+				<tr><td><b>Logo 1:1</b> 1200×1200</td><td>Logotipo cuadrado</td><td>Perfil</td><td>Perfil</td><td>Canal</td></tr>
+				<tr><td><b>Logo 4:1</b> 1200×300</td><td>Logotipo horizontal</td><td>—</td><td>—</td><td>—</td></tr>
+			</tbody>
+		</table></div>
+		<p class="nota">PNG en sRGB, menos de 5 MB por imagen. Video: 1080p, 30 fps, H.264, yuv420p.</p>
+
+		<h3>Kit por servicio</h3>
+		<div class="grid g4 galeria">
+			<figure><img src="anuncios/1x1/00-marca-1x1-1200x1200.png" alt="Shopify · CRO · IA" loading="lazy"><figcaption><b>Shopify · CRO · IA</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/01-tienda-shopify-1x1-1200x1200.png" alt="Tiendas Shopify" loading="lazy"><figcaption><b>Tiendas Shopify</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/02-conversion-cro-1x1-1200x1200.png" alt="Conversión (CRO)" loading="lazy"><figcaption><b>Conversión (CRO)</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/03-velocidad-1x1-1200x1200.png" alt="Velocidad y mantenimiento" loading="lazy"><figcaption><b>Velocidad y mantenimiento</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/04-medicion-1x1-1200x1200.png" alt="Medición" loading="lazy"><figcaption><b>Medición</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/05-ia-aplicada-1x1-1200x1200.png" alt="IA aplicada" loading="lazy"><figcaption><b>IA aplicada</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/06-desarrollo-a-la-medida-1x1-1200x1200.png" alt="Desarrollo a la medida" loading="lazy"><figcaption><b>Desarrollo a la medida</b></figcaption></figure>
+			<figure><img src="anuncios/1x1/00-marca-retrato-1x1-1200x1200.png" alt="Marca con retrato" loading="lazy"><figcaption><b>Marca · retrato</b></figcaption></figure>
+		</div>
+	</div>
+</section>
+
+<section id="voz">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">09</span><div><h2>Voz</h2><p>Habla Jossue, en primera persona, con palabras simples. Nombra el problema del cliente antes que el servicio.</p></div></div>
+		<div class="grid g2">
+			<div class="tarjeta"><ul class="lista si">
+				<li><b>Primera persona del singular:</b> "Armo tu tienda", nunca "Armamos".</li>
+				<li><b>Lo simple primero</b>, el término técnico entre paréntesis: "Conversión (CRO)".</li>
+				<li><b>Frases cortas</b>, de tú a tú.</li>
+				<li><b>Verbos de acción:</b> armo, reviso, programo, mido, te digo.</li>
+			</ul></div>
+			<div class="tarjeta"><ul class="lista no">
+				<li>Eslóganes huecos: "soluciones integrales", "lleva tu marca al siguiente nivel".</li>
+				<li>Cifras, resultados, clientes o testimonios que no estén publicados y aprobados.</li>
+				<li>Urgencia falsa, mayúsculas para gritar o signos de exclamación.</li>
+				<li>Promesas de "IA mágica" o "crecimiento exponencial".</li>
+			</ul></div>
+		</div>
+
+		<h3>Pilares de mensaje</h3>
+		<div id="pilares"></div>
+
+		<h3>Botones aprobados</h3>
+		<div style="display:flex;gap:12px;flex-wrap:wrap"><span class="cta-demo">Cuéntame tu caso</span><span class="boton">Pregúntale a Jossue AI</span><span class="boton">Define el siguiente paso</span></div>
+
+		<h3>Anuncios de búsqueda (Google Ads)</h3>
+		<div class="grid g2">
+			<div class="tabla"><table><thead><tr><th>Titular · máx. 30</th><th>Car.</th></tr></thead><tbody id="rsa-t"></tbody></table></div>
+			<div class="tabla"><table><thead><tr><th>Descripción · máx. 90</th><th>Car.</th></tr></thead><tbody id="rsa-d"></tbody></table></div>
+		</div>
+		<p class="nota">Validar antes de lanzar: el uso de la marca "Shopify" en el texto de anuncios puede estar sujeto a la política de marcas registradas de Google Ads.</p>
+	</div>
+</section>
+
+<section id="movimiento">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">10</span><div><h2>Movimiento</h2><p>Todo se mueve despacio y con calma: la constelación se dibuja, las estrellas titilan y el texto sube con un fundido.</p></div></div>
+		<div class="movimiento">
+			<div class="escena" aria-label="Animación de muestra: la constelación se dibuja línea por línea">
+				<svg viewBox="0 0 160 90" id="escena"></svg>
+				<div class="tit">Te ayudo a vender más por internet.</div>
+			</div>
+			<div class="tabla"><table><tbody>
+				<tr><td><b>Entrada</b></td><td>La constelación se dibuja tramo por tramo (A→B→C, luego C→D y C→E), 600 ms cada uno, ease-out.</td></tr>
+				<tr><td><b>Estrellas</b></td><td>Destello breve al llegar la línea. Las del fondo titilan ±0.15 de opacidad en ciclos de 3 a 6 s.</td></tr>
+				<tr><td><b>Texto</b></td><td>Sube 24 u con fundido, 400 ms, 80 ms de desfase entre niveles.</td></tr>
+				<tr><td><b>Transiciones</b></td><td>Solo fundidos cruzados de 400 ms. Sin deslizamientos, giros ni zoom.</td></tr>
+				<tr><td><b>Cierre</b></td><td>Isotipo centrado, luego isologo y URL, 2 s fijos.</td></tr>
+				<tr><td><b>Pantallas</b></td><td>Marco oscuro y subtítulos en su propia franja, debajo de la imagen.</td></tr>
+			</tbody></table></div>
+		</div>
+	</div>
+</section>
+
+<section id="kit">
+	<div class="wrap">
+		<div class="cabeza"><span class="num">11</span><div><h2>Kit de archivos</h2><p>Todo lo necesario para producir piezas nuevas, con código o sin él.</p></div></div>
+<pre><code>brand-kit/jossue-alcala/
+├── KEY-VISUAL.md       versión de este manual para IAs
+├── key-visual.html     este manual
+├── logos/              isotipo, isologos, logos 1:1 y 4:1
+├── fotos/              retrato oficial
+├── fuentes/            Inter Tight (TTF, woff2, licencia OFL)
+├── plantilla/
+│   ├── anuncio.html    plantilla única por parámetros
+│   ├── anuncios.json   textos y formatos
+│   ├── render.mjs      exporta todas las piezas
+│   └── manual.mjs      regenera este manual
+└── anuncios/           1x1 · 4x5 · 9x16 · 16x9 · 1.91x1  (45 piezas)</code></pre>
+		<h3>Producir una pieza nueva</h3>
+		<ol class="pasos">
+			<li><span>Agrega una entrada en <code>plantilla/anuncios.json</code> con id, kicker, titular, apoyo, ícono y variantes.</span></li>
+			<li><span>Desde <code>jossue-portfolio</code> ejecuta <code>node brand-kit/jossue-alcala/plantilla/render.mjs &lt;id&gt;</code>.</span></li>
+			<li><span>Revisa <code>anuncios/&lt;formato&gt;/</code>. Si el script avisa <code>DESBORDE</code>, acorta el texto.</span></li>
+		</ol>
+		<div class="botones">
+			<a class="boton prim" href="KEY-VISUAL.md">Abrir KEY-VISUAL.md</a>
+			<a class="boton" href="plantilla/anuncio.html?w=1200&amp;h=628&amp;v=estandar&amp;k=IA%20aplicada&amp;t=Pon%20la%20IA%20a%20trabajar%20en%20tu%20negocio.&amp;p=Asistentes%20y%20automatizaciones%20con%20tus%20datos.&amp;i=sparkles-ai">Probar la plantilla</a>
+			<a class="boton" href="logos/">Logos</a>
+			<a class="boton" href="anuncios/">Anuncios</a>
+		</div>
+	</div>
+</section>
+
+</main>
+
+<footer>
+	<div class="wrap"><img src="logos/jossue-alcala-isologo-claro.svg" alt="Jossue Alcalá"><span>Key Visual v1.0 · octubre 2026 · jossuealcala.com</span></div>
+</footer>
+
+<script>
+const C = [[27.3, 12], [29.05, 26.9], [28.33, 33.67], [21.28, 46.54], [42.72, 52]];
+const L = [[0, 1], [1, 2], [2, 3], [2, 4]];
+const halo = (id) => `<radialGradient id="${id}"><stop offset="0" stop-color="#fff8e8" stop-opacity=".9"/><stop offset=".35" stop-color="#ece6d8" stop-opacity=".35"/><stop offset="1" stop-color="#ece6d8" stop-opacity="0"/></radialGradient>`;
+function rnd(seed) { let s = seed; return () => (s = (s * 16807) % 2147483647) / 2147483647; }
+function polvo(w, h, n, seed, rmax = 1.6) { const r = rnd(seed); let o = ''; for (let i = 0; i < n; i++) o += `<circle cx="${(r() * w).toFixed(1)}" cy="${(r() * h).toFixed(1)}" r="${(0.5 + r() * rmax).toFixed(2)}" fill="#dfe6ff" opacity="${(0.15 + r() * 0.5).toFixed(2)}"/>`; return o; }
+function figura(ox, oy, s, id, extra = '') {
+	const p = C.map(([a, b]) => [ox + a * s, oy + b * s]);
+	return `<g stroke="#ece6d8" stroke-opacity=".28" stroke-width="${s * 0.45}" stroke-linecap="round">${L.map(([a, b], i) => `<line class="linea l${i + 1}" pathLength="1" x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`).join('')}</g>` +
+		p.map(([a, b], i) => `<g class="est e${i + 1}"><circle cx="${a}" cy="${b}" r="${s * 3.6}" fill="url(#${id})"/><circle cx="${a}" cy="${b}" r="${s * (1.3 + i * 0.08)}" fill="#fffaf0"/></g>`).join('') + extra;
+}
+const angosta = matchMedia('(max-width: 700px)').matches;
+document.getElementById('cielo-portada').innerHTML = `<defs>${halo('hp')}</defs>${polvo(1600, 1000, 220, 5, 1.8)}${angosta ? figura(1330, 30, 5.5, 'hp') : figura(820, -40, 15, 'hp')}`;
+document.getElementById('capa-estrellas').innerHTML = `<defs>${halo('hc')}</defs>${polvo(400, 500, 60, 9, 1.2)}${figura(180, 20, 4.2, 'hc')}`;
+document.getElementById('escena').innerHTML = `<defs>${halo('he')}</defs><g class="polvo">${polvo(160, 90, 50, 3, 0.35)}</g>${figura(78, 0, 1.5, 'he')}`;
+
+// Concepto: estrellas sueltas a la izquierda, unidas a la derecha.
+(() => {
+	const sueltas = [[10, 14], [20, 30], [8, 44], [18, 54], [12, 24]];
+	const s = 0.62, ox = 26, oy = 8;
+	const p = C.map(([a, b]) => [ox + a * s, oy + b * s]);
+	document.getElementById('concepto').innerHTML = `<defs>${halo('hk')}</defs>${polvo(64, 64, 40, 21, 0.25)}` +
+		sueltas.map(([a, b]) => `<circle cx="${a}" cy="${b}" r="0.9" fill="#fffaf0" opacity=".55"/>`).join('') +
+		`<path d="M23 32h5" stroke="#9aa197" stroke-width=".4" stroke-linecap="round"/><path d="M26.5 30.5 28 32l-1.5 1.5" fill="none" stroke="#9aa197" stroke-width=".4" stroke-linecap="round" stroke-linejoin="round"/>` +
+		`<g stroke="#ece6d8" stroke-opacity=".35" stroke-width=".35" stroke-linecap="round">${L.map(([a, b]) => `<line x1="${p[a][0]}" y1="${p[a][1]}" x2="${p[b][0]}" y2="${p[b][1]}"/>`).join('')}</g>` +
+		p.map(([a, b], i) => `<circle cx="${a}" cy="${b}" r="2.4" fill="url(#hk)"/><circle cx="${a}" cy="${b}" r="${0.85 + i * 0.05}" fill="#fffaf0"/>`).join('');
+})();
+
+// Diagrama técnico de la constelación.
+(() => {
+	const etiquetas = ['A', 'B', 'C', 'D', 'E'];
+	let reticula = '';
+	for (let v = 8; v <= 56; v += 4) reticula += `<line x1="${v}" y1="2" x2="${v}" y2="62" /><line x1="8" y1="${v + 2}" x2="56" y2="${v + 2}" />`;
+	document.getElementById('diagrama').innerHTML = `<defs>${halo('hd')}</defs><g stroke="#eef1ea" stroke-opacity=".06" stroke-width=".12">${reticula}</g>` +
+		figura(0, 0, 1, 'hd') +
+		C.map(([a, b], i) => `<text x="${a + (i === 3 ? -4.4 : 2.6)}" y="${b + 1}" font-size="2.6" font-family="Inter Tight" font-weight="600" fill="#ece6d8">${etiquetas[i]}</text>`).join('');
+})();
+
+const ICONOS = {
+	'sparkles-ai': ['Marca / IA aplicada', '<path d="M13 4.5c.9 5.4 3.1 7.6 8.5 8.5-5.4.9-7.6 3.1-8.5 8.5-.9-5.4-3.1-7.6-8.5-8.5 5.4-.9 7.6-3.1 8.5-8.5Z"/><path d="M23.5 19.5c.5 2.5 1.5 3.5 4 4-2.5.5-3.5 1.5-4 4-.5-2.5-1.5-3.5-4-4 2.5-.5 3.5-1.5 4-4Z"/>'],
+	code: ['Tiendas Shopify', '<path d="m11 10-6 6 6 6M21 10l6 6-6 6M18.5 7.5l-5 17"/>'],
+	filter: ['Conversión (CRO)', '<path d="M4.5 6.5h23l-9 11v8l-5 2.5v-10.5Z"/>'],
+	'trend-up': ['Velocidad', '<path d="M4 23.5 12 15.5l5 5L28 9.5"/><path d="M20.5 9.5H28V17"/>'],
+	'badge-percent': ['Medición', '<path d="M16 3.5 19 6.2l4-.4.9 3.9 3.4 2.2-1.6 3.7 1.6 3.7-3.4 2.2-.9 3.9-4-.4-3 2.7-3-2.7-4 .4-.9-3.9-3.4-2.2 1.6-3.7-1.6-3.7 3.4-2.2.9-3.9 4 .4Z"/><path d="m12 20 8-8"/><circle cx="12.5" cy="12.5" r="1.3"/><circle cx="19.5" cy="19.5" r="1.3"/>'],
+	basket: ['Desarrollo a la medida', '<path d="M4 12h24l-2.4 13a2.5 2.5 0 0 1-2.5 2H8.9a2.5 2.5 0 0 1-2.5-2Z"/><path d="m11 12 4-7.5M21 12l-4-7.5M12 17v5M16 17v5M20 17v5"/>'],
+	chat: ['Contacto', '<path d="M6 6.5h20a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H15l-6 4.5v-4.5H6A2.5 2.5 0 0 1 3.5 20V9A2.5 2.5 0 0 1 6 6.5Z"/><path d="M11 14.5h.01M16 14.5h.01M21 14.5h.01"/>'],
+};
+document.getElementById('iconos').innerHTML = Object.entries(ICONOS).map(([k, [n, d]]) => `<div><svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</g></svg><span>${n}<br><code>${k}</code></span></div>`).join('');
+
+const PILARES = [
+	['00', 'Shopify · CRO · IA', 'Te ayudo a vender más por internet.', 'Encuentro qué te está costando más, lo diseño y me quedo a construirlo contigo.', '00-marca'],
+	['01', 'Tiendas Shopify', 'Tu tienda, hecha a la medida de cómo vendes.', 'La armo completa en Shopify, o la parte que te falte. Sin plantillas.', '01-tienda-shopify'],
+	['02', 'Conversión (CRO)', 'Te digo en qué punto pierdes la venta.', 'Reviso el recorrido de tu cliente y te digo qué arreglar primero y qué puede esperar.', '02-conversion-cro'],
+	['03', 'Velocidad y mantenimiento', 'Una tienda que abre rápido en el celular.', 'Y que tu equipo pueda mantenerla sin llamar a nadie.', '03-velocidad'],
+	['04', 'Medición', 'Sabe de dónde viene cada venta.', 'Dejo la medición conectada con tu publicidad y tus correos.', '04-medicion'],
+	['05', 'IA aplicada', 'Pon la IA a trabajar en tu negocio.', 'Asistentes y automatizaciones con tus datos y tus permisos, donde ahorran tiempo.', '05-ia-aplicada'],
+	['06', 'Desarrollo a la medida', 'Si ninguna app lo hace, la programo.', 'Apps y funciones hechas para cómo opera tu tienda.', '06-desarrollo-a-la-medida'],
+];
+document.getElementById('pilares').innerHTML = PILARES.map(([n, k, t, p]) => `<div class="pilar"><span class="id">${n}</span><div><span class="k-demo">${k}</span><h4>${t}</h4><p>${p}</p></div></div>`).join('');
+
+const T = ['Tiendas Shopify a la medida', 'Te digo dónde pierdes ventas', 'Tu tienda rápida en el celular', 'Sabe de dónde viene tu venta', 'IA aplicada a tu ecommerce', 'Apps de Shopify a la medida', 'Shopify, CRO e IA aplicada', 'Diseño y construyo contigo', 'Más de 8 años en growth y CRO', 'Medición conectada a tus ads', 'Asistentes de IA con tus datos', 'Te respondo en 1 día hábil', 'Cuéntame tu caso', 'Jossue Alcalá: ecommerce e IA', 'Diagnóstico de conversión'];
+const D = ['Armo tu tienda Shopify completa o la parte que te falte, a la medida de cómo vendes.', 'Reviso el recorrido de tu cliente y te digo qué arreglar primero y qué puede esperar.', 'Encuentro qué te está costando más, lo diseño y me quedo a construirlo contigo.', 'Asistentes y automatizaciones con IA que usan tus datos y permisos, donde ahorran tiempo.', 'Escríbeme dos líneas sobre tu proyecto y te digo por dónde empezaría yo.'];
+const filas = (lista) => lista.map((x) => `<tr><td>${x}</td><td class="cnt">${[...x].length}</td></tr>`).join('');
+document.getElementById('rsa-t').innerHTML = filas(T);
+document.getElementById('rsa-d').innerHTML = filas(D);
+</script>
+</body>
+</html>

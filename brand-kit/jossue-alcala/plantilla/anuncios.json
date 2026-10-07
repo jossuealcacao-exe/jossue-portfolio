@@ -1,0 +1,19 @@
+{
+  "formatos": {
+    "1x1": { "w": 1200, "h": 1200 },
+    "4x5": { "w": 1080, "h": 1350 },
+    "9x16": { "w": 1080, "h": 1920 },
+    "16x9": { "w": 1920, "h": 1080 },
+    "1.91x1": { "w": 1200, "h": 628 }
+  },
+  "anuncios": [
+    { "id": "00-marca", "k": "Shopify · CRO · IA", "t": "Te ayudo a vender más por internet.", "p": "Encuentro qué te está costando más, lo diseño y me quedo a construirlo contigo.", "i": "sparkles-ai", "variantes": ["estandar", "retrato", "minimo"], "seed": 11 },
+    { "id": "01-tienda-shopify", "k": "Tiendas Shopify", "t": "Tu tienda, hecha a la medida de cómo vendes.", "p": "La armo completa en Shopify, o la parte que te falte. Sin plantillas.", "i": "code", "seed": 23 },
+    { "id": "02-conversion-cro", "k": "Conversión (CRO)", "t": "Te digo en qué punto pierdes la venta.", "p": "Reviso el recorrido de tu cliente y te digo qué arreglar primero y qué puede esperar.", "i": "filter", "seed": 37 },
+    { "id": "03-velocidad", "k": "Velocidad y mantenimiento", "t": "Una tienda que abre rápido en el celular.", "p": "Y que tu equipo pueda mantenerla sin llamar a nadie.", "i": "trend-up", "seed": 41 },
+    { "id": "04-medicion", "k": "Medición", "t": "Sabe de dónde viene cada venta.", "p": "Dejo la medición conectada con tu publicidad y tus correos.", "i": "badge-percent", "seed": 53 },
+    { "id": "05-ia-aplicada", "k": "IA aplicada", "t": "Pon la IA a trabajar en tu negocio.", "p": "Asistentes y automatizaciones con tus datos y tus permisos, donde ahorran tiempo.", "i": "sparkles-ai", "seed": 67 },
+    { "id": "06-desarrollo-a-la-medida", "k": "Desarrollo a la medida", "t": "Si ninguna app lo hace, la programo.", "p": "Apps y funciones hechas para cómo opera tu tienda.", "i": "basket", "seed": 79 },
+    { "id": "07-chatbots-ecommerce", "k": "Chatbots para ecommerce", "t": "Tus clientes preguntan. Yo armo un chatbot.", "p": "Conecto un asistente a tu catálogo y defino qué puede hacer con tus datos.", "i": "chat", "seed": 83 }
+  ]
+}

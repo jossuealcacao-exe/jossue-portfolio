@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Plantilla de anuncio · Jossue Alcalá</title>
+<!--
+  Plantilla única del key visual. Se controla por parámetros en la URL:
+    w, h        tamaño en px (ej. w=1200&h=1200)
+    v           variante: estandar | retrato | minimo
+    k           kicker (etiqueta corta en mayúsculas)
+    t           titular
+    p           texto de apoyo
+    i           ícono del kicker: code | filter | trend-up | badge-percent | sparkles-ai | basket | chat
+    cta         texto del botón (por defecto "Cuéntame tu caso")
+    url         dominio visible (por defecto jossuealcala.com)
+    seed        semilla del campo de estrellas (número)
+  Ejemplo: anuncio.html?w=1200&h=628&v=estandar&k=IA%20aplicada&t=...&p=...&i=sparkles-ai
+  render.mjs genera todas las piezas desde anuncios.json.
+-->
+<style>
+@font-face { font-family: "Inter Tight"; src: url(../fuentes/InterTight-Variable.woff2) format("woff2"); font-weight: 100 900; }
+:root {
+	--noche: #050605;
+	--indigo: #1a2142;
+	--violeta: #2a1b3d;
+	--marfil: #ece6d8;
+	--tinta-marfil: #12110e;
+	--texto: #eef1ea;
+	--texto-2: #9aa197;
+	--apoyo: #b9bfb5;
+	--u: 1px;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { width: var(--w); height: var(--h); overflow: hidden; }
+body { position: relative; font-family: "Inter Tight", system-ui, sans-serif; color: var(--texto); background: var(--noche); -webkit-font-smoothing: antialiased; }
+.nebula { position: absolute; inset: 0; background:
+	radial-gradient(55% 60% at var(--nx, 74%) var(--ny, 40%), var(--indigo) 0%, rgba(26, 33, 66, 0) 70%),
+	radial-gradient(45% 55% at var(--vx, 88%) var(--vy, 95%), rgba(42, 27, 61, 0.7) 0%, rgba(42, 27, 61, 0) 70%),
+	var(--noche); }
+.cielo { position: absolute; inset: 0; width: 100%; height: 100%; }
+.marco { position: absolute; display: flex; flex-direction: column; }
+.iso { height: calc(var(--u) * 56); flex: none; }
+.iso img { height: 100%; width: auto; display: block; }
+.bloque { margin-top: auto; }
+.kicker { display: inline-flex; align-items: center; gap: calc(var(--u) * 14); font-size: calc(var(--u) * var(--fk)); font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--texto-2); }
+.kicker i { display: grid; place-items: center; width: calc(var(--u) * var(--fk) * 2); height: calc(var(--u) * var(--fk) * 2); border-radius: calc(var(--u) * 16); background: rgba(238, 241, 234, 0.06); border: 1px solid rgba(238, 241, 234, 0.14); color: var(--marfil); }
+.kicker i svg { width: 60%; height: 60%; }
+h1 { margin-top: calc(var(--u) * 30); font-size: calc(var(--u) * var(--ft)); line-height: 1.02; font-weight: 620; letter-spacing: -0.022em; text-wrap: balance; }
+p { margin-top: calc(var(--u) * 28); font-size: calc(var(--u) * var(--fp)); line-height: 1.3; font-weight: 420; color: var(--apoyo); text-wrap: pretty; }
+.pie { margin-top: calc(var(--u) * 56); display: flex; align-items: center; flex-wrap: wrap; gap: calc(var(--u) * 28); }
+.cta { display: inline-flex; align-items: center; gap: calc(var(--u) * 12); padding: calc(var(--u) * 22) calc(var(--u) * 34); border-radius: 999px; background: var(--marfil); color: var(--tinta-marfil); font-size: calc(var(--u) * var(--fc)); font-weight: 600; }
+.cta svg { width: 1em; height: 1em; }
+.url { font-size: calc(var(--u) * var(--fc) * 0.93); font-weight: 500; color: var(--texto-2); }
+.foto { position: absolute; overflow: hidden; border-radius: calc(var(--u) * 28); border: 1px solid rgba(236, 230, 216, 0.16); box-shadow: 0 calc(var(--u) * 30) calc(var(--u) * 80) rgba(0, 0, 0, 0.55); }
+.foto img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.foto figcaption { position: absolute; left: 0; right: 0; bottom: 0; padding: calc(var(--u) * 80) calc(var(--u) * 28) calc(var(--u) * 26); background: linear-gradient(to top, rgba(5, 6, 5, 0.92), rgba(5, 6, 5, 0)); display: grid; gap: calc(var(--u) * 4); }
+.foto strong { font-size: calc(var(--u) * 28); font-weight: 600; }
+.foto span { font-size: calc(var(--u) * 21); color: var(--apoyo); }
+.minimo .bloque { display: none; }
+.minimo .iso { height: calc(var(--u) * 84); margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="nebula"></div>
+<svg class="cielo" aria-hidden="true"></svg>
+<div class="marco">
+	<div class="iso"><img src="../logos/jossue-alcala-isologo-claro.svg" alt="Jossue Alcalá"></div>
+	<div class="bloque">
+		<span class="kicker"><i></i><span class="kicker-texto"></span></span>
+		<h1></h1>
+		<p></p>
+		<div class="pie"><span class="cta"></span><span class="url"></span></div>
+	</div>
+</div>
+<script>
+const q = new URLSearchParams(location.search);
+const W = +q.get('w') || 1200, H = +q.get('h') || 1200;
+const variante = q.get('v') || 'estandar';
+const r = W / H;
+const horizontal = r > 1.2, vertical = r < 0.85, historia = H / W > 1.6;
+const u = horizontal ? H / 1080 : W / 1080;
+const dividido = variante === 'retrato' && !vertical;
+
+// Íconos del sitio (src/components/Icon.astro): retícula 32, trazo 1.7, puntas redondas.
+const ICONOS = {
+	code: '<path d="m11 10-6 6 6 6M21 10l6 6-6 6M18.5 7.5l-5 17"/>',
+	filter: '<path d="M4.5 6.5h23l-9 11v8l-5 2.5v-10.5Z"/>',
+	'trend-up': '<path d="M4 23.5 12 15.5l5 5L28 9.5"/><path d="M20.5 9.5H28V17"/>',
+	'badge-percent': '<path d="M16 3.5 19 6.2l4-.4.9 3.9 3.4 2.2-1.6 3.7 1.6 3.7-3.4 2.2-.9 3.9-4-.4-3 2.7-3-2.7-4 .4-.9-3.9-3.4-2.2 1.6-3.7-1.6-3.7 3.4-2.2.9-3.9 4 .4Z"/><path d="m12 20 8-8"/><circle cx="12.5" cy="12.5" r="1.3"/><circle cx="19.5" cy="19.5" r="1.3"/>',
+	'sparkles-ai': '<path d="M13 4.5c.9 5.4 3.1 7.6 8.5 8.5-5.4.9-7.6 3.1-8.5 8.5-.9-5.4-3.1-7.6-8.5-8.5 5.4-.9 7.6-3.1 8.5-8.5Z"/><path d="M23.5 19.5c.5 2.5 1.5 3.5 4 4-2.5.5-3.5 1.5-4 4-.5-2.5-1.5-3.5-4-4 2.5-.5 3.5-1.5 4-4Z"/>',
+	basket: '<path d="M4 12h24l-2.4 13a2.5 2.5 0 0 1-2.5 2H8.9a2.5 2.5 0 0 1-2.5-2Z"/><path d="m11 12 4-7.5M21 12l-4-7.5M12 17v5M16 17v5M20 17v5"/>',
+	chat: '<path d="M6 6.5h20a2.5 2.5 0 0 1 2.5 2.5v11a2.5 2.5 0 0 1-2.5 2.5H15l-6 4.5v-4.5H6A2.5 2.5 0 0 1 3.5 20V9A2.5 2.5 0 0 1 6 6.5Z"/><path d="M11 14.5h.01M16 14.5h.01M21 14.5h.01"/>',
+	arrow: '<path d="M6 16h20M18 8l8 8-8 8"/>',
+};
+const icono = (n, w = 1.7) => `<svg viewBox="0 0 32 32"><g fill="none" stroke="currentColor" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round">${ICONOS[n] || ''}</g></svg>`;
+
+const root = document.documentElement.style;
+root.setProperty('--w', W + 'px');
+root.setProperty('--h', H + 'px');
+root.setProperty('--u', u + 'px');
+// Escala tipográfica en unidades u (u = lado corto / 1080).
+const escala = horizontal ? { fk: 30, ft: 100, fp: 38, fc: 32 } : historia ? { fk: 28, ft: 96, fp: 38, fc: 32 } : { fk: 26, ft: 88, fp: 34, fc: 30 };
+if (dividido) Object.assign(escala, { ft: horizontal ? 88 : 72, fp: horizontal ? 34 : 30 });
+for (const [k, v] of Object.entries(escala)) root.setProperty('--' + k, v);
+if (!horizontal) { root.setProperty('--nx', '78%'); root.setProperty('--ny', '24%'); root.setProperty('--vx', '18%'); root.setProperty('--vy', '96%'); }
+document.body.classList.add(variante);
+
+const $ = (s) => document.querySelector(s);
+$('.kicker i').innerHTML = icono(q.get('i') || 'sparkles-ai');
+$('.kicker-texto').textContent = q.get('k') || '';
+$('h1').textContent = q.get('t') || '';
+$('p').textContent = q.get('p') || '';
+$('.cta').innerHTML = `${q.get('cta') || 'Cuéntame tu caso'} ${icono('arrow', 2.4)}`;
+$('.url').textContent = q.get('url') || 'jossuealcala.com';
+if (!q.get('k')) $('.kicker').remove();
+if (!q.get('p')) $('p').remove();
+
+// Márgenes y zonas seguras.
+const m = horizontal ? { t: 112 * u, x: 120 * u } : { t: 84 * u, x: 84 * u };
+const seguraArriba = historia ? H * 0.14 : 0, seguraAbajo = historia ? H * 0.2 : 0;
+const marco = $('.marco');
+const fotoAncho = dividido ? (horizontal ? 0.33 : 0.38) * W : 0;
+const columna = horizontal ? (dividido ? W - 2 * m.x - fotoAncho - 64 * u : 0.53 * W) : W - 2 * m.x - (dividido ? fotoAncho + 48 * u : 0);
+Object.assign(marco.style, { left: m.x + 'px', top: seguraArriba + m.t + 'px', bottom: seguraAbajo + m.t + 'px', width: columna + 'px' });
+
+// Constelación del isotipo: coordenadas originales en 64×64.
+const C = [[27.3, 12], [29.05, 26.9], [28.33, 33.67], [21.28, 46.54], [42.72, 52]];
+const L = [[0, 1], [1, 2], [2, 3], [2, 4]];
+const BX = [21.28, 12, 42.72, 52];
+
+function estrellas(n, semilla) {
+	let s = semilla; const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647; let o = '';
+	for (let k = 0; k < n; k++) o += `<circle cx="${(rnd() * W).toFixed(1)}" cy="${(rnd() * H).toFixed(1)}" r="${((0.6 + rnd() * 1.6) * Math.max(u, 0.7)).toFixed(2)}" fill="#dfe6ff" opacity="${(0.15 + rnd() * 0.5).toFixed(2)}"/>`;
+	return o;
+}
+function constelacion([x0, y0, x1, y1]) {
+	const bw = BX[2] - BX[0], bh = BX[3] - BX[1], pad = 8;
+	const s = Math.min((x1 - x0) / (bw + pad), (y1 - y0) / (bh + pad));
+	if (!(s > 0)) return '';
+	const ox = (x0 + x1) / 2 - ((BX[0] + BX[2]) / 2) * s, oy = (y0 + y1) / 2 - ((BX[1] + BX[3]) / 2) * s;
+	const pts = C.map(([a, b]) => [ox + a * s, oy + b * s]);
+	const lineas = L.map(([a, b]) => `<line x1="${pts[a][0]}" y1="${pts[a][1]}" x2="${pts[b][0]}" y2="${pts[b][1]}"/>`).join('');
+	const puntos = pts.map(([a, b], k) => `<circle cx="${a}" cy="${b}" r="${s * 3.6}" fill="url(#halo)"/><circle cx="${a}" cy="${b}" r="${s * (1.3 + k * 0.08)}" fill="#fffaf0"/>`).join('');
+	return `<g stroke="#ece6d8" stroke-opacity=".28" stroke-width="${s * 0.45}" stroke-linecap="round">${lineas}</g>${puntos}`;
+}
+
+function componer() {
+	const iso = $('.iso').getBoundingClientRect();
+	const bloque = $('.bloque').getBoundingClientRect();
+	const textoTop = variante === 'minimo' ? iso.top : bloque.top;
+	let caja = null;
+	if (variante === 'estandar') {
+		caja = horizontal
+			? [m.x + columna + 40 * u, m.t, W - m.x * 0.8, H - m.t]
+			: [W * 0.42, iso.bottom + 40 * u, W - m.x, textoTop - 48 * u];
+	} else if (variante === 'minimo') {
+		caja = [m.x, seguraArriba + m.t, W - m.x, iso.top - 48 * u];
+	}
+	if (variante === 'retrato') {
+		const fig = document.createElement('figure');
+		fig.className = 'foto';
+		fig.innerHTML = '<img src="../fotos/jossue-alcala-retrato.jpg" alt="Jossue Alcalá"><figcaption><strong>Jossue Alcalá</strong><span>Ecommerce, Shopify e IA aplicada</span></figcaption>';
+		const caja2 = dividido
+			? { left: W - m.x - fotoAncho, top: seguraArriba + m.t, width: fotoAncho, height: H - seguraArriba - seguraAbajo - 2 * m.t, pos: '50% 22%' }
+			: { left: m.x, top: iso.bottom + 40 * u, width: W - 2 * m.x, height: textoTop - iso.bottom - 88 * u, pos: '50% 16%' };
+		Object.assign(fig.style, { left: caja2.left + 'px', top: caja2.top + 'px', width: caja2.width + 'px', height: caja2.height + 'px' });
+		fig.querySelector('img').style.objectPosition = caja2.pos;
+		document.body.appendChild(fig);
+	}
+	const n = Math.round((W * H) / (1080 * 1080) * 110);
+	$('.cielo').setAttribute('viewBox', `0 0 ${W} ${H}`);
+	$('.cielo').innerHTML = `<defs><radialGradient id="halo"><stop offset="0" stop-color="#fff8e8" stop-opacity=".9"/><stop offset=".35" stop-color="#ece6d8" stop-opacity=".35"/><stop offset="1" stop-color="#ece6d8" stop-opacity="0"/></radialGradient></defs>${estrellas(n, +q.get('seed') || 11)}${caja ? constelacion(caja) : ''}`;
+}
+
+Promise.all([document.fonts.ready, ...[...document.images].map((im) => im.decode().catch(() => {}))]).then(() => {
+	componer();
+	const fotoImg = document.querySelector('.foto img');
+	return fotoImg ? fotoImg.decode().catch(() => {}) : null;
+}).then(() => { document.body.dataset.listo = '1'; });
+</script>
+</body>
+</html>
