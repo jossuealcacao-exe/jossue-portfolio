@@ -5,6 +5,7 @@ import { notify } from './notify.mjs';
 import { sendDailySummary } from './digest.mjs';
 import { crmStatus, syncLater, syncPending } from './crm.mjs';
 import { handleBookingCancel, handleBookingCreate, handleBookingIcs, handleCalendarFeed, handleSlots } from './booking.mjs';
+import { handleProposal } from './proposals.mjs';
 
 const MAX_BODY_BYTES = 64 * 1024;
 const RATE_LIMIT_MS = 60_000;
@@ -247,6 +248,9 @@ export async function handleRequest(request, env, ctx) {
 		const [, locale, tail = ''] = legacyBlog;
 		return Response.redirect(`https://blog.jossuealcala.com/${locale}/${tail}`, 301);
 	}
+	// Propuestas privadas con contraseña: nada de /propuestas/ sale sin pasar por aquí. Va antes del
+	// filtro de orígenes porque el navegador pide las fuentes con Origin; sus POST exigen el mismo sitio.
+	if (url.pathname.startsWith('/propuestas/')) return handleProposal(request, env, ctx);
 	const origin = requestOrigin(request, env);
 	if (origin === false) return json(403, { ok: false, error: 'Origin not allowed' });
 

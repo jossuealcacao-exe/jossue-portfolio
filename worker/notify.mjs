@@ -11,6 +11,7 @@ export const KINDS = {
 	call: 'Llamada agendada',
 	callCancelled: 'Llamada cancelada',
 	whatsapp: 'WhatsApp',
+	proposal: 'Propuesta',
 	alert: 'Alerta',
 	summary: 'Resumen',
 };
