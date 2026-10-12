@@ -50,6 +50,15 @@ test('a wrong password is refused and nobody is notified', async () => {
 	assert.equal(e.sent.length, 0);
 });
 
+test('a form sent with Origin «null» still reaches the password check', async () => {
+	const e = env();
+	const wrong = await handleProposal(post('/propuestas/vitalin/acceso', 'password=nope', { Origin: 'null' }), e);
+	assert.equal(wrong.status, 401);
+	const right = await handleProposal(post('/propuestas/vitalin/acceso', `password=${encodeURIComponent(PASS)}`, { Origin: 'null' }), e);
+	assert.equal(right.status, 303);
+	assert.equal(right.headers.get('Referrer-Policy'), 'same-origin');
+});
+
 test('the right password sets a signed cookie scoped to the proposal and tells Jossué', async () => {
 	const e = env();
 	const res = await handleProposal(post('/propuestas/vitalin/acceso', `password=${encodeURIComponent(PASS)}`), e);

@@ -52,7 +52,8 @@ async function validSession(request, slug, password, now = Date.now()) {
 const PRIVATE = {
 	'Cache-Control': 'private, no-store',
 	'X-Robots-Tag': 'noindex, nofollow',
-	'Referrer-Policy': 'no-referrer',
+	// same-origin y no no-referrer: con no-referrer el navegador manda los formularios con Origin «null».
+	'Referrer-Policy': 'same-origin',
 	'X-Content-Type-Options': 'nosniff',
 };
 
@@ -111,9 +112,11 @@ export async function handleProposal(request, env, ctx, now = Date.now()) {
 	const password = SLUG.test(slug) ? String(env[secretName(slug)] ?? '') : '';
 	if (!password) return notFound();
 	if (rest === '') return Response.redirect(new URL(`/propuestas/${slug}/`, url).toString(), 301);
-	// Un POST solo vale desde la propia página: si el navegador dice de dónde viene, tiene que ser este sitio.
+	// Un POST de otro sitio se rechaza. «null» no dice de dónde viene (algunos navegadores lo mandan así
+	// desde páginas con políticas de privacidad estrictas); para esos casos la cookie SameSite=Lax evita
+	// que un sitio ajeno use la sesión del cliente.
 	const from = request.headers.get('Origin');
-	if (request.method === 'POST' && from && from !== url.origin) return new Response('Forbidden', { status: 403, headers: PRIVATE });
+	if (request.method === 'POST' && from && from !== 'null' && from !== url.origin) return new Response('Forbidden', { status: 403, headers: PRIVATE });
 
 	if (rest === '/acceso' && request.method === 'POST') {
 		const fields = await readForm(request);
